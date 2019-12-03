@@ -6,7 +6,7 @@ This document contains the documentation of the staging db and creating + loadin
 
 ### Staging tables for RRBS source systems
 
-#### RRBS Voice table :"stag_ukdev_uk_rrbs_voice"
+#### 1. RRBS Voice table :"stag_ukdev_uk_rrbs_voice"
 
 ```sql
 CREATE TABLE staging.stag_ukdev_uk_rrbs_voice(
@@ -152,7 +152,7 @@ GO
 
 
 
-#### RRBS Voice table :"stag_ukdev_uk_rrbs_gprs"
+#### 2. RRBS GPRS table :"stag_ukdev_uk_rrbs_gprs"
 
 ```sql
 CREATE TABLE staging.stag_ukdev_uk_rrbs_gprs(
@@ -244,7 +244,7 @@ GO
 
 
 
-#### RRBS Voice table :"stag_ukdev_uk_rrbs_sms"
+#### 3. RRBS SMS table :"stag_ukdev_uk_rrbs_sms"
 
 ```sql
 CREATE TABLE staging.stag_ukdev_uk_rrbs_sms(
@@ -336,7 +336,7 @@ GO
 
 
 
-#### RRBS Voice table :"stag_ukdev_uk_rrbs_topup"
+#### 4. RRBS TOPUP table :"stag_ukdev_uk_rrbs_topup"
 
 ```sql
 CREATE TABLE staging.stag_ukdev_uk_rrbs_topup(
@@ -524,6 +524,385 @@ CREATE NONCLUSTERED INDEX [ind_MSISDN] ON staging.stag_ukdev_uk_rrbs_topup
 	[MSISDN] ASC
 )WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, SORT_IN_TEMPDB = OFF, IGNORE_DUP_KEY = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON, FILLFACTOR = 80) ON [PRIMARY]
 GO
+
+```
+
+### Staging tables for MNO source systems
+
+#### MNO Voice/SMS table :"stag_ukdev_uk_mno_voicesms"
+
+```sql
+CREATE TABLE staging.stag_ukdev_uk_mno_voicesms(
+	[Record_Type] [varchar](3) NULL,
+	[CDR_Type] [varchar](2) NULL,
+	[CDR_ID] [varchar](12) NULL,
+	[Network_Call_Reference] [varchar](10) NULL,
+	[Subscriber_IMSI] [varchar](15) NULL,
+	[A_Number] [varchar](21) NULL,
+	[B_Number] [varchar](21) NULL,
+	[Dialled_Digits] [varchar](21) NULL,
+	[Location] [varchar](5) NULL,
+	[Call_Forwarding_Flag] [varchar](1) NULL,
+	[SMSC_Address] [varchar](21) NULL,
+	[Charging_Timestamp] [varchar](14) NULL,
+	[Duration] [varchar](10) NULL,
+	[Rate_Class] [varchar](6) NULL,
+	[Charge] [varchar](11) NULL,
+	[Fragment_Number] [varchar](3) NULL,
+	[Last_Fragment_Indicator] [varchar](1) NULL,
+	[Record_Sequence_Number] [varchar](21) NULL,
+	[Provider_Id] [varchar](5) NULL,
+	[Service_Type] [varchar](10) NULL,
+	[IMEI] [varchar](20) NULL,
+	[Message_Type] [varchar](11) NULL,
+	[End_User_Charge] [varchar](9) NULL,
+	[Premium_SMS_Delivery_Flag] [varchar](50) NULL,
+	[filename] [varchar](50) NULL,
+	[Lyca_Number] [varchar](21) NULL,
+	[Created_Date] [datetime] NULL
+) ON [PRIMARY]
+
+
+USE [GBR_MNO_MONTH10_2019]
+GO
+
+CREATE NONCLUSTERED INDEX [idx_AN] ON staging.stag_ukdev_uk_mno_voicesms 
+(
+	[A_Number] ASC
+)WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, SORT_IN_TEMPDB = OFF, IGNORE_DUP_KEY = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON, FILLFACTOR = 80) ON [PRIMARY]
+GO
+
+CREATE NONCLUSTERED INDEX [idx_ct] ON staging.stag_ukdev_uk_mno_voicesms 
+(
+	[CDR_Type] ASC
+)WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, SORT_IN_TEMPDB = OFF, IGNORE_DUP_KEY = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON, FILLFACTOR = 80) ON [PRIMARY]
+GO
+
+CREATE NONCLUSTERED INDEX [idx_CTS] ON staging.stag_ukdev_uk_mno_voicesms 
+(
+	[Charging_Timestamp] ASC
+)WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, SORT_IN_TEMPDB = OFF, IGNORE_DUP_KEY = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON, FILLFACTOR = 80) ON [PRIMARY]
+GO
+
+CREATE NONCLUSTERED INDEX [idx_IMEI] ON staging.stag_ukdev_uk_mno_voicesms 
+(
+	[IMEI] ASC
+)WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, SORT_IN_TEMPDB = OFF, IGNORE_DUP_KEY = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON, FILLFACTOR = 80) ON [PRIMARY]
+GO
+
+CREATE NONCLUSTERED INDEX [idx_LN] ON staging.stag_ukdev_uk_mno_voicesms 
+(
+	[Lyca_Number] ASC
+)WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, SORT_IN_TEMPDB = OFF, IGNORE_DUP_KEY = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON, FILLFACTOR = 80) ON [PRIMARY]
+GO
+
+CREATE NONCLUSTERED INDEX [idx_SUBIMSI] ON staging.stag_ukdev_uk_mno_voicesms 
+(
+	[Subscriber_IMSI] ASC
+)WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, SORT_IN_TEMPDB = OFF, IGNORE_DUP_KEY = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON, FILLFACTOR = 80) ON [PRIMARY]
+GO
+
+```
+
+#### MNO GPRS table :"stag_ukdev_uk_mno_gprs"
+
+```sql
+CREATE TABLE staging.stag_ukdev_uk_mno_gprs(
+	[Record_Type] [char](3) NULL,
+	[CDR_Type] [char](2) NULL,
+	[CDR_ID] [char](12) NULL,
+	[IMSI] [char](15) NULL,
+	[MSISDN] [char](16) NULL,
+	[IMEI] [char](16) NULL,
+	[Location] [char](5) NULL,
+	[APN_NI] [char](63) NULL,
+	[APN_OI] [char](37) NULL,
+	[Charging_timestamp] [char](14) NULL,
+	[Duration] [char](10) NULL,
+	[Data_Volume_Download] [char](16) NULL,
+	[Data_Volume_Upload] [char](16) NULL,
+	[Data_Volume_Total] [char](16) NULL,
+	[Username] [char](63) NULL,
+	[Network_Element_Id] [char](39) NULL,
+	[GGSN_Address] [char](39) NULL,
+	[Charging_Id] [char](10) NULL,
+	[Fragment_number] [char](7) NULL,
+	[Fragment_indicator] [char](1) NULL,
+	[RecordSequenceNumber] [char](21) NULL,
+	[Content_Source] [char](30) NULL,
+	[Rate_Class] [char](6) NULL,
+	[Charge] [char](11) NULL,
+	[End_user_charge] [varchar](50) NULL,
+	[Filename] [varchar](50) NULL,
+	[Created_Date] [datetime] NULL
+) ON [PRIMARY]
+
+```
+
+### Staging tables for LCR/SWITCH source systems
+
+
+#### LCR/SWITCH XCDA table :"stag_ukdev_uk_lcr_xcda"
+
+```sql
+CREATE TABLE staging.stag_ukdev_uk_lcr_xcda(
+	[sitecode] [varchar](3) NOT NULL,
+	[switchcode] [varchar](3) NOT NULL,
+	[calldate] [datetime] NOT NULL,
+	[legAtime] [int] NOT NULL,
+	[legBtime] [int] NOT NULL,
+	[did] [varchar](100) NULL,
+	[ani] [varchar](256) NULL,
+	[legAtrunk] [varchar](20) NULL,
+	[legAport] [varchar](15) NULL,
+	[sessionid_a] [varchar](32) NOT NULL,
+	[yyyy] [int] NULL,
+	[mm] [int] NULL,
+	[dd] [int] NULL,
+	[hh] [int] NULL,
+	[mn] [int] NULL,
+	[callstage] [int] NULL,
+	[reason] [int] NULL,
+	[accesstype] [char](1) NULL,
+	[callauth] [int] NULL,
+	[sitecode2] [nvarchar](50) NULL,
+	[usage] [float] NULL,
+	[cost_a] [float] NULL,
+	[callconnect] [int] NULL,
+	[cost_a2] [float] NULL,
+	[clicategory] [int] NULL,
+	[info] [varchar](128) NULL,
+	[FileName] [varchar](250) NULL,
+	[Created_date] [datetime] NULL
+) ON [PRIMARY]
+
+```
+
+
+
+#### LCR/SWITCH XCDR table :"stag_ukdev_uk_lcr_xcdr"
+
+```sql
+CREATE TABLE staging.stag_ukdev_uk_lcr_xcdr(
+	[calldate] [datetime] NULL,
+	[cnxdate] [datetime] NULL,
+	[telcocode] [char](4) NULL,
+	[custcode] [char](8) NULL,
+	[sitecode] [varchar](3) NOT NULL,
+	[switchcode] [varchar](3) NOT NULL,
+	[did] [varchar](100) NULL,
+	[ani] [varchar](50) NULL,
+	[dialednum] [char](30) NULL,
+	[destcode] [varchar](64) NULL,
+	[langcode] [varchar](50) NULL,
+	[pincode] [char](12) NULL,
+	[trffclass] [char](4) NULL,
+	[trunkin] [char](8) NULL,
+	[trunkout] [char](8) NULL,
+	[SetupCharge] [varchar](50) NULL,
+	[balance] [float] NULL,
+	[talktime] [int] NULL,
+	[batchcode] [int] NULL,
+	[serialcode] [int] NULL,
+	[billmode] [int] NOT NULL,
+	[charge] [int] NULL,
+	[timeperiod] [int] NULL,
+	[talkcharge] [float] NULL,
+	[provcost] [float] NULL,
+	[cnxdelay] [int] NULL,
+	[cnxunit] [float] NULL,
+	[sampdelay] [int] NULL,
+	[sampunit] [float] NULL,
+	[totalcons] [real] NULL,
+	[balance1] [real] NULL,
+	[acctype] [int] NULL,
+	[maxaccess] [int] NULL,
+	[firstusg] [datetime] NULL,
+	[daysvalid] [int] NULL,
+	[expdate] [datetime] NULL,
+	[freesec] [int] NULL,
+	[premiumdest] [int] NULL,
+	[freecnxdelay] [int] NULL,
+	[cnxcharge] [nvarchar](50) NULL,
+	[firstcnx] [int] NULL,
+	[newdelay] [int] NULL,
+	[legAdev] [varchar](15) NULL,
+	[legBdev] [varchar](15) NULL,
+	[rtt] [int] NULL,
+	[taskid] [int] NULL,
+	[sessionid_a] [varchar](32) NOT NULL,
+	[sessionid_b] [varchar](32) NOT NULL,
+	[act_id] [varchar](12) NULL,
+	[netration] [float] NULL,
+	[freebalance] [float] NULL,
+	[wdaychange] [float] NULL,
+	[freecnxfact] [float] NULL,
+	[cnxunitfact] [float] NULL,
+	[accesstype] [char](1) NULL,
+	[yyyy] [int] NULL,
+	[mm] [int] NULL,
+	[dd] [int] NULL,
+	[hh] [int] NULL,
+	[mn] [int] NULL,
+	[discflag] [int] NULL,
+	[cardgroup] [varchar](32) NULL,
+	[cost_a] [float] NULL,
+	[currcode] [varchar](3) NULL,
+	[fffflag] [int] NULL,
+	[clicategory] [int] NULL,
+	[dummy1] [int] NULL,
+	[FileName] [varchar](250) NULL,
+	[Created_date] [datetime] NULL
+) ON [PRIMARY]
+```
+
+
+#### LCR/SWITCH XCDS table :"stag_ukdev_uk_lcr_xcds"
+
+```sql
+
+CREATE TABLE staging.stag_ukdev_uk_lcr_xcds(
+	[sitecode] [varchar](3) NOT NULL,
+	[switchcode] [varchar](3) NOT NULL,
+	[calldate] [datetime] NULL,
+	[sessionid_b] [varchar](32) NOT NULL,
+	[trunkin] [char](8) NULL,
+	[trunkout] [char](8) NOT NULL,
+	[legAdev] [varchar](15) NULL,
+	[SetupCharge] [varchar](50) NOT NULL,
+	[ani] [varchar](256) NULL,
+	[did] [char](30) NULL,
+	[dialednum] [char](30) NULL,
+	[legAtime] [varchar](32) NULL,
+	[talktime] [int] NULL,
+	[status] [varchar](100) NULL,
+	[cause] [int] NULL,
+	[YYYY] [int] NULL,
+	[MM] [int] NULL,
+	[DD] [int] NULL,
+	[HH] [int] NULL,
+	[mn] [int] NULL,
+	[prefixcode] [varchar](16) NULL,
+	[destcode] [varchar](64) NULL,
+	[connectflg] [int] NULL,
+	[disconnectflg] [int] NULL,
+	[oprsitecode] [varchar](32) NULL,
+	[callcost] [float] NULL,
+	[timecls] [char](7) NULL,
+	[choicenb] [int] NULL,
+	[cropr] [varchar](8) NULL,
+	[crsitecode] [nvarchar](50) NULL,
+	[CallAttempt] [int] NULL,
+	[currcode] [varchar](20) NULL,
+	[routecls] [int] NULL,
+	[costprice] [float] NULL,
+	[FileName] [varchar](250) NULL,
+	[Created_date] [datetime] NULL
+) ON [PRIMARY]
+```
+
+
+
+#### LCR/SWITCH XCDX table :"stag_ukdev_uk_lcr_xcdx"
+
+```sql
+
+CREATE TABLE staging.stag_ukdev_uk_lcr_xcdx(
+	[site_code] [varchar](50) NULL,
+	[switch_code] [varchar](6) NOT NULL,
+	[a_call_start] [datetime] NULL,
+	[session_id] [varchar](32) NULL,
+	[trunk_in] [varchar](30) NULL,
+	[trunk_out] [varchar](30) NULL,
+	[lega_name] [varchar](30) NULL,
+	[legb_name] [varchar](30) NULL,
+	[a_cli] [varchar](60) NULL,
+	[a_did] [varchar](60) NULL,
+	[prefix_code] [varchar](60) NULL,
+	[callednb] [varchar](60) NULL,
+	[legatime] [int] NOT NULL,
+	[legbtime] [int] NOT NULL,
+	[connect_start] [datetime] NOT NULL,
+	[duration] [int] NOT NULL,
+	[call_domain] [varchar](32) NULL,
+	[call_cost] [float] NULL,
+	[choice] [int] NULL,
+	[connect_flag] [int] NULL,
+	[stat] [varchar](200) NULL,
+	[cause] [int] NULL,
+	[disc_party] [int] NULL,
+	[SetupCharge] [varchar](50) NULL,
+	[FileName] [varchar](250) NULL,
+	[Created_date] [datetime] NULL
+) ON [PRIMARY]
+
+```
+
+### Staging tables for GGSN source systems
+
+
+#### GGSN GPRS table :"stag_ukdev_uk_ggsn_gprs"
+
+```sql
+CREATE TABLE staging.stag_ukdev_uk_ggsn_gprs(
+	[recordType] [varchar](10) NULL,
+	[servedIMSI] [varchar](20) NULL,
+	[p_GWAddress] [varchar](100) NULL,
+	[chargingID] [varchar](20) NULL,
+	[servingNodeAddress] [varchar](200) NULL,
+	[accessPointNameNI] [varchar](100) NULL,
+	[pdpPDNType] [varchar](10) NULL,
+	[servedPDPPDNAddress] [varchar](50) NULL,
+	[dynamicAddressFlag] [varchar](10) NULL,
+	[recordOpeningTime] [varchar](50) NULL,
+	[duration] [int] NULL,
+	[causeForRecClosing] [varchar](150) NULL,
+	[diagnostics] [varchar](10) NULL,
+	[recordSequenceNumber] [varchar](10) NULL,
+	[nodeID] [varchar](20) NULL,
+	[localSequenceNumber] [varchar](20) NULL,
+	[apnSelectionMode] [varchar](100) NULL,
+	[servedMSISDN] [varchar](50) NULL,
+	[chargingCharacteristics] [varchar](50) NULL,
+	[chChSelectionMode] [varchar](50) NULL,
+	[iMSsignalingContext] [varchar](50) NULL,
+	[externalChargingID] [varchar](50) NULL,
+	[servingNodePLMNIdentifier] [varchar](50) NULL,
+	[pSFreeFormatData] [varchar](50) NULL,
+	[pSFFDAppendIndicator] [varchar](50) NULL,
+	[servedIMEISV] [varchar](50) NULL,
+	[rATType] [varchar](10) NULL,
+	[mSTimeZone] [varchar](50) NULL,
+	[userLocationInformation] [varchar](50) NULL,
+	[cAMELChargingInformation] [varchar](50) NULL,
+	[servingNodeType] [varchar](50) NULL,
+	[servedMNNAI] [varchar](50) NULL,
+	[p_GWPLMNIdentifier] [varchar](50) NULL,
+	[startTime] [varchar](50) NULL,
+	[stopTime] [varchar](50) NULL,
+	[served3gpp2MEID] [varchar](50) NULL,
+	[pDNConnectionChargingID] [varchar](50) NULL,
+	[threeGPP2UserLocationInformation] [varchar](50) NULL,
+	[servedPDPPDNAddressExt] [varchar](100) NULL,
+	[dynamicAddressFlagExt] [varchar](50) NULL,
+	[Dummy] [varchar](200) NULL,
+	[Total_upLink] [bigint] NULL,
+	[Total_DownLink] [bigint] NULL,
+	[change_date] [varchar](100) NULL,
+	[URL] [nvarchar](max) NULL,
+	[ratingGroup] [nvarchar](max) NULL,
+	[failureHand] [nvarchar](max) NULL,
+	[ConditionChange] [nvarchar](max) NULL,
+	[RuleBaseName] [nvarchar](max) NULL,
+	[TimeOfFirstUsage] [nvarchar](max) NULL,
+	[TimeOfLastUsage] [nvarchar](max) NULL,
+	[TimeUsage] [nvarchar](max) NULL,
+	[TimeOfReport] [nvarchar](max) NULL,
+	[filename] [varchar](50) NULL,
+	[Created_Date] [datetime] NULL,
+	[R_ChangeTime] [varchar](50) NULL,
+	[R_RecordOpeningTime] [varchar](50) NULL
+) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
 
 ```
 
