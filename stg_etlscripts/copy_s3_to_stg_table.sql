@@ -10,7 +10,7 @@
 /* Work in progress  */
 --#Sample scripts---------------------------------------------------------------
 copy ukdev.uk_dev_stg.stg_rrbs_uk_voice from 's3://mis-dl-uk-eu-west-2-311477489434-dev-raw/RRBS/UK/VOICE/2019/11/07/VOICE_2019110722.cdr'
-qiam_role 'arn:aws:iam::311477489434:role/Redshift-S3-uk-AllSubAccounts'
+iam_role 'arn:aws:iam::311477489434:role/Redshift-S3-uk-AllSubAccounts'
 csv
 delimiter ','; 
 
