@@ -112,8 +112,8 @@ CREATE TABLE ukdev.stg.stg_rrbs_uk_voice(
 	Failcause varchar(50) NULL,
 	Roaming_Partner_ID varchar(50) NULL,
 	FileName varchar(100) NULL,
-	CREATED_DATE datetime NULL
-) ON PRIMARY
+	Created_Date datetime default sysdate
+)
 
 
 
@@ -186,8 +186,8 @@ CREATE TABLE ukdev.stg.stg_rrbs_uk_gprs(
 	Granted_bytes_current varchar(50) NULL,
 	Roaming_Partner_ID varchar(50) NULL,
 	FileName varchar(40) NULL,
-	CREATED_DATE datetime NULL
-) ON PRIMARY
+	Created_Date datetime default sysdate
+)
 
 ---#### 3. RRBS SMS table :"stg_rrbs_uk_sms"------------------------------------
 
@@ -255,8 +255,8 @@ CREATE TABLE ukdev.stg.stg_rrbs_uk_sms(
 	Surcharge_Consumed varchar(50) NULL,
 	Roaming_Partner_ID varchar(50) NULL,
 	FileName varchar(100) NULL,
-	Created_date datetime NULL
-) ON PRIMARY
+	Created_Date datetime default sysdate
+)
 
 
 ---#### 4. RRBS TOPUP table :"stg_rrbs_uk_topup"--------------------------------
@@ -429,8 +429,8 @@ CREATE TABLE ukdev.stg.stg_rrbs_uk_topup(
 	BundleExpiryDate varchar(50) NULL,
 	recharge_date varchar(22) NOT NULL,
 	Filename varchar(50) NULL,
-	Created_date datetime NULL
-) ON PRIMARY
+	Created_Date datetime default sysdate
+)
 
 ---### stg tables for MNO source systems----------------------------------------
 ---#### MNO Voice/SMS table :"stg_mno_uk_voicesms"------------------------------
@@ -462,8 +462,8 @@ CREATE TABLE ukdev.stg.stg_mno_uk_voicesms(
 	Premium_SMS_Delivery_Flag varchar(50) NULL,
 	filename varchar(50) NULL,
 	Lyca_Number varchar(21) NULL,
-	Created_Date datetime NULL
-) ON PRIMARY
+	Created_Date datetime default sysdate
+)
 
 
 ---#### MNO GPRS table :"stg_mno_uk_gprs"---------------------------------------
@@ -495,8 +495,8 @@ CREATE TABLE ukdev.stg.stg_mno_uk_gprs(
 	Charge char(11) NULL,
 	End_user_charge varchar(50) NULL,
 	Filename varchar(50) NULL,
-	Created_Date datetime NULL
-) ON PRIMARY
+	Created_Date datetime default sysdate
+)
 
 
 ---### stg tables for LCR/SWITCH source systems---------------------------------
@@ -530,8 +530,8 @@ CREATE TABLE ukdev.stg.stg_lcr_uk_xcda(
 	clicatery int NULL,
 	info varchar(128) NULL,
 	FileName varchar(250) NULL,
-	Created_date datetime NULL
-) ON PRIMARY
+	Created_Date datetime default sysdate
+)
 
 
 ---#### LCR/SWITCH XCDR table :"stg_lcr_uk_xcdr"--------------------------------
@@ -605,8 +605,8 @@ CREATE TABLE ukdev.stg.stg_lcr_uk_xcdr(
 	clicatery int NULL,
 	dummy1 int NULL,
 	FileName varchar(250) NULL,
-	Created_date datetime NULL
-) ON PRIMARY
+	Created_Date datetime default sysdate
+)
 
 ---#### LCR/SWITCH XCDS table :"stg_lcr_uk_xcds"--------------------------------
 
@@ -646,8 +646,8 @@ CREATE TABLE ukdev.stg.stg_lcr_uk_xcds(
 	routecls int NULL,
 	costprice float NULL,
 	FileName varchar(250) NULL,
-	Created_date datetime NULL
-) ON PRIMARY
+	Created_Date datetime default sysdate
+)
 
 
 ---#### LCR/SWITCH XCDX table :"stg_lcr_uk_xcdx"--------------------------------
@@ -678,8 +678,8 @@ CREATE TABLE ukdev.stg.stg_lcr_uk_xcdx(
 	disc_party int NULL,
 	SetupCharge varchar(50) NULL,
 	FileName varchar(250) NULL,
-	Created_date datetime NULL
-) ON PRIMARY
+	Created_Date datetime default sysdate
+)
 
 
 ---### stg tables for GGSN source systems---------------------------------------
@@ -740,7 +740,7 @@ CREATE TABLE ukdev.stg.stg_ggsn_uk_gprs(
 	TimeUsage nvarchar(max) NULL,
 	TimeOfReport nvarchar(max) NULL,
 	filename varchar(50) NULL,
-	Created_Date datetime NULL,
+	Created_Date datetime default sysdate,
 	R_ChangeTime varchar(50) NULL,
 	R_RecordOpeningTime varchar(50) NULL
-) ON PRIMARY TEXTIMAGE_ON PRIMARY
+)
