@@ -10,7 +10,7 @@
 /* Script has been tested ready for review  */
 --#1 to create Redshift schemas-------------------------------------------------
 
-create schema if not exists stag authorization <redshiftadminname>;
+create schema if not exists stg authorization <redshiftadminname>;
 create schema if not exists dm authorization <redshiftadminname>;
 
 
