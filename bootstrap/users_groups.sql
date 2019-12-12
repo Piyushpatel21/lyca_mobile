@@ -16,7 +16,7 @@ create group lycagroup;
 
 --#2 to create Redshift local users with passwords------------------------------
 
-create user <username> password '<password>' in group cloudwickgroup;
+create user <username> password '<password>' in group <groupname>;
 
 
 --#3 to Grant permission to the schemas ----------------------------------------
