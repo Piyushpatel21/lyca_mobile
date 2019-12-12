@@ -1,12 +1,3 @@
-/*----------------------------------------------------------------
-	Topic	:	stg tables creation scripts
-	Author	: 	Hemanth Pasumarthi
-	Domain	:	Redshift
-	Version		Description			Date			Change By
-	---------------------------------------------------------
-	v 0.1		Initial Draft		12/12/2019		Hemanth Pasumarthi
-------------------------------------------------------------------*/
-
 /* Work in progress  */
 --# Commands to create tables---------------------------------------------------
 
@@ -15,7 +6,6 @@
 ---#### 1. RRBS Voice table :"stg_rrbs_uk_voice"--------------------------------
 
 CREATE TABLE ukdev.stg.stg_rrbs_uk_voice(
-	RRBS_VID bigint IDENTITY(1,1) NOT NULL,
 	Voice_call_cdr int NULL,
 	Network_ID varchar(10) NULL,
 	Call_Type varchar(10) NULL,
@@ -120,7 +110,6 @@ CREATE TABLE ukdev.stg.stg_rrbs_uk_voice(
 ---#### 2. RRBS GPRS table :"stg_rrbs_uk_gprs"----------------------------------
 
 CREATE TABLE ukdev.stg.stg_rrbs_uk_gprs(
-	RRBS_GID bigint IDENTITY(1,1) NOT NULL,
 	CDR_Type int NULL,
 	Network_ID int NULL,
 	Data_Feature int NULL,
@@ -192,7 +181,6 @@ CREATE TABLE ukdev.stg.stg_rrbs_uk_gprs(
 ---#### 3. RRBS SMS table :"stg_rrbs_uk_sms"------------------------------------
 
 CREATE TABLE ukdev.stg.stg_rrbs_uk_sms(
-	RRBS_SID bigint IDENTITY(1,1) NOT NULL,
 	CDR_Types varchar(40) NULL,
 	Network_ID varchar(10) NULL,
 	Call_Type varchar(5) NULL,
@@ -262,7 +250,6 @@ CREATE TABLE ukdev.stg.stg_rrbs_uk_sms(
 ---#### 4. RRBS TOPUP table :"stg_rrbs_uk_topup"--------------------------------
 
 CREATE TABLE ukdev.stg.stg_rrbs_uk_topup(
-	RRBS_TID bigint IDENTITY(1,1) NOT NULL,
 	Operation_Code varchar(10) NULL,
 	Network_ID varchar(50) NULL,
 	recharge_type varchar(10) NOT NULL,
@@ -424,10 +411,6 @@ CREATE TABLE ukdev.stg.stg_rrbs_uk_topup(
 	NUS_APPLIED varchar(50) NULL,
 	SlotId varchar(50) NULL,
 	Reserved_Bundle_Cost varchar(50) NULL,
-	Additional_Channel_Info varchar(50) NULL,
-	AutoFlag varchar(50) NULL,
-	BundleExpiryDate varchar(50) NULL,
-	recharge_date varchar(22) NOT NULL,
 	Filename varchar(50) NULL,
 	Created_Date datetime default sysdate
 )
@@ -461,7 +444,6 @@ CREATE TABLE ukdev.stg.stg_mno_uk_voicesms(
 	End_User_Charge varchar(9) NULL,
 	Premium_SMS_Delivery_Flag varchar(50) NULL,
 	filename varchar(50) NULL,
-	Lyca_Number varchar(21) NULL,
 	Created_Date datetime default sysdate
 )
 
