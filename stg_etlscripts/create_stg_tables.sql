@@ -103,7 +103,7 @@ CREATE TABLE ukdev.stg.stg_rrbs_uk_voice(
 	Roaming_Partner_ID varchar(50) NULL,
 	FileName varchar(100) NULL,
 	Created_Date datetime default sysdate
-)
+) SORTKEY (FileName);
 
 
 
@@ -176,7 +176,7 @@ CREATE TABLE ukdev.stg.stg_rrbs_uk_gprs(
 	Roaming_Partner_ID varchar(50) NULL,
 	FileName varchar(40) NULL,
 	Created_Date datetime default sysdate
-)
+) SORTKEY (FileName);
 
 ---#### 3. RRBS SMS table :"stg_rrbs_uk_sms"------------------------------------
 
@@ -244,7 +244,7 @@ CREATE TABLE ukdev.stg.stg_rrbs_uk_sms(
 	Roaming_Partner_ID varchar(50) NULL,
 	FileName varchar(100) NULL,
 	Created_Date datetime default sysdate
-)
+) SORTKEY (FileName);
 
 
 ---#### 4. RRBS TOPUP table :"stg_rrbs_uk_topup"--------------------------------
@@ -411,9 +411,9 @@ CREATE TABLE ukdev.stg.stg_rrbs_uk_topup(
 	NUS_APPLIED varchar(50) NULL,
 	SlotId varchar(50) NULL,
 	Reserved_Bundle_Cost varchar(50) NULL,
-	Filename varchar(50) NULL,
+	FileName varchar(50) NOT NULL,
 	Created_Date datetime default sysdate
-)
+) SORTKEY (FileName);
 
 ---### stg tables for MNO source systems----------------------------------------
 ---#### MNO Voice/SMS table :"stg_mno_uk_voicesms"------------------------------
@@ -443,9 +443,9 @@ CREATE TABLE ukdev.stg.stg_mno_uk_voicesms(
 	Message_Type varchar(11) NULL,
 	End_User_Charge varchar(9) NULL,
 	Premium_SMS_Delivery_Flag varchar(50) NULL,
-	filename varchar(50) NULL,
+	FileName varchar(50) NOT NULL,
 	Created_Date datetime default sysdate
-)
+) SORTKEY (FileName);
 
 
 ---#### MNO GPRS table :"stg_mno_uk_gprs"---------------------------------------
@@ -476,9 +476,9 @@ CREATE TABLE ukdev.stg.stg_mno_uk_gprs(
 	Rate_Class char(6) NULL,
 	Charge char(11) NULL,
 	End_user_charge varchar(50) NULL,
-	Filename varchar(50) NULL,
+	FileName varchar(50) NOT NULL,
 	Created_Date datetime default sysdate
-)
+) SORTKEY (FileName);
 
 
 ---### stg tables for LCR/SWITCH source systems---------------------------------
@@ -511,9 +511,9 @@ CREATE TABLE ukdev.stg.stg_lcr_uk_xcda(
 	cost_a2 float NULL,
 	clicatery int NULL,
 	info varchar(128) NULL,
-	FileName varchar(250) NULL,
+	FileName varchar(250) NOT NULL,
 	Created_Date datetime default sysdate
-)
+) SORTKEY (FileName);
 
 
 ---#### LCR/SWITCH XCDR table :"stg_lcr_uk_xcdr"--------------------------------
@@ -586,9 +586,9 @@ CREATE TABLE ukdev.stg.stg_lcr_uk_xcdr(
 	fffflag int NULL,
 	clicatery int NULL,
 	dummy1 int NULL,
-	FileName varchar(250) NULL,
+	FileName varchar(250) NOT NULL,
 	Created_Date datetime default sysdate
-)
+) SORTKEY (FileName);
 
 ---#### LCR/SWITCH XCDS table :"stg_lcr_uk_xcds"--------------------------------
 
@@ -627,9 +627,9 @@ CREATE TABLE ukdev.stg.stg_lcr_uk_xcds(
 	currcode varchar(20) NULL,
 	routecls int NULL,
 	costprice float NULL,
-	FileName varchar(250) NULL,
+	FileName varchar(250) NOT NULL,
 	Created_Date datetime default sysdate
-)
+) SORTKEY (FileName);
 
 
 ---#### LCR/SWITCH XCDX table :"stg_lcr_uk_xcdx"--------------------------------
@@ -659,9 +659,9 @@ CREATE TABLE ukdev.stg.stg_lcr_uk_xcdx(
 	cause int NULL,
 	disc_party int NULL,
 	SetupCharge varchar(50) NULL,
-	FileName varchar(250) NULL,
+	FileName varchar(250) NOT NULL,
 	Created_Date datetime default sysdate
-)
+) SORTKEY (FileName);
 
 
 ---### stg tables for GGSN source systems---------------------------------------
@@ -721,8 +721,8 @@ CREATE TABLE ukdev.stg.stg_ggsn_uk_gprs(
 	TimeOfLastUsage nvarchar(max) NULL,
 	TimeUsage nvarchar(max) NULL,
 	TimeOfReport nvarchar(max) NULL,
-	filename varchar(50) NULL,
+	FileName varchar(50) NOT NULL,
 	Created_Date datetime default sysdate,
 	R_ChangeTime varchar(50) NULL,
 	R_RecordOpeningTime varchar(50) NULL
-)
+) SORTKEY (FileName);
