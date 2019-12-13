@@ -24,3 +24,19 @@ from stl_load_errors
 order by query desc
 limit 20;
 
+
+---#Sample copy script to add coloumn with file name----------------------------
+create table my_table (
+  id integer,
+  name varchar(50) NULL
+  email varchar(50) NULL,
+);
+
+COPY {table_name} FROM 's3://file-key' 
+WITH CREDENTIALS 'aws_access_key_id=xxxx;aws_secret_access_key=xxxxx' 
+DATEFORMAT 'auto' TIMEFORMAT 'auto' MAXERROR 0 ACCEPTINVCHARS '*' DELIMITER '\t' GZIP;
+
+ALTER TABLE my_table ADD COLUMN processed_file_name varchar(256) NOT NULL DEFAULT '{file-name}';
+
+
+
