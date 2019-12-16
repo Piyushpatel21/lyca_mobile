@@ -1,12 +1,3 @@
-/*----------------------------------------------------------------
-	Topic	:	Users and Groups creation scripts
-	Author	: 	Hemanth Pasumarthi
-	Domain	:	Redshift
-	Version		Description			Date			Change By
-	---------------------------------------------------------
-	v 0.1		Initial Draft		12/12/2019		Hemanth Pasumarthi
-------------------------------------------------------------------*/
-
 /* Script has been tested ready for review  */
 --#1 to create Redshift local groups for Cloudwick and Lycamobile teams---------
 
