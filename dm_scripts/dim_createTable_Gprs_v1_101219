@@ -1,0 +1,80 @@
+/*----------------------------------------------------------------
+	Topic	:	Dimension table creation scripts
+	Author	: 	Shubhajit Saha
+	Domain	:	GPRS
+	Version		Description			Date			Change By
+	---------------------------------------------------------
+	v 0.1		Initial Draft		06/12/2019		Shubhajit
+------------------------------------------------------------------*/
+
+
+--#1------------------------------
+
+CREATE TABLE IF NOT EXISTS
+DM.DIM_UK_RRBS_GPRS_CDR_TYPES
+(
+sk_cdr_type int IDENTITY (1,1),
+cdr_type_id int sortkey,
+cdr_type_val varchar(100),
+valid_from date,
+vaid_to date DEFAULT '9999-12-31',
+is_recent int
+)
+DISTSTYLE ALL;
+
+--#2------------------------------
+
+CREATE TABLE IF NOT EXISTS
+DM.DIM_UK_RRBS_GPRS_NETWORK_TYPE
+(
+sk_cdr_type int IDENTITY(1,1),
+network_type_id int sortkey,
+network_type_val varchar(100),
+valid_from date,
+vaid_to date DEFAULT '9999-12-31',
+is_recent int
+)
+DISTSTYLE ALL;
+
+--#3------------------------------
+
+CREATE TABLE IF NOT EXISTS
+DM.DIM_UK_RRBS_GPRS_DATA_FEATURE
+(
+sk_data_type int IDENTITY(1,1),
+data_type_id int sortkey,
+data_type_val varchar(100),
+valid_from date,
+vaid_to date DEFAULT '9999-12-31',
+is_recent int
+)
+DISTSTYLE ALL;
+
+--#4------------------------------
+
+CREATE TABLE IF NOT EXISTS
+DM.DIM_UK_RRBS_GPRS_SERVICE_TYPE
+(
+sk_service_type int IDENTITY(1,1),
+service_type_id int sortkey,
+service_type_val varchar(100),
+valid_from date,
+vaid_to date  DEFAULT '9999-12-31',
+is_recent int
+)
+DISTSTYLE ALL;
+
+--#5------------------------------
+
+CREATE TABLE IF NOT EXISTS
+DM.DIM_UK_RRBS_GPRS_ROAM_FLAG
+(
+sk_roam_flag int IDENTITY(1,1),
+roam_flag_id int sortkey,
+roam_flag_val varchar(100),
+valid_from date,
+vaid_to date  DEFAULT '9999-12-31',
+is_recent int
+)
+DISTSTYLE ALL;
+
