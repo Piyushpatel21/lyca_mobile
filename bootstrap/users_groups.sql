@@ -12,8 +12,8 @@ create user <username> password '<password>' in group <groupname>;
 
 --#3 to Grant permission to the schemas ----------------------------------------
 
-grant all on schema stg to group cloudwickgroup;
-grant all on schema dm to group cloudwickgroup;
+grant all on schema uk_rrbs_stg to group cloudwickgroup;
+grant all on schema uk_rrbs_dm to group cloudwickgroup;
 
 --#4 to Grant permission to the all databases ----------------------------------
 
