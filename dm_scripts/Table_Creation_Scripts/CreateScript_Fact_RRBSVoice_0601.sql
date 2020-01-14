@@ -30,7 +30,11 @@ CREATE TABLE IF NOT EXISTS uk_rrbs_dm.fact_rrbs_voice
 	,granted_money NUMERIC(18,0)   ENCODE zstd
 	,call_duration INTEGER   ENCODE zstd
 	,chargeable_used_time INTEGER   ENCODE zstd
-	,call_date TIMESTAMP WITHOUT TIME ZONE   ENCODE RAW
+	,call_date TIMESTAMP WITHOUT TIME ZONE   ENCODE ZSTD
+	/* 080120-addition: adding derived columns*/
+	,call_date_dt DATE ENCODE RAW
+	,call_date_num INT ENCODE ZSTD
+	/* end of 080120-addition*/
 	,call_termination_time TIMESTAMP WITHOUT TIME ZONE   ENCODE zstd
 	,initial_account_balance NUMERIC(10,4)   ENCODE zstd
 	,talk_charge NUMERIC(10,4)   ENCODE zstd
@@ -103,7 +107,7 @@ CREATE TABLE IF NOT EXISTS uk_rrbs_dm.fact_rrbs_voice
 DISTSTYLE KEY
  DISTKEY (imsi)
  SORTKEY (
-	call_date
+	call_date_dt
 	, network_id
 	, roam_flag
 	, call_type

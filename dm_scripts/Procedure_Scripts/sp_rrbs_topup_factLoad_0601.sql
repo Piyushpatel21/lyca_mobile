@@ -155,6 +155,12 @@ AS $$
 ,account_id
 ,sim_number
 ,cdr_time_stamp
+
+/* 080120-addition: adding derived columns */
+,	cdr_dt	
+,	cdr_dt_num 
+/* end of 080120-addition */
+
 ,reservation
 ,discount_promo_code
 ,discount_promo_amount
@@ -240,7 +246,7 @@ AS $$
 ,NULLIF(recharge_type,''):: smallint
 ,NULLIF(msisdn,''):: bigint
 ,NULLIF(imsi,''):: bigint
-,NULLIF(account_pin_number,''):: bigint
+,account_pin_number
 ,NULLIF(voucher_card_id,''):: int
 ,special_topup_amount::decimal(10,4)
 ,transaction_id 
@@ -318,9 +324,15 @@ AS $$
 ,deptid 
 ,NULLIF(bundle_catery,''):: smallint
 ,NULLIF(plan_validity_days,''):: smallint
-,NULLIF(account_id,''):: int
+,NULLIF(account_id,''):: bigint
 ,NULLIF(sim_number,''):: bigint
 ,to_timestamp(nullif(cdr_time_stamp,0),'yyyymmddhhmiss') 
+
+/* 080120-addition: adding derived columns*/
+,to_date(SUBSTRING(NULLIF(NULLIF(cdr_time_stamp, '0'), ''), 1, 8), 'yyyymmdd') AS cdr_dt	
+,to_number((SUBSTRING(NULLIF(NULLIF(cdr_time_stamp, '0'), ''), 1, 8)), '999999999') AS cdr_dt_num			
+/* end of 080120-addition*/
+
 ,NULLIF(reservation,''):: smallint
 ,discount_promo_code 
 ,NULLIF(discount_promo_amount,''):: decimal(10,4)

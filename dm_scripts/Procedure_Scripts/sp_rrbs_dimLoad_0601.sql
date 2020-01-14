@@ -25,11 +25,11 @@ AS $$
                 v_dim_table_name   VARCHAR(50) ;--DEFAULT 'test_dim_rrbs_sms_cdrtype';
                 v_dim_col_id       VARCHAR(50);--dim table id column name
                 v_dim_col_val      VARCHAR(50);--dim table val column name
-                v_stage_schema     VARCHAR(10) DEFAULT 'stg';
-                v_dm_schema        VARCHAR(10) DEFAULT 'dm';
-                sql1               VARCHAR(500);
-                sql2               VARCHAR(500);
-               sql3               VARCHAR(500);
+                v_stage_schema     VARCHAR(20) DEFAULT 'uk_rrbs_stg';
+                v_dm_schema        VARCHAR(20) DEFAULT 'uK_rrbs_dm';
+                sql1               VARCHAR(1000);
+                sql2               VARCHAR(1000);
+               sql3               VARCHAR(1000);
         BEGIN
                 SET search_path TO uk_rrbs_dm;
                 RAISE NOTICE 'Procedure body begins here';
@@ -44,12 +44,19 @@ AS $$
                 
 				
                 /* fetching the dim column id, & dim coloumn value*/
-                sql1 = 'select  "column"  from pg_catalog.pg_table_def where tablename = '
+               /* sql1 = 'select  "column"  from pg_catalog.pg_table_def where tablename = '
                 || QUOTE_LITERAL(v_dim_table_name)
                 || ' and "column" like ''%_id'' '
 --				||QUOTE_IDENT('%_id') 
 				||' and "column"<>'
+				||QUOTE_LITERAL('batch_id')*/
+				
+				 sql1 = 'select  "column"  from pg_catalog.pg_table_def where tablename = '
+                || QUOTE_LITERAL(v_dim_table_name)
+                || ' and "column" like ''%_id'' '
+				||' and "column"<>'
 				||QUOTE_LITERAL('batch_id')
+				|| ' and "column" not like ''sk_%'' '
 			;
 			
                 EXECUTE sql1 INTO v_dim_col_id;

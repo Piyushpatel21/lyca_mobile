@@ -27,6 +27,12 @@ CREATE TABLE IF NOT EXISTS uk_rrbs_dm.fact_rrbs_sms
 	,free_sms_account_balance INTEGER   ENCODE zstd
 	,instance_id_session_id VARCHAR(20)   ENCODE zstd
 	,msg_date TIMESTAMP WITHOUT TIME ZONE   ENCODE RAW
+	
+	/* 080120-addition: adding derived columns*/
+	,msg_date_dt DATE ENCODE RAW
+	,msg_date_num INT ENCODE ZSTD
+	/* end of 080120-addition*/
+	
 	,account_id INTEGER   ENCODE zstd
 	,dept_id INTEGER   ENCODE zstd
 	,free_zone_id INTEGER   ENCODE zstd
@@ -70,7 +76,7 @@ CREATE TABLE IF NOT EXISTS uk_rrbs_dm.fact_rrbs_sms
 DISTSTYLE KEY
  DISTKEY (imsi)
  SORTKEY (
-	msg_date
+	msg_date_dt
 	, network_id
 	, cdr_types
 	, roam_flag

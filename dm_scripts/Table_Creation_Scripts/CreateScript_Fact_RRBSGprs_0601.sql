@@ -23,9 +23,19 @@ total_used_bytes	BIGINT encode zstd ,
 chargeable_used_bytes	BIGINT encode zstd ,
 uploaded_bytes	BIGINT encode zstd ,
 downloaded_bytes	BIGINT encode zstd ,
+
 data_connection_time	timestamp encode zstd ,
 data_connection_dt	date encode raw , -- derived from data_connection_time
+/* 080120-addition: adding derived columns*/	
+data_connection_dt_num INT ENCODE ZSTD,
+/* end of 080120-addition*/
+
 data_termination_time	timestamp encode zstd ,
+/* 080120-addition: adding derived columns*/	
+data_termination_dt	date encode raw , -- derived from data_termination_time
+data_termination_dt_num INT ENCODE ZSTD,	-- derived from data_termination_time
+/* end of 080120-addition*/
+
 time_duration	Int encode zstd ,
 initial_account_balance	decimal(20,6) encode zstd ,
 data_charge	decimal(20,6) encode zstd ,
