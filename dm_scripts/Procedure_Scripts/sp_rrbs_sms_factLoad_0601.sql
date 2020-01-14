@@ -23,7 +23,7 @@ AS $$
 						 /*SELECT top 1 filename into v_dummy_1 FROM stg.stage_abc 
 						WHERE filename = v_filename ;
 						GET DIAGNOSTICS v_check_stage_count := ROW_COUNT;*/
-						SELECT COUNT(1) INTO v_check_stage_count FROM stg.stg_rrbs_uk_sms WHERE filename = v_filename ;
+						SELECT COUNT(1) INTO v_check_stage_count FROM uk_rrbs_stg.stg_rrbs_sms WHERE filename = v_filename ;
 				END;
 				
 				BEGIN
@@ -94,7 +94,13 @@ AS $$
 	,balance						
 	,free_sms_account_balance													
 	,instance_id_session_id												
-	,msg_date						
+	,msg_date	
+
+/* 080120-addition: adding derived columns*/
+	,msg_date_dt					
+	,msg_date_num 					
+/* end of 080120-addition*/
+	
 	,account_id					
 	,dept_id					
 	,free_zone_id						
@@ -161,6 +167,12 @@ AS $$
 ,NULLIF(free_sms_account_balance,''):: INTEGER 
 ,instance_id_session_id	--VARCHAR(20)	
 ,to_timestamp(msg_date, 'YYYYMMDDHHMISS')	
+
+/* 080120-addition: adding derived columns*/
+		,to_date(substring ( msg_date,1,8),'yyyymmdd')    		 					
+		,to_number(substring ( msg_date,1,8), '999999999')		
+/* end of 080120-addition*/
+
 ,account_id:: INTEGER 
 ,dept_id:: INTEGER 
 ,NULLIF(free_zone_id,''):: INTEGER 
@@ -174,7 +186,7 @@ AS $$
 ,NULLIF(local_roam_country_code,''):: SMALLINT 
 ,to_timestamp(cdr_time_stamp, 'YYYYMMDDHHMISS'	)
 ,NULLIF(bucket_type,'')::	SMALLINT	
-,NULLIF(initial_free_units,''):: decimal(20,4) 
+,NULLIF(intial_free_units,''):: decimal(20,4) 
 ,NULLIF(subscriber_type,'')::	SMALLINT	
 ,NULLIF(sub_acct_id,''):: BIGINT 
 ,family_id	--VARCHAR(50)	
@@ -201,7 +213,7 @@ AS $$
 ,v_batchid
 ,CREATED_DATE        
 												FROM
-        										stg.stg_rrbs_uk_sms srus														
+        										uk_rrbs_stg.stg_rrbs_sms srus														
 												WHERE
 												FILENAME = v_filename;
 										/*	Take count of records inserted into Fact table	*/        

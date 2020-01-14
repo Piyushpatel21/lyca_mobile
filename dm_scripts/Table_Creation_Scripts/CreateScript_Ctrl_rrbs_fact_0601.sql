@@ -10,5 +10,6 @@ CREATE TABLE IF NOT EXISTS uk_rrbs_dm.ctrl_rrbs_fact
 	,load_end_time TIMESTAMP WITHOUT TIME ZONE  DEFAULT ('now'::text)::timestamp without time zone ENCODE lzo
 )
 DISTSTYLE ALL
+sortkey(batch_id)
 ;
 

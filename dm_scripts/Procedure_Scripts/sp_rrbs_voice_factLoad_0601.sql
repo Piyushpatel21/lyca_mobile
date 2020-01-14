@@ -100,6 +100,10 @@ Granted_Money                  ,
 call_duration                  ,
 Chargeable_Used_Time           ,
 Call_date                      ,
+/* 080120-addition: adding derived columns*/
+call_date_dt					,
+call_date_num 					,
+/* end of 080120-addition*/
 Call_termination_time          ,
 Initial_Account_balance        ,
 Talk_charge                    ,
@@ -200,6 +204,10 @@ CREATED_DATE
         NULLIF(call_duration,'') ::integer                     ,
         NULLIF(Chargeable_Used_Time,'') ::integer              ,
         TO_TIMESTAMP(Call_date , 'YYYYMMDDHHMISS')             ,
+/* 080120-addition: adding derived columns*/
+to_date(SUBSTRING(NULLIF(NULLIF(call_date, '0'), ''), 1, 8), 'yyyymmdd') AS call_date_dt	,		
+to_number((SUBSTRING(NULLIF(NULLIF(call_date, '0'), ''), 1, 8)), '999999999') AS call_date_num			,		
+/* end of 080120-addition*/
         TO_TIMESTAMP(Call_termination_time , 'YYYYMMDDHHMISS') ,
         Initial_Account_balance                                ,
         Talk_charge                                            ,

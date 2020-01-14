@@ -23,7 +23,7 @@ AS $$
 						 /*SELECT top 1 filename into v_dummy_1 FROM stg.stage_abc 
 						WHERE filename = v_filename ;
 						GET DIAGNOSTICS v_check_stage := ROW_COUNT;*/
-						SELECT COUNT(1) INTO v_check_stage FROM stg.stg_rrbs_uk_gprs WHERE filename = v_filename ;
+						SELECT COUNT(1) INTO v_check_stage FROM uk_rrbs_stg.stg_rrbs_gprs WHERE filename = v_filename ;
 				END;
 				
 				BEGIN
@@ -93,7 +93,16 @@ cdr_type
 	,downloaded_bytes
 	,data_connection_time
 	,data_connection_dt
+/* 080120-addition: adding derived columns*/	
+	,data_connection_dt_num
+/* end of 080120-addition*/	
+	
 	,data_termination_time
+/* 080120-addition: adding derived columns*/	
+	,data_termination_dt
+	,data_termination_dt_num
+/* end of 080120-addition*/	
+
 	,time_duration
 	,initial_account_balance
 	,data_charge
@@ -140,7 +149,7 @@ cdr_type
 	,created_date
 															                   
 														)
-												SELECT
+SELECT
 		
 cdr_type::SMALLINT
 	,network_id::SMALLINT
@@ -165,7 +174,16 @@ cdr_type::SMALLINT
 	,downloaded_bytes::BIGINT
 	,to_timestamp(NULLIF(NULLIF(data_connection_time, '0'), ''), 'yyyymmddhhmiss') AS data_connection_time
 	,to_date(SUBSTRING(NULLIF(NULLIF(data_connection_time, '0'), ''), 1, 8), 'yyyymmdd') AS data_connection_dt
-	,to_timestamp(NULLIF(NULLIF(data_termination_time, '0'), ''), 'yyyymmddhhmiss')
+/* 080120-addition: adding derived columns*/	
+	
+	,to_number((SUBSTRING(NULLIF(NULLIF(data_connection_time, '0'), ''), 1, 8)), '999999999') AS data_connection_dt_num
+/* end of 080120-addition*/	
+	
+	,to_timestamp(NULLIF(NULLIF(data_termination_time, '0'), ''), 'yyyymmddhhmiss') AS data_termination_time
+/* 080120-addition: adding derived columns*/
+	,to_date(SUBSTRING(NULLIF(NULLIF(data_termination_time, '0'), ''), 1, 8), 'yyyymmdd') AS data_termination_dt	
+	,to_number((SUBSTRING(NULLIF(NULLIF(data_termination_time, '0'), ''), 1, 8)), '999999999') AS data_termination_dt_num	
+/* end of 080120-addition*/		
 	,NULLIF(time_duration, '')::INT
 	,initial_account_balance::DECIMAL(20, 6)
 	,data_charge::DECIMAL(20, 6)
@@ -212,7 +230,7 @@ cdr_type::SMALLINT
 	,created_date		
        
 FROM
-        stg.stg_rrbs_uk_gprs sruv
+        uk_rrbs_stg.stg_rrbs_gprs sruv
 														
 												WHERE
 														FILENAME = v_filename;
