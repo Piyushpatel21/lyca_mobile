@@ -1,10 +1,4 @@
 /* Work in progress  */
---#Sample scripts---------------------------------------------------------------
-copy ukdev.uk_dev_stg.stg_rrbs_uk_voice from 's3://mis-dl-uk-eu-west-2-311477489434-dev-raw/RRBS/UK/VOICE/2019/11/07/VOICE_2019110722.cdr'
-iam_role 'arn:aws:iam::311477489434:role/Redshift-S3-uk-AllSubAccounts'
-csv
-delimiter ','; 
-
 
 ---#sample script to see if there is an error ----------------------------------
 select query, filename as filename,line_number as line, 
@@ -25,57 +19,117 @@ create table my_table (
 
 COPY {table_name} FROM 's3://file-key' 
 WITH CREDENTIALS 'aws_access_key_id=xxxx;aws_secret_access_key=xxxxx' 
-DATEFORMAT 'auto' TIMEFORMAT 'auto' MAXERROR 0 ACCEPTINVCHARS '*' DELIMITER '\t' GZIP;
+csv
+emptyasnull
+blanksasnull
+DELIMITER ',' ;
 
+ALTER TABLE my_table ADD COLUMN creation_date varchar(256) NOT NULL DEFAULT ;
 ALTER TABLE my_table ADD COLUMN processed_file_name varchar(256) NOT NULL DEFAULT '{file-name}';
 
 
 
 
----##Sample script to fix the extra coloumn issue ------------------------------
-copy ukdev.stg.temp_stg_VOICE_2019110723 from 's3://mis-dl-uk-eu-west-2-311477489434-dev-raw/RRBS/UK/VOICE/2019/11/07/VOICE_2019110723.cdr'
-iam_role 'arn:aws:iam::311477489434:role/Redshift-S3-uk-AllSubAccounts'
-delimiter ','
-removequotes
-emptyasnull
-blanksasnull
-maxerror 5;
+---## Script to ingest sep month S3 RRBS SMS folder---------------------------------------
 
----## Script to ingest complete S3 folder---------------------------------------
-
-copy ukdev.stg.stg_rrbs_uk_voice from 's3://mis-dl-uk-eu-west-2-311477489434-dev-raw/RRBS/UK/VOICE/'
+copy uk_rrbs_stg.stg_rrbs_sms from 's3://mis-dl-uk-eu-west-2-311477489434-dev-raw/RRBS/UK/SMS/2019/09'
 iam_role 'arn:aws:iam::311477489434:role/Redshift-S3-uk-AllSubAccounts'
 csv
+emptyasnull
+blanksasnull
 delimiter ',';
 
----## cdr_time_stamp validation which is used to create filename=---------------
-select cdr_time_stamp from ukdev.stg.stg_rrbs_uk_voice limit 50;
-
+---##Check the total table count and count for each filename-------------------
+select count(1) from uk_rrbs_stg.stg_rrbs_sms;
+select filename,count(1) from uk_rrbs_stg.stg_rrbs_sms group by filename
+order by filename;
 
 ---##Sample script to add new coloumns and update filename coloum ---------------
-ALTER TABLE ukdev.stg.stg_rrbs_uk_voice ADD COLUMN FileName varchar(50) NOT NULL DEFAULT 'nofilename';
-UPDATE ukdev.stg.stg_rrbs_uk_voice set FileName = concat('VOICE_',concat(substring(cdr_time_stamp,0,11),'.cdr')) where FileName='nofilename';
-ALTER TABLE ukdev.stg.stg_rrbs_uk_voice ADD COLUMN Created_Date datetime default sysdate;
+ALTER TABLE uk_rrbs_stg.stg_rrbs_sms ADD COLUMN created_date datetime default sysdate;
+ALTER TABLE uk_rrbs_stg.stg_rrbs_sms ADD COLUMN filename varchar(50) NOT NULL DEFAULT 'nofilename';
+UPDATE uk_rrbs_stg.stg_rrbs_sms set filename = concat('SMS_',concat(substring(cdr_time_stamp,0,11),'.cdr')) where FileName='nofilename';
 
 ---##Sample script to alter table with sortkey ---------------
-ALTER TABLE ukdev.stg.stg_rrbs_uk_voice alter SORTKEY (FileName);
+ALTER TABLE uk_rrbs_stg.stg_rrbs_sms alter SORTKEY (filename);
+vacuum;
+analyze;
+
+
+---##Script to ingest sep month RRBS GPRS folder---------------------------------------
+copy uk_rrbs_stg.stg_rrbs_gprs from 's3://mis-dl-uk-eu-west-2-311477489434-dev-raw/RRBS/UK/GPRS/2019/09'
+iam_role 'arn:aws:iam::311477489434:role/Redshift-S3-uk-AllSubAccounts'
+csv
+emptyasnull
+blanksasnull
+delimiter ',';
+
+---##Check the total table count and count for each filename-------------------
+select filename,count(1) from uk_rrbs_stg.stg_rrbs_gprs group by filename
+order by filename;
+
+---##Sample script to add new coloumns and update filename coloum ---------------
+
+ALTER TABLE uk_rrbs_stg.stg_rrbs_gprs ADD COLUMN created_date datetime default sysdate;
+ALTER TABLE uk_rrbs_stg.stg_rrbs_gprs ADD COLUMN filename varchar(50) NOT NULL DEFAULT 'nofilename';
+UPDATE uk_rrbs_stg.stg_rrbs_gprs set filename = concat('GPRS_',concat(substring(cdr_time_stamp,0,11),'.cdr')) where filename = 'nofilename';
+
+---##Sample script to alter table with sortkey ---------------
+
+ALTER TABLE uk_rrbs_stg.stg_rrbs_gprs alter SORTKEY (filename);
+vacuum;
+analyze; 
+
+
+---##Script to ingest sep month RRBS Voice folder---------------------------------------
+copy uk_rrbs_stg.stg_rrbs_voice from 's3://mis-dl-uk-eu-west-2-311477489434-dev-raw/RRBS/UK/VOICE/2019/09'
+iam_role 'arn:aws:iam::311477489434:role/Redshift-S3-uk-AllSubAccounts'
+csv
+emptyasnull
+blanksasnull
+delimiter ',';
+
+---##Check the total table count and count for each filename-------------------
+select filename,count(1) from uk_rrbs_stg.stg_rrbs_voice group by filename
+order by filename;
+
+---##Sample script to add new coloumns and update filename coloum ---------------
+
+ALTER TABLE uk_rrbs_stg.stg_rrbs_voice ADD COLUMN created_date datetime default sysdate;
+ALTER TABLE uk_rrbs_stg.stg_rrbs_voice ADD COLUMN filename varchar(50) NOT NULL DEFAULT 'nofilename';
+UPDATE uk_rrbs_stg.stg_rrbs_voice set filename = concat('VOICE_',concat(substring(Call_date,0,11),'.cdr')) where filename = 'nofilename';
+
+---##Sample script to alter table with sortkey ---------------
+
+ALTER TABLE uk_rrbs_stg.stg_rrbs_voice alter SORTKEY (filename);
+vacuum;
+analyze; 
+
+---##Script to ingest sep month RRBS topup folder---------------------------------------
+copy uk_rrbs_stg.stg_rrbs_topup from 's3://mis-dl-uk-eu-west-2-311477489434-dev-raw/RRBS/UK/TOPUP/2019/09'
+iam_role 'arn:aws:iam::311477489434:role/Redshift-S3-uk-AllSubAccounts'
+csv
+emptyasnull
+blanksasnull;
+
+---##Check the total table count and count for each filename-------------------
+select filename,count(*) from uk_rrbs_stg.stg_rrbs_topup group by filename
+order by filename;
+
+---##Sample script to add new coloumns and update filename coloum ---------------
+
+ALTER TABLE uk_rrbs_stg.stg_rrbs_topup ADD COLUMN created_date datetime default sysdate;
+ALTER TABLE uk_rrbs_stg.stg_rrbs_topup ADD COLUMN filename varchar(50) NOT NULL DEFAULT 'nofilename';
+UPDATE uk_rrbs_stg.stg_rrbs_topup set filename = concat('TOPUP_',concat(substring(cdr_time_stamp,0,11),'.cdr')) where FileName='nofilename';
+
+---##Sample script to alter table with sortkey ---------------
+ALTER TABLE uk_rrbs_stg.stg_rrbs_topup alter SORTKEY (filename);
+vacuum;
+analyze;
+
 
 ---### Issues found during the ingestion 
 
----1.-###S3 data from 's3://mis-dl-uk-eu-west-2-311477489434-dev-raw/RRBS/UK/VOICE/2019/11/07' has data from future dates
-cdr_time_stamp= 2019110800* = 2,549 records
-cdr_time_stamp= 2019110801* = 216 records
-cdr_time_stamp= 2019111302* = 24 records
-cdr_time_stamp= 2019111303* = 7 records
-
----### Removed those rows using the following commands 
-delete from ukdev.stg.stg_rrbs_uk_voice where FileName='VOICE_2019110800.cdr';
-delete from ukdev.stg.stg_rrbs_uk_voice where FileName='VOICE_2019110801.cdr';
-delete from ukdev.stg.stg_rrbs_uk_voice where FileName='VOICE_2019111302.cdr';
-delete from ukdev.stg.stg_rrbs_uk_voice where FileName='VOICE_2019111303.cdr';
-
-
----2.-###S3 data has same file names in two different folders only in RRBS-GPRS--
+--1. Same filename in two different folders only with RRBS-GPRS and this is because of split files recieved from client
 /* e.g 
 RRBS/UK/GPRS/2019/11/06/GPRS_2019110623.cdr
 RRBS/UK/GPRS/2019/11/07/GPRS_2019110623.cdr
@@ -85,18 +139,6 @@ RRBS/UK/GPRS/2019/11/07/GPRS_2019110623.cdr
 RRBS/UK/GPRS/2019/11/05/GPRS_2019110523.cdr
 RRBS/UK/GPRS/2019/11/06/GPRS_2019110523.cdr
 */
-
-/*
-RRBS/UK/GPRS/2019/11/03/GPRS_2019110323.cdr
-RRBS/UK/GPRS/2019/11/04/GPRS_2019110323.cdr
-*/
-/*
-RRBS/UK/GPRS/2019/11/02/GPRS_2019110223.cdr
-RRBS/UK/GPRS/2019/11/03/GPRS_2019110223.cdr
-*/
-/*
-RRBS/UK/GPRS/2019/11/01/GPRS_2019110123.cdr
-RRBS/UK/GPRS/2019/11/02/GPRS_2019110123.cdr
-*/
+-- 2. Extra column found in TOPUP_20192402.cdr file and mannual processing is done for the file
 
 
