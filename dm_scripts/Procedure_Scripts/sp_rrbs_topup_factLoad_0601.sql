@@ -1,6 +1,6 @@
-CREATE OR REPLACE PROCEDURE uk_rrbs_dm.sp_rrbs_topup_factLoad(p_filename "varchar")
+CREATE OR REPLACE PROCEDURE uk_rrbs_dm.sp_rrbs_topup_factload(p_filename "varchar")
 	LANGUAGE plpgsql
-AS $$ 	 	 	
+AS $$ 	 	 	 	
         DECLARE
                 v_filename 			VARCHAR(100);
                 v_batchid 			int4;                
@@ -345,7 +345,8 @@ AS $$
 ,NULLIF(parent_bundle_code,''):: int
 ,NULLIF(bundle_unit_type,''):: smallint
 ,to_date(nullif(contract_start_date,''),'dd-mm-yyyy') 
-,to_date(nullif(contract_end_date,''),'dd-mm-yyyy') 
+--,to_date(nullif(contract_end_date,''),'dd-mm-yyyy') 
+,contract_end_date  -- modified due to incoming bad data in date field
 ,NULLIF(flh_flag,''):: smallint
 ,exibs_retailer_transaction_id 
 ,NULLIF(operation_flag,''):: smallint
@@ -453,5 +454,5 @@ AS $$
                 RAISE NOTICE 'error message SQLSTATE %', SQLSTATE;
         END;
         
-		   $$
+		    $$
 ;
