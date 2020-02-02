@@ -6,7 +6,7 @@ cat <<EOF > creds.tpl
 aws_access_key_id = {{ AWS_ACCESS_KEY_ID }}
 aws_secret_access_key = {{ AWS_SECRET_ACCESS_KEY }}
 EOF
-cat <<EOF > ~/.aws/config
+cat <<EOF > config.tpl
 [profile mis_code_commit]
 role_arn = arn:aws:iam::869841577715:role/OrganizationAccountCodeCommit
 source_profile = mis_lycamobile
@@ -14,6 +14,7 @@ region = {{ AWS_REGION }}
 EOF
 
 envtpl  < creds.tpl > ~/.aws/credentials
+envtpl  < config.tpl > ~/.aws/config
 
 git config --global credential.helper '!aws --profile mis_code_commit codecommit credential-helper $@'
 git config --global credential.UseHttpPath true
