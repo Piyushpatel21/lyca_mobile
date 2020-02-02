@@ -21,4 +21,5 @@ git config --global user.name "Git CI/CD"
 
 export branch=$(git rev-parse --abbrev-ref HEAD)
 git remote add code_comit https://git-codecommit.eu-west-2.amazonaws.com/v1/repos/lyca-etl-movements
+git remote -v
 git push code_commit $branch
