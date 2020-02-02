@@ -30,3 +30,5 @@ code_commit:
     - bash build/gitlab.sh
   only:
     - master
+  tags:
+    - docker
