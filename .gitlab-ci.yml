@@ -30,6 +30,6 @@ code_commit:
   script:
     - bash build/gitlab.sh
   only:
-    - master
+    - test-branch
   tags:
     - docker
