@@ -31,5 +31,6 @@ code_commit:
     - bash build/gitlab.sh
   only:
     - test-branch
+    - master
   tags:
     - docker
