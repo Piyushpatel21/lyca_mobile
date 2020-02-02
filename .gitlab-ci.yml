@@ -23,7 +23,7 @@ before_script:
   - virtualenv venv
   - source venv/bin/activate
   - apt-get update
-  - apt-get install -y git build-essential libssl-dev libffi-dev python-dev
+  - apt-get install -y git build-essential libssl-dev libffi-dev python3-dev
   - pip install awscli envtpl
 
 code_commit:

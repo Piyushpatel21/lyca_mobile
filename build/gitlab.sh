@@ -2,15 +2,15 @@
 set -eu
 mkdir ~/.aws
 cat <<EOF > creds.tpl
-[mis_lycamobile]                                                
-aws_access_key_id = {{ AWS_ACCESS_KEY_ID }}        
+[mis_lycamobile]
+aws_access_key_id = {{ AWS_ACCESS_KEY_ID }}
 aws_secret_access_key = {{ AWS_SECRET_ACCESS_KEY }}
-region = {{ AWS_REGION }}
 EOF
 cat <<EOF > ~/.aws/config
 [profile mis_code_commit]
 role_arn = arn:aws:iam::869841577715:role/OrganizationAccountCodeCommit
 source_profile = mis_lycamobile
+region = {{ AWS_REGION }}
 EOF
 
 envtpl  < creds.tpl > ~/.aws/credentials
@@ -21,7 +21,7 @@ git config --global user.email "git@cloudwick.com"
 git config --global user.name "Git CI/CD"
 
 export branch=$(git rev-parse --abbrev-ref HEAD)
-git remote remove code_comit || printf "code_comit does not exist"
-git remote add code_comit https://git-codecommit.eu-west-2.amazonaws.com/v1/repos/lycamobile-etl-movements
+git remote remove code_commit || printf "code_commit does not exist"
+git remote add code_commit https://git-codecommit.eu-west-2.amazonaws.com/v1/repos/lycamobile-etl-movements
 git remote -v
 git push code_commit $branch
