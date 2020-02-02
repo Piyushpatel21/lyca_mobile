@@ -1,5 +1,5 @@
 #! /bin/bash
-set -eu
+set -eux
 mkdir ~/.aws
 cat <<EOF > creds.tpl
 [mis_lycamobile]
