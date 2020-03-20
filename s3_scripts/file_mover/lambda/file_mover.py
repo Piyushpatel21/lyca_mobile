@@ -10,6 +10,7 @@ import boto3
 import json
 import re
 import os
+import urllib
 
 ###
 # Getting our environment variables
@@ -61,6 +62,8 @@ def year_month_day(objectname):
 
 
 def dynamodb_lookup(key):
+    print(mapping_table)
+    print(key)
     response = dynamodb_client.get_item(Key = { 'SourceDir' : {'S': key}}, TableName=mapping_table)
     outputpath = response['Item']['OutputDir']['S']
     return outputpath
@@ -79,14 +82,18 @@ def lambda_handler(event, context):
     s3_message = json.loads(event['Records'][0]['Sns']['Message'])
     # get the object key and bucket name
     key = s3_message['Records'][0]['s3']['object']['key'] # landing/RRBS/UK/CDR_2019_03_01_blahblah.csv
+    key = urllib.parse.unquote(key)
     bucket = s3_message['Records'][0]['s3']['bucket']['name']
     source_object = {
         'Bucket' : bucket,
         'Key' : key
         }
-    objectname = key.split("/")[-1]
-    ymd = year_month_day(objectname)
-    new_filename = map_to_output(key) + '/' + ymd + '/' + objectname
+    prefix = "/".join(key.split("/")[:-1])
+    #check for key value, key should contain filename
+    if key[-1] != "/":
+        objectname = key.split("/")[-1]
+        ymd = year_month_day(objectname)
+        new_filename = map_to_output(key) + '/' + ymd + '/' + objectname
     
     s3.meta.client.copy(source_object, bucket, new_filename,ExtraArgs={'ACL': 'bucket-owner-full-control'})
     s3.meta.client.delete_object(Bucket = bucket, Key = key)
