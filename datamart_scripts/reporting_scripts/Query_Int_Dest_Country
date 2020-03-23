@@ -1,0 +1,14 @@
+Insert into uk_rrbs_rt.INT_DEST_COUNTRY
+select 
+	Call_Date_dt	as Call_Date 
+	,'UK' as country_code
+	,Destinationzone_name as "Zone"
+	,sum(cast (call_duration  as float))/60. as Mo_mins
+ from uk_rrbs_dm.fact_rrbs_voice    
+where Call_Date_dt between '2019-10-01' and '2019-10-31'
+	and roam_flag in (0,1)    
+	and  call_duration > 0    
+	and  Network_ID = 1    
+	and  call_type = 7    
+	and  destinationzone_name is not null    
+group by Call_Date_dt,Destinationzone_name
