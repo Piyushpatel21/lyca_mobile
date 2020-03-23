@@ -1,0 +1,22 @@
+INSERT INTO uk_rrbs_rt.Afgan_Usage_Summary
+select 
+'GBR' as sitecode
+, call_date_dt 
+, Charged_party_number as msisdn
+, Destination_area_code as prefix
+,case when Destination_area_code in ('9370','9371') then 'AWCC' else 'Other' end as prefix_desc
+,destinationzone_name
+, count(*) as count_voice_sess
+, sum(cast(call_duration as float))/60. as call_duratio
+, sum(case when talk_charge>0 then cast(call_duration as float) end)/60. as charge_duration
+, sum(case when talk_charge=0 then cast(call_duration as float) end)/60.  as free_duration
+from uk_rrbs_dm.fact_rrbs_voice frv
+where call_date_dt >= '20190901' and call_date_dt <= '20191031'
+and Dialed_number like '93%'
+		and call_duration > 0
+		group by 
+			call_date_dt
+			, Charged_party_number
+			,prefix
+			,prefix_desc
+		 ,destinationzone_name
