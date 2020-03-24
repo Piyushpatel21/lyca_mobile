@@ -4,6 +4,7 @@ Parameters:
   LandingBucket:
     Type: String
     Description: The bucket where files will land and move
+    Default: lyca-raw
 Resources:
   FileObjects:
     Type: AWS::Lambda::Function
@@ -16,6 +17,7 @@ Resources:
       Environment:
         Variables:
           MAPPING_TABLE: !Ref MappingDdb
+          TRANSFERLOG_TABLE: !Ref TransferLogDdb
       Role: !GetAtt FileObjectsRole.Arn
   FileObjectsRole:
     Type: AWS::IAM::Role
@@ -30,7 +32,7 @@ Resources:
             Action:
               - sts:AssumeRole
       Path: "/"
-      PermissionsBoundary: !Sub arn:aws:iam::${AWS::AccountId}:policy/OrganizationAccountServiceBoundariesPolicy
+      #PermissionsBoundary: !Sub arn:aws:iam::${AWS::AccountId}:policy/OrganizationAccountServiceBoundariesPolicy
       Policies:
         - PolicyName: mis-dl-root
           PolicyDocument:
@@ -51,8 +53,12 @@ Resources:
               - Effect: Allow
                 Action:
                   - 'dynamodb:GetItem'
+                  - 'dynamodb:PutItem'
+                  - 'dynamodb:UpdateItem'
+                  - 'dynamodb:BatchWriteItem'
                 Resource:
-                  - !GetAtt MappingDdb.Arn 
+                  - !GetAtt MappingDdb.Arn
+                  - !GetAtt TransferLogDdb.Arn
   FileUploadsSnsTopic:
     Type: AWS::SNS::Topic
     Properties:
@@ -71,10 +77,9 @@ Resources:
             Principal:
               AWS: "*"
             Action: sns:Publish
-            Resource: !Ref FileUploadsSnsTopic            
+            Resource: !Ref FileUploadsSnsTopic
       Topics:
         - !Ref FileUploadsSnsTopic
-          
   FilerSubmissionPermission:
     Type: AWS::Lambda::Permission
     Properties:
@@ -84,13 +89,33 @@ Resources:
       SourceArn: !Sub arn:aws:sns:${AWS::Region}:${AWS::AccountId}:${AWS::StackName}-uploads
   MappingDdb:
     Type: "AWS::DynamoDB::Table"
-    Properties: 
-      AttributeDefinitions: 
-        - 
+    Properties:
+      AttributeDefinitions:
+        -
           AttributeName: "SourceDir"
           AttributeType: "S"
       BillingMode: PAY_PER_REQUEST
-      KeySchema: 
-        - 
+      KeySchema:
+        -
           AttributeName: "SourceDir"
           KeyType: "HASH"
+
+  TransferLogDdb:
+    Type: "AWS::DynamoDB::Table"
+    #DependsOn: "MappingDdb"
+    Properties: 
+      AttributeDefinitions: 
+        - 
+          AttributeName: "FilenameOrig"
+          AttributeType: "S"
+        -
+          AttributeName: "FileLandingDate"
+          AttributeType: "S"
+      BillingMode: PAY_PER_REQUEST
+      KeySchema: 
+        -
+          AttributeName: "FilenameOrig" 
+          KeyType: "HASH"
+        - 
+          AttributeName: "FileLandingDate"
+          KeyType: "RANGE"
