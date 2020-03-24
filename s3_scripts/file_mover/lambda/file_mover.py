@@ -91,10 +91,10 @@ def insert_transferlog(key,Etag,LastModified,size,targetSystem):
 	    'FileETag': Etag,
 	    'Size': size,
 	    'Status': 'Complete', #need to be updated in later version
-	    'Version': 1, #need to be updated in later version
+	    'Version': 0, #need to be updated in later version
         }
-        LOGGER.info("DynamoDB entry made for {}".format(key))
     )
+    LOGGER.info("DynamoDB entry made for {}".format(key))
     
 def map_to_output(key):
     key = "/".join(key.split("/")[:-1])
@@ -128,4 +128,4 @@ def lambda_handler(event, context):
         s3.meta.client.copy(source_object, bucket, new_filename,ExtraArgs={'ACL': 'bucket-owner-full-control'})
         insert_transferlog(key,Etag,LastModified,size,targetSystem) #insert the logs to dynamodb table
         s3.meta.client.delete_object(Bucket = bucket, Key = key)
-	LOGGER.info("Finished")
+    LOGGER.info("Finished")
