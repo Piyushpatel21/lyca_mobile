@@ -32,10 +32,13 @@ s3=boto3.resource('s3')
 
 def year_month_day(objectname):
    # x = string.objectname
-    pattern = '([0-9]{2}_[0-9]{2}_[0-9]{4}_|[0-9]{8}_|[0-9]{4}_[0-9]{2}_[0-9]{2}_)'
+    pattern = '([0-9]{2}_[0-9]{2}_[0-9]{4}_|[0-9]{8}_|[0-9]{4}_[0-9]{2}_[0-9]{2}_|[0-9]{2}-[0-9]{2}-[0-9]{4}.|[a-zA-Z]_[0-9]{8}.|[a-zA-Z]_[0-9]{2}_[0-9]{2}_[0-9]{4}.)'
     pattern1 = '[0-9]{2}_[0-9]{2}_[0-9]{4}_'
     pattern2 = '[0-9]{8}_'
     pattern3 = '[0-9]{4}_[0-9]{2}_[0-9]{2}_'
+    rec_ptrn1 = '[0-9]{2}-[0-9]{2}-[0-9]{4}.'
+    rec_ptrn2 = '[a-zA-Z]_[0-9]{8}.'
+    rec_ptrn3 = '[a-zA-Z]_[0-9]{2}_[0-9]{2}_[0-9]{4}.'
     result = re.findall(pattern, objectname) 
     dd = ''
     mm = ''
@@ -58,6 +61,24 @@ def year_month_day(objectname):
             yyyy = result[0].split('_',1)[0][0:4]
             mm = result[0].split('_',1)[0][4:6]
             dd = result[0].split('_',1)[0][6:8]
+            flag = True
+        elif re.match(rec_ptrn1,result[0]):  #[0-9]{2}-[0-9]{2}-[0-9]{4}.
+            ptrn = result[0].split('.',1)[0]
+            yyyy = ptrn.split('-')[2]
+            mm = ptrn.split('-')[1]
+            dd = ptrn.split('-')[0]
+            flag = True
+        elif re.match(rec_ptrn2,result[0]): #_[0-9]{8}.
+            ptrn = result[0].split('.',1)[0]
+            yyyy = ptrn.split('_')[1][0:4]
+            mm = ptrn.split('_')[1][4:6]
+            dd = ptrn.split('_')[1][6:8]
+            flag = True
+        elif re.match(rec_ptrn3,result[0]): #_[0-9]{2}_[0-9]{2}_[0-9]{4}.
+            ptrn = result[0].split('.',1)[0]
+            yyyy = ptrn.split('_')[3]
+            mm = ptrn.split('_')[2]
+            dd = ptrn.split('_')[1]
             flag = True
     else:
         return "pattern not found"
