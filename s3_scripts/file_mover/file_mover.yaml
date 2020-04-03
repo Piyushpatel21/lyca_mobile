@@ -4,7 +4,9 @@ Parameters:
   LandingBucket:
     Type: String
     Description: The bucket where files will land and move
-    Default: lyca-raw
+  NotificationEmailId:
+    Type: String
+    Description: The Email Id for Lambda Error
 Resources:
   FileObjects:
     Type: AWS::Lambda::Function
@@ -67,6 +69,30 @@ Resources:
         -
           Endpoint: !GetAtt FileObjects.Arn
           Protocol: lambda
+  LambdaAlarmSNSTopic:
+    Type: AWS::SNS::Topic
+    Properties:
+      TopicName: !Sub ${AWS::StackName}-lambdaErrorAlarm
+      Subscription:
+        - Endpoint: !Ref NotificationEmailId
+          Protocol: email
+  LambdaAlarm:
+    Type: AWS::CloudWatch::Alarm
+    Properties:
+      AlarmActions:             
+        - !Ref LambdaAlarmSNSTopic 
+      AlarmName: "AlarmLambdaErrors"
+      AlarmDescription: "Alarm if lambda errors"
+      Namespace: "AWS/Lambda"
+      MetricName: "Errors"
+      Dimensions:
+        - Name: "FunctionName"
+          Value: !Ref FileObjects
+      Statistic: "Sum"
+      ComparisonOperator: "GreaterThanOrEqualToThreshold"
+      Threshold: 1
+      EvaluationPeriods: 1
+      Period: 300
   FileUploadsTopicPolicy:
     Type: "AWS::SNS::TopicPolicy"
     Properties:
@@ -77,9 +103,25 @@ Resources:
             Principal:
               AWS: "*"
             Action: sns:Publish
-            Resource: !Ref FileUploadsSnsTopic
+            Resource:
+               - !Ref FileUploadsSnsTopic
       Topics:
         - !Ref FileUploadsSnsTopic
+  
+  LambdaAlarmTopicPolicy:
+    Type: "AWS::SNS::TopicPolicy"
+    Properties:
+      PolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: Allow
+            Principal:
+              AWS: "*"
+            Action: sns:Publish
+            Resource:  
+              - !Ref LambdaAlarmSNSTopic
+      Topics:
+        - !Ref LambdaAlarmSNSTopic
   FilerSubmissionPermission:
     Type: AWS::Lambda::Permission
     Properties:
@@ -102,7 +144,6 @@ Resources:
 
   TransferLogDdb:
     Type: "AWS::DynamoDB::Table"
-    #DependsOn: "MappingDdb"
     Properties: 
       AttributeDefinitions: 
         - 
