@@ -1,18 +1,19 @@
 #!/usr/bin/env python
 
 """
-Here we use the DynamoDB, and S3 boto3 clients to move the file according to a 
+Here we use the DynamoDB, and S3 boto3 clients to move the file according to a
 mapping table and date stored in the dynamodb table
 We expect SNS events from S3
 """
 
-import boto3
 import json
 import logging
 import re
 import os
 import urllib
 from datetime import datetime
+import boto3
+from boto3.dynamodb.conditions import Key, Attr
 
 LOGGER = logging.getLogger()
 LOGGER.setLevel(logging.INFO)
@@ -25,13 +26,15 @@ mapping_table = os.environ['MAPPING_TABLE']
 transferLog_table = os.environ['TRANSFERLOG_TABLE']
 
 ### boto3 resources
-dynamodb_client=boto3.client('dynamodb')
-dynamodb_resource= boto3.resource('dynamodb')
+dynamodb_client = boto3.client('dynamodb')
+dynamodb_resource = boto3.resource('dynamodb')
 table = dynamodb_resource.Table(transferLog_table)
-s3=boto3.resource('s3')
+s3 = boto3.resource('s3')
 
 def year_month_day(objectname):
-   # x = string.objectname
+    """
+    Function to extract the Year Month and date from filename
+    """
     pattern = '([0-9]{2}_[0-9]{2}_[0-9]{4}_|[0-9]{8}_|[0-9]{4}_[0-9]{2}_[0-9]{2}_|[0-9]{2}-[0-9]{2}-[0-9]{4}.|[a-zA-Z]_[0-9]{8}.|[a-zA-Z]_[0-9]{2}_[0-9]{2}_[0-9]{4}.)'
     pattern1 = '[0-9]{2}_[0-9]{2}_[0-9]{4}_'
     pattern2 = '[0-9]{8}_'
@@ -39,73 +42,95 @@ def year_month_day(objectname):
     rec_ptrn1 = '[0-9]{2}-[0-9]{2}-[0-9]{4}.'
     rec_ptrn2 = '[a-zA-Z]_[0-9]{8}.'
     rec_ptrn3 = '[a-zA-Z]_[0-9]{2}_[0-9]{2}_[0-9]{4}.'
-    result = re.findall(pattern, objectname) 
+    result = re.findall(pattern, objectname)
     dd = ''
     mm = ''
     yyyy = ''
+    ymd = ''
     flag = False
     if result:
-        if re.match(pattern1,result[0]):
-            dd = result[0].split('_',3)[0]
-            mm = result[0].split('_',3)[1]
-            yyyy = result[0].split('_',3)[2]
+        if re.match(pattern1, result[0]):
+            dd = result[0].split('_', 3)[0]
+            mm = result[0].split('_', 3)[1]
+            yyyy = result[0].split('_', 3)[2]
             flag = True
 
-        elif re.match(pattern3,result[0]):
-            dd = result[0].split('_',3)[2]
-            mm = result[0].split('_',3)[1]
-            yyyy = result[0].split('_',3)[0]
+        elif re.match(pattern3, result[0]):
+            dd = result[0].split('_', 3)[2]
+            mm = result[0].split('_', 3)[1]
+            yyyy = result[0].split('_', 3)[0]
             flag = True
 
-        elif re.match(pattern2,result[0]):
-            yyyy = result[0].split('_',1)[0][0:4]
-            mm = result[0].split('_',1)[0][4:6]
-            dd = result[0].split('_',1)[0][6:8]
+        elif re.match(pattern2, result[0]):
+            yyyy = result[0].split('_', 1)[0][0:4]
+            mm = result[0].split('_', 1)[0][4:6]
+            dd = result[0].split('_', 1)[0][6:8]
             flag = True
-        elif re.match(rec_ptrn1,result[0]):  #[0-9]{2}-[0-9]{2}-[0-9]{4}.
-            ptrn = result[0].split('.',1)[0]
+        elif re.match(rec_ptrn1, result[0]):  #[0-9]{2}-[0-9]{2}-[0-9]{4}.
+            ptrn = result[0].split('.', 1)[0]
             yyyy = ptrn.split('-')[2]
             mm = ptrn.split('-')[1]
             dd = ptrn.split('-')[0]
             flag = True
-        elif re.match(rec_ptrn2,result[0]): #_[0-9]{8}.
-            ptrn = result[0].split('.',1)[0]
+        elif re.match(rec_ptrn2, result[0]): #_[0-9]{8}.
+            ptrn = result[0].split('.', 1)[0]
             yyyy = ptrn.split('_')[1][0:4]
             mm = ptrn.split('_')[1][4:6]
             dd = ptrn.split('_')[1][6:8]
             flag = True
-        elif re.match(rec_ptrn3,result[0]): #_[0-9]{2}_[0-9]{2}_[0-9]{4}.
-            ptrn = result[0].split('.',1)[0]
+        elif re.match(rec_ptrn3, result[0]): #_[0-9]{2}_[0-9]{2}_[0-9]{4}.
+            ptrn = result[0].split('.', 1)[0]
             yyyy = ptrn.split('_')[3]
             mm = ptrn.split('_')[2]
             dd = ptrn.split('_')[1]
             flag = True
     else:
-        return "pattern not found"
+        ymd = "pattern not found"
     if flag:
-        if ((yyyy >= '2000' and yyyy <= '2100') and (mm >= '01' and mm <='12') and (dd >= '01' and dd <='31')):
+        if ((yyyy >= '2000' and yyyy <= '2100') and (mm >= '01' and mm <= '12') and (dd >= '01' and dd <= '31')):
             ymd = yyyy + "/" + mm + "/" + dd
-            return (ymd)
-        else :
-            return "incorrect date"
+        else:
+            ymd = "incorrect date"
+    return (ymd)
 
+def dynamodb_duplicateCheck(filename, Etag):
+    """
+    Check for source file duplication
+    """
+    duplicate_response = {'IsDuplicate': False, 'IdenticalNameCount':0}
+    flag = 0
+    response = table.query(KeyConditionExpression=Key('FilenameOrig').eq(filename))
+    if response['Count'] != 0:
+        for i in response['Items']:
+            if i['FileETag'] == Etag:
+                flag = 1
+        if flag == 1:
+            duplicate_response['IsDuplicate'] = True
+            duplicate_response['IdenticalNameCount'] = response['Count']
+        else:
+            duplicate_response['IdenticalNameCount'] = response['Count']
+    return duplicate_response
 
 def dynamodb_lookup(key):
-    LOGGER.info('Looking up {} in {}'.format(key,mapping_table))
-    #print(mapping_table)
-    #print(key)
-    response = dynamodb_client.get_item(Key = { 'SourceDir' : {'S': key}}, TableName=mapping_table)
+    """
+    Return the target mapping Dir
+    """
+    LOGGER.info('Looking up {} in {}'.format(key, mapping_table))
+    response = dynamodb_client.get_item(Key ={'SourceDir' : {'S': key}}, TableName =mapping_table)
     outputpath = response['Item']['OutputDir']['S']
     return outputpath
 
-def insert_transferlog(key,Etag,LastModified,size,targetSystem):
+def insert_transferlog(key, Etag, LastModified, size, targetSystem, targetFile):
+    """
+    Enter file relocation logs to dynamoDB table
+    """
     now = datetime.now()
     dt_string = now.strftime("%d/%m/%Y %H:%M:%S")
     response = table.put_item(
 	Item={
-	    'FilenameOrig': key.split("/")[-1],
-	    'SourceSystem': "/".join(key.split("/")[:-1]),
-	    'FilenameTgt': key.split("/")[-1],
+            'FilenameOrig': key.split("/")[-1],
+            'SourceSystem': "/".join(key.split("/")[:-1]),
+	    'FilenameTgt': targetFile,
 	    'TargetSystem': targetSystem,
 	    'FileLandingDate': LastModified,
 	    'FileRegDate': dt_string,
@@ -116,7 +141,7 @@ def insert_transferlog(key,Etag,LastModified,size,targetSystem):
         }
     )
     LOGGER.info("DynamoDB entry made for {}".format(key))
-    
+
 def map_to_output(key):
     key = "/".join(key.split("/")[:-1])
     outputpath = dynamodb_lookup(key)
@@ -144,9 +169,17 @@ def lambda_handler(event, context):
     if key[-1] != "/":
         objectname = key.split("/")[-1]
         ymd = year_month_day(objectname)
-        new_filename = map_to_output(key) + '/' + ymd + '/' + objectname
+        targetFile = objectname
+        dup_indicator = dynamodb_duplicateCheck(objectname, Etag)
+        if dup_indicator['IsDuplicate'] == False and dup_indicator['IdenticalNameCount'] == 0:
+            new_filename = map_to_output(key) + '/' + ymd + '/' + objectname
+        elif dup_indicator['IsDuplicate'] == False and dup_indicator['IdenticalNameCount'] > 0:
+            new_filename = map_to_output(key) + '/' + ymd + '/' + objectname + '_' + str(dup_indicator['IdenticalNameCount'])
+            targetFile = objectname + '_' + str(dup_indicator['IdenticalNameCount'])
+        elif dup_indicator['IsDuplicate'] == True:
+            new_filename = map_to_output(key) + '/duplicate/' + objectname
         targetSystem = "/".join(new_filename.split("/")[:-1])
-        s3.meta.client.copy(source_object, bucket, new_filename,ExtraArgs={'ACL': 'bucket-owner-full-control'})
-        insert_transferlog(key,Etag,LastModified,size,targetSystem) #insert the logs to dynamodb table
-        s3.meta.client.delete_object(Bucket = bucket, Key = key)
+        s3.meta.client.copy(source_object, bucket, new_filename, ExtraArgs={'ACL': 'bucket-owner-full-control'})
+        insert_transferlog(key, Etag, LastModified, size, targetSystem, targetFile) #insert the logs to dynamodb table
+        s3.meta.client.delete_object(Bucket =bucket, Key =key)
     LOGGER.info("Finished")

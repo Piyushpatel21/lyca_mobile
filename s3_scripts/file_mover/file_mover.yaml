@@ -58,6 +58,7 @@ Resources:
                   - 'dynamodb:PutItem'
                   - 'dynamodb:UpdateItem'
                   - 'dynamodb:BatchWriteItem'
+                  - 'dynamodb:Query'
                 Resource:
                   - !GetAtt MappingDdb.Arn
                   - !GetAtt TransferLogDdb.Arn
