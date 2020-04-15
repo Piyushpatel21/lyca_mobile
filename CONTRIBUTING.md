@@ -1,6 +1,6 @@
 # CONTRIBUTING
 
-To contributing to this project is welcome!
+Contributing to this project is welcome!
 
 Please create a Pull/Merge Request, and add `WIP:` in the header while it is still in progress.
 Be sure to update the description with a summary of the changes you are proposing and the reason.
