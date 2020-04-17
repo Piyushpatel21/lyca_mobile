@@ -1,10 +1,11 @@
 from commonUtils.CommandLineProcessor import CommandLineProcessor
-from pyspark.sql import DataFrame, Window, WindowSpec
+from pyspark.sql import DataFrame, Window
 from functools import reduce
 from pyspark.sql import functions as py_function
 from pyspark.sql.types import StructType
 from datetime import datetime
-# from dateutil.relativedelta import relativedelta
+from dateutil.relativedelta import relativedelta
+from pyspark.sql.types import DateType
 
 
 class DataTranformation:
@@ -55,21 +56,23 @@ class DataTranformation:
             .where('dupCount = 1').drop('dupCount')
         return df_unique_records
 
-    # @staticmethod
-    # def getCheckDate(time_range, no_d_m):
-    #     if time_range == 'day':
-    #         d = datetime.today() + relativedelta(days=-no_d_m)
-    #         check_date = d.strftime("%Y%m%d")
-    #         return check_date
-    #     elif time_range == 'month':
-    #         d = datetime.today() + relativedelta(months=-no_d_m)
-    #         check_date = d.strftime("%Y%m%d")
-    #         return check_date
+    @staticmethod
+    def getCheckDate(mnthOrdaily, noOfdaysOrMonth):
+        if mnthOrdaily == 'dailly':
+            d = datetime.today() + relativedelta(days=-noOfdaysOrMonth)
+            check_date = d.strftime("%Y%m%d")
+            return check_date
+        elif mnthOrdaily == 'monthly':
+            d = datetime.today() + relativedelta(months=-noOfdaysOrMonth)
+            check_date = d.strftime("%Y%m%d")
+            return check_date
 
     @staticmethod
     def getLateOrNormalCdr(spark, dataFrame: DataFrame, inputColumn, outputColumn, dateRange) -> DataFrame:
         intInput = "int_" + inputColumn
-        df_event_date = dataFrame.withColumn(outputColumn, int(py_function.unix_timestamp(inputColumn, 'yyyy-mm-dd')))
-        df_normalOrLate = df_event_date.withColumn("normalOrlate",
-                                                   py_function.when(intInput < dateRange, "Late").otherwise("Normal"))
-        return df_normalOrLate
+        print(inputColumn)
+        print(intInput)
+        df_event_date = dataFrame.withColumn(outputColumn, py_function.to_date(py_function.substring(py_function.col(inputColumn), 0, 8), 'yyyy-MM-dd'))
+        # df_normalOrLate = df_event_date.withColumn("normalOrlate",
+        #                                            py_function.when(intInput < dateRange, "Late").otherwise("Normal"))
+        return df_event_date

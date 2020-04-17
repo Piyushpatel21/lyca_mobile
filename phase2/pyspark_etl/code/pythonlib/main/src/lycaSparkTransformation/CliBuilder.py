@@ -24,16 +24,37 @@ class CliBuilder:
     def getSchemaPath(self):
         return self.prop['module_prop']['schema_path']
 
+    def getInputDateColumn(self):
+        return self.prop['module_prop']['inputdateColumn']
+
+    def getOutputDateColumn(self):
+        return self.prop['module_prop']['outputdateColumn']
+
+    def getMnthlyOrdaily(self):
+        return self.prop['module_prop']['mnthOrdaily']
+
+    def getNoOfdaysOrMonth(self):
+        return self.prop['module_prop']['noOfdaysOrMonth']
+
+
     def getPrpperty(self):
         module = self.getModule()
         subModule = self.getSubModule()
         appname = self.getAppName()
         sourceFilePath = self.getSourceFilePath()
         schemaPath = self.getSchemaPath()
+        inputdateColumn = self.getInputDateColumn()
+        outputdateColumn = self.getOutputDateColumn()
+        mnthOrdaily = self.getMnthlyOrdaily()
+        noOfdaysOrMonth = self.getNoOfdaysOrMonth()
         return {
             "module": module,
             "subModule": subModule,
             "appname": appname,
             "sourceFilePath": sourceFilePath,
-            "schemaPath": schemaPath
+            "schemaPath": schemaPath,
+            "inputdateColumn": inputdateColumn,
+            "outputdateColumn": outputdateColumn,
+            "mnthOrdaily": mnthOrdaily,
+            "noOfdaysOrMonth": noOfdaysOrMonth
         }

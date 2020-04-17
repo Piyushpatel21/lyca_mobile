@@ -2,6 +2,10 @@
   {
     "module" : "rrbs",
     "sub_module" : "sms",
+    "inputdateColumn" : "msg_date",
+    "outputdateColumn" : "msg_date_dt",
+    "mnthOrdaily" : "monthly",
+    "noOfdaysOrMonth" : 1,
     "source_file_path" : "../../../../pythonlib/test/resources",
     "schema_path" : "../../../../config/rrbs_fct_sms.json"
   },
