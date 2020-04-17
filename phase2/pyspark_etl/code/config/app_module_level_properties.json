@@ -1,0 +1,26 @@
+[
+  {
+    "module" : "rrbs",
+    "sub_module" : "sms",
+    "source_file_path" : "../../../../pythonlib/test/resources",
+    "schema_path" : "../../../../config/rrbs_fct_sms.json"
+  },
+  {
+    "module" : "rrbs",
+    "sub_module" : "voice",
+    "source_file_path" : "../config",
+    "schema_path" : "rrbs_fct_voice.json"
+  },
+  {
+    "module" : "rrbs",
+    "sub_module" : "topup",
+    "source_file_path" : "../config",
+    "schema_path" : "rrbs_fct_topp.json"
+  },
+  {
+    "module" : "rrbs",
+    "sub_module" : "gprs",
+    "source_file_path" : "../config",
+    "schema_path" : "rrbs_fct_gprs.json"
+  }
+]
