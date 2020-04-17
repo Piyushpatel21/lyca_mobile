@@ -24,11 +24,14 @@ class CliBuilder:
     def getSchemaPath(self):
         return self.prop['module_prop']['schema_path']
 
-    def getInputDateColumn(self):
-        return self.prop['module_prop']['inputdateColumn']
+    def getDateColumn(self):
+        return self.prop['module_prop']['dateColumn']
 
-    def getOutputDateColumn(self):
-        return self.prop['module_prop']['outputdateColumn']
+    def getFormattedDateColumn(self):
+        return self.prop['module_prop']['formattedDateColumn']
+
+    def getIntegerDateColumn(self):
+        return self.prop['module_prop']['integerDateColumn']
 
     def getMnthlyOrdaily(self):
         return self.prop['module_prop']['mnthOrdaily']
@@ -43,8 +46,9 @@ class CliBuilder:
         appname = self.getAppName()
         sourceFilePath = self.getSourceFilePath()
         schemaPath = self.getSchemaPath()
-        inputdateColumn = self.getInputDateColumn()
-        outputdateColumn = self.getOutputDateColumn()
+        dateColumn = self.getDateColumn()
+        formattedDateColumn = self.getFormattedDateColumn()
+        integerDateColumn = self.getIntegerDateColumn()
         mnthOrdaily = self.getMnthlyOrdaily()
         noOfdaysOrMonth = self.getNoOfdaysOrMonth()
         return {
@@ -53,8 +57,9 @@ class CliBuilder:
             "appname": appname,
             "sourceFilePath": sourceFilePath,
             "schemaPath": schemaPath,
-            "inputdateColumn": inputdateColumn,
-            "outputdateColumn": outputdateColumn,
+            "dateColumn": dateColumn,
+            "formattedDateColumn": formattedDateColumn,
+            "integerDateColumn" : integerDateColumn,
             "mnthOrdaily": mnthOrdaily,
             "noOfdaysOrMonth": noOfdaysOrMonth
         }

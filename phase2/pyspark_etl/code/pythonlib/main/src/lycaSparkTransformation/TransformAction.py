@@ -28,11 +28,12 @@ subModule = properties["prop"]["subModule"]
 ap = properties["prop"]["appname"]
 sourceFilePath = properties["prop"]["sourceFilePath"]
 schemaPath = properties["prop"]["schemaPath"]
-inputdateColumn = properties["prop"]["inputdateColumn"]
-outputdateColumn = properties["prop"]["outputdateColumn"]
+dateColumn = properties["prop"]["dateColumn"]
+formattedDateColumn = properties["prop"]["formattedDateColumn"]
+integerDateColumn = properties["prop"]["integerDateColumn"]
 mnthOrdaily = properties["prop"]["mnthOrdaily"]
 noOfdaysOrMonth = properties["prop"]["noOfdaysOrMonth"]
 
 files =['SMS_2019090200.cdr']
-transformactionchain = TransformActionChain(module, subModule, ap, sourceFilePath, schemaPath, files, inputdateColumn, outputdateColumn, mnthOrdaily, noOfdaysOrMonth)
+transformactionchain = TransformActionChain(module, subModule, ap, sourceFilePath, schemaPath, files, dateColumn, formattedDateColumn, integerDateColumn, mnthOrdaily, noOfdaysOrMonth)
 

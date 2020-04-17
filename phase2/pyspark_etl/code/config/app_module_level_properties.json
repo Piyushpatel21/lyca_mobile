@@ -2,8 +2,9 @@
   {
     "module" : "rrbs",
     "sub_module" : "sms",
-    "inputdateColumn" : "msg_date",
-    "outputdateColumn" : "msg_date_dt",
+    "dateColumn" : "msg_date",
+    "formattedDateColumn" : "msg_date_dt",
+    "integerDateColumn" : "msg_date_num",
     "mnthOrdaily" : "monthly",
     "noOfdaysOrMonth" : 1,
     "source_file_path" : "../../../../pythonlib/test/resources",
