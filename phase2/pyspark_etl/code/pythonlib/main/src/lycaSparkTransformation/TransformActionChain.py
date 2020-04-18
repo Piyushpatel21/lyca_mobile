@@ -32,6 +32,7 @@ class TransformActionChain:
         lateOrNormalCdr = DataTranformation.getLateOrNormalCdr(df_source, self.dateColumn, self.formattedDateColumn,
                                                                self.integerDateColumn, date_range)
         df_duplicate = DataTranformation.getDuplicates(df_source, "checksum")
-        df_duplicate.show(10, False)
+        # df_duplicate.show(10, False)
         df_unique = DataTranformation.getUnique(df_source, "checksum")
-        df_unique.show(10)
+        # df_unique.show(10)
+        DataTranformation.writeToS3(df_unique)
