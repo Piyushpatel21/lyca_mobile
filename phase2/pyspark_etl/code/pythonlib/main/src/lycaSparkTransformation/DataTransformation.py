@@ -76,13 +76,21 @@ class DataTransformation:
         df_event_date = dataFrame.withColumn(integerDateColumn,
                                              py_function.substring(py_function.col(dateColumn), 0, 8).cast(
                                                  IntegerType()))
-        df_normalOrLate = df_event_date.withColumn("normalOrlate",
-                                                   py_function.when(py_function.col(integerDateColumn) < int(dateRange),
-                                                                    "Late")
-                                                   .otherwise("Normal")) \
-            .withColumn(formattedDateColumn, py_function.to_date(
-            py_function.to_date(py_function.col(integerDateColumn).cast(StringType()), 'yyyyMMdd'), 'yyyy-MM-dd'))
+        df_normalOrLate = df_event_date.withColumn(formattedDateColumn, py_function.to_date(
+            py_function.to_date(py_function.col(integerDateColumn).cast(StringType()), 'yyyyMMdd'), 'yyyy-MM-dd')) \
+            .withColumn("normalOrlate",
+                        py_function.when(py_function.col(integerDateColumn) < int(dateRange), "Late").otherwise(
+                            "Normal"))
         return df_normalOrLate
+
+    @staticmethod
+    def getDbDuplicate(dfSource: DataFrame, dfRedshift: DataFrame) -> DataFrame:
+        dfDB = dfRedshift.select("checksum")
+        dfjoin = dfSource.join(dfDB, dfSource["checksum"] == dfDB["checksum"], "left_outer") \
+            .withColumn("newOrDupl",
+                        py_function.when(dfSource["checksum"] == dfDB["checksum"], "Duplicate").otherwise("New"))
+        dfnormalOrDuplicate = dfjoin.drop(dfDB["checksum"])
+        return dfnormalOrDuplicate
 
     @staticmethod
     def writeToS3(dataFrame: DataFrame):
