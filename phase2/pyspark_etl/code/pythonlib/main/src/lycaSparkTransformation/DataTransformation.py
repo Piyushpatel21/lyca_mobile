@@ -8,9 +8,7 @@ from dateutil.relativedelta import relativedelta
 from pyspark.sql.types import IntegerType, StringType, DateType
 
 
-class DataTranformation:
-
-    # @staticmethod
+class DataTransformation:
 
     @staticmethod
     def readSourceFile(spark, path, structtype: StructType, checkSumColumns=[], fList=[]) -> DataFrame:
@@ -67,6 +65,10 @@ class DataTranformation:
             d = datetime.today() + relativedelta(months=-noOfdaysOrMonth)
             check_date = d.strftime("%Y%m%d")
             return check_date
+        else:
+            d = datetime.today() + relativedelta(days=-1)
+            check_date = d.strftime("%Y%m%d")
+            return check_date
 
     @staticmethod
     def getLateOrNormalCdr(dataFrame: DataFrame, dateColumn, formattedDateColumn, integerDateColumn,
@@ -76,11 +78,13 @@ class DataTranformation:
                                                  IntegerType()))
         df_normalOrLate = df_event_date.withColumn("normalOrlate",
                                                    py_function.when(py_function.col(integerDateColumn) < int(dateRange),
-                                                                    "Late").otherwise("Normal")) \
+                                                                    "Late")
+                                                   .otherwise("Normal")) \
             .withColumn(formattedDateColumn, py_function.to_date(
             py_function.to_date(py_function.col(integerDateColumn).cast(StringType()), 'yyyyMMdd'), 'yyyy-MM-dd'))
         return df_normalOrLate
 
     @staticmethod
     def writeToS3(dataFrame: DataFrame):
-        dataFrame.write.format('csv').option('header', True).mode('overwrite').option('sep', '|').save('../../../../pythonlib/test/resources/output')
+        dataFrame.write.format('csv').option('header', True).mode('overwrite').option('sep', '|').save(
+            '../../../../pythonlib/test/resources/output')

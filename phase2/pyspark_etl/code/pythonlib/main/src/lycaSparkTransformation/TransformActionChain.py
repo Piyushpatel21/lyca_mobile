@@ -1,7 +1,6 @@
-from lycaSparkTransformation.DataTranformation import DataTranformation
+from lycaSparkTransformation.DataTransformation import DataTransformation
 from lycaSparkTransformation.SchemaReader import SchemaReader
 from lycaSparkTransformation.SparkSessionBuilder import SparkSessionBuilder
-from pyspark.sql.types import IntegerType, StringType
 import os
 
 
@@ -23,16 +22,16 @@ class TransformActionChain:
         schemaFilePath = os.path.abspath(self.schemaPath)
         if os.path.exists(schemaPath):
             schema = SchemaReader.structTypemapping(schemaFilePath)
-        checkSumColumns = DataTranformation.getCheckSumColumns(schemaFilePath)
+        checkSumColumns = DataTransformation.getCheckSumColumns(schemaFilePath)
         sparkSession = SparkSessionBuilder.sparkSessionBuild(self.appname)
         file_path = os.path.abspath(sourceFilePath)
         file_list = ['/sample.cdr']
-        df_source = DataTranformation.readSourceFile(sparkSession, file_path, schema, checkSumColumns, file_list)
-        date_range = int(DataTranformation.getPrevRangeDate(self.mnthOrdaily, self.noOfdaysOrMonth))
-        lateOrNormalCdr = DataTranformation.getLateOrNormalCdr(df_source, self.dateColumn, self.formattedDateColumn,
+        df_source = DataTransformation.readSourceFile(sparkSession, file_path, schema, checkSumColumns, file_list)
+        date_range = int(DataTransformation.getPrevRangeDate(self.mnthOrdaily, self.noOfdaysOrMonth))
+        lateOrNormalCdr = DataTransformation.getLateOrNormalCdr(df_source, self.dateColumn, self.formattedDateColumn,
                                                                self.integerDateColumn, date_range)
-        df_duplicate = DataTranformation.getDuplicates(df_source, "checksum")
+        df_duplicate = DataTransformation.getDuplicates(df_source, "checksum")
         # df_duplicate.show(10, False)
-        df_unique = DataTranformation.getUnique(df_source, "checksum")
+        df_unique = DataTransformation.getUnique(df_source, "checksum")
         # df_unique.show(10)
-        DataTranformation.writeToS3(df_unique)
+        DataTransformation.writeToS3(df_unique)
