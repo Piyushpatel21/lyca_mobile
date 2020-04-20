@@ -23,9 +23,10 @@ class CommandLineProcessor:
     @staticmethod
     def processCLIArguments(module, sub_module, filepath):
         """:parameter module - read property for a particular module
-           :parameter module - read property for a particular sub-module
+           :parameter sub_module - read property for a particular sub-module
            :parameter filepath - path of JSON
            :return JSON object"""
+        idx = 0
         try:
             data = CommandLineProcessor.json_parser(filepath)
             for obj in data:
@@ -33,10 +34,7 @@ class CommandLineProcessor:
                     return {
                         "module_prop": obj
                     }
-                    break
                 else:
                     continue
-        except (OSError, IOError) as ex:
-            print("Param source file not found : Path - " + filepath)
-        except ValueError:
-            print('Decoding JSON has failed')
+        except (OSError, IOError, ValueError) as ex:
+            print("Param source file not found : Path - " + ex)
