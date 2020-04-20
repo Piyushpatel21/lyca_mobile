@@ -26,7 +26,6 @@ class CommandLineProcessor:
            :parameter sub_module - read property for a particular sub-module
            :parameter filepath - path of JSON
            :return JSON object"""
-        idx = 0
         try:
             data = CommandLineProcessor.json_parser(filepath)
             for obj in data:
