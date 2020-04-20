@@ -15,5 +15,6 @@ class SparkSessionBuilder:
 
     @staticmethod
     def sparkSessionBuild(appName):
-        """:parameter - appname for each module identification"""
+        """:parameter - appname for each module identification
+           :return SparkSession"""
         return SparkSession.builder.appName(appName).getOrCreate()

@@ -17,7 +17,7 @@ class SchemaReader:
     @staticmethod
     def dataType(columnType):
         """:parameter columnType, which we have in schema file for each column
-           :return actual datatype according spark compatible"""
+           :return actual datatype according to spark compatibility"""
         if columnType in ("smallint"):
             return StringType()
         elif columnType in ("character", "timestamp without time zone"):
