@@ -1,3 +1,6 @@
+import os
+import tempfile
+
 from commonUtils.CommandLineProcessor import CommandLineProcessor
 from pyspark.sql import DataFrame, Window, Column
 from functools import reduce
@@ -44,8 +47,8 @@ class DataTransformation:
     @staticmethod
     def getDuplicates(dataFrame: DataFrame, checksumColumn) -> DataFrame:
         windowspec = Window.partitionBy(checksumColumn).orderBy(dataFrame["checksum"].desc())
-        df_duplicates = dataFrame.withColumn("duplicate", py_function.row_number().over(windowspec).cast(IntegerType())) \
-            .filter('duplicate = 2')
+        df_duplicates = dataFrame.withColumn("duplicate", py_function.count(dataFrame["checksum"]).over(windowspec).cast(IntegerType())) \
+            .filter('duplicate > 1')
         return df_duplicates
 
     @staticmethod
@@ -93,6 +96,9 @@ class DataTransformation:
         return dfnormalOrDuplicate
 
     @staticmethod
-    def writeToS3(dataFrame: DataFrame):
-        dataFrame.write.format('csv').option('header', True).mode('overwrite').option('sep', '|').save(
-            '../../../../pythonlib/test/resources/output')
+    def writeToS3(dataFrame: DataFrame, run_date, cdrType, filename):
+        path = '../../../../pythonlib/test/resources/output/' + run_date + '/' + cdrType + '/'
+        # dataFrame.write.format('csv').mode('append').option('sep', ',').save(path)
+        dataFrame.repartition(1).write.option("header", True)\
+            .option("quote", "\u0000")\
+            .csv(path, "append")

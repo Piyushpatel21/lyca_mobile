@@ -1,3 +1,11 @@
+########################################################################
+# description     : processing JSON config files.                      #
+# author          : Naren K(narendra.kumar@cloudwick.com)              #
+# contributor     :                                                    #
+# version         : 1.0                                                #
+# notes           :                                                    #
+########################################################################
+
 import json
 
 

@@ -5,7 +5,7 @@
     "dateColumn" : "msg_date",
     "formattedDateColumn" : "msg_date_dt",
     "integerDateColumn" : "msg_date_num",
-    "mnthOrdaily" : "monthly",
+    "mnthOrdaily" : "daily",
     "noOfdaysOrMonth" : 1,
     "source_file_path" : "../../../../pythonlib/test/resources",
     "schema_path" : "../../../../config/rrbs_fct_sms.json"
