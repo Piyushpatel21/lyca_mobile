@@ -1,3 +1,13 @@
+########################################################################
+# description     : processing JSON config files.                      #
+# author          : Naren K(narendra.kumar@cloudwick.com),             #
+#                   Tejveer Singh (tejveer.singh@cloudwick.com)        #
+#                   Shubhajit Saha (shubhajit.saha@cloudwick.com)      #
+# contributor     :                                                    #
+# version         : 1.0                                                #
+# notes           :                                                    #
+########################################################################
+
 from lycaSparkTransformation.DataTransformation import DataTransformation
 from lycaSparkTransformation.SchemaReader import SchemaReader
 from lycaSparkTransformation.SparkSessionBuilder import SparkSessionBuilder

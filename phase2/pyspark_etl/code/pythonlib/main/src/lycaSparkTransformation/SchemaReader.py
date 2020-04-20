@@ -1,3 +1,13 @@
+########################################################################
+# description     : Building StructType schema for data files          #
+# author          : Naren K(narendra.kumar@cloudwick.com),             #
+#                   Tejveer Singh (tejveer.singh@cloudwick.com)        #
+#                   Shubhajit Saha (shubhajit.saha@cloudwick.com)      #
+# contributor     :                                                    #
+# version         : 1.0                                                #
+# notes           :                                                    #
+########################################################################
+
 from pyspark.sql.types import StructType, StructField, StringType, IntegerType, DateType, DecimalType
 from commonUtils.CommandLineProcessor import CommandLineProcessor
 
@@ -6,6 +16,8 @@ class SchemaReader:
 
     @staticmethod
     def dataType(columnType):
+        """:parameter columnType, which we have in schema file for each column
+           :return actual datatype according spark compatible"""
         if columnType in ("smallint"):
             return StringType()
         elif columnType in ("character", "timestamp without time zone"):
@@ -17,6 +29,8 @@ class SchemaReader:
 
     @staticmethod
     def structTypemapping(JsonPath) -> StructType:
+        """:parameter JsonPath - schema file path
+           :return StructType schema for a source file"""
         try:
             data = CommandLineProcessor.json_parser(JsonPath)
             fieldStruct = StructType([])

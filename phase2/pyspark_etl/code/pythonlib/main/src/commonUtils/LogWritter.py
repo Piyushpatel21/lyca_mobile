@@ -1,3 +1,13 @@
+########################################################################
+# description     : Application Log4j                                  #
+# author          : Naren K(narendra.kumar@cloudwick.com),             #
+#                   Tejveer Singh (tejveer.singh@cloudwick.com)        #
+#                   Shubhajit Saha (shubhajit.saha@cloudwick.com)      #
+# contributor     :                                                    #
+# version         : 1.0                                                #
+# notes           :                                                    #
+########################################################################
+
 import logging
 
 
@@ -11,9 +21,12 @@ class Log:
         self._logger = logging.getLogger(__name__)
 
     def get_logger(self):
+        """:return logger"""
         return self._logger
 
     def set_level(self, level=None):
+        """:parameter log level type
+           :return logger with a specific log level"""
         if level == "INFO":
             # self._logger.setLevel(self.log4j.Level.INFO) if self.spark else
             self._logger.setLevel(logging.INFO)

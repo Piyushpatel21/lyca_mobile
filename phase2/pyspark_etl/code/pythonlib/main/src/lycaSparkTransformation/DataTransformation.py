@@ -1,5 +1,12 @@
-import os
-import tempfile
+########################################################################
+# description     : Spark Transformation, Spark writer                 #                              #
+# author          : Naren K(narendra.kumar@cloudwick.com),             #
+#                   Tejveer Singh (tejveer.singh@cloudwick.com)        #
+#                   Shubhajit Saha (shubhajit.saha@cloudwick.com)      #
+# contributor     :                                                    #
+# version         : 1.0                                                #
+# notes           :                                                    #
+########################################################################
 
 from commonUtils.CommandLineProcessor import CommandLineProcessor
 from pyspark.sql import DataFrame, Window, Column
@@ -15,6 +22,11 @@ class DataTransformation:
 
     @staticmethod
     def readSourceFile(spark, path, structtype: StructType, checkSumColumns=[], fList=[]) -> DataFrame:
+        """ :parameter SparkSession
+            :parameter path of source files
+            :parameter StructType - schema for source file
+            :parameter fList of source files
+            :return union of all source files"""
         try:
             df_list = []
             for file in fList:
@@ -34,6 +46,8 @@ class DataTransformation:
 
     @staticmethod
     def getCheckSumColumns(JsonPath) -> []:
+        """ :parameter JsonPath schema file path
+            :return list of column which is part of building checksum column"""
         try:
             data = CommandLineProcessor.json_parser(JsonPath)
             checkColList = []
@@ -46,20 +60,26 @@ class DataTransformation:
 
     @staticmethod
     def getDuplicates(dataFrame: DataFrame, checksumColumn) -> DataFrame:
-        windowspec = Window.partitionBy(checksumColumn).orderBy(dataFrame["checksum"].desc())
-        df_duplicates = dataFrame.withColumn("duplicate", py_function.count(dataFrame["checksum"]).over(windowspec).cast(IntegerType())) \
+        """:parameter - DataFrame, checkSum column name
+           :return duplicate record with in dataFrame basis on checksum column"""
+        windowspec = Window.partitionBy(dataFrame[checksumColumn]).orderBy(dataFrame[checksumColumn].desc())
+        df_duplicates = dataFrame.withColumn("duplicate", py_function.count(dataFrame[checksumColumn]).over(windowspec).cast(IntegerType())) \
             .filter('duplicate > 1')
         return df_duplicates
 
     @staticmethod
     def getUnique(dataFrame: DataFrame, checksumColumn) -> DataFrame:
-        windowspec = Window.partitionBy(checksumColumn).orderBy(checksumColumn)
+        """:parameter - DataFrame, checkSum column name
+            :return unique record with in dataFrame basis on checksum column"""
+        windowspec = Window.partitionBy(dataFrame[checksumColumn]).orderBy(dataFrame[checksumColumn])
         df_source = dataFrame.withColumn("duplicate", py_function.row_number().over(windowspec).cast(IntegerType()))
         df_unique_records = df_source.filter(df_source['duplicate'] == 1).drop(df_source['duplicate'])
         return df_unique_records
 
     @staticmethod
     def getPrevRangeDate(mnthOrdaily=None, noOfdaysOrMonth=None):
+        """:parameter - monthly or daily and no. of month or days
+           :return difference date between current date and given no. of days and month"""
         if mnthOrdaily == 'daily':
             d = datetime.today() + relativedelta(days=-noOfdaysOrMonth)
             check_date = d.strftime("%Y%m%d")
@@ -76,6 +96,11 @@ class DataTransformation:
     @staticmethod
     def getLateOrNormalCdr(dataFrame: DataFrame, dateColumn, formattedDateColumn, integerDateColumn,
                            dateRange) -> DataFrame:
+        """:parameter source as dataFrame
+           :parameter date column
+           :parameter formatted Date Column name
+           :parameter numeric column name of date column
+           :return dataframe with new derived columns"""
         df_event_date = dataFrame.withColumn(integerDateColumn,
                                              py_function.substring(py_function.col(dateColumn), 0, 8).cast(
                                                  IntegerType()))
@@ -88,6 +113,9 @@ class DataTransformation:
 
     @staticmethod
     def getDbDuplicate(dfSource: DataFrame, dfRedshift: DataFrame) -> DataFrame:
+        """:parameter dfSource - get from source file
+           :parameter dfRedshift - reading data from redshift late CDR or data mart db
+           :return dataframe with new column weather record exist in dfRedshift"""
         dfDB = dfRedshift.select("checksum")
         dfjoin = dfSource.join(dfDB, dfSource["checksum"] == dfDB["checksum"], "left_outer") \
             .withColumn("newOrDupl",
@@ -98,7 +126,4 @@ class DataTransformation:
     @staticmethod
     def writeToS3(dataFrame: DataFrame, run_date, cdrType, filename):
         path = '../../../../pythonlib/test/resources/output/' + run_date + '/' + cdrType + '/'
-        # dataFrame.write.format('csv').mode('append').option('sep', ',').save(path)
-        dataFrame.repartition(1).write.option("header", True)\
-            .option("quote", "\u0000")\
-            .csv(path, "append")
+        dataFrame.write.format('csv').mode('append').option('sep', ',').save(path)

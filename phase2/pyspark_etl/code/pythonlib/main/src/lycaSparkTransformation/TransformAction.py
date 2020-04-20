@@ -1,3 +1,13 @@
+########################################################################
+# description     : Building application level param and calling       #
+# author          : Naren K(narendra.kumar@cloudwick.com),             #
+#                   Tejveer Singh (tejveer.singh@cloudwick.com)        #
+#                   Shubhajit Saha (shubhajit.saha@cloudwick.com)      #
+# contributor     :                                                    #
+# version         : 1.0                                                #
+# notes           :                                                    #
+########################################################################
+
 import os
 
 from lycaSparkTransformation.CliBuilder import CliBuilder
@@ -5,6 +15,9 @@ from lycaSparkTransformation.TransformActionChain import TransformActionChain
 
 
 class TransformAction:
+    """:parameter - Taking input as module
+       :parameter sub-module
+       :parameter application property file path"""
     def __init__(self, module, subModule, filePath):
         self.module = module
         self.submodule = subModule
@@ -12,6 +25,7 @@ class TransformAction:
         self.cli = CliBuilder(module, subModule, filePath)
 
     def buildCLI(self):
+        """ Building application properties"""
         moduleProp = self.cli.getPrpperty()
         return {
             "prop": moduleProp
