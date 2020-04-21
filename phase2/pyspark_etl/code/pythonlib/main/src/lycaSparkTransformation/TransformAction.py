@@ -49,6 +49,6 @@ integerDateColumn = properties["prop"]["integerDateColumn"]
 mnthOrdaily = properties["prop"]["mnthOrdaily"]
 noOfdaysOrMonth = properties["prop"]["noOfdaysOrMonth"]
 
-files =['SMS_2019090200.cdr']
+files =['sample.csv']
 transformactionchain = TransformActionChain(module, subModule, ap, sourceFilePath, srcSchemaPath, tgtSchemaPath, files, dateColumn, formattedDateColumn, integerDateColumn, mnthOrdaily, noOfdaysOrMonth)
 

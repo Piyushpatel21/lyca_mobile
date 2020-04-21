@@ -141,4 +141,4 @@ class DataTransformation:
     @staticmethod
     def writeToS3(dataFrame: DataFrame, run_date, cdrType, filename, tgtColmns=[]):
         path = '../../../../pythonlib/test/resources/output/' + run_date + '/' + cdrType + '/'
-        dataFrame.repartition(1).select(py_function.concat_ws(",", *tgtColmns)).write.format('csv').mode('append').option('sep', ',').save(path)
+        dataFrame.repartition(1).write.option("header", "true").format('csv').mode('append').option('sep', ',').save(path)

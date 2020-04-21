@@ -40,7 +40,7 @@ class TransformActionChain:
         sparkSession.conf.set("spark.hadoop.mapred.output.committer.class","com.appsflyer.spark.DirectOutputCommitter")
 
         file_path = os.path.abspath(sourceFilePath)
-        file_list = ['/sample.cdr']
+        file_list = ['/sample2.csv']
         run_date = '20200420'
         df_source = DataTransformation.readSourceFile(sparkSession, file_path, schema, checkSumColumns, file_list)
         df_lateDB = sparkSession.read.option("header", "true").csv('../../../../pythonlib/test/resources/output/20200420/dataMart/')
@@ -60,13 +60,13 @@ class TransformActionChain:
         df_unique_late.show(20, False)
         print("unique normal record ============>")
         df_unique_normal.show(20, False)
-        print("Late CDR New Record ============>")
+        print("Late DB New Record ============>")
         dfLateCDRNewRecord.show(20, False)
-        print("Late CDR Duplicate Record ============>")
+        print("Late DB Duplicate Record ============>")
         dfLateCDRDuplicate.show(20, False)
-        print("Normal CDR New Record ============>")
+        print("Normal DB New Record ============>")
         dfNormalCDRNewRecord.show(20, False)
-        print("Normal CDR Duplicate Record ============>")
+        print("Normal DB Duplicate Record ============>")
         dfNormalCDRDuplicate.show(150, False)
         DataTransformation.writeToS3(dfLateCDRNewRecord, run_date, 'dataMart', 'normalDB.csv', tgtColumns)
         DataTransformation.writeToS3(df_duplicate, run_date, 'duplicateModel', 'duplicate.csv')
