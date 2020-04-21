@@ -15,13 +15,14 @@ import os
 
 
 class TransformActionChain:
-    def __init__(self, module, subModule, ap, sourceFilePath, schemaPath, files, dateColumn, formattedDateColumn,
+    def __init__(self, module, subModule, ap, sourceFilePath, srcSchemaPath, tgtSchemaPath, files, dateColumn, formattedDateColumn,
                  integerDateColumn, mnthOrdaily, noOfdaysOrMonth):
         self.module = module
         self.subModule = subModule
         self.appname = ap
         self.sourceFilePath = sourceFilePath
-        self.schemaPath = schemaPath
+        self.srcSchemaPath = srcSchemaPath
+        self.tgtSchemaPath = tgtSchemaPath
         self.files = [files]
         self.dateColumn = dateColumn
         self.formattedDateColumn = formattedDateColumn
@@ -29,10 +30,11 @@ class TransformActionChain:
         self.mnthOrdaily = mnthOrdaily
         self.noOfdaysOrMonth = noOfdaysOrMonth
 
-        schemaFilePath = os.path.abspath(self.schemaPath)
-        if os.path.exists(schemaPath):
-            schema = SchemaReader.structTypemapping(schemaFilePath)
-        checkSumColumns = DataTransformation.getCheckSumColumns(schemaFilePath)
+        srcSchemaFilePath = os.path.abspath(self.srcSchemaPath)
+        if os.path.exists(srcSchemaPath):
+            schema = SchemaReader.structTypemapping(self.srcSchemaPath)
+        checkSumColumns = DataTransformation.getCheckSumColumns(srcSchemaFilePath)
+        tgtColumns = DataTransformation.getTgtColumns(self.tgtSchemaPath)
         sparkSession = SparkSessionBuilder.sparkSessionBuild(self.appname)
         sparkSession.conf.set("mapreduce.fileoutputcommitter.marksuccessfuljobs", "false")
         sparkSession.conf.set("spark.hadoop.mapred.output.committer.class","com.appsflyer.spark.DirectOutputCommitter")
@@ -66,7 +68,7 @@ class TransformActionChain:
         dfNormalCDRNewRecord.show(20, False)
         print("Normal CDR Duplicate Record ============>")
         dfNormalCDRDuplicate.show(150, False)
-        DataTransformation.writeToS3(dfLateCDRNewRecord, run_date, 'dataMart', 'normalDB.csv')
+        DataTransformation.writeToS3(dfLateCDRNewRecord, run_date, 'dataMart', 'normalDB.csv', tgtColumns)
         DataTransformation.writeToS3(df_duplicate, run_date, 'duplicateModel', 'duplicate.csv')
         DataTransformation.writeToS3(dfLateCDRNewRecord, run_date, 'lateCDR', 'late.csv')
         DataTransformation.writeToS3(dfLateCDRDuplicate, run_date, 'duplicateModel', 'duplicate.csv')

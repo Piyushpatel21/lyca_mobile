@@ -37,7 +37,7 @@ class DataTransformation:
                 df_source = spark.read.option("header", "false").schema(structtype).csv(file)
                 df_trans = df_source.withColumn("checksum",
                                                 py_function.md5(py_function.concat_ws(",", *checkSumColumns))) \
-                    .withColumn("file_identifier", py_function.lit(file_identifier))
+                    .withColumn("filename", py_function.lit(file_identifier))
                 df_list.append(df_trans)
             print("<============ Merge all DataFrame using Union ============>")
             return reduce(DataFrame.union, df_list)
@@ -59,11 +59,26 @@ class DataTransformation:
             print('Decoding JSON has failed')
 
     @staticmethod
+    def getTgtColumns(JsonPath) -> []:
+        """ :parameter JsonPath schema file path
+            :return list of column which is part of building checksum column"""
+        try:
+            data = CommandLineProcessor.json_parser(JsonPath)
+            colList = []
+            for col in data:
+                colList.append(col["column_name"])
+            return colList
+        except ValueError:
+            print('Decoding JSON has failed')
+
+    @staticmethod
     def getDuplicates(dataFrame: DataFrame, checksumColumn) -> DataFrame:
         """:parameter - DataFrame, checkSum column name
            :return duplicate record with in dataFrame basis on checksum column"""
         windowspec = Window.partitionBy(dataFrame[checksumColumn]).orderBy(dataFrame[checksumColumn].desc())
-        df_duplicates = dataFrame.withColumn("duplicate", py_function.count(dataFrame[checksumColumn]).over(windowspec).cast(IntegerType())) \
+        df_duplicates = dataFrame.withColumn("duplicate",
+                                             py_function.count(dataFrame[checksumColumn]).over(windowspec).cast(
+                                                 IntegerType())) \
             .filter('duplicate > 1')
         return df_duplicates
 
@@ -116,7 +131,7 @@ class DataTransformation:
         """:parameter dfSource - get from source file
            :parameter dfRedshift - reading data from redshift late CDR or data mart db
            :return dataframe with new column weather record exist in dfRedshift"""
-        dfDB = dfRedshift.select("checksum")
+        dfDB = dfRedshift.select(dfRedshift["checksum"])
         dfjoin = dfSource.join(dfDB, dfSource["checksum"] == dfDB["checksum"], "left_outer") \
             .withColumn("newOrDupl",
                         py_function.when(dfSource["checksum"] == dfDB["checksum"], "Duplicate").otherwise("New"))
@@ -124,6 +139,6 @@ class DataTransformation:
         return dfnormalOrDuplicate
 
     @staticmethod
-    def writeToS3(dataFrame: DataFrame, run_date, cdrType, filename):
+    def writeToS3(dataFrame: DataFrame, run_date, cdrType, filename, tgtColmns=[]):
         path = '../../../../pythonlib/test/resources/output/' + run_date + '/' + cdrType + '/'
-        dataFrame.write.format('csv').mode('append').option('sep', ',').save(path)
+        dataFrame.repartition(1).select(py_function.concat_ws(",", *tgtColmns)).write.format('csv').mode('append').option('sep', ',').save(path)

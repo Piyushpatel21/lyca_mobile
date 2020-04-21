@@ -29,7 +29,7 @@ class CommandLineProcessor:
         try:
             data = CommandLineProcessor.json_parser(filepath)
             for obj in data:
-                if obj["module"] == module and obj["sub_module"] == sub_module:
+                if obj["module"] == module and obj["subModule"] == sub_module:
                     return {
                         "module_prop": obj
                     }

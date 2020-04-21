@@ -25,19 +25,23 @@ class CliBuilder:
 
     def getSubModule(self):
         """ :return sub module name ex: sms, gprs etc"""
-        return self.prop['module_prop']['sub_module']
+        return self.prop['module_prop']['subModule']
 
     def getAppName(self):
         """ :return application name for spark session"""
-        return self.prop['module_prop']['module'] + " - " + self.prop['module_prop']['sub_module']
+        return self.prop['module_prop']['module'] + " - " + self.prop['module_prop']['subModule']
 
     def getSourceFilePath(self):
         """ :return source file path in s3"""
-        return self.prop['module_prop']['source_file_path']
+        return self.prop['module_prop']['sourceFilePath']
 
-    def getSchemaPath(self):
-        """ :return JSON schema file path"""
-        return self.prop['module_prop']['schema_path']
+    def getSrcSchemaPath(self):
+        """ :return JSON src schema file path"""
+        return self.prop['module_prop']['srcSchemaPath']
+
+    def getTgtSchemaPath(self):
+        """ :return JSON tgt schema file path"""
+        return self.prop['module_prop']['tgtSchemaPath']
 
     def getDateColumn(self):
         """ :return return date column which is used in dataset to compare with Late or Normal CDR"""
@@ -65,7 +69,8 @@ class CliBuilder:
         subModule = self.getSubModule()
         appname = self.getAppName()
         sourceFilePath = self.getSourceFilePath()
-        schemaPath = self.getSchemaPath()
+        srcSchemaPath = self.getSrcSchemaPath()
+        tgtSchemaPath = self.getTgtSchemaPath()
         dateColumn = self.getDateColumn()
         formattedDateColumn = self.getFormattedDateColumn()
         integerDateColumn = self.getIntegerDateColumn()
@@ -76,7 +81,8 @@ class CliBuilder:
             "subModule": subModule,
             "appname": appname,
             "sourceFilePath": sourceFilePath,
-            "schemaPath": schemaPath,
+            "srcSchemaPath": srcSchemaPath,
+            "tgtSchemaPath": tgtSchemaPath,
             "dateColumn": dateColumn,
             "formattedDateColumn": formattedDateColumn,
             "integerDateColumn": integerDateColumn,

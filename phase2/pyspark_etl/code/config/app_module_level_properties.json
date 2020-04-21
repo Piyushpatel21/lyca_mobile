@@ -1,14 +1,15 @@
 [
   {
     "module" : "rrbs",
-    "sub_module" : "sms",
+    "subModule" : "sms",
     "dateColumn" : "msg_date",
     "formattedDateColumn" : "msg_date_dt",
     "integerDateColumn" : "msg_date_num",
     "mnthOrdaily" : "daily",
     "noOfdaysOrMonth" : 1,
-    "source_file_path" : "../../../../pythonlib/test/resources",
-    "schema_path" : "../../../../config/rrbs_fct_sms.json"
+    "sourceFilePath" : "../../../../pythonlib/test/resources",
+    "srcSchemaPath" : "../../../../config/rrbs_src_fct_sms.json",
+    "tgtSchemaPath" : "../../../../config/rrbs_tgt_fct_sms.json"
   },
   {
     "module" : "rrbs",
