@@ -30,9 +30,9 @@ class DataTransformation:
         try:
             df_list = []
             for file in fList:
-                df_source = "df_" + str(file).lower().replace(".cdr", "")
-                file_identifier = df_source
-                print("Reading source file =====> " + df_source)
+                file_identifier = str(file).lower().replace(".cdr", "")
+                df_source = "df_" + file_identifier
+                print("Reading source file =====> " + file_identifier)
                 file = path + file
                 df_source = spark.read.option("header", "false").schema(structtype).csv(file)
                 df_trans = df_source.withColumn("checksum",
@@ -141,4 +141,4 @@ class DataTransformation:
     @staticmethod
     def writeToS3(dataFrame: DataFrame, run_date, cdrType, filename, tgtColmns=[]):
         path = '../../../../pythonlib/test/resources/output/' + run_date + '/' + cdrType + '/'
-        dataFrame.repartition(1).write.option("header", "true").format('csv').mode('append').option('sep', ',').save(path)
+        dataFrame.repartition(1).select(*tgtColmns).write.option("header", "true").format('csv').mode('append').option('sep', ',').save(path)
