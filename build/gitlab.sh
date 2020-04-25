@@ -27,4 +27,5 @@ git remote add code_commit https://git-codecommit.eu-west-2.amazonaws.com/v1/rep
 
 git remote -v
 
+printf "hash: $(git rev-parse HEAD) ci_ref: ${CI_COMMIT_REF_NAME}"
 git push code_commit ${CI_COMMIT_REF_NAME}
