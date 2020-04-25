@@ -27,4 +27,4 @@ git remote add code_commit https://git-codecommit.eu-west-2.amazonaws.com/v1/rep
 
 git remote -v
 
-git push code_commit ${CI_COMMIT_REF_NAME} || sleep 10000
+git push code_commit ${CI_COMMIT_REF_NAME}
