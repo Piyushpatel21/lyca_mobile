@@ -25,4 +25,5 @@ git remote remove code_commit || printf "code_commit does not exist"
 git remote add code_commit https://git-codecommit.eu-west-2.amazonaws.com/v1/repos/lycamobile-etl-movements
 # git remote set-url origin https://git-codecommit.eu-west-2.amazonaws.com/v1/repos/lycamobile-etl-movements
 git remote -v
+echo "pushing to CI_COMMIT_REF_NAME='${CI_COMMIT_REF_NAME}'"
 git push code_commit ${CI_COMMIT_REF_NAME}
