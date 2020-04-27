@@ -7,71 +7,77 @@
 # version         : 1.0                                                #
 # notes           :                                                    #
 ########################################################################
+from typing import Tuple
+from pyspark.sql import SparkSession
 
 from lycaSparkTransformation.DataTransformation import DataTransformation
 from lycaSparkTransformation.SchemaReader import SchemaReader
-from lycaSparkTransformation.SparkSessionBuilder import SparkSessionBuilder
+from pyspark.sql import DataFrame
 import os
+from lycaSparkTransformation.CliBuilder import CliBuilder
 
 
 class TransformActionChain:
-    def __init__(self, module, subModule, ap, sourceFilePath, srcSchemaPath, tgtSchemaPath, files, dateColumn, formattedDateColumn,
-                 integerDateColumn, mnthOrdaily, noOfdaysOrMonth):
+    def __init__(self, module, subModule, filePath):
         self.module = module
         self.subModule = subModule
-        self.appname = ap
-        self.sourceFilePath = sourceFilePath
-        self.srcSchemaPath = srcSchemaPath
-        self.tgtSchemaPath = tgtSchemaPath
-        self.files = [files]
-        self.dateColumn = dateColumn
-        self.formattedDateColumn = formattedDateColumn
-        self.integerDateColumn = integerDateColumn
-        self.mnthOrdaily = mnthOrdaily
-        self.noOfdaysOrMonth = noOfdaysOrMonth
+        self.filePath = filePath
+        self.property = CliBuilder(self.module, self.subModule, self.filePath).getPrpperty()
 
-        srcSchemaFilePath = os.path.abspath(self.srcSchemaPath)
-        if os.path.exists(srcSchemaPath):
-            schema = SchemaReader.structTypemapping(self.srcSchemaPath)
-        checkSumColumns = DataTransformation.getCheckSumColumns(srcSchemaFilePath)
-        tgtColumns = DataTransformation.getTgtColumns(self.tgtSchemaPath)
-        sparkSession = SparkSessionBuilder.sparkSessionBuild(self.appname)
-        sparkSession.conf.set("mapreduce.fileoutputcommitter.marksuccessfuljobs", "false")
-        sparkSession.conf.set("spark.hadoop.mapred.output.committer.class","com.appsflyer.spark.DirectOutputCommitter")
+    def srcSchema(self):
+        try:
+            srcSchemaFilePath = os.path.abspath(self.property.get("srcSchemaPath"))
+            schema = SchemaReader.structTypemapping(self.property.get("srcSchemaPath"))
+            checkSumColumns = DataTransformation.getCheckSumColumns(srcSchemaFilePath)
+            tgtColumns = DataTransformation.getTgtColumns(self.property.get("tgtSchemaPath"))
+            return {
+                "srcSchema": schema,
+                "checkSumColumns": checkSumColumns,
+                "tgtSchema": tgtColumns
+            }
+        except ValueError:
+            "Error"
 
-        file_path = os.path.abspath(sourceFilePath)
-        file_list = ['/sample2.csv']
-        run_date = '20200420'
-        df_source = DataTransformation.readSourceFile(sparkSession, file_path, schema, checkSumColumns, file_list)
-        df_lateDB = sparkSession.read.option("header", "true").csv('../../../../pythonlib/test/resources/output/20200420/dataMart/')
-        df_normalDB = sparkSession.read.option("header", "true").csv('../../../../pythonlib/test/resources/output/20200420/dataMart/')
-        date_range = int(DataTransformation.getPrevRangeDate(self.mnthOrdaily, self.noOfdaysOrMonth))
-        lateOrNormalCdr = DataTransformation.getLateOrNormalCdr(df_source, self.dateColumn, self.formattedDateColumn, self.integerDateColumn, date_range)
-        df_duplicate = DataTransformation.getDuplicates(lateOrNormalCdr, "checksum")
-        df_unique_late = DataTransformation.getUnique(lateOrNormalCdr, "checksum").filter("normalOrlate == 'Late'")
-        df_unique_normal = DataTransformation.getUnique(lateOrNormalCdr, "checksum").filter("normalOrlate == 'Normal'")
-        dfLateCDRNewRecord = DataTransformation.getDbDuplicate(df_unique_late, df_lateDB).filter("newOrDupl == 'New'")
-        dfLateCDRDuplicate = DataTransformation.getDbDuplicate(df_unique_late, df_lateDB).filter("newOrDupl == 'Duplicate'")
-        dfNormalCDRNewRecord = DataTransformation.getDbDuplicate(df_unique_normal, df_normalDB).filter("newOrDupl == 'New'")
-        dfNormalCDRDuplicate = DataTransformation.getDbDuplicate(df_unique_normal, df_normalDB).filter("newOrDupl == 'Duplicate'")
-        print("source file duplicate ============>")
-        df_duplicate.show(20, False)
-        print("unique late record ============>")
-        df_unique_late.show(20, False)
-        print("unique normal record ============>")
-        df_unique_normal.show(20, False)
-        print("Late DB New Record ============>")
-        dfLateCDRNewRecord.show(20, False)
-        print("Late DB Duplicate Record ============>")
-        dfLateCDRDuplicate.show(20, False)
-        print("Normal DB New Record ============>")
-        dfNormalCDRNewRecord.show(20, False)
-        print("Normal DB Duplicate Record ============>")
-        dfNormalCDRDuplicate.show(150, False)
-        wcID = dfNormalCDRDuplicate
-        DataTransformation.writeToS3(dfLateCDRNewRecord, run_date, 'dataMart', 'normalDB.csv', tgtColumns)
-        DataTransformation.writeToS3(df_duplicate, run_date, 'duplicateModel', 'duplicate.csv', tgtColumns)
-        DataTransformation.writeToS3(dfLateCDRNewRecord, run_date, 'lateCDR', 'late.csv', tgtColumns)
-        DataTransformation.writeToS3(dfLateCDRDuplicate, run_date, 'duplicateModel', 'duplicate.csv', tgtColumns)
-        DataTransformation.writeToS3(dfNormalCDRNewRecord, run_date, 'dataMart', 'normalDB.csv', tgtColumns)
-        DataTransformation.writeToS3(dfNormalCDRDuplicate, run_date, 'duplicateModel', 'duplicate.csv', tgtColumns)
+    def getSourceData(self, sparkSession: SparkSession, srcSchema, checkSumColumns, file_list, run_date) -> Tuple[DataFrame, DataFrame, DataFrame]:
+        try:
+            df_source = DataTransformation.readSourceFile(sparkSession, self.property.get("sourceFilePath"), srcSchema, checkSumColumns, file_list)
+            date_range = int(DataTransformation.getPrevRangeDate(self.property.get("mnthOrdaily"), self.property.get("noOfdaysOrMonth")))
+            lateOrNormalCdr = DataTransformation.getLateOrNormalCdr(df_source, self.property.get("dateColumn"), self.property.get("formattedDateColumn"), self.property.get("integerDateColumn"), date_range)
+            df_duplicate = DataTransformation.getDuplicates(lateOrNormalCdr, "checksum")
+            df_unique_late = DataTransformation.getUnique(lateOrNormalCdr, "checksum").filter("normalOrlate == 'Late'")
+            df_unique_normal = DataTransformation.getUnique(lateOrNormalCdr, "checksum").filter("normalOrlate == 'Normal'")
+            return df_duplicate, df_unique_late, df_unique_normal
+        except Exception:
+            print("Error in DataFrame")
+
+    def getDbDuplicate(self, sparkSession: SparkSession) -> Tuple[DataFrame, DataFrame]:
+        try:
+            dfDB = sparkSession.read.option("header", "true").csv('../../../../pythonlib/test/resources/output/20200420/dataMart/')
+            normalDateRng = int(DataTransformation.getPrevRangeDate(self.property.get("mnthOrdaily"), self.property.get("noOfdaysOrMonth")))
+            lateDateRng = int(DataTransformation.getPrevRangeDate(self.property.get("mnthOrdaily"), self.property.get("noOfdaysOrMonth")))
+            dfNormalDB = dfDB.filter(dfDB[self.property.get("integerDateColumn")] <= normalDateRng)
+            dfLateDB = dfDB.filter(dfDB[self.property.get("integerDateColumn")] <= lateDateRng)
+            return dfNormalDB, dfLateDB
+        except Exception:
+            print("Error in DataFrame")
+
+    def getLateCDR(self, srcDataFrame, lateDBDataFrame) -> Tuple[DataFrame, DataFrame]:
+        try:
+            dfLateCDRNewRecord = DataTransformation.getDbDuplicate(srcDataFrame, lateDBDataFrame).filter("newOrDupl == 'New'")
+            dfLateCDRDuplicate = DataTransformation.getDbDuplicate(srcDataFrame, lateDBDataFrame).filter("newOrDupl == 'Duplicate'")
+            return dfLateCDRNewRecord, dfLateCDRDuplicate
+        except Exception as ex :
+            print("Error in DataFrame")
+
+    def getNormalCDR(self, srcDataFrame, normalDBDataFrame) -> Tuple[DataFrame, DataFrame]:
+        try:
+            dfNormalCDRNewRecord = DataTransformation.getDbDuplicate(srcDataFrame, normalDBDataFrame).filter("newOrDupl == 'New'")
+            dfNormalCDRDuplicate = DataTransformation.getDbDuplicate(srcDataFrame, normalDBDataFrame).filter("newOrDupl == 'Duplicate'")
+            return dfNormalCDRNewRecord, dfNormalCDRDuplicate
+        except Exception:
+            print("Error in DataFrame")
+
+    def dfWrite(self, dataFrame: DataFrame, run_date, cdrType, fileName, tgtSchema):
+        path = '../../../../pythonlib/test/resources/output/' + str(run_date) + '/' + cdrType + '/'
+        print(os.path.abspath(path))
+        DataTransformation.writeToS3(dataFrame, run_date, os.path.abspath(path), tgtSchema)

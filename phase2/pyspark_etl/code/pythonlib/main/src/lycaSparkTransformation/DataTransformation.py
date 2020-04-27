@@ -22,9 +22,10 @@ class DataTransformation:
 
     @staticmethod
     def readSourceFile(spark, path, structtype: StructType, checkSumColumns=[], fList=[]) -> DataFrame:
-        """ :parameter SparkSession
+        """ :parameter spark
             :parameter path of source files
-            :parameter StructType - schema for source file
+            :parameter structtype - schema for source file
+            :parameter checkSumColumns - list of checksum columns
             :parameter fList of source files
             :return union of all source files"""
         try:
@@ -139,6 +140,6 @@ class DataTransformation:
         return dfnormalOrDuplicate
 
     @staticmethod
-    def writeToS3(dataFrame: DataFrame, run_date, cdrType, filename, tgtColmns=[]):
-        path = '../../../../pythonlib/test/resources/output/' + run_date + '/' + cdrType + '/'
+    def writeToS3(dataFrame: DataFrame, run_date, path, tgtColmns=[]):
+        # dataFrame.withColumn("rn", py_function.monotonically_increasing_id()).show(150, False)
         dataFrame.repartition(1).select(*tgtColmns).write.option("header", "true").format('csv').mode('append').option('sep', ',').save(path)

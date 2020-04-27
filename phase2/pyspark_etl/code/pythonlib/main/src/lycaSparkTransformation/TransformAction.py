@@ -9,46 +9,50 @@
 ########################################################################
 
 import os
-
-from lycaSparkTransformation.CliBuilder import CliBuilder
 from lycaSparkTransformation.TransformActionChain import TransformActionChain
-
+from lycaSparkTransformation.SparkSessionBuilder import SparkSessionBuilder
 
 class TransformAction:
     """:parameter - Taking input as module
        :parameter sub-module
        :parameter application property file path"""
-    def __init__(self, module, subModule, filePath):
-        self.module = module
-        self.submodule = subModule
-        self.filePath = filePath
-        self.cli = CliBuilder(module, subModule, filePath)
+    def __init__(self):
+        pass
 
-    def buildCLI(self):
-        """ Building application properties"""
-        moduleProp = self.cli.getPrpperty()
-        return {
-            "prop": moduleProp
-        }
 
 module = 'rrbs'
 subModule = 'sms'
 filePath = os.path.abspath('../../../../config/app_module_level_properties.json')
-tf = TransformAction(module, subModule, filePath)
-
-properties = tf.buildCLI()
-module = properties["prop"]["module"]
-subModule = properties["prop"]["subModule"]
-ap = properties["prop"]["appname"]
-sourceFilePath = properties["prop"]["sourceFilePath"]
-srcSchemaPath = properties["prop"]["srcSchemaPath"]
-tgtSchemaPath = properties["prop"]["tgtSchemaPath"]
-dateColumn = properties["prop"]["dateColumn"]
-formattedDateColumn = properties["prop"]["formattedDateColumn"]
-integerDateColumn = properties["prop"]["integerDateColumn"]
-mnthOrdaily = properties["prop"]["mnthOrdaily"]
-noOfdaysOrMonth = properties["prop"]["noOfdaysOrMonth"]
-
-files =['sample.csv']
-transformactionchain = TransformActionChain(module, subModule, ap, sourceFilePath, srcSchemaPath, tgtSchemaPath, files, dateColumn, formattedDateColumn, integerDateColumn, mnthOrdaily, noOfdaysOrMonth)
-
+tf = TransformAction()
+transformactionchain = TransformActionChain(module, subModule, filePath)
+propColumns = transformactionchain.srcSchema()
+file_list = ["/sample.csv"]
+run_date = 20200420
+sparkSessionBuild = SparkSessionBuilder().sparkSessionBuild()
+sparkSession = sparkSessionBuild.get("sparkSession")
+logger = sparkSessionBuild.get("logger")
+duplicateData, lateUnique, normalUnique = transformactionchain.getSourceData(sparkSession, propColumns.get("srcSchema"), propColumns.get("checkSumColumns"), file_list, run_date)
+normalDB, lateDB = transformactionchain.getDbDuplicate(sparkSession)
+normalNew, normalDuplicate = transformactionchain.getLateCDR(normalUnique, normalDB)
+lateNew, lateDuplicate = transformactionchain.getNormalCDR(lateUnique, lateDB)
+outputCDR = [duplicateData, normalNew, normalDuplicate, lateNew, lateNew, lateDuplicate]
+print("source file duplicate ============>")
+duplicateData.show(20, False)
+print("unique late record ============>")
+lateUnique.show(20, False)
+print("unique normal record ============>")
+normalUnique.show(20, False)
+print("Late DB New Record ============>")
+lateNew.show(20, False)
+print("Late DB Duplicate Record ============>")
+lateDuplicate.show(20, False)
+print("Normal DB New Record ============>")
+lateNew.show(20, False)
+print("Normal DB Duplicate Record ============>")
+normalDuplicate.show(150, False)
+transformactionchain.dfWrite(lateNew, run_date, 'dataMart', 'normalDB.csv', propColumns.get("tgtSchema"))
+transformactionchain.dfWrite(duplicateData, run_date, 'duplicateModel', 'duplicate.csv', propColumns.get("tgtSchema"))
+transformactionchain.dfWrite(lateNew, run_date, 'lateCDR', 'late.csv', propColumns.get("tgtSchema"))
+transformactionchain.dfWrite(lateDuplicate, run_date, 'duplicateModel', 'duplicate.csv', propColumns.get("tgtSchema"))
+transformactionchain.dfWrite(normalNew, run_date, 'dataMart', 'normalDB.csv', propColumns.get("tgtSchema"))
+transformactionchain.dfWrite(normalDuplicate, run_date, 'duplicateModel', 'duplicate.csv', propColumns.get("tgtSchema"))
