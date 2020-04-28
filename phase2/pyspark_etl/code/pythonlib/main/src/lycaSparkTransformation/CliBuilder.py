@@ -8,7 +8,7 @@
 # notes           :                                                    #
 ########################################################################
 
-from commonUtils.CommandLineProcessor import CommandLineProcessor
+from commonUtils.JsonProcessor import JsonProcessor
 
 
 class CliBuilder:
@@ -17,7 +17,7 @@ class CliBuilder:
         self.module = module
         self.submodule = submodule
         self.filePath = filePath
-        self.prop = CommandLineProcessor.processCLIArguments(self.module, self.submodule, self.filePath)
+        self.prop = JsonProcessor.processJsonProperties(self.module, self.submodule, self.filePath)
 
     def getModule(self):
         """ :return module name ex: rrbs"""

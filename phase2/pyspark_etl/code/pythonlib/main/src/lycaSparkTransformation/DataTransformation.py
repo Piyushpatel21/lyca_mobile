@@ -8,7 +8,7 @@
 # notes           :                                                    #
 ########################################################################
 
-from commonUtils.CommandLineProcessor import CommandLineProcessor
+from commonUtils.JsonProcessor import JsonProcessor
 from pyspark.sql import DataFrame, Window, Column
 from functools import reduce
 from pyspark.sql import functions as py_function
@@ -50,7 +50,7 @@ class DataTransformation:
         """ :parameter JsonPath schema file path
             :return list of column which is part of building checksum column"""
         try:
-            data = CommandLineProcessor.json_parser(JsonPath)
+            data = JsonProcessor.json_parser(JsonPath)
             checkColList = []
             for col in data:
                 if col["checkSum"]:
@@ -64,7 +64,7 @@ class DataTransformation:
         """ :parameter JsonPath schema file path
             :return list of column which is part of building checksum column"""
         try:
-            data = CommandLineProcessor.json_parser(JsonPath)
+            data = JsonProcessor.json_parser(JsonPath)
             colList = []
             for col in data:
                 colList.append(col["column_name"])

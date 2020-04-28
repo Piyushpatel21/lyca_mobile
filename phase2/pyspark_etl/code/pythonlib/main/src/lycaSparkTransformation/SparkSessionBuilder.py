@@ -33,7 +33,6 @@ class SparkSessionBuilder:
                     "logger": logger
                 }
             else:
-                print("we are in else part")
                 sparkSession = SparkSession.builder.master("local").appName(self.appname).getOrCreate()
                 sparkLogger = Log4j(sparkSession)
                 sparkLogger.setLevel("INFO")

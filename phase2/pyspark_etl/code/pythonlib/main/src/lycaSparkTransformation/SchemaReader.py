@@ -9,7 +9,7 @@
 ########################################################################
 
 from pyspark.sql.types import StructType, StructField, StringType, IntegerType, DateType, DecimalType
-from commonUtils.CommandLineProcessor import CommandLineProcessor
+from commonUtils.JsonProcessor import JsonProcessor
 
 
 class SchemaReader:
@@ -32,7 +32,7 @@ class SchemaReader:
         """:parameter JsonPath - schema file path
            :return StructType schema for a source file"""
         try:
-            data = CommandLineProcessor.json_parser(JsonPath)
+            data = JsonProcessor.json_parser(JsonPath)
             fieldStruct = StructType([])
             for col in data:
                 fieldStruct.add(

@@ -18,14 +18,16 @@ from lycaSparkTransformation.CliBuilder import CliBuilder
 
 
 class TransformActionChain:
-    def __init__(self, module, subModule, filePath):
+    def __init__(self, logger, module, subModule, filePath):
+        self.logger = logger
         self.module = module
         self.subModule = subModule
         self.filePath = filePath
         self.property = CliBuilder(self.module, self.subModule, self.filePath).getPrpperty()
-
+        self.logger.info("We are in action chain")
     def srcSchema(self):
         try:
+            self.logger.info("something")
             srcSchemaFilePath = os.path.abspath(self.property.get("srcSchemaPath"))
             schema = SchemaReader.structTypemapping(self.property.get("srcSchemaPath"))
             checkSumColumns = DataTransformation.getCheckSumColumns(srcSchemaFilePath)
