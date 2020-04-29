@@ -14,7 +14,7 @@ from lycaSparkTransformation.DataTransformation import DataTransformation
 from lycaSparkTransformation.SchemaReader import SchemaReader
 from pyspark.sql import DataFrame
 import os
-from lycaSparkTransformation.CliBuilder import CliBuilder
+from lycaSparkTransformation.JSONBuilder import JSONBuilder
 
 
 class TransformActionChain:
@@ -23,7 +23,7 @@ class TransformActionChain:
         self.module = module
         self.subModule = subModule
         self.filePath = filePath
-        self.property = CliBuilder(self.module, self.subModule, self.filePath).getPrpperty()
+        self.property = JSONBuilder(self.module, self.subModule, self.filePath).getPrpperty()
         self.logger.info("We are in action chain")
     def srcSchema(self):
         try:

@@ -11,7 +11,7 @@
 from commonUtils.JsonProcessor import JsonProcessor
 
 
-class CliBuilder:
+class JSONBuilder:
 
     def __init__(self, module, submodule, filePath):
         self.module = module
