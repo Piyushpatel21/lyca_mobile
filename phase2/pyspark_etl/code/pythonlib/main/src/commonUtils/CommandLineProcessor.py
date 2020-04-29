@@ -1,6 +1,7 @@
 import argparse
 import json
-import logging
+# from commonUtils.Log4j import Log4j
+
 import sys
 
 moduleTag = (
@@ -16,14 +17,14 @@ submoduleTag = (
 
 
 class CommandLineProcessor:
-    log = logging.getLogger(__name__)
+    # log = Log4j()
     common_args = argparse.ArgumentParser(add_help=False)
     log_group = common_args.add_mutually_exclusive_group()
     log_group.add_argument(
         '-v',
         '--verbose',
         dest='verbosity',
-        default=[logging.INFO],
+        # default=[log.info],
         action='append_const',
         const=-10,
         help='more verbose',
@@ -72,10 +73,6 @@ class CommandLineProcessor:
     def processCLIArguments(self):
         """Parse arguments and run the default action."""
         args = self.parser.parse_args()
-        # init logging
-        log_level = max(logging.DEBUG, min(logging.CRITICAL, sum(args.verbosity)))
-        debug_on = log_level <= logging.DEBUG
-        logging.basicConfig(level=log_level)
         kwargs = dict(vars(args))
         kwargs.pop('action', None)
         kwargs.pop('command', None)
@@ -84,7 +81,7 @@ class CommandLineProcessor:
             # callback action
             args.action(**kwargs)
         except Exception as e:
-            self.log.error(e, exc_info=debug_on)
+            self.log.error(e)
             sys.exit(1)
         sys.exit(0)
 
@@ -98,8 +95,9 @@ cli = CommandLineProcessor()
 @cli.option('-submodule', '--submodule', choices=submoduleTag)
 def lycaDailyLoad(run_date, module, submodule):
     """Creates a resources for LycaETL."""
-    cli.log.info('creating resources for LycaETL')
-    cli.log.info(json.dumps({'run_date': run_date, 'module': module, 'submodule': submodule}))
+    # cli.log.info('creating resources for LycaETL')
+    # cli.log.info(json.dumps({'run_date': run_date, 'module': module, 'submodule': submodule}))
+    print(json.dumps({'run_date': run_date, 'module': module, 'submodule': submodule}))
 
 
 if __name__ == '__main__':
