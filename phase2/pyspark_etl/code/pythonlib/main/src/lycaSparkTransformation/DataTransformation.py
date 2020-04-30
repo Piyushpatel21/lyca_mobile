@@ -93,29 +93,26 @@ class DataTransformation:
         return df_unique_records
 
     @staticmethod
-    def getPrevRangeDate(mnthOrdaily=None, noOfdaysOrMonth=None):
+    def getPrevRangeDate(run_date, mnthOrdaily=None, noOfdaysOrMonth=None):
         """:parameter - monthly or daily and no. of month or days
            :return difference date between current date and given no. of days and month"""
         if mnthOrdaily == 'daily':
-            d = datetime.today() + relativedelta(days=-noOfdaysOrMonth)
+            d = datetime.strptime(str(run_date), '%Y%m%d') + relativedelta(days=-noOfdaysOrMonth)
             check_date = d.strftime("%Y%m%d")
             return check_date
         elif mnthOrdaily == 'monthly':
-            d = datetime.today() + relativedelta(months=-noOfdaysOrMonth)
-            check_date = d.strftime("%Y%m%d")
-            return check_date
-        else:
-            d = datetime.today() + relativedelta(days=-1)
+            d = datetime.strptime(str(run_date), '%Y%m%d') + relativedelta(months=-noOfdaysOrMonth)
             check_date = d.strftime("%Y%m%d")
             return check_date
 
     @staticmethod
     def getLateOrNormalCdr(dataFrame: DataFrame, dateColumn, formattedDateColumn, integerDateColumn,
                            dateRange) -> DataFrame:
-        """:parameter source as dataFrame
-           :parameter date column
-           :parameter formatted Date Column name
-           :parameter numeric column name of date column
+        """:parameter dataFrame- source as dataFrame
+           :parameter dateColumn column
+           :parameter formattedDateColumn - formatted Date Column name
+           :parameter integerDateColumn - numeric column name of date column
+           :parameter dateRange
            :return dataframe with new derived columns"""
         df_event_date = dataFrame.withColumn(integerDateColumn,
                                              py_function.substring(py_function.col(dateColumn), 0, 8).cast(

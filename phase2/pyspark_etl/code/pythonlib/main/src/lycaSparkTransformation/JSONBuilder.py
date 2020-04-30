@@ -55,13 +55,21 @@ class JSONBuilder:
         """ :return numeric column name for date column"""
         return self.prop['module_prop']['integerDateColumn']
 
-    def getMnthlyOrdaily(self):
-        """ :return load daily or monthely"""
-        return self.prop['module_prop']['mnthOrdaily']
+    def getNormalCdrFrq(self):
+        """ :return load daily or monthely for normal data"""
+        return self.prop['module_prop']['normalcdrfrq']
 
-    def getNoOfdaysOrMonth(self):
-        """ :return no of days or month for dataset comparision"""
-        return self.prop['module_prop']['noOfdaysOrMonth']
+    def getNumofDayorMnthNormal(self):
+        """ :return num of days for normal cdr to check duplicate"""
+        return self.prop['module_prop']['numofdayormnthnormal']
+
+    def getLatecdrFrq(self):
+        """ :return num of days for late cdr to check duplicate"""
+        return self.prop['module_prop']['latecdrfrq']
+
+    def getNumofDayorMnthLate(self):
+        """ :return load daily or monthely for normal data"""
+        return self.prop['module_prop']['numofdayormnthlate']
 
     def getPrpperty(self):
         """ :return return all properties"""
@@ -74,8 +82,10 @@ class JSONBuilder:
         dateColumn = self.getDateColumn()
         formattedDateColumn = self.getFormattedDateColumn()
         integerDateColumn = self.getIntegerDateColumn()
-        mnthOrdaily = self.getMnthlyOrdaily()
-        noOfdaysOrMonth = self.getNoOfdaysOrMonth()
+        normalcdrfrq = self.getNormalCdrFrq()
+        numofdayormnthnormal = self.getNumofDayorMnthNormal()
+        latecdrfrq = self.getLatecdrFrq()
+        numofdayormnthlate = self.getNumofDayorMnthLate()
         return {
             "module": module,
             "subModule": subModule,
@@ -86,6 +96,8 @@ class JSONBuilder:
             "dateColumn": dateColumn,
             "formattedDateColumn": formattedDateColumn,
             "integerDateColumn": integerDateColumn,
-            "mnthOrdaily": mnthOrdaily,
-            "noOfdaysOrMonth": noOfdaysOrMonth
+            "normalcdrfrq": normalcdrfrq,
+            "numofdayormnthnormal": numofdayormnthnormal,
+            "latecdrfrq": latecdrfrq,
+            "numofdayormnthlate": numofdayormnthlate
         }

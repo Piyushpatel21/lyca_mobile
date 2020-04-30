@@ -33,9 +33,9 @@ propColumns = transformactionchain.srcSchema()
 file_list = ["/sample.csv"]
 run_date = 20200420
 duplicateData, lateUnique, normalUnique = transformactionchain.getSourceData(sparkSession, propColumns.get("srcSchema"), propColumns.get("checkSumColumns"), file_list, run_date)
-normalDB, lateDB = transformactionchain.getDbDuplicate(sparkSession)
-normalNew, normalDuplicate = transformactionchain.getLateCDR(normalUnique, normalDB)
-lateNew, lateDuplicate = transformactionchain.getNormalCDR(lateUnique, lateDB)
+normalDB, lateDB = transformactionchain.getDbDuplicate(sparkSession, run_date)
+normalNew, normalDuplicate = transformactionchain.getNormalCDR(normalUnique, normalDB)
+lateNew, lateDuplicate = transformactionchain.getLateCDR(lateUnique, lateDB)
 outputCDR = [duplicateData, normalNew, normalDuplicate, lateNew, lateNew, lateDuplicate]
 normalDuplicate.show(150, False)
 transformactionchain.dfWrite(lateNew, run_date, 'dataMart', 'normalDB.csv', propColumns.get("tgtSchema"))

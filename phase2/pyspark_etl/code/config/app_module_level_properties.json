@@ -5,8 +5,10 @@
     "dateColumn" : "msg_date",
     "formattedDateColumn" : "msg_date_dt",
     "integerDateColumn" : "msg_date_num",
-    "mnthOrdaily" : "daily",
-    "noOfdaysOrMonth" : 1,
+    "normalcdrfrq" : "daily",
+    "numofdayormnthnormal" : 1,
+    "latecdrfrq" : "monthly",
+    "numofdayormnthlate" : 2,
     "sourceFilePath" : "../../../../pythonlib/test/resources",
     "srcSchemaPath" : "../../../../config/rrbs_src_fct_sms.json",
     "tgtSchemaPath" : "../../../../config/rrbs_tgt_fct_sms.json"

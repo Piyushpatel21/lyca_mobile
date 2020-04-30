@@ -25,6 +25,7 @@ class TransformActionChain:
         self.filePath = filePath
         self.property = JSONBuilder(self.module, self.subModule, self.filePath).getPrpperty()
         self.logger.info("We are in action chain")
+
     def srcSchema(self):
         try:
             self.logger.info("something")
@@ -43,7 +44,7 @@ class TransformActionChain:
     def getSourceData(self, sparkSession: SparkSession, srcSchema, checkSumColumns, file_list, run_date) -> Tuple[DataFrame, DataFrame, DataFrame]:
         try:
             df_source = DataTransformation.readSourceFile(sparkSession, self.property.get("sourceFilePath"), srcSchema, checkSumColumns, file_list)
-            date_range = int(DataTransformation.getPrevRangeDate(self.property.get("mnthOrdaily"), self.property.get("noOfdaysOrMonth")))
+            date_range = int(DataTransformation.getPrevRangeDate(run_date,self.property.get("normalcdrfrq"), self.property.get("numofdayormnthnormal")))
             lateOrNormalCdr = DataTransformation.getLateOrNormalCdr(df_source, self.property.get("dateColumn"), self.property.get("formattedDateColumn"), self.property.get("integerDateColumn"), date_range)
             df_duplicate = DataTransformation.getDuplicates(lateOrNormalCdr, "checksum")
             df_unique_late = DataTransformation.getUnique(lateOrNormalCdr, "checksum").filter("normalOrlate == 'Late'")
@@ -52,11 +53,11 @@ class TransformActionChain:
         except Exception:
             print("Error in DataFrame")
 
-    def getDbDuplicate(self, sparkSession: SparkSession) -> Tuple[DataFrame, DataFrame]:
+    def getDbDuplicate(self, sparkSession: SparkSession, run_date) -> Tuple[DataFrame, DataFrame]:
         try:
+            normalDateRng = int(DataTransformation.getPrevRangeDate(run_date,self.property.get("normalcdrfrq"), self.property.get("numofdayormnthnormal")))
+            lateDateRng = int(DataTransformation.getPrevRangeDate(run_date,self.property.get("latecdrfrq"), self.property.get("numofdayormnthlate")))
             dfDB = sparkSession.read.option("header", "true").csv('../../../../pythonlib/test/resources/output/20200420/dataMart/')
-            normalDateRng = int(DataTransformation.getPrevRangeDate(self.property.get("mnthOrdaily"), self.property.get("noOfdaysOrMonth")))
-            lateDateRng = int(DataTransformation.getPrevRangeDate(self.property.get("mnthOrdaily"), self.property.get("noOfdaysOrMonth")))
             dfNormalDB = dfDB.filter(dfDB[self.property.get("integerDateColumn")] <= normalDateRng)
             dfLateDB = dfDB.filter(dfDB[self.property.get("integerDateColumn")] <= lateDateRng)
             return dfNormalDB, dfLateDB
