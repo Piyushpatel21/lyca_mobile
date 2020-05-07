@@ -73,6 +73,7 @@ class CommandLineProcessor:
     def processCLIArguments(self):
         """Parse arguments and run the default action."""
         args = self.parser.parse_args()
+        print(args)
         kwargs = dict(vars(args))
         kwargs.pop('action', None)
         kwargs.pop('command', None)
@@ -81,24 +82,7 @@ class CommandLineProcessor:
             # callback action
             args.action(**kwargs)
         except Exception as e:
-            self.log.error(e)
-            sys.exit(1)
-        sys.exit(0)
-
-
-cli = CommandLineProcessor()
-
-
-@cli.command('lycaCommonArg')
-@cli.option('-run_date', '--run_date', type=int)
-@cli.option('-module', '--module', choices=moduleTag)
-@cli.option('-submodule', '--submodule', choices=submoduleTag)
-def lycaDailyLoad(run_date, module, submodule):
-    """Creates a resources for LycaETL."""
-    # cli.log.info('creating resources for LycaETL')
-    # cli.log.info(json.dumps({'run_date': run_date, 'module': module, 'submodule': submodule}))
-    print(json.dumps({'run_date': run_date, 'module': module, 'submodule': submodule}))
-
-
-if __name__ == '__main__':
-    cli.processCLIArguments()
+            print(e)
+            # self.log.error(e)
+            # sys.exit(1)
+        # sys.exit(0)
