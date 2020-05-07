@@ -36,4 +36,18 @@ class JsonProcessor:
                 else:
                     continue
         except (OSError, IOError, ValueError) as ex:
-            print("Param source file not found : Path - " + ex)
+            print("failed to process application prop file : Path - " + ex)
+
+    @staticmethod
+    def processRedshiftProp(serivetype, filepath):
+        try:
+            data = JsonProcessor.json_parser(filepath)
+            for obj in data:
+                if obj["servicetype"] == serivetype:
+                    return {
+                        "servicetypeObj": obj
+                    }
+                else:
+                    continue
+        except (OSError, IOError, ValueError) as ex:
+            print("failed to process connection file : - " + ex)

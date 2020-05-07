@@ -13,11 +13,13 @@ from commonUtils.JsonProcessor import JsonProcessor
 
 class JSONBuilder:
 
-    def __init__(self, module, submodule, filePath):
+    def __init__(self, module, submodule, filePath, connfile):
         self.module = module
         self.submodule = submodule
         self.filePath = filePath
+        self.connfile = connfile
         self.prop = JsonProcessor.processJsonProperties(self.module, self.submodule, self.filePath)
+        self.servicetype = JsonProcessor.processRedshiftProp("redshift", connfile)
 
     def getModule(self):
         """ :return module name ex: rrbs"""
@@ -71,7 +73,48 @@ class JSONBuilder:
         """ :return load daily or monthely for normal data"""
         return self.prop['module_prop']['numofdayormnthlate']
 
-    def getPrpperty(self):
+    def getDatabase(self):
+        """ :return load daily or monthely for normal data"""
+        return self.prop['module_prop']['database']
+
+    def getNormalcdrtbl(self):
+        """ :return load daily or monthely for normal data"""
+        return self.prop['module_prop']['normalcdrtbl']
+
+    def getLatecdrtbl(self):
+        """ :return load daily or monthely for normal data"""
+        return self.prop['module_prop']['latecdrtbl']
+
+    def getDuplicatecdrtbl(self):
+        """ :return load daily or monthely for normal data"""
+        return self.prop['module_prop']['duplicatecdrtbl']
+
+    def getUsername(self):
+        """ :return load daily or monthely for normal data"""
+        return self.servicetype['servicetypeObj']['username']
+
+    def getPassword(self):
+        """ :return load daily or monthely for normal data"""
+        return self.servicetype['servicetypeObj']['password']
+
+    def getHost(self):
+        """ :return load daily or monthely for normal data"""
+        return self.servicetype['servicetypeObj']['host']
+
+    def getPort(self):
+        """ :return load daily or monthely for normal data"""
+        return self.servicetype['servicetypeObj']['port']
+
+    def getTmpdir(self):
+        """ :return load daily or monthely for normal data"""
+        return self.servicetype['servicetypeObj']['tmpdir']
+
+    def getDomain(self):
+        """ :return load daily or monthely for normal data"""
+        return self.servicetype['servicetypeObj']['domain']
+
+
+    def getAppPrpperty(self):
         """ :return return all properties"""
         module = self.getModule()
         subModule = self.getSubModule()
@@ -86,6 +129,11 @@ class JSONBuilder:
         numofdayormnthnormal = self.getNumofDayorMnthNormal()
         latecdrfrq = self.getLatecdrFrq()
         numofdayormnthlate = self.getNumofDayorMnthLate()
+        domain = self.getDomain()
+        normalcdrtbl = self.getNormalcdrtbl()
+        latecdrtbl = self.getLatecdrtbl()
+        duplicatecdrtbl = self.getDuplicatecdrtbl()
+        database = self.getDatabase()
         return {
             "module": module,
             "subModule": subModule,
@@ -99,5 +147,26 @@ class JSONBuilder:
             "normalcdrfrq": normalcdrfrq,
             "numofdayormnthnormal": numofdayormnthnormal,
             "latecdrfrq": latecdrfrq,
-            "numofdayormnthlate": numofdayormnthlate
+            "numofdayormnthlate": numofdayormnthlate,
+            "domain": domain,
+            "duplicatecdrtbl": duplicatecdrtbl,
+            "latecdrtbl": latecdrtbl,
+            "normalcdrtbl": normalcdrtbl,
+            "database": database
+        }
+
+    def getConnPrpperty(self):
+        user = self.getUsername()
+        password = self.getPassword()
+        host = self.getHost()
+        port = self.getPort()
+        tmpdir = self.getTmpdir()
+        domain = self.getDomain()
+        return {
+            "user": user,
+            "password": password,
+            "host": host,
+            "port": port,
+            "tmpdir": tmpdir,
+            "domain": domain
         }

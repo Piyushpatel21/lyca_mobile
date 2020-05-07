@@ -15,16 +15,23 @@ from lycaSparkTransformation.SchemaReader import SchemaReader
 from pyspark.sql import DataFrame
 import os
 from lycaSparkTransformation.JSONBuilder import JSONBuilder
+from awsUtils.RedshiftUtils import RedshiftUtils
 
 
 class TransformActionChain:
-    def __init__(self, logger, module, subModule, filePath):
+    def __init__(self, logger, module, subModule, filePath, connfile):
         self.logger = logger
         self.module = module
         self.subModule = subModule
         self.filePath = filePath
-        self.property = JSONBuilder(self.module, self.subModule, self.filePath).getPrpperty()
-        self.logger.info("We are in action chain")
+        self.connfile = connfile
+        self.jsonParser = JSONBuilder(self.module, self.subModule, self.filePath, self.connfile)
+        self.property = self.jsonParser.getAppPrpperty()
+        self.connpropery = self.jsonParser.getConnPrpperty()
+        self.redshiftprop = RedshiftUtils(self.connpropery.get("host"), self.connpropery.get("port"), self.connpropery.get("user"), self.connpropery.get("domain"),
+                                          self.connpropery.get("password"), self.connpropery.get("tmpdir"))
+        print(self.connpropery.get("host"), self.connpropery.get("port"), self.connpropery.get("user"), self.connpropery.get("domain"),
+                                          self.connpropery.get("password"), self.connpropery.get("tmpdir"))
 
     def srcSchema(self):
         try:
@@ -57,7 +64,7 @@ class TransformActionChain:
         try:
             normalDateRng = int(DataTransformation.getPrevRangeDate(run_date,self.property.get("normalcdrfrq"), self.property.get("numofdayormnthnormal")))
             lateDateRng = int(DataTransformation.getPrevRangeDate(run_date,self.property.get("latecdrfrq"), self.property.get("numofdayormnthlate")))
-            dfDB = sparkSession.read.option("header", "true").csv('../../../../pythonlib/test/resources/output/20200420/dataMart/')
+            dfDB = RedshiftUtils.readFromRedshift(sparkSession, self.property.get("domain"), self.property.get("normalcdrtbl"))
             dfNormalDB = dfDB.filter(dfDB[self.property.get("integerDateColumn")] <= normalDateRng)
             dfLateDB = dfDB.filter(dfDB[self.property.get("integerDateColumn")] <= lateDateRng)
             return dfNormalDB, dfLateDB
@@ -80,7 +87,14 @@ class TransformActionChain:
         except Exception:
             print("Error in DataFrame")
 
-    def dfWrite(self, dataFrame: DataFrame, run_date, cdrType, fileName, tgtSchema):
-        path = '../../../../pythonlib/test/resources/output/' + str(run_date) + '/' + cdrType + '/'
-        print(os.path.abspath(path))
-        DataTransformation.writeToS3(dataFrame, run_date, os.path.abspath(path), tgtSchema)
+    def writetoDataMart(self, dataframe, tgtColmns=[]):
+        df = dataframe.select(*tgtColmns)
+        RedshiftUtils.writeToRedshift(df, self.property.get("domain"), self.property.get("normalcdrtbl"))
+
+    def writetoDuplicateCDR(self, dataframe, tgtColmns=[]):
+        df = dataframe.select(*tgtColmns)
+        RedshiftUtils.writeToRedshift(df, self.property.get("domain"), self.property.get("duplicatecdrtbl"))
+
+    def writetoLateCDR(self, dataframe, tgtColmns=[]):
+        df = dataframe.select(*tgtColmns)
+        RedshiftUtils.writeToRedshift(df, self.property.get("domain"), self.property.get("latecdrtbl"))

@@ -11,7 +11,11 @@
     "numofdayormnthlate" : 2,
     "sourceFilePath" : "../../../../pythonlib/test/resources",
     "srcSchemaPath" : "../../../../config/rrbs_src_fct_sms.json",
-    "tgtSchemaPath" : "../../../../config/rrbs_tgt_fct_sms.json"
+    "tgtSchemaPath" : "../../../../config/rrbs_tgt_fct_sms.json",
+    "database" : "rrbs",
+    "normalcdrtbl" : "sms",
+    "latecdrtbl" : "",
+    "duplicatecdrtbl" : ""
   },
   {
     "module" : "rrbs",
