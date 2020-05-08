@@ -75,13 +75,13 @@ class RedshiftUtils:
         except Exception as ex:
             print("failed to write data in redshift")
 
-    def getFileList(self) -> []:
+    def getFileList(self, batchid) -> []:
         filename = []
         engine = sa.create_engine(self.connection_string)
         session = sessionmaker()
         session.configure(bind=engine)
         s = session()
-        query = "SELECT file_name FROM uk_test.log_batch_files_rrbs where batch_id = 1;"
+        query = "SELECT file_name FROM uk_test.log_batch_files_rrbs where batch_id = 1};"
         rr = s.execute(query)
         records = rr.fetchall()
         for row in records:
