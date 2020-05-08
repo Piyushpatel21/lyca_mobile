@@ -87,7 +87,7 @@ class RedshiftUtils:
         session = sessionmaker()
         session.configure(bind=engine)
         s = session()
-        query = "SELECT file_name FROM uk_test.log_batch_files_rrbs where batch_id = 1};"
+        query = "SELECT file_name FROM uk_rrbs_dm.log_batch_files_rrbs where batch_id = 1};"
         rr = s.execute(query)
         records = rr.fetchall()
         for row in records:
