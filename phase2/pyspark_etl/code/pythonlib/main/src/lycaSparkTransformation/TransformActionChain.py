@@ -19,12 +19,13 @@ from awsUtils.RedshiftUtils import RedshiftUtils
 
 
 class TransformActionChain:
-    def __init__(self, logger, module, subModule, filePath, connfile):
+    def __init__(self, logger, module, subModule, filePath, connfile, batchid):
         self.logger = logger
         self.module = module
         self.subModule = subModule
         self.filePath = filePath
         self.connfile = connfile
+        self.batchid = batchid
         self.jsonParser = JSONBuilder(self.module, self.subModule, self.filePath, self.connfile)
         self.property = self.jsonParser.getAppPrpperty()
         self.connpropery = self.jsonParser.getConnPrpperty()
@@ -48,8 +49,9 @@ class TransformActionChain:
         except ValueError:
             "Error"
 
-    def getSourceData(self, sparkSession: SparkSession, srcSchema, checkSumColumns, file_list, run_date) -> Tuple[DataFrame, DataFrame, DataFrame]:
+    def getSourceData(self, sparkSession: SparkSession, srcSchema, checkSumColumns, run_date) -> Tuple[DataFrame, DataFrame, DataFrame]:
         try:
+            file_list = RedshiftUtils.getFileList(self.batchid)
             df_source = DataTransformation.readSourceFile(sparkSession, self.property.get("sourceFilePath"), srcSchema, checkSumColumns, file_list)
             date_range = int(DataTransformation.getPrevRangeDate(run_date,self.property.get("normalcdrfrq"), self.property.get("numofdayormnthnormal")))
             lateOrNormalCdr = DataTransformation.getLateOrNormalCdr(df_source, self.property.get("dateColumn"), self.property.get("formattedDateColumn"), self.property.get("integerDateColumn"), date_range)
@@ -76,7 +78,7 @@ class TransformActionChain:
             dfLateCDRNewRecord = DataTransformation.getDbDuplicate(srcDataFrame, lateDBDataFrame).filter("newOrDupl == 'New'")
             dfLateCDRDuplicate = DataTransformation.getDbDuplicate(srcDataFrame, lateDBDataFrame).filter("newOrDupl == 'Duplicate'")
             return dfLateCDRNewRecord, dfLateCDRDuplicate
-        except Exception as ex :
+        except Exception as ex:
             print("Error in DataFrame")
 
     def getNormalCDR(self, srcDataFrame, normalDBDataFrame) -> Tuple[DataFrame, DataFrame]:

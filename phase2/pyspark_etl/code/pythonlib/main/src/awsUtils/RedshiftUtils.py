@@ -1,5 +1,17 @@
+########################################################################
+# description     : processing JSON config files.                      #
+# author          : Naren K(narendra.kumar@cloudwick.com),             #
+#                   Tejveer Singh(tejveer.singh@cloudwick.com)         #
+#                   Shubhajit Saha(shubhajit.saha@cloudwick.com)       #
+# contributor     :                                                    #
+# version         : 1.0                                                #
+# notes           :                                                    #
+########################################################################
+
 from pyspark.sql import DataFrame
 from pyspark.sql import SparkSession
+import sqlalchemy as sa
+from sqlalchemy.orm import sessionmaker
 
 
 class RedshiftUtils:
@@ -20,6 +32,7 @@ class RedshiftUtils:
         self.user = dwh_user,
         self.password = dwh_pass,
         self.redshiftTmpDir = tmp_dir
+        self.connection_string = "redshift+psycopg2://%s:%s@%s:%s/%s" % (self.user, self.password, dwh_host, str(dwh_port), dwh_db)
 
     def readFromRedshift(self, sparkSession: SparkSession, domain_name, dataset_name) -> DataFrame:
         """
@@ -61,3 +74,18 @@ class RedshiftUtils:
                 .save()
         except Exception as ex:
             print("failed to write data in redshift")
+
+    def getFileList(self) -> []:
+        filename = []
+        engine = sa.create_engine(self.connection_string)
+        session = sessionmaker()
+        session.configure(bind=engine)
+        s = session()
+        query = "SELECT * FROM uk_test.log_batch_files_rrbs where batch_id = 101;"
+        rr = s.execute(query)
+        records = rr.fetchall()
+        for row in records:
+            print
+            "row start >>>>>>>>>>>>>>>>>>>>"
+            for col in row:
+                filename.append(col)

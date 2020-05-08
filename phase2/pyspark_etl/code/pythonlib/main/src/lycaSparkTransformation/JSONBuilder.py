@@ -58,59 +58,59 @@ class JSONBuilder:
         return self.prop['module_prop']['integerDateColumn']
 
     def getNormalCdrFrq(self):
-        """ :return load daily or monthely for normal data"""
+        """ :return normal cdr frequency"""
         return self.prop['module_prop']['normalcdrfrq']
 
     def getNumofDayorMnthNormal(self):
-        """ :return num of days for normal cdr to check duplicate"""
+        """ :return date range for normal cdr"""
         return self.prop['module_prop']['numofdayormnthnormal']
 
     def getLatecdrFrq(self):
-        """ :return num of days for late cdr to check duplicate"""
+        """ :return late cdr frequency"""
         return self.prop['module_prop']['latecdrfrq']
 
     def getNumofDayorMnthLate(self):
-        """ :return load daily or monthely for normal data"""
+        """ :return date range for late cdr"""
         return self.prop['module_prop']['numofdayormnthlate']
 
     def getDatabase(self):
-        """ :return load daily or monthely for normal data"""
+        """ :return database name"""
         return self.prop['module_prop']['database']
 
     def getNormalcdrtbl(self):
-        """ :return load daily or monthely for normal data"""
+        """ :return normal cdr table name"""
         return self.prop['module_prop']['normalcdrtbl']
 
     def getLatecdrtbl(self):
-        """ :return load daily or monthely for normal data"""
+        """ :return late cdr table name"""
         return self.prop['module_prop']['latecdrtbl']
 
     def getDuplicatecdrtbl(self):
-        """ :return load daily or monthely for normal data"""
+        """ :return duplicate cdr table name"""
         return self.prop['module_prop']['duplicatecdrtbl']
 
     def getUsername(self):
-        """ :return load daily or monthely for normal data"""
+        """ :return username of db"""
         return self.servicetype['servicetypeObj']['username']
 
     def getPassword(self):
-        """ :return load daily or monthely for normal data"""
+        """ :return password of db"""
         return self.servicetype['servicetypeObj']['password']
 
     def getHost(self):
-        """ :return load daily or monthely for normal data"""
+        """ :return host of database"""
         return self.servicetype['servicetypeObj']['host']
 
     def getPort(self):
-        """ :return load daily or monthely for normal data"""
+        """ :return port for db"""
         return self.servicetype['servicetypeObj']['port']
 
     def getTmpdir(self):
-        """ :return load daily or monthely for normal data"""
+        """ :return temp dir"""
         return self.servicetype['servicetypeObj']['tmpdir']
 
     def getDomain(self):
-        """ :return load daily or monthely for normal data"""
+        """ :return domain name"""
         return self.servicetype['servicetypeObj']['domain']
 
 

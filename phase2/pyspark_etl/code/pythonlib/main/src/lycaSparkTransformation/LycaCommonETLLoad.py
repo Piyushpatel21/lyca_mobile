@@ -26,7 +26,7 @@ class LycaCommonETLLoad:
         parser.add_argument('--module', help='module name required to process data')
         parser.add_argument('--submodule', help='submodule name required to process data')
         parser.add_argument('--configfile', help='application module level config file path')
-        parser.add_argument('--connfile', help='application module level config file path')
+        parser.add_argument('--connfile', help='connection config file path')
         known_arguments, unknown_arguments = parser.parse_known_args()
         arguments = vars(known_arguments)
         if arguments:
@@ -43,10 +43,10 @@ connfile = os.path.abspath(args.get('connfile'))
 sparkSessionBuild = SparkSessionBuilder().sparkSessionBuild()
 sparkSession = sparkSessionBuild.get("sparkSession")
 logger = sparkSessionBuild.get("logger")
-tf = TransformActionChain(logger, args.get('module'), args.get('submodule'), configfile, connfile)
+batchid = 101
+tf = TransformActionChain(logger, args.get('module'), args.get('submodule'), configfile, connfile, batchid)
 propColumns = tf.srcSchema()
-file_list = ["/sample.csv"]
-duplicateData, lateUnique, normalUnique = tf.getSourceData(sparkSession, propColumns.get("srcSchema"), propColumns.get("checkSumColumns"), file_list, args.get('run_date'))
+duplicateData, lateUnique, normalUnique = tf.getSourceData(sparkSession, propColumns.get("srcSchema"), propColumns.get("checkSumColumns"), args.get('run_date'))
 normalDB, lateDB = tf.getDbDuplicate(sparkSession, args.get('run_date'))
 normalNew, normalDuplicate = tf.getNormalCDR(normalUnique, normalDB)
 lateNew, lateDuplicate = tf.getLateCDR(lateUnique, lateDB)
