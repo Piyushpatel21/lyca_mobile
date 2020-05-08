@@ -21,7 +21,7 @@ from pyspark.sql.types import IntegerType, StringType, DateType
 class DataTransformation:
 
     @staticmethod
-    def readSourceFile(spark, path, structtype: StructType, checkSumColumns=[], fList=[]) -> DataFrame:
+    def readSourceFile(spark, path, structtype: StructType, batchid, checkSumColumns=[], fList=[]) -> DataFrame:
         """ :parameter spark
             :parameter path of source files
             :parameter structtype - schema for source file
@@ -38,7 +38,10 @@ class DataTransformation:
                 df_source = spark.read.option("header", "false").schema(structtype).csv(file)
                 df_trans = df_source.withColumn("checksum",
                                                 py_function.md5(py_function.concat_ws(",", *checkSumColumns))) \
-                    .withColumn("filename", py_function.lit(file_identifier))
+                    .withColumn("filename", py_function.lit(file_identifier)) \
+                    .withColumn('sk_rrbs_topup', py_function.lit(1)) \
+                    .withColumn("batch_id", py_function.lit(batchid)) \
+                    .withColumn("created_date", py_function.current_timestamp())
                 df_list.append(df_trans)
             print("<============ Merge all DataFrame using Union ============>")
             return reduce(DataFrame.union, df_list)
@@ -102,6 +105,10 @@ class DataTransformation:
             return check_date
         elif mnthOrdaily == 'monthly':
             d = datetime.strptime(str(run_date), '%Y%m%d') + relativedelta(months=-noOfdaysOrMonth)
+            check_date = d.strftime("%Y%m%d")
+            return check_date
+        else:
+            d = datetime.strptime(str(run_date), '%Y%m%d') + relativedelta(days=-1)
             check_date = d.strftime("%Y%m%d")
             return check_date
 

@@ -1,5 +1,8 @@
 [
   {
+    "column_name": "sk_rrbs_topup"
+  },
+  {
     "column_name": "cdr_types"
   },
   {
@@ -223,5 +226,8 @@
   },
   {
     "column_name": "checksum"
+  },
+  {
+    "column_name": "created_date"
   }
 ]

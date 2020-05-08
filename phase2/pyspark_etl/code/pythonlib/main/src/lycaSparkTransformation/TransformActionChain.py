@@ -19,19 +19,18 @@ from awsUtils.RedshiftUtils import RedshiftUtils
 
 
 class TransformActionChain:
-    def __init__(self, logger, module, subModule, filePath, connfile, batchid):
+    def __init__(self, logger, module, subModule, filePath, connfile, batchid, run_date):
         self.logger = logger
         self.module = module
         self.subModule = subModule
         self.filePath = filePath
         self.connfile = connfile
         self.batchid = batchid
+        self.run_date = DataTransformation.getPrevRangeDate(run_date)
         self.jsonParser = JSONBuilder(self.module, self.subModule, self.filePath, self.connfile)
         self.property = self.jsonParser.getAppPrpperty()
         self.connpropery = self.jsonParser.getConnPrpperty()
         self.redshiftprop = RedshiftUtils(self.connpropery.get("host"), self.connpropery.get("port"), self.connpropery.get("user"), self.connpropery.get("domain"),
-                                          self.connpropery.get("password"), self.connpropery.get("tmpdir"))
-        print(self.connpropery.get("host"), self.connpropery.get("port"), self.connpropery.get("user"), self.connpropery.get("domain"),
                                           self.connpropery.get("password"), self.connpropery.get("tmpdir"))
 
     def srcSchema(self):
@@ -49,23 +48,23 @@ class TransformActionChain:
         except ValueError:
             "Error"
 
-    def getSourceData(self, sparkSession: SparkSession, srcSchema, checkSumColumns, run_date) -> Tuple[DataFrame, DataFrame, DataFrame]:
+    def getSourceData(self, sparkSession: SparkSession, srcSchema, checkSumColumns) -> Tuple[DataFrame, DataFrame, DataFrame]:
         try:
             file_list = RedshiftUtils.getFileList(self.batchid)
-            df_source = DataTransformation.readSourceFile(sparkSession, self.property.get("sourceFilePath"), srcSchema, checkSumColumns, file_list)
-            date_range = int(DataTransformation.getPrevRangeDate(run_date,self.property.get("normalcdrfrq"), self.property.get("numofdayormnthnormal")))
+            df_source = DataTransformation.readSourceFile(sparkSession, self.property.get("sourceFilePath"), srcSchema, str(self.batchid), checkSumColumns, file_list)
+            date_range = int(DataTransformation.getPrevRangeDate(self.run_date, self.property.get("normalcdrfrq"), self.property.get("numofdayormnthnormal")))
             lateOrNormalCdr = DataTransformation.getLateOrNormalCdr(df_source, self.property.get("dateColumn"), self.property.get("formattedDateColumn"), self.property.get("integerDateColumn"), date_range)
             df_duplicate = DataTransformation.getDuplicates(lateOrNormalCdr, "checksum")
             df_unique_late = DataTransformation.getUnique(lateOrNormalCdr, "checksum").filter("normalOrlate == 'Late'")
             df_unique_normal = DataTransformation.getUnique(lateOrNormalCdr, "checksum").filter("normalOrlate == 'Normal'")
             return df_duplicate, df_unique_late, df_unique_normal
-        except Exception:
-            print("Error in DataFrame")
+        except Exception as ex:
+            print(ex)
 
-    def getDbDuplicate(self, sparkSession: SparkSession, run_date) -> Tuple[DataFrame, DataFrame]:
+    def getDbDuplicate(self, sparkSession: SparkSession) -> Tuple[DataFrame, DataFrame]:
         try:
-            normalDateRng = int(DataTransformation.getPrevRangeDate(run_date,self.property.get("normalcdrfrq"), self.property.get("numofdayormnthnormal")))
-            lateDateRng = int(DataTransformation.getPrevRangeDate(run_date,self.property.get("latecdrfrq"), self.property.get("numofdayormnthlate")))
+            normalDateRng = int(DataTransformation.getPrevRangeDate(self.run_date, self.property.get("normalcdrfrq"), self.property.get("numofdayormnthnormal")))
+            lateDateRng = int(DataTransformation.getPrevRangeDate(self.run_date, self.property.get("latecdrfrq"), self.property.get("numofdayormnthlate")))
             dfDB = RedshiftUtils.readFromRedshift(sparkSession, self.property.get("domain"), self.property.get("normalcdrtbl"))
             dfNormalDB = dfDB.filter(dfDB[self.property.get("integerDateColumn")] <= normalDateRng)
             dfLateDB = dfDB.filter(dfDB[self.property.get("integerDateColumn")] <= lateDateRng)
