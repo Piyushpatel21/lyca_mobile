@@ -30,8 +30,8 @@ class TransformActionChain:
         self.jsonParser = JSONBuilder(self.module, self.subModule, self.filePath, self.connfile)
         self.property = self.jsonParser.getAppPrpperty()
         self.connpropery = self.jsonParser.getConnPrpperty()
-        self.redshiftprop = RedshiftUtils(self.connpropery.get("host"), self.connpropery.get("port"), self.connpropery.get("user"), self.connpropery.get("domain"),
-                                          self.connpropery.get("password"), self.connpropery.get("tmpdir"))
+        self.redshiftprop = RedshiftUtils(self.connpropery.get("host"), self.connpropery.get("port"), self.connpropery.get("domain"),
+                                          self.connpropery.get("user"), self.connpropery.get("password"), self.connpropery.get("tmpdir"))
 
     def srcSchema(self):
         try:
@@ -50,7 +50,9 @@ class TransformActionChain:
 
     def getSourceData(self, sparkSession: SparkSession, srcSchema, checkSumColumns) -> Tuple[DataFrame, DataFrame, DataFrame]:
         try:
-            file_list = RedshiftUtils.getFileList(self.batchid)
+            # file_list = RedshiftUtils.getFileList(self.batchid)
+            path = self.property.get("sourceFilePath") + "/" + self.module.upper() + "/" + "UK" + "/" +self.subModule.upper() + "/" + self.run_date[:4] + "/" + self.run_date[4:6] + "/" + self.run_date[6:8]
+            print(path)
             df_source = DataTransformation.readSourceFile(sparkSession, self.property.get("sourceFilePath"), srcSchema, str(self.batchid), checkSumColumns, file_list)
             date_range = int(DataTransformation.getPrevRangeDate(self.run_date, self.property.get("normalcdrfrq"), self.property.get("numofdayormnthnormal")))
             lateOrNormalCdr = DataTransformation.getLateOrNormalCdr(df_source, self.property.get("dateColumn"), self.property.get("formattedDateColumn"), self.property.get("integerDateColumn"), date_range)
@@ -90,12 +92,12 @@ class TransformActionChain:
 
     def writetoDataMart(self, dataframe, tgtColmns=[]):
         df = dataframe.select(*tgtColmns)
-        RedshiftUtils.writeToRedshift(df, self.property.get("domain"), self.property.get("normalcdrtbl"))
+        RedshiftUtils.writeToRedshift(df, self.property.get("database"), self.property.get("normalcdrtbl"))
 
     def writetoDuplicateCDR(self, dataframe, tgtColmns=[]):
         df = dataframe.select(*tgtColmns)
-        RedshiftUtils.writeToRedshift(df, self.property.get("domain"), self.property.get("duplicatecdrtbl"))
+        RedshiftUtils.writeToRedshift(df, self.property.get("database"), self.property.get("duplicatecdrtbl"))
 
     def writetoLateCDR(self, dataframe, tgtColmns=[]):
         df = dataframe.select(*tgtColmns)
-        RedshiftUtils.writeToRedshift(df, self.property.get("domain"), self.property.get("latecdrtbl"))
+        RedshiftUtils.writeToRedshift(df, self.property.get("database"), self.property.get("latecdrtbl"))

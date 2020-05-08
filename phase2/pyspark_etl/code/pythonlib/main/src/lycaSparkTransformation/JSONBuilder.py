@@ -129,7 +129,6 @@ class JSONBuilder:
         numofdayormnthnormal = self.getNumofDayorMnthNormal()
         latecdrfrq = self.getLatecdrFrq()
         numofdayormnthlate = self.getNumofDayorMnthLate()
-        domain = self.getDomain()
         normalcdrtbl = self.getNormalcdrtbl()
         latecdrtbl = self.getLatecdrtbl()
         duplicatecdrtbl = self.getDuplicatecdrtbl()
@@ -148,7 +147,6 @@ class JSONBuilder:
             "numofdayormnthnormal": numofdayormnthnormal,
             "latecdrfrq": latecdrfrq,
             "numofdayormnthlate": numofdayormnthlate,
-            "domain": domain,
             "duplicatecdrtbl": duplicatecdrtbl,
             "latecdrtbl": latecdrtbl,
             "normalcdrtbl": normalcdrtbl,

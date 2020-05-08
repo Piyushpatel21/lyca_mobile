@@ -32,19 +32,25 @@ class RedshiftUtils:
         self.user = dwh_user,
         self.password = dwh_pass,
         self.redshiftTmpDir = tmp_dir
-        self.connection_string = "redshift+psycopg2://%s:%s@%s:%s/%s" % (self.user, self.password, dwh_host, str(dwh_port), dwh_db)
 
-    def readFromRedshift(self, sparkSession: SparkSession, domain_name, dataset_name) -> DataFrame:
+        self.connection_options = {
+            "url": "jdbc:redshift://{host}:{port}/{db}".format(host=dwh_host, port=dwh_port, db=dwh_db),
+            "user": dwh_user,
+            "password": dwh_pass,
+            "redshiftTmpDir": tmp_dir
+        }
+
+    def readFromRedshift(self, sparkSession: SparkSession, db_name, dataset_name) -> DataFrame:
         """
         Return response with data from Redshift
         :parameter sparkSession - spark session
-        :parameter domain_name - schema name
+        :parameter db_name - schema name
         :parameter dataset_name - table name
         :return:
         """
         try:
 
-            table = ".".join([domain_name, dataset_name])
+            table = ".".join([db_name, dataset_name])
             return sparkSession.read \
                 .format("com.databricks.spark.redshift") \
                 .option("url", self.url) \
@@ -55,16 +61,16 @@ class RedshiftUtils:
         except Exception as ex:
             print("failed to get data from redshift")
 
-    def writeToRedshift(self, dataframe, domain_name, dataset_name):
+    def writeToRedshift(self, dataframe, db_name, dataset_name):
         """
         Return response with data from Redshift
         :parameter dataframe - need to write data in redshift
-        :parameter domain_name - schema name
+        :parameter db_name - schema name
         :parameter dataset_name - table name
         :return:
         """
         try:
-            table = ".".join([domain_name, dataset_name])
+            table = ".".join([db_name, dataset_name])
             dataframe.write \
                 .format("com.databricks.spark.redshift") \
                 .option("url", self.url) \
@@ -77,7 +83,7 @@ class RedshiftUtils:
 
     def getFileList(self, batchid) -> []:
         filename = []
-        engine = sa.create_engine(self.connection_string)
+        engine = sa.create_engine(self.connection_options)
         session = sessionmaker()
         session.configure(bind=engine)
         s = session()

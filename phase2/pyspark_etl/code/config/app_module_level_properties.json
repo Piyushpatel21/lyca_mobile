@@ -9,13 +9,13 @@
     "numofdayormnthnormal" : 1,
     "latecdrfrq" : "monthly",
     "numofdayormnthlate" : 2,
-    "sourceFilePath" : "../../../../pythonlib/test/resources",
+    "sourceFilePath" : "s3://mis-dl-lyca-raw",
     "srcSchemaPath" : "../../../../config/rrbs_src_fct_sms.json",
     "tgtSchemaPath" : "../../../../config/rrbs_tgt_fct_sms.json",
-    "database" : "rrbs",
-    "normalcdrtbl" : "sms",
-    "latecdrtbl" : "",
-    "duplicatecdrtbl" : ""
+    "database" : "uk_rrbs_dm",
+    "normalcdrtbl" : "fact_rrbs_sms",
+    "latecdrtbl" : "fact_rrbs_sms_latecdr",
+    "duplicatecdrtbl" : "fact_rrbs_sms_duplcdr"
   },
   {
     "module" : "rrbs",
@@ -27,13 +27,13 @@
     "numofdayormnthnormal" : 1,
     "latecdrfrq" : "monthly",
     "numofdayormnthlate" : 2,
-    "sourceFilePath" : "../../../../pythonlib/test/resources",
+    "sourceFilePath" : "s3://mis-dl-lyca-raw",
     "srcSchemaPath" : "../../../../config/rrbs_src_fct_voice.json",
     "tgtSchemaPath" : "../../../../config/rrbs_tgt_fct_voice.json",
-    "database" : "rrbs",
-    "normalcdrtbl" : "sms",
-    "latecdrtbl" : "",
-    "duplicatecdrtbl" : ""
+    "database" : "uk_test",
+    "normalcdrtbl" : "fact_rrbs_voice",
+    "latecdrtbl" : "fact_rrbs_voice_latecdr",
+    "duplicatecdrtbl" : "fact_rrbs_voice_duplcdr"
   },
   {
     "module" : "rrbs",
@@ -48,10 +48,10 @@
     "sourceFilePath" : "../../../../pythonlib/test/resources",
     "srcSchemaPath" : "../../../../config/rrbs_src_fct_topup.json",
     "tgtSchemaPath" : "../../../../config/rrbs_tgt_fct_topup.json",
-    "database" : "rrbs",
-    "normalcdrtbl" : "sms",
-    "latecdrtbl" : "",
-    "duplicatecdrtbl" : ""
+    "database" : "uk_test",
+    "normalcdrtbl" : "fact_rrbs_topup",
+    "latecdrtbl" : "fact_rrbs_topup_latecdr",
+    "duplicatecdrtbl" : "fact_rrbs_topup_duplcdr"
   },
   {
     "module" : "rrbs",
@@ -66,9 +66,9 @@
     "sourceFilePath" : "../../../../pythonlib/test/resources",
     "srcSchemaPath" : "../../../../config/rrbs_src_fct_gprs.json",
     "tgtSchemaPath" : "../../../../config/rrbs_tgt_fct_gprs.json",
-    "database" : "rrbs",
-    "normalcdrtbl" : "sms",
-    "latecdrtbl" : "",
-    "duplicatecdrtbl" : ""
+    "database" : "uk_test",
+    "normalcdrtbl" : "fact_rrbs_topup",
+    "latecdrtbl" : "fact_rrbs_topup_latecdr",
+    "duplicatecdrtbl" : "fact_rrbs_topup_duplcdr"
   }
 ]
