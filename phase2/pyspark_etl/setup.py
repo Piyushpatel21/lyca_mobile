@@ -18,7 +18,7 @@ setup(
     description="Build lyca etl pipeline",
     long_description=long_description,
     long_description_content_type="text/markdown",
-    url="https://code.cloudwick.com/emea/customers/lycamobile/lycamobile-etl-movements",
+    url="https://code.cloudwick.com/emea/customers/lycamobile/lycamobile-etl-movements/tree/reOrganizing_ss/phase2/pyspark_etl/code/pythonlib",
     packages=find_packages(exclude=["docs", "tests", ".gitignore", "README.md", "Makefile"]),
     data_files=['Pipfile'],
     include_data_files=True,
@@ -33,7 +33,7 @@ setup(
     ],
     project_urls={
         "Bug Tracker": "",
-        "Source Code": "https://code.cloudwick.com/emea/customers/lycamobile/lycamobile-etl-movements",
+        "Source Code": "https://code.cloudwick.com/emea/customers/lycamobile/lycamobile-etl-movements/tree/reOrganizing_ss/phase2/pyspark_etl/code/pythonlib",
     },
     python_requires='>=2.7'
 )

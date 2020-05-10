@@ -27,7 +27,7 @@ build_szip:
 build_pyspark_zip:
 	rm -rf dist/${PROJECT_NAME}-pyspark-${VERSION}.zip
 	mkdir -p libs dist
-	zip -r dist/${PROJECT_NAME}-pyspark-${VERSION}.zip amorphicutils
+	zip -r dist/${PROJECT_NAME}-pyspark-${VERSION}.zip lycaetlpackage
 
 test: init
 	python -m pytest --verbose --color=yes tests/
