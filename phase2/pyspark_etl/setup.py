@@ -1,7 +1,7 @@
 from setuptools import setup, find_packages
 from pipenv.project import Project
 from pipenv.utils import convert_deps_to_pip
-
+from glob import glob
 
 pr = Project(chdir=False)
 pFile = pr.parsed_pipfile
@@ -13,15 +13,17 @@ with open("README.md", "r+") as f:
 
 setup(
     name="lycaetl",
+    version="1.0.0",
     author="Cloudwick Technologies UK",
     author_email="bhavin.tandel@cloudwick.com",
     description="Build lyca etl pipeline",
     long_description=long_description,
     long_description_content_type="text/markdown",
     url="https://code.cloudwick.com/emea/customers/lycamobile/lycamobile-etl-movements/tree/reOrganizing_ss/phase2/pyspark_etl/code/pythonlib/main/src/",
-    packages=find_packages(),
+    packages=find_packages(where='code/pythonlib/main/src'),
     package_dir={'': 'code/pythonlib/main/src'},
-    data_files=['Pipfile'],
+    data_files=['Pipfile',
+                ('config', glob('code/config/*.json'))],
     include_data_files=True,
     zip_safe=True,
     install_requires=requirements,

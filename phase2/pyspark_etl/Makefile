@@ -1,5 +1,5 @@
 # Get the version of amorphic-utils from setup.py
-VERSION=$(shell grep "__version__ = [0-9.]*" amorphicutils/__init__.py | cut -d\" -f2)
+VERSION=$(shell grep "version=[0-9.]*" setup.py | cut -d\" -f2)
 PROJECT_NAME=$(shell grep "name=*" setup.py | cut -d\" -f2)
 
 init:
@@ -27,7 +27,7 @@ build_szip:
 build_pyspark_zip:
 	rm -rf dist/${PROJECT_NAME}-pyspark-${VERSION}.zip
 	mkdir -p libs dist
-	zip -r dist/${PROJECT_NAME}-pyspark-${VERSION}.zip lycaetlpackage
+	(cd code/pythonlib/main/src; zip -r ../../../../dist/${PROJECT_NAME}-pyspark-${VERSION}.zip *)
 
 test: init
 	python -m pytest --verbose --color=yes tests/
