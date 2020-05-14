@@ -10,8 +10,6 @@
 
 from pyspark.sql import DataFrame
 from pyspark.sql import SparkSession
-import sqlalchemy as sa
-from sqlalchemy.orm import sessionmaker
 
 
 class RedshiftUtils:
@@ -81,14 +79,26 @@ class RedshiftUtils:
         except Exception as ex:
             print("failed to write data in redshift")
 
-    def getFileList(self, batchid) -> []:
+    # def getFileList(self, batchid) -> []:
+    #     filename = []
+    #     engine = sa.create_engine(self.connection_options)
+    #     session = sessionmaker()
+    #     session.configure(bind=engine)
+    #     s = session()
+    #     query = "SELECT file_name FROM uk_rrbs_dm.log_batch_files_rrbs where batch_id = 1;"
+    #     rr = s.execute(query)
+    #     records = rr.fetchall()
+    #     for row in records:
+    #         filename.append(row)
+
+    def getFileList(self, sparkSession: SparkSession) -> []:
         filename = []
-        engine = sa.create_engine(self.connection_options)
-        session = sessionmaker()
-        session.configure(bind=engine)
-        s = session()
-        query = "SELECT file_name FROM uk_rrbs_dm.log_batch_files_rrbs where batch_id = 1};"
-        rr = s.execute(query)
-        records = rr.fetchall()
-        for row in records:
-            filename.append(row)
+        files = sparkSession.read \
+            .format("com.databricks.spark.redshift") \
+            .option("url", self.url) \
+            .option("query", "SELECT file_name FROM uk_rrbs_dm.log_batch_files_rrbs where batch_id = 1") \
+            .option("tempdir", self.redshiftTmpDir) \
+            .load()
+        for file in files:
+            filename.append(file)
+        return filename

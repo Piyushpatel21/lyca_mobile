@@ -14,11 +14,10 @@ import json
 class JsonProcessor:
 
     @staticmethod
-    def json_parser(filepath):
+    def json_parser(file):
         """:parameter filepath - Json file path
            :return streaming byte of input file"""
-        with open(filepath, 'r') as paramFile:
-            return json.load(paramFile)
+        return json.loads(file)
 
     @staticmethod
     def processJsonProperties(module, sub_module, filepath):
@@ -50,4 +49,4 @@ class JsonProcessor:
                 else:
                     continue
         except (OSError, IOError, ValueError) as ex:
-            print("failed to process connection file : - " + ex)
+            print("failed to process connection file : - " + str(ex))

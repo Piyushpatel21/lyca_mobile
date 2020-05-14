@@ -8,11 +8,8 @@
 # notes           :                                                    #
 ########################################################################
 
-import os
-import argparse
 from lycaSparkTransformation.TransformActionChain import TransformActionChain
 from lycaSparkTransformation.SparkSessionBuilder import SparkSessionBuilder
-import sys
 
 
 class LycaCommonETLLoad:
@@ -20,40 +17,43 @@ class LycaCommonETLLoad:
        :parameter sub-module
        :parameter application property file path"""
 
+    def __init__(self, run_date, module, submodule, configfile, connfile):
+        self.run_date = run_date
+        self.module = module
+        self.submodule = submodule
+        self.configfile = configfile
+        self.connfile = connfile
+
     def parseArguments(self):
-        parser = argparse.ArgumentParser()
-        parser.add_argument('--run_date', help='run date required for trigger pipeline')
-        parser.add_argument('--module', help='module name required to process data')
-        parser.add_argument('--submodule', help='submodule name required to process data')
-        parser.add_argument('--configfile', help='application module level config file path')
-        parser.add_argument('--connfile', help='connection config file path')
-        known_arguments, unknown_arguments = parser.parse_known_args()
-        arguments = vars(known_arguments)
-        if arguments:
-            if not (arguments.get('run_date') and arguments.get('module') and arguments.get('submodule')):
-                print("--run_date --module, --submodule required for trigger pipeline")
-                sys.exit(1)
-        return arguments
+        return {
+            "run_date": self.run_date,
+            "module": self.module,
+            "submodule": self.submodule,
+            "configfile": self.configfile,
+            "connfile": self.connfile
+        }
 
 
-lycaETL = LycaCommonETLLoad()
-args = lycaETL.parseArguments()
-configfile = os.path.abspath(args.get('configfile'))
-connfile = os.path.abspath(args.get('connfile'))
-sparkSessionBuild = SparkSessionBuilder().sparkSessionBuild()
-sparkSession = sparkSessionBuild.get("sparkSession")
-logger = sparkSessionBuild.get("logger")
-batchid = 101
-tf = TransformActionChain(logger, args.get('module'), args.get('submodule'), configfile, connfile, batchid, args.get('run_date'))
-propColumns = tf.srcSchema()
-duplicateData, lateUnique, normalUnique = tf.getSourceData(sparkSession, propColumns.get("srcSchema"), propColumns.get("checkSumColumns"))
-normalDB, lateDB = tf.getDbDuplicate(sparkSession)
-normalNew, normalDuplicate = tf.getNormalCDR(normalUnique, normalDB)
-lateNew, lateDuplicate = tf.getLateCDR(lateUnique, lateDB)
-outputCDR = [duplicateData, normalNew, normalDuplicate, lateNew, lateNew, lateDuplicate]
-tf.writetoDataMart(normalNew, propColumns.get("tgtSchema"))
-tf.writetoDataMart(lateNew, propColumns.get("tgtSchema"))
-tf.writetoLateCDR(lateNew, propColumns.get("tgtSchema"))
-tf.writetoDuplicateCDR(lateDuplicate, propColumns.get("tgtSchema"))
-tf.writetoDuplicateCDR(duplicateData, propColumns.get("tgtSchema"))
-tf.writetoDuplicateCDR(normalDuplicate, propColumns.get("tgtSchema"))
+def start_execution(args):
+    lycaETL = LycaCommonETLLoad(args.get('run_date'), args.get('module'), args.get('submodule'), args.get('configfile'),
+                      args.get('connfile'))
+    args = lycaETL.parseArguments()
+    configfile = args.get('configfile')
+    connfile = args.get('connfile')
+    sparkSessionBuild = SparkSessionBuilder().sparkSessionBuild()
+    sparkSession = sparkSessionBuild.get("sparkSession")
+    logger = sparkSessionBuild.get("logger")
+    batchid = 101
+    tf = TransformActionChain(logger, args.get('module'), args.get('submodule'), configfile, connfile, batchid, args.get('run_date'))
+    propColumns = tf.srcSchema()
+    duplicateData, lateUnique, normalUnique = tf.getSourceData(sparkSession, propColumns.get("srcSchema"), propColumns.get("checkSumColumns"))
+    normalDB, lateDB = tf.getDbDuplicate(sparkSession)
+    normalNew, normalDuplicate = tf.getNormalCDR(normalUnique, normalDB)
+    lateNew, lateDuplicate = tf.getLateCDR(lateUnique, lateDB)
+    outputCDR = [duplicateData, normalNew, normalDuplicate, lateNew, lateNew, lateDuplicate]
+    tf.writetoDataMart(normalNew, propColumns.get("tgtSchema"))
+    tf.writetoDataMart(lateNew, propColumns.get("tgtSchema"))
+    tf.writetoLateCDR(lateNew, propColumns.get("tgtSchema"))
+    tf.writetoDuplicateCDR(lateDuplicate, propColumns.get("tgtSchema"))
+    tf.writetoDuplicateCDR(duplicateData, propColumns.get("tgtSchema"))
+    tf.writetoDuplicateCDR(normalDuplicate, propColumns.get("tgtSchema"))
