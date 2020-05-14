@@ -15,7 +15,8 @@ from pyspark.sql import functions as py_function
 from pyspark.sql.types import StructType
 from datetime import datetime
 from dateutil.relativedelta import relativedelta
-from pyspark.sql.types import IntegerType, StringType, DateType
+from pyspark.sql.types import IntegerType, StringType
+from awsUtils.AwsReader import AwsReader
 
 
 class DataTransformation:
@@ -35,6 +36,11 @@ class DataTransformation:
                 df_source = "df_" + file_identifier
                 print("Reading source file =====> " + file_identifier)
                 file = path + file
+                ACCESS_KEY = 'AKIAXBQ6FEWBGATUWVMM'
+                SECRET_KEY = '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'
+                # spark._jsc.hadoopConfiguration().set("fs.s3n.awsAccessKeyId", ACCESS_KEY)
+                # spark._jsc.hadoopConfiguration().set("fs.s3n.awsSecretAccessKey", SECRET_KEY)
+                # spark._jsc.hadoopConfiguration().set("fs.s3n.impl", "org.apache.hadoop.fs.s3native.NativeS3FileSystem")
                 df_source = spark.read.option("header", "false").schema(structtype).csv(file)
                 df_trans = df_source.withColumn("checksum",
                                                 py_function.md5(py_function.concat_ws(",", *checkSumColumns))) \
@@ -45,8 +51,8 @@ class DataTransformation:
                 df_list.append(df_trans)
             print("<============ Merge all DataFrame using Union ============>")
             return reduce(DataFrame.union, df_list)
-        except Exception:
-            print("Error in reading files to create DataFrame" + Exception)
+        except Exception as ex:
+            print(ex)
 
     @staticmethod
     def getCheckSumColumns(JsonPath) -> []:
@@ -147,3 +153,4 @@ class DataTransformation:
     def writeToS3(dataFrame: DataFrame, run_date, path, tgtColmns=[]):
         # dataFrame.withColumn("rn", py_function.monotonically_increasing_id()).show(150, False)
         dataFrame.repartition(1).select(*tgtColmns).write.option("header", "true").format('csv').mode('append').option('sep', ',').save(path)
+
