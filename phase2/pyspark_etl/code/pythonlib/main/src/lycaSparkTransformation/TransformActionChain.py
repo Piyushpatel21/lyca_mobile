@@ -51,7 +51,9 @@ class TransformActionChain:
 
     def getSourceData(self, sparkSession: SparkSession, srcSchema, checkSumColumns) -> Tuple[DataFrame, DataFrame, DataFrame]:
         try:
-            file_list = RedshiftUtils.getFileList(sparkSession)
+            s3 = AwsReader.getawsClient('s3')
+            file_list = ['UKR6_CS_08_05_2020_05_36_50_24934.cdr']
+            # file_list = self.redshiftprop.getFileList(sparkSession)
             path = self.property.get("sourceFilePath") + "/" + self.module.upper() + "/" + "UK" + "/" +self.subModule.upper() + "/" + self.run_date[:4] + "/" + self.run_date[4:6] + "/" + self.run_date[6:8] + "/"
             df_source = DataTransformation.readSourceFile(sparkSession, path, srcSchema, str(self.batchid), checkSumColumns, file_list)
             date_range = int(DataTransformation.getPrevRangeDate(self.run_date, self.property.get("normalcdrfrq"), self.property.get("numofdayormnthnormal")))

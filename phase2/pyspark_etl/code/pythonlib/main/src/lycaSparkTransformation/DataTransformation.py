@@ -36,11 +36,6 @@ class DataTransformation:
                 df_source = "df_" + file_identifier
                 print("Reading source file =====> " + file_identifier)
                 file = path + file
-                ACCESS_KEY = 'AKIAXBQ6FEWBGATUWVMM'
-                SECRET_KEY = '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'
-                # spark._jsc.hadoopConfiguration().set("fs.s3n.awsAccessKeyId", ACCESS_KEY)
-                # spark._jsc.hadoopConfiguration().set("fs.s3n.awsSecretAccessKey", SECRET_KEY)
-                # spark._jsc.hadoopConfiguration().set("fs.s3n.impl", "org.apache.hadoop.fs.s3native.NativeS3FileSystem")
                 df_source = spark.read.option("header", "false").schema(structtype).csv(file)
                 df_trans = df_source.withColumn("checksum",
                                                 py_function.md5(py_function.concat_ws(",", *checkSumColumns))) \

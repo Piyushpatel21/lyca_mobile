@@ -10,6 +10,8 @@
 
 from pyspark.sql import DataFrame
 from pyspark.sql import SparkSession
+import sqlalchemy as sa
+from sqlalchemy.orm import sessionmaker
 
 
 class RedshiftUtils:
@@ -79,7 +81,7 @@ class RedshiftUtils:
         except Exception as ex:
             print("failed to write data in redshift")
 
-    # def getFileList(self, batchid) -> []:
+    # def getFileList(self, sparkSession: SparkSession) -> []:
     #     filename = []
     #     engine = sa.create_engine(self.connection_options)
     #     session = sessionmaker()
