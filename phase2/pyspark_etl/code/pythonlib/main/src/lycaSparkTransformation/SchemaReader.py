@@ -31,12 +31,9 @@ class SchemaReader:
     def structTypemapping(JsonPath) -> StructType:
         """:parameter JsonPath - schema file path
            :return StructType schema for a source file"""
-        try:
-            data = JsonProcessor.json_parser(JsonPath)
-            fieldStruct = StructType([])
-            for col in data:
-                fieldStruct.add(
-                    StructField(col["column_name"], SchemaReader.dataType(col["column_type"]), col["required"]))
-            return fieldStruct
-        except ValueError:
-            print('Decoding JSON has failed')
+        data = JsonProcessor.json_parser(JsonPath)
+        fieldStruct = StructType([])
+        for col in data:
+            fieldStruct.add(
+                StructField(col["column_name"], SchemaReader.dataType(col["column_type"]), col["required"]))
+        return fieldStruct

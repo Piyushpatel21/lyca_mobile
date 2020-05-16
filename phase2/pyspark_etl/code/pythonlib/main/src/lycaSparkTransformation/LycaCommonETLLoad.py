@@ -10,8 +10,6 @@
 
 from lycaSparkTransformation.TransformActionChain import TransformActionChain
 from lycaSparkTransformation.SparkSessionBuilder import SparkSessionBuilder
-import sys
-import argparse
 
 
 class LycaCommonETLLoad:
@@ -39,8 +37,7 @@ class LycaCommonETLLoad:
 
 
 def start_execution(args):
-    lycaETL = LycaCommonETLLoad(args.get('run_date'), args.get('module'), args.get('submodule'), args.get('configfile'),
-                                args.get('connfile'), args.get('master'))
+    lycaETL = LycaCommonETLLoad(args.get('run_date'), args.get('module'), args.get('submodule'), args.get('configfile'), args.get('connfile'), args.get('master'))
     args = lycaETL.parseArguments()
     appname = args.get('module') + '-' + args.get('submodule')
     configfile = args.get('configfile')
@@ -49,17 +46,9 @@ def start_execution(args):
     sparkSession = sparkSessionBuild.get("sparkSession")
     logger = sparkSessionBuild.get("logger")
     batchid = 101
-    tf = TransformActionChain(logger, args.get('module'), args.get('submodule'), configfile, connfile, batchid,
-                              args.get('run_date'))
+    tf = TransformActionChain(logger, args.get('module'), args.get('submodule'), configfile, connfile, batchid, args.get('run_date'))
     propColumns = tf.srcSchema()
-    duplicateData, lateUnique, normalUnique = tf.getSourceData(sparkSession, propColumns.get("srcSchema"),
-                                                               propColumns.get("checkSumColumns"))
-    logger.info("duplicate data within file")
-    duplicateData.show(20, False)
-    logger.info("late unique data within file")
-    lateUnique.show(20, False)
-    logger.info("normal unique data within file")
-    normalUnique.show(20, False)
+    duplicateData, lateUnique, normalUnique = tf.getSourceData(sparkSession, propColumns.get("srcSchema"), propColumns.get("checkSumColumns"))
     normalDB, lateDB = tf.getDbDuplicate(sparkSession)
     normalNew, normalDuplicate = tf.getNormalCDR(normalUnique, normalDB)
     lateNew, lateDuplicate = tf.getLateCDR(lateUnique, lateDB)

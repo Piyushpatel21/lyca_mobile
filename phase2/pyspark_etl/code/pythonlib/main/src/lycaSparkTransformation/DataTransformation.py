@@ -9,14 +9,13 @@
 ########################################################################
 
 from commonUtils.JsonProcessor import JsonProcessor
-from pyspark.sql import DataFrame, Window, Column
+from pyspark.sql import DataFrame, Window
 from functools import reduce
 from pyspark.sql import functions as py_function
 from pyspark.sql.types import StructType
 from datetime import datetime
 from dateutil.relativedelta import relativedelta
 from pyspark.sql.types import IntegerType, StringType
-from awsUtils.AwsReader import AwsReader
 
 
 class DataTransformation:
@@ -29,53 +28,43 @@ class DataTransformation:
             :parameter checkSumColumns - list of checksum columns
             :parameter fList of source files
             :return union of all source files"""
-        try:
-            df_list = []
-            for file in fList:
-                file_identifier = str(file).lower().replace(".cdr", "")
-                df_source = "df_" + file_identifier
-                print("Reading source file =====> " + file_identifier)
-                file = path + file
-                df_source = spark.read.option("header", "false").schema(structtype).csv(file)
-                df_trans = df_source.withColumn("rec_checksum",
-                                                py_function.md5(py_function.concat_ws(",", *checkSumColumns))) \
-                    .withColumn("filename", py_function.lit(file_identifier)) \
-                    .withColumn(prmryKey, py_function.lit(1)) \
-                    .withColumn("batch_id", py_function.lit(batchid)) \
-                    .withColumn("created_date", py_function.current_timestamp()) \
-                    .withColumn("free_zone_expiry_date_num", py_function.lit(''))
-                df_list.append(df_trans)
-            print("<============ Merge all DataFrame using Union ============>")
-            return reduce(DataFrame.union, df_list)
-        except Exception as ex:
-            print(ex)
+        df_list = []
+        for file in fList:
+            file_identifier = str(file).lower().replace(".cdr", "")
+            df_source = "df_" + file_identifier
+            file = path + file
+            df_source = spark.read.option("header", "false").schema(structtype).csv(file)
+            df_trans = df_source.withColumn("rec_checksum",
+                                            py_function.md5(py_function.concat_ws(",", *checkSumColumns))) \
+                .withColumn("filename", py_function.lit(file_identifier)) \
+                .withColumn(prmryKey, py_function.lit(1)) \
+                .withColumn("batch_id", py_function.lit(batchid)) \
+                .withColumn("created_date", py_function.current_timestamp()) \
+                .withColumn("free_zone_expiry_date_num", py_function.lit(''))
+            df_list.append(df_trans)
+        return reduce(DataFrame.union, df_list)
+
 
     @staticmethod
     def getCheckSumColumns(JsonPath) -> []:
         """ :parameter JsonPath schema file path
             :return list of column which is part of building checksum column"""
-        try:
-            data = JsonProcessor.json_parser(JsonPath)
-            checkColList = []
-            for col in data:
-                if col["check_sum"]:
-                    checkColList.append(col["column_name"])
-            return checkColList
-        except ValueError:
-            print('Decoding JSON has failed')
+        data = JsonProcessor.json_parser(JsonPath)
+        checkColList = []
+        for col in data:
+            if col["check_sum"]:
+                checkColList.append(col["column_name"])
+        return checkColList
 
     @staticmethod
     def getTgtColumns(JsonPath) -> []:
         """ :parameter JsonPath schema file path
             :return list of column which is part of building checksum column"""
-        try:
-            data = JsonProcessor.json_parser(JsonPath)
-            colList = []
-            for col in data:
-                colList.append(col["column_name"])
-            return colList
-        except ValueError:
-            print('Decoding JSON has failed')
+        data = JsonProcessor.json_parser(JsonPath)
+        colList = []
+        for col in data:
+            colList.append(col["column_name"])
+        return colList
 
     @staticmethod
     def getDuplicates(dataFrame: DataFrame, checksumColumn) -> DataFrame:
@@ -144,9 +133,3 @@ class DataTransformation:
                         py_function.when(dfSource["rec_checksum"] == dfDB["rec_checksum"], "Duplicate").otherwise("New"))
         dfnormalOrDuplicate = dfjoin.drop(dfDB["rec_checksum"])
         return dfnormalOrDuplicate
-
-    @staticmethod
-    def writeToS3(dataFrame: DataFrame, run_date, path, tgtColmns=[]):
-        # dataFrame.withColumn("rn", py_function.monotonically_increasing_id()).show(150, False)
-        dataFrame.repartition(1).select(*tgtColmns).write.option("header", "true").format('csv').mode('append').option('sep', ',').save(path)
-
