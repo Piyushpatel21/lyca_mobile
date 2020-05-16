@@ -22,7 +22,7 @@ from awsUtils.AwsReader import AwsReader
 class DataTransformation:
 
     @staticmethod
-    def readSourceFile(spark, path, structtype: StructType, batchid, checkSumColumns=[], fList=[]) -> DataFrame:
+    def readSourceFile(spark, path, structtype: StructType, batchid, prmryKey, checkSumColumns=[], fList=[]) -> DataFrame:
         """ :parameter spark
             :parameter path of source files
             :parameter structtype - schema for source file
@@ -37,12 +37,13 @@ class DataTransformation:
                 print("Reading source file =====> " + file_identifier)
                 file = path + file
                 df_source = spark.read.option("header", "false").schema(structtype).csv(file)
-                df_trans = df_source.withColumn("checksum",
+                df_trans = df_source.withColumn("rec_checksum",
                                                 py_function.md5(py_function.concat_ws(",", *checkSumColumns))) \
                     .withColumn("filename", py_function.lit(file_identifier)) \
-                    .withColumn('sk_rrbs_topup', py_function.lit(1)) \
+                    .withColumn(prmryKey, py_function.lit(1)) \
                     .withColumn("batch_id", py_function.lit(batchid)) \
-                    .withColumn("created_date", py_function.current_timestamp())
+                    .withColumn("created_date", py_function.current_timestamp()) \
+                    .withColumn("free_zone_expiry_date_num", py_function.lit(''))
                 df_list.append(df_trans)
             print("<============ Merge all DataFrame using Union ============>")
             return reduce(DataFrame.union, df_list)
@@ -57,7 +58,7 @@ class DataTransformation:
             data = JsonProcessor.json_parser(JsonPath)
             checkColList = []
             for col in data:
-                if col["checkSum"]:
+                if col["check_sum"]:
                     checkColList.append(col["column_name"])
             return checkColList
         except ValueError:
@@ -137,11 +138,11 @@ class DataTransformation:
         """:parameter dfSource - get from source file
            :parameter dfRedshift - reading data from redshift late CDR or data mart db
            :return dataframe with new column weather record exist in dfRedshift"""
-        dfDB = dfRedshift.select(dfRedshift["checksum"])
-        dfjoin = dfSource.join(dfDB, dfSource["checksum"] == dfDB["checksum"], "left_outer") \
+        dfDB = dfRedshift.select(dfRedshift["rec_checksum"])
+        dfjoin = dfSource.join(dfDB, dfSource["rec_checksum"] == dfDB["rec_checksum"], "left_outer") \
             .withColumn("newOrDupl",
-                        py_function.when(dfSource["checksum"] == dfDB["checksum"], "Duplicate").otherwise("New"))
-        dfnormalOrDuplicate = dfjoin.drop(dfDB["checksum"])
+                        py_function.when(dfSource["rec_checksum"] == dfDB["rec_checksum"], "Duplicate").otherwise("New"))
+        dfnormalOrDuplicate = dfjoin.drop(dfDB["rec_checksum"])
         return dfnormalOrDuplicate
 
     @staticmethod

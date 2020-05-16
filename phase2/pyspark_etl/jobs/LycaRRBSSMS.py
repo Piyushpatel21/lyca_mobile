@@ -10,6 +10,7 @@ def parseArguments():
     parser.add_argument('--submodule', help='submodule name required to process data')
     parser.add_argument('--configfile', help='application module level config file path')
     parser.add_argument('--connfile', help='connection config file path')
+    parser.add_argument('--master', help='session for glue')
     known_arguments, unknown_arguments = parser.parse_known_args()
     arguments = vars(known_arguments)
     if arguments:

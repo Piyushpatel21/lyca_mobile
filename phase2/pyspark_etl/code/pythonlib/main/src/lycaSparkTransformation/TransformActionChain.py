@@ -54,13 +54,14 @@ class TransformActionChain:
             s3 = AwsReader.getawsClient('s3')
             file_list = ['UKR6_CS_08_05_2020_05_36_50_24934.cdr']
             # file_list = self.redshiftprop.getFileList(sparkSession)
+            prmryKey = "sk_rrbs_" + self.subModule
             path = self.property.get("sourceFilePath") + "/" + self.module.upper() + "/" + "UK" + "/" +self.subModule.upper() + "/" + self.run_date[:4] + "/" + self.run_date[4:6] + "/" + self.run_date[6:8] + "/"
-            df_source = DataTransformation.readSourceFile(sparkSession, path, srcSchema, str(self.batchid), checkSumColumns, file_list)
+            df_source = DataTransformation.readSourceFile(sparkSession, path, srcSchema, str(self.batchid), prmryKey, checkSumColumns, file_list)
             date_range = int(DataTransformation.getPrevRangeDate(self.run_date, self.property.get("normalcdrfrq"), self.property.get("numofdayormnthnormal")))
             lateOrNormalCdr = DataTransformation.getLateOrNormalCdr(df_source, self.property.get("dateColumn"), self.property.get("formattedDateColumn"), self.property.get("integerDateColumn"), date_range)
-            df_duplicate = DataTransformation.getDuplicates(lateOrNormalCdr, "checksum")
-            df_unique_late = DataTransformation.getUnique(lateOrNormalCdr, "checksum").filter("normalOrlate == 'Late'")
-            df_unique_normal = DataTransformation.getUnique(lateOrNormalCdr, "checksum").filter("normalOrlate == 'Normal'")
+            df_duplicate = DataTransformation.getDuplicates(lateOrNormalCdr, "rec_checksum")
+            df_unique_late = DataTransformation.getUnique(lateOrNormalCdr, "rec_checksum").filter("normalOrlate == 'Late'")
+            df_unique_normal = DataTransformation.getUnique(lateOrNormalCdr, "rec_checksum").filter("normalOrlate == 'Normal'")
             return df_duplicate, df_unique_late, df_unique_normal
         except Exception as ex:
             print(ex)
@@ -68,38 +69,56 @@ class TransformActionChain:
     def getDbDuplicate(self, sparkSession: SparkSession) -> Tuple[DataFrame, DataFrame]:
         try:
             normalDateRng = int(DataTransformation.getPrevRangeDate(self.run_date, self.property.get("normalcdrfrq"), self.property.get("numofdayormnthnormal")))
+            print("normalDateRng" + str(normalDateRng))
             lateDateRng = int(DataTransformation.getPrevRangeDate(self.run_date, self.property.get("latecdrfrq"), self.property.get("numofdayormnthlate")))
-            dfDB = RedshiftUtils.readFromRedshift(sparkSession, self.property.get("domain"), self.property.get("normalcdrtbl"))
+            print("lateDateRng" + str(lateDateRng))
+            print("DBNAME -> " + str(self.property.get("database")))
+            print("NORMALCDRTBL -> " + str(self.property.get("normalcdrtbl")))
+            dfDB = self.redshiftprop.readFromRedshift(sparkSession, self.property.get("database"), self.property.get("normalcdrtbl"))
             dfNormalDB = dfDB.filter(dfDB[self.property.get("integerDateColumn")] <= normalDateRng)
             dfLateDB = dfDB.filter(dfDB[self.property.get("integerDateColumn")] <= lateDateRng)
+            self.logger.info("reading redshift data")
+            dfDB.show(20, False)
             return dfNormalDB, dfLateDB
-        except Exception:
-            print("Error in DataFrame")
+        except Exception as ex:
+            self.logger.info("Failed to read redshift for db duplicate")
+            self.logger.info(ex)
 
-    def getLateCDR(self, srcDataFrame, lateDBDataFrame) -> Tuple[DataFrame, DataFrame]:
+    def getLateCDR(self, srcDataFrame: DataFrame, lateDBDataFrame: DataFrame) -> Tuple[DataFrame, DataFrame]:
         try:
-            dfLateCDRNewRecord = DataTransformation.getDbDuplicate(srcDataFrame, lateDBDataFrame).filter("newOrDupl == 'New'")
-            dfLateCDRDuplicate = DataTransformation.getDbDuplicate(srcDataFrame, lateDBDataFrame).filter("newOrDupl == 'Duplicate'")
+            dfLateCDRND = DataTransformation.getDbDuplicate(srcDataFrame, lateDBDataFrame)
+            dfLateCDRNewRecord = dfLateCDRND.filter("newOrDupl == 'New'")
+            dfLateCDRDuplicate = dfLateCDRND.filter("newOrDupl == 'Duplicate'")
             return dfLateCDRNewRecord, dfLateCDRDuplicate
         except Exception as ex:
-            print("Error in DataFrame")
+            self.logger.info("Failed to compute Late CDR data")
+            self.logger.info(ex)
 
-    def getNormalCDR(self, srcDataFrame, normalDBDataFrame) -> Tuple[DataFrame, DataFrame]:
+    def getNormalCDR(self, srcDataFrame: DataFrame, normalDBDataFrame: DataFrame) -> Tuple[DataFrame, DataFrame]:
         try:
-            dfNormalCDRNewRecord = DataTransformation.getDbDuplicate(srcDataFrame, normalDBDataFrame).filter("newOrDupl == 'New'")
-            dfNormalCDRDuplicate = DataTransformation.getDbDuplicate(srcDataFrame, normalDBDataFrame).filter("newOrDupl == 'Duplicate'")
+            self.logger.info("srcDataFrame data")
+            srcDataFrame.show(20, False)
+            self.logger.info("normalDBDataFrame data")
+            normalDBDataFrame.show(20, False)
+            dfNormalCDRND = DataTransformation.getDbDuplicate(srcDataFrame, normalDBDataFrame)
+            self.logger.info("dfNormalCDRND data")
+            dfNormalCDRND.show(20, False)
+            dfNormalCDRNewRecord = dfNormalCDRND.filter("newOrDupl == 'New'")
+            dfNormalCDRDuplicate = dfNormalCDRND.filter("newOrDupl == 'Duplicate'")
             return dfNormalCDRNewRecord, dfNormalCDRDuplicate
-        except Exception:
-            print("Error in DataFrame")
+        except Exception as ex:
+            self.logger.info("Failed to compute Normal CDR data")
+            self.logger.info(ex)
 
-    def writetoDataMart(self, dataframe, tgtColmns=[]):
+    def writetoDataMart(self, dataframe: DataFrame, tgtColmns=[]):
         df = dataframe.select(*tgtColmns)
-        RedshiftUtils.writeToRedshift(df, self.property.get("database"), self.property.get("normalcdrtbl"))
+        self.logger.info("Writing in redshift table ===> " + self.property.get("database") + " " + self.property.get("normalcdrtbl"))
+        self.redshiftprop.writeToRedshift(df, self.property.get("database"), self.property.get("normalcdrtbl"))
 
-    def writetoDuplicateCDR(self, dataframe, tgtColmns=[]):
+    def writetoDuplicateCDR(self, dataframe: DataFrame, tgtColmns=[]):
         df = dataframe.select(*tgtColmns)
-        RedshiftUtils.writeToRedshift(df, self.property.get("database"), self.property.get("duplicatecdrtbl"))
+        self.redshiftprop.writeToRedshift(df, self.property.get("database"), self.property.get("duplicatecdrtbl"))
 
-    def writetoLateCDR(self, dataframe, tgtColmns=[]):
+    def writetoLateCDR(self, dataframe: DataFrame, tgtColmns=[]):
         df = dataframe.select(*tgtColmns)
-        RedshiftUtils.writeToRedshift(df, self.property.get("database"), self.property.get("latecdrtbl"))
+        self.redshiftprop.writeToRedshift(df, self.property.get("database"), self.property.get("latecdrtbl"))

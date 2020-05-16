@@ -10,8 +10,6 @@
 
 from pyspark.sql import DataFrame
 from pyspark.sql import SparkSession
-import sqlalchemy as sa
-from sqlalchemy.orm import sessionmaker
 
 
 class RedshiftUtils:
@@ -27,18 +25,15 @@ class RedshiftUtils:
             :param dwh_pass: Password for the user
             :param tmp_dir:  Temp directory for store intermediate result
             """
-
-        self.url = "jdbc:redshift://{host}:{port}/{db}".format(host=dwh_host, port=dwh_port, db=dwh_db)
-        self.user = dwh_user,
-        self.password = dwh_pass,
+        self.jdbcUsername = dwh_user
+        self.jdbcPassword = dwh_pass
+        self.jdbcHostname = dwh_host
+        self.jdbcPort = dwh_port
+        self.jdbcDatabase = dwh_db
         self.redshiftTmpDir = tmp_dir
-
-        self.connection_options = {
-            "url": "jdbc:redshift://{host}:{port}/{db}".format(host=dwh_host, port=dwh_port, db=dwh_db),
-            "user": dwh_user,
-            "password": dwh_pass,
-            "redshiftTmpDir": tmp_dir
-        }
+        self.jdbcUrl = "jdbc:redshift://{jdbcHostname}:{jdbcPort}/{jdbcDatabase}?user={jdbcUsername}&password={jdbcPassword}" \
+            .format(jdbcHostname=self.jdbcHostname, jdbcPort=self.jdbcPort, jdbcDatabase=self.jdbcDatabase, jdbcUsername=self.jdbcUsername,
+                    jdbcPassword=self.jdbcPassword)
 
     def readFromRedshift(self, sparkSession: SparkSession, db_name, dataset_name) -> DataFrame:
         """
@@ -53,8 +48,9 @@ class RedshiftUtils:
             table = ".".join([db_name, dataset_name])
             return sparkSession.read \
                 .format("com.databricks.spark.redshift") \
-                .option("url", self.url) \
+                .option("url", self.jdbcUrl) \
                 .option("dbtable", table) \
+                .option("forward_spark_s3_credentials", "true") \
                 .option("tempdir", self.redshiftTmpDir) \
                 .load()
 
@@ -73,31 +69,21 @@ class RedshiftUtils:
             table = ".".join([db_name, dataset_name])
             dataframe.write \
                 .format("com.databricks.spark.redshift") \
-                .option("url", self.url) \
+                .option("url", self.jdbcUrl) \
                 .option("dbtable", table) \
+                .option("forward_spark_s3_credentials", "true") \
                 .option("tempdir", self.redshiftTmpDir) \
                 .mode("append") \
                 .save()
         except Exception as ex:
             print("failed to write data in redshift")
 
-    # def getFileList(self, sparkSession: SparkSession) -> []:
-    #     filename = []
-    #     engine = sa.create_engine(self.connection_options)
-    #     session = sessionmaker()
-    #     session.configure(bind=engine)
-    #     s = session()
-    #     query = "SELECT file_name FROM uk_rrbs_dm.log_batch_files_rrbs where batch_id = 1;"
-    #     rr = s.execute(query)
-    #     records = rr.fetchall()
-    #     for row in records:
-    #         filename.append(row)
-
     def getFileList(self, sparkSession: SparkSession) -> []:
         filename = []
         files = sparkSession.read \
             .format("com.databricks.spark.redshift") \
-            .option("url", self.url) \
+            .option("url", self.jdbcUrl) \
+            .option("forward_spark_s3_credentials", "true") \
             .option("query", "SELECT file_name FROM uk_rrbs_dm.log_batch_files_rrbs where batch_id = 1") \
             .option("tempdir", self.redshiftTmpDir) \
             .load()
