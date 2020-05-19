@@ -7,6 +7,8 @@
 # version         : 1.0                                                #
 # notes           :                                                    #
 ########################################################################
+import argparse
+import sys
 
 from lycaSparkTransformation.TransformActionChain import TransformActionChain
 from lycaSparkTransformation.SparkSessionBuilder import SparkSessionBuilder
@@ -45,7 +47,7 @@ def start_execution(args):
     sparkSessionBuild = SparkSessionBuilder(args.get('master'), appname).sparkSessionBuild()
     sparkSession = sparkSessionBuild.get("sparkSession")
     logger = sparkSessionBuild.get("logger")
-    batchid = 101
+    batchid = 1
     tf = TransformActionChain(logger, args.get('module'), args.get('submodule'), configfile, connfile, batchid, args.get('run_date'))
     propColumns = tf.srcSchema()
     duplicateData, lateUnique, normalUnique = tf.getSourceData(sparkSession, propColumns.get("srcSchema"), propColumns.get("checkSumColumns"))
@@ -53,10 +55,7 @@ def start_execution(args):
     normalNew, normalDuplicate = tf.getNormalCDR(normalUnique, normalDB)
     lateNew, lateDuplicate = tf.getLateCDR(lateUnique, lateDB)
     outputCDR = [duplicateData, normalNew, normalDuplicate, lateNew, lateNew, lateDuplicate]
-    cnt = normalNew.count()
-    logger.info("Writing new record in redshift" + str(cnt))
     tf.writetoDataMart(normalNew, propColumns.get("tgtSchema"))
-    logger.info("====== Writing new record in redshift completed =======" + str(cnt))
     tf.writetoDataMart(lateNew, propColumns.get("tgtSchema"))
     tf.writetoLateCDR(lateNew, propColumns.get("tgtSchema"))
     tf.writetoDuplicateCDR(lateDuplicate, propColumns.get("tgtSchema"))

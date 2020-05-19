@@ -78,15 +78,13 @@ class RedshiftUtils:
         except Exception as ex:
             print("failed to write data in redshift")
 
-    def getFileList(self, sparkSession: SparkSession) -> []:
-        filename = []
+    def getFileList(self, sparkSession: SparkSession, batchid) -> []:
         files = sparkSession.read \
             .format("com.databricks.spark.redshift") \
             .option("url", self.jdbcUrl) \
             .option("forward_spark_s3_credentials", "true") \
-            .option("query", "SELECT file_name FROM uk_rrbs_dm.log_batch_files_rrbs where batch_id = 1") \
+            .option("query", "SELECT file_name FROM uk_rrbs_dm.log_batch_files_rrbs where batch_id = {batch_id}".format(batch_id=batchid)) \
             .option("tempdir", self.redshiftTmpDir) \
             .load()
-        for file in files:
-            filename.append(file)
+        filename = files.rdd.flatMap(lambda file: file).collect()
         return filename
