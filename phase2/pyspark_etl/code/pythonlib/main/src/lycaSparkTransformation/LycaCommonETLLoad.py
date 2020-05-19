@@ -7,8 +7,6 @@
 # version         : 1.0                                                #
 # notes           :                                                    #
 ########################################################################
-import argparse
-import sys
 
 from lycaSparkTransformation.TransformActionChain import TransformActionChain
 from lycaSparkTransformation.SparkSessionBuilder import SparkSessionBuilder
