@@ -229,7 +229,7 @@
   },
   {
     "column_name" : "initial_free_units",
-    "column_type" : "numeric(20,4)",
+    "column_type" : "numeric",
     "required" : false,
     "check_sum" : true
   },
