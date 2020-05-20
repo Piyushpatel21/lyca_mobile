@@ -7,6 +7,8 @@
 # version         : 1.0                                                #
 # notes           :                                                    #
 ########################################################################
+import argparse
+import sys
 
 from lycaSparkTransformation.TransformActionChain import TransformActionChain
 from lycaSparkTransformation.SparkSessionBuilder import SparkSessionBuilder
@@ -53,9 +55,16 @@ def start_execution(args):
     normalNew, normalDuplicate = tf.getNormalCDR(normalUnique, normalDB)
     lateNew, lateDuplicate = tf.getLateCDR(lateUnique, lateDB)
     outputCDR = [duplicateData, normalNew, normalDuplicate, lateNew, lateNew, lateDuplicate]
-    tf.writetoDataMart(normalNew, propColumns.get("tgtSchema"))
-    tf.writetoDataMart(lateNew, propColumns.get("tgtSchema"))
-    tf.writetoLateCDR(lateNew, propColumns.get("tgtSchema"))
-    tf.writetoDuplicateCDR(lateDuplicate, propColumns.get("tgtSchema"))
-    tf.writetoDuplicateCDR(duplicateData, propColumns.get("tgtSchema"))
-    tf.writetoDuplicateCDR(normalDuplicate, propColumns.get("tgtSchema"))
+    normalNewcnt = normalNew.count()
+    lateNewCnt = lateNew.count()
+    lateDuplicateCnt = lateDuplicate.count()
+    duplicateDataCnt = duplicateData.count()
+    normalDuplicateCnt = normalDuplicate.count()
+    print("we are processing : normalNew={normalNew}, lateNew={lateNew}, lateDuplicate={lateDuplicate}, duplicateData={duplicateData}, normalDuplicate={normalDuplicate}"
+          .format(normalNew=normalNewcnt, lateNew=lateNewCnt, lateDuplicate=lateDuplicateCnt, duplicateData=duplicateDataCnt, normalDuplicate=normalDuplicateCnt))
+    tf.writetoDataMart(normalNew, propColumns.get("tgtSchema"), 'normalNew')
+    tf.writetoLateCDR(lateNew, propColumns.get("tgtSchema"), 'LateNew')
+    tf.writetoDuplicateCDR(lateDuplicate, propColumns.get("tgtSchema"), 'lateDuplicate')
+    tf.writetoDuplicateCDR(duplicateData, propColumns.get("tgtSchema"), 'duplicateData')
+    tf.writetoDuplicateCDR(normalDuplicate, propColumns.get("tgtSchema"), 'normalDuplicate')
+    tf.writetoDataMart(lateNew, propColumns.get("tgtSchema"), 'lateNew')

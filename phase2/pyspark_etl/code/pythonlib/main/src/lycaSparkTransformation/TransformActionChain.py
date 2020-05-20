@@ -33,6 +33,7 @@ class TransformActionChain:
         self.connpropery = self.jsonParser.getConnPrpperty()
         self.redshiftprop = RedshiftUtils(self.connpropery.get("host"), self.connpropery.get("port"), self.connpropery.get("domain"),
                                           self.connpropery.get("user"), self.connpropery.get("password"), self.connpropery.get("tmpdir"))
+        print("CDR table name : {late}".format(late=self.property.get("latecdrtbl")))
 
     def srcSchema(self):
         try:
@@ -54,9 +55,8 @@ class TransformActionChain:
     def getSourceData(self, sparkSession: SparkSession, srcSchema, checkSumColumns) -> Tuple[DataFrame, DataFrame, DataFrame]:
         try:
             self.logger.info("***** reading source data from s3 *****")
-            # file_list = self.redshiftprop.getFileList(sparkSession, self.batchid)
-            # file_list = ['UKR6_CS_08_05_2020_05_36_50_24934.csv']
-            file_list = ['sample.csv']
+            file_list = self.redshiftprop.getFileList(sparkSession, self.batchid)
+            print(file_list)
             prmryKey = "sk_rrbs_" + self.subModule
             path = self.property.get("sourceFilePath") + "/" + self.module.upper() + "/" + "UK" + "/" +self.subModule.upper() + "/" + self.run_date[:4] + "/" + self.run_date[4:6] + "/" + self.run_date[6:8] + "/"
             df_source = self.trans.readSourceFile(sparkSession, path, srcSchema, str(self.batchid), prmryKey, checkSumColumns, file_list)
@@ -106,29 +106,30 @@ class TransformActionChain:
         except Exception as ex:
             self.logger.error("Failed to compute Normal CDR data : {error}".format(error=ex))
 
-    def writetoDataMart(self, dataframe: DataFrame, tgtColmns=[]):
+    def writetoDataMart(self, dataframe: DataFrame, tgtColmns=[], idn=None):
         try:
             self.logger.info("***** started writing to data mart *****")
             df = dataframe.select(*tgtColmns)
-            self.redshiftprop.writeToRedshift(df, self.property.get("database"), self.property.get("normalcdrtbl"))
+            self.redshiftprop.writeToRedshift(df, self.property.get("database"), self.property.get("normalcdrtbl"), idn)
             self.logger.info("***** started writing to data mart - completed *****")
         except Exception as ex:
             self.logger.error("Failed to write data in data mart : {error}".format(error=ex))
 
-    def writetoDuplicateCDR(self, dataframe: DataFrame, tgtColmns=[]):
+    def writetoDuplicateCDR(self, dataframe: DataFrame, tgtColmns=[], idn=None):
         try:
-            self.logger.info("***** started writing to duplicate data mart *****")
+            self.logger.info("***** started writing to duplicate mart *****")
             df = dataframe.select(*tgtColmns)
-            self.redshiftprop.writeToRedshift(df, self.property.get("database"), self.property.get("duplicatecdrtbl"))
-            self.logger.info("***** started writing to duplicate data mart - completed *****")
+            self.redshiftprop.writeToRedshift(df, self.property.get("database"), self.property.get("duplicatecdrtbl"), idn)
+            self.logger.info("***** started writing to duplicate mart - completed *****")
         except Exception as ex:
-            self.logger.error("Failed to write data in duplicate data mart : {error}".format(error=ex))
+            self.logger.error("Failed to write data in duplicate mart : {error}".format(error=ex))
 
-    def writetoLateCDR(self, dataframe: DataFrame, tgtColmns=[]):
+    def writetoLateCDR(self, dataframe: DataFrame, tgtColmns=[], idn=None):
         try:
-            self.logger.info("***** started writing to late data mart *****")
+            self.logger.info("***** started writing to late mart *****")
+            dataframe.show(20, False)
             df = dataframe.select(*tgtColmns)
-            self.redshiftprop.writeToRedshift(df, self.property.get("database"), self.property.get("latecdrtbl"))
-            self.logger.info("***** started writing to late data mart - completed *****")
+            self.redshiftprop.writeToRedshift(df, self.property.get("database"), self.property.get("latecdrtbl"), idn)
+            self.logger.info("***** started writing to late mart - completed *****")
         except Exception as ex:
-            self.logger.error("Failed to write data in late data mart : {error}".format(error=ex))
+            self.logger.error("Failed to write data in late mart : {error}".format(error=ex))
