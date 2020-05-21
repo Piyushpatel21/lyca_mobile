@@ -19,13 +19,14 @@ from awsUtils.AwsReader import AwsReader
 
 
 class TransformActionChain:
-    def __init__(self, logger, module, subModule, configfile, connfile, batchid, run_date):
+    def __init__(self, logger, module, subModule, configfile, connfile, run_date, batch_from, batch_to):
         self.logger = logger
         self.module = module
         self.subModule = subModule
+        self.batch_from = batch_from
+        self.batch_to = batch_to
         self.configfile = AwsReader.s3ReadFile('s3', 'aws-glue-temporary-484320814466-eu-west-2', configfile)
         self.connfile = AwsReader.s3ReadFile('s3', 'aws-glue-temporary-484320814466-eu-west-2', connfile)
-        self.batchid = batchid
         self.trans = DataTransformation()
         self.run_date = self.trans.getPrevRangeDate(run_date)
         self.jsonParser = JSONBuilder(self.module, self.subModule, self.configfile, self.connfile)
@@ -33,7 +34,9 @@ class TransformActionChain:
         self.connpropery = self.jsonParser.getConnPrpperty()
         self.redshiftprop = RedshiftUtils(self.connpropery.get("host"), self.connpropery.get("port"), self.connpropery.get("domain"),
                                           self.connpropery.get("user"), self.connpropery.get("password"), self.connpropery.get("tmpdir"))
-        print("CDR table name : {late}".format(late=self.property.get("latecdrtbl")))
+
+    def getBatchID(self, sparkSession: SparkSession) -> int:
+        return self.redshiftprop.getBatchId(sparkSession, self.subModule.upper(), self.batch_from, self.batch_to)
 
     def srcSchema(self):
         try:
@@ -52,14 +55,13 @@ class TransformActionChain:
         except Exception as ex:
             self.logger.error("Failed to create src, tgt, cheksum schema : {error}".format(error=ex))
 
-    def getSourceData(self, sparkSession: SparkSession, srcSchema, checkSumColumns) -> Tuple[DataFrame, DataFrame, DataFrame]:
+    def getSourceData(self, sparkSession: SparkSession, batchid, srcSchema, checkSumColumns) -> Tuple[DataFrame, DataFrame, DataFrame]:
         try:
             self.logger.info("***** reading source data from s3 *****")
-            file_list = self.redshiftprop.getFileList(sparkSession, self.batchid)
-            print(file_list)
+            file_list = self.redshiftprop.getFileList(sparkSession, batchid)
             prmryKey = "sk_rrbs_" + self.subModule
             path = self.property.get("sourceFilePath") + "/" + self.module.upper() + "/" + "UK" + "/" +self.subModule.upper() + "/" + self.run_date[:4] + "/" + self.run_date[4:6] + "/" + self.run_date[6:8] + "/"
-            df_source = self.trans.readSourceFile(sparkSession, path, srcSchema, str(self.batchid), prmryKey, checkSumColumns, file_list)
+            df_source = self.trans.readSourceFile(sparkSession, path, srcSchema, batchid, prmryKey, checkSumColumns, file_list)
             print("after merging source row =====>")
             date_range = int(self.trans.getPrevRangeDate(self.run_date, self.property.get("normalcdrfrq"), self.property.get("numofdayormnthnormal")))
             lateOrNormalCdr = self.trans.getLateOrNormalCdr(df_source, self.property.get("dateColumn"), self.property.get("formattedDateColumn"), self.property.get("integerDateColumn"), date_range)
@@ -106,7 +108,7 @@ class TransformActionChain:
         except Exception as ex:
             self.logger.error("Failed to compute Normal CDR data : {error}".format(error=ex))
 
-    def writetoDataMart(self, dataframe: DataFrame, tgtColmns=[], idn=None):
+    def writetoDataMart(self, dataframe: DataFrame, tgtColmns=[]):
         try:
             self.logger.info("***** started writing to data mart *****")
             df = dataframe.select(*tgtColmns)
@@ -115,7 +117,7 @@ class TransformActionChain:
         except Exception as ex:
             self.logger.error("Failed to write data in data mart : {error}".format(error=ex))
 
-    def writetoDuplicateCDR(self, dataframe: DataFrame, tgtColmns=[], idn=None):
+    def writetoDuplicateCDR(self, dataframe: DataFrame, tgtColmns=[]):
         try:
             self.logger.info("***** started writing to duplicate mart *****")
             df = dataframe.select(*tgtColmns)
@@ -124,7 +126,7 @@ class TransformActionChain:
         except Exception as ex:
             self.logger.error("Failed to write data in duplicate mart : {error}".format(error=ex))
 
-    def writetoLateCDR(self, dataframe: DataFrame, tgtColmns=[], idn=None):
+    def writetoLateCDR(self, dataframe: DataFrame, tgtColmns=[]):
         try:
             self.logger.info("***** started writing to late mart *****")
             dataframe.show(20, False)

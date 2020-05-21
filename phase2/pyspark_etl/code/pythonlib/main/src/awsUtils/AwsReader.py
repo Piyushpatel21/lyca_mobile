@@ -13,7 +13,7 @@ class AwsReader:
         return s3client.get_object(Bucket=bucketName, Key=key)
 
     @staticmethod
-    def s3ReadFile( service, bucket_name, file):
+    def s3ReadFile(service, bucket_name, file):
         s3 = AwsReader.getawsClient(service)
         contentObj = AwsReader.gets3FileContent(s3, bucket_name, file)
         return contentObj['Body'].read().decode('utf-8')
