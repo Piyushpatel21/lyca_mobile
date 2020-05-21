@@ -62,7 +62,6 @@ class TransformActionChain:
             prmryKey = "sk_rrbs_" + self.subModule
             path = self.property.get("sourceFilePath") + "/" + self.module.upper() + "/" + "UK" + "/" +self.subModule.upper() + "/" + self.run_date[:4] + "/" + self.run_date[4:6] + "/" + self.run_date[6:8] + "/"
             df_source = self.trans.readSourceFile(sparkSession, path, srcSchema, batchid, prmryKey, checkSumColumns, file_list)
-            print("after merging source row =====>")
             date_range = int(self.trans.getPrevRangeDate(self.run_date, self.property.get("normalcdrfrq"), self.property.get("numofdayormnthnormal")))
             lateOrNormalCdr = self.trans.getLateOrNormalCdr(df_source, self.property.get("dateColumn"), self.property.get("formattedDateColumn"), self.property.get("integerDateColumn"), date_range)
             df_duplicate = self.trans.getDuplicates(lateOrNormalCdr, "rec_checksum")

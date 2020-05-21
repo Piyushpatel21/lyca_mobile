@@ -44,4 +44,4 @@ class SparkSessionBuilder:
                     "logger": logger
                 }
         except Exception as ex:
-            print("Failed to launch SparkSession with error: {0}".format(str(ex)))
+            print("Failed to launch SparkSession with : {error}".format(error=ex))
