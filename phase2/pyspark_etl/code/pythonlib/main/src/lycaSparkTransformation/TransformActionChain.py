@@ -111,7 +111,7 @@ class TransformActionChain:
         try:
             self.logger.info("***** started writing to data mart *****")
             df = dataframe.select(*tgtColmns)
-            self.redshiftprop.writeToRedshift(df, self.property.get("database"), self.property.get("normalcdrtbl"), idn)
+            self.redshiftprop.writeToRedshift(df, self.property.get("database"), self.property.get("normalcdrtbl"))
             self.logger.info("***** started writing to data mart - completed *****")
         except Exception as ex:
             self.logger.error("Failed to write data in data mart : {error}".format(error=ex))
@@ -120,7 +120,7 @@ class TransformActionChain:
         try:
             self.logger.info("***** started writing to duplicate mart *****")
             df = dataframe.select(*tgtColmns)
-            self.redshiftprop.writeToRedshift(df, self.property.get("database"), self.property.get("duplicatecdrtbl"), idn)
+            self.redshiftprop.writeToRedshift(df, self.property.get("database"), self.property.get("duplicatecdrtbl"))
             self.logger.info("***** started writing to duplicate mart - completed *****")
         except Exception as ex:
             self.logger.error("Failed to write data in duplicate mart : {error}".format(error=ex))
@@ -130,7 +130,7 @@ class TransformActionChain:
             self.logger.info("***** started writing to late mart *****")
             dataframe.show(20, False)
             df = dataframe.select(*tgtColmns)
-            self.redshiftprop.writeToRedshift(df, self.property.get("database"), self.property.get("latecdrtbl"), idn)
+            self.redshiftprop.writeToRedshift(df, self.property.get("database"), self.property.get("latecdrtbl"))
             self.logger.info("***** started writing to late mart - completed *****")
         except Exception as ex:
             self.logger.error("Failed to write data in late mart : {error}".format(error=ex))
