@@ -13,7 +13,7 @@ clean:
 	rm -f -r dist/
 	rm -f -r *.egg-info
 
-    build: clean build_pyspark_zip bdist_egg
+build: clean build_pyspark_zip bdist_egg
 
 bdist_egg:
 	python setup.py bdist_egg

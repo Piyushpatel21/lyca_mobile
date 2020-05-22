@@ -1,0 +1,209 @@
+[
+  {
+    "column_name": "sk_rrbs_sms"
+  },
+  {
+    "column_name": "cdr_types"
+  },
+  {
+    "column_name": "network_id"
+  },
+  {
+    "column_name": "call_type"
+  },
+  {
+    "column_name": "plan_id"
+  },
+  {
+    "column_name": "service_id"
+  },
+  {
+    "column_name": "cli"
+  },
+  {
+    "column_name": "dialed_number"
+  },
+  {
+    "column_name": "imsi"
+  },
+  {
+    "column_name": "serving_node"
+  },
+  {
+    "column_name": "destination_area_code"
+  },
+  {
+    "column_name": "destination_zone_code"
+  },
+  {
+    "column_name": "destination_zone_name"
+  },
+  {
+    "column_name": "roam_flag"
+  },
+  {
+    "column_name": "roaming_node"
+  },
+  {
+    "column_name": "roaming_area_code"
+  },
+  {
+    "column_name": "roaming_zone_name"
+  },
+  {
+    "column_name": "sms_feature"
+  },
+  {
+    "column_name": "number_of_sms_charged"
+  },
+  {
+    "column_name": "number_of_free_sms"
+  },
+  {
+    "column_name": "initial_account_balance"
+  },
+  {
+    "column_name": "msg_cost"
+  },
+  {
+    "column_name": "balance"
+  },
+  {
+    "column_name": "free_sms_account_balance"
+  },
+  {
+    "column_name": "instance_id_session_id"
+  },
+  {
+    "column_name": "msg_date"
+  },
+  {
+    "column_name": "account_id"
+  },
+  {
+    "column_name": "dept_id"
+  },
+  {
+    "column_name": "free_zone_id"
+  },
+  {
+    "column_name": "last_topup_type"
+  },
+  {
+    "column_name": "bundle_code"
+  },
+  {
+    "column_name": "free_zone_expiry_date"
+  },
+  {
+    "column_name": "bundle_sms_charge"
+  },
+  {
+    "column_name": "bundle_balance"
+  },
+  {
+    "column_name": "bundle_plan_id"
+  },
+  {
+    "column_name": "nsms_free_units"
+  },
+  {
+    "column_name": "local_roam_country_code"
+  },
+  {
+    "column_name": "cdr_time_stamp"
+  },
+  {
+    "column_name": "bucket_type"
+  },
+  {
+    "column_name": "initial_free_units"
+  },
+  {
+    "column_name": "subscriber_type"
+  },
+  {
+    "column_name": "sub_acct_id"
+  },
+  {
+    "column_name": "family_id"
+  },
+  {
+    "column_name": "concat_message_flag"
+  },
+  {
+    "column_name": "concat_message_reference_number"
+  },
+  {
+    "column_name": "concat_message_total_chunks"
+  },
+  {
+    "column_name": "concat_message_current_chunk"
+  },
+  {
+    "column_name": "trace_id"
+  },
+  {
+    "column_name": "idp_time"
+  },
+  {
+    "column_name": "extension_record"
+  },
+  {
+    "column_name": "call_indicator"
+  },
+  {
+    "column_name": "serving_node_name"
+  },
+  {
+    "column_name": "bundle_version_name"
+  },
+  {
+    "column_name": "flh_reward_slab_id"
+  },
+  {
+    "column_name": "bundle_version_id"
+  },
+  {
+    "column_name": "rate_id"
+  },
+  {
+    "column_name": "pricing_plan_id"
+  },
+  {
+    "column_name": "pocket_id"
+  },
+  {
+    "column_name": "consumed_promo_amount"
+  },
+  {
+    "column_name": "rlh_charging_indicator"
+  },
+  {
+    "column_name": "surcharge_consumed"
+  },
+  {
+    "column_name": "roaming_partner_id"
+  },
+  {
+    "column_name": "msg_date_dt"
+  },
+  {
+    "column_name": "msg_date_num"
+  },
+  {
+    "column_name": "free_zone_expiry_date_num"
+  },
+  {
+    "column_name": "filename"
+  },
+  {
+    "column_name": "batch_id"
+  },
+  {
+    "column_name": "created_date"
+  },
+  {
+    "column_name": "rec_checksum"
+  }
+]
