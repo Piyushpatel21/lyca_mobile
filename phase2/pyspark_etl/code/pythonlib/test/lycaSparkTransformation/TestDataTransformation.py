@@ -1,5 +1,5 @@
 from phase2.pyspark_etl.code.pythonlib.main.src.lycaSparkTransformation.SparkSessionBuilder import SparkSessionBuilder
-from phase2.pyspark_etl.code.pythonlib.main.src.lycaSparkTransformation.Transformations import trimWhiteSpaces, trimAllCols, fillNull
+from phase2.pyspark_etl.code.pythonlib.main.src.lycaSparkTransformation.DataTransformation import DataTransformation
 from pyspark.sql.types import *
 from pyspark.sql.functions import col
 import datetime
@@ -8,6 +8,7 @@ import datetime
 class TestTransformation:
     sparkSessionBuild = SparkSessionBuilder().sparkSessionBuild()
     spark = sparkSessionBuild.get("sparkSession")
+    dataTransformation = DataTransformation()
 
     def testSparkInit(self):
         assert self.spark.version == "2.4.3"
@@ -23,7 +24,7 @@ class TestTransformation:
 
         actual_df = source_df.withColumn(
             "name",
-            trimWhiteSpaces(col("name"))
+            self.dataTransformation.trimWhiteSpaces(col("name"))
         )
 
         expected_df = self.spark.createDataFrame(
@@ -47,7 +48,7 @@ class TestTransformation:
 
         actual_df = source_df.withColumn(
             "name",
-            trimWhiteSpaces(col("name"))
+            self.dataTransformation.trimWhiteSpaces(col("name"))
         )
 
         expected_df = self.spark.createDataFrame(
@@ -69,7 +70,7 @@ class TestTransformation:
             schema=StructType(_schema)
         )
 
-        actual_df = trimAllCols(source_df)
+        actual_df = self.dataTransformation.trimAllCols(source_df)
 
         expected_df = self.spark.createDataFrame(
             [("foo", "1"),
@@ -91,7 +92,7 @@ class TestTransformation:
             schema=StructType(_schema)
         )
 
-        actual_df = fillNull(source_df)
+        actual_df = self.dataTransformation.fillNull(source_df)
 
         expected_df = self.spark.createDataFrame(
             [("foo", 1, datetime.date(2020, 5, 12)),
@@ -114,7 +115,7 @@ class TestTransformation:
         )
         value_dict = {'string': '0', 'number': 0, 'date': '0', 'datetime': '0'}
 
-        actual_df = fillNull(source_df, value_dict)
+        actual_df = self.dataTransformation.fillNull(source_df, value_dict)
 
         expected_df = self.spark.createDataFrame(
             [("foo", 1, datetime.date(2020, 5, 12)),
@@ -135,9 +136,9 @@ class TestTransformation:
             schema=StructType(_schema)
         )
 
-        trimmed_df = trimAllCols(source_df)
+        trimmed_df = self.dataTransformation.trimAllCols(source_df)
 
-        no_null_df = fillNull(trimmed_df)
+        no_null_df = self.dataTransformation.fillNull(trimmed_df)
 
         expected_df = self.spark.createDataFrame(
             [("foo", 1),

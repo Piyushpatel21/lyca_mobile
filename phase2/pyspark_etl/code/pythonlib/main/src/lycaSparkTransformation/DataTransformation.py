@@ -15,14 +15,16 @@ from pyspark.sql import functions as py_function
 from pyspark.sql.types import StructType
 from datetime import datetime
 from dateutil.relativedelta import relativedelta
-from pyspark.sql.types import IntegerType, StringType
+from pyspark.sql.types import IntegerType, StringType, DoubleType, LongType, FloatType, DateType, TimestampType
 from commonUtils.Log4j import Log4j
+import pyspark.sql.functions as F
 
 
 class DataTransformation:
 
     def __init__(self):
         self._logger = Log4j().getLogger()
+        self.default_value_dict = {'string': '0', 'number': 0, 'date': '1970-01-01', 'datetime': '1970-01-01 00:00:00'}
 
     def readSourceFile(self, spark, path, structtype: StructType, batchid, prmryKey, checkSumColumns=[],
                        fList=[]) -> DataFrame:
@@ -168,3 +170,53 @@ class DataTransformation:
             return dfnormalOrDuplicate
         except Exception as ex:
             self._logger.error("Failed to return unique records : {error}".format(error=ex))
+
+    def trimWhiteSpaces(self, column):
+        """
+        Trims the white space from start and end
+
+        :param column:
+        :return:
+        """
+        return F.trim(column)
+
+    def fillNull(self, df, value_dict=None):
+        """
+        Fill the null value with respect to data type.
+
+        :param df: spark dataframe
+        :param value_dict: default: {'string': '0', 'number': 0, 'date': '1970-01-01', 'datetime': '1970-01-01 00:00:00'}
+        :return:
+        """
+
+        if not value_dict:
+            value_dict = self.default_value_dict
+
+        col_default_values = {}
+        for elem in df.schema:
+            if elem.dataType == StringType():
+                col_default_values[elem.name] = value_dict['string']
+            elif elem.dataType in [IntegerType(), DoubleType(), FloatType(), LongType()]:
+                col_default_values[elem.name] = value_dict['number']
+            elif elem.dataType == DateType():
+                col_default_values[elem.name] = value_dict['date']
+            elif elem.dataType == TimestampType():
+                col_default_values[elem.name] = value_dict['datetime']
+
+        return df.fillna(col_default_values)
+
+    def trimAllCols(self, df):
+        """
+        Trim all the space string from columns
+
+        :param df: spark dataframe
+        :return:
+        """
+        final_df = df
+        for elem in df.schema:
+            if elem.dataType == StringType():
+                print("Triming {name}".format(name=elem.name))
+                final_df = final_df.withColumn(elem.name, self.trimWhiteSpaces(F.col(elem.name)))
+
+        return final_df
+
