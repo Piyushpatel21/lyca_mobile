@@ -70,6 +70,8 @@ class RedshiftUtils:
         """
         try:
             table = ".".join([db_name, dataset_name])
+            tempTbl = '_'.join(['df_temp', dataset_name])
+            dataframe.createGlobalTempView(tempTbl)
             dataframe.write \
                 .format("com.databricks.spark.redshift") \
                 .option("url", self.jdbcUrl) \
