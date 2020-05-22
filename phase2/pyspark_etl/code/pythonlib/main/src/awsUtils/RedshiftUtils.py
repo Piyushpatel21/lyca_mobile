@@ -60,7 +60,7 @@ class RedshiftUtils:
         except Exception as ex:
             self._logger.error("failed to get data from redshift : {error}".format(error=ex))
 
-    def writeToRedshift(self, dataframe: DataFrame, db_name, dataset_name):
+    def writeToRedshift(self, dataframe: DataFrame, db_name, dataset_name, tempTbl):
         """
         Return response with data from Redshift
         :parameter dataframe - need to write data in redshift
@@ -70,8 +70,6 @@ class RedshiftUtils:
         """
         try:
             table = ".".join([db_name, dataset_name])
-            tempTbl = '_'.join(['df_temp', dataset_name])
-            dataframe.createGlobalTempView(tempTbl)
             dataframe.write \
                 .format("com.databricks.spark.redshift") \
                 .option("url", self.jdbcUrl) \
@@ -80,6 +78,7 @@ class RedshiftUtils:
                 .option("tempdir", self.redshiftTmpDir) \
                 .mode("append") \
                 .save()
+
         except Exception as ex:
             self._logger.error("failed to write data in redshift : {error}".format(error=ex))
 
@@ -120,9 +119,7 @@ class RedshiftUtils:
                 .option("tempdir", self.redshiftTmpDir) \
                 .load()
             batchIDList = df.rdd.flatMap(lambda batch: batch).collect()
-            print(batchIDList)
             batchID = batchIDList[0]
-            print(batchID)
             return batchID
         except Exception as ex:
             self._logger.error("failed to get batch Id from redshift : {error}".format(error=ex))

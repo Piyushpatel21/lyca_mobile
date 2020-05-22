@@ -9,6 +9,7 @@
 ########################################################################
 import argparse
 import sys
+import os
 from datetime import datetime, timedelta
 from lycaSparkTransformation.TransformActionChain import TransformActionChain
 from lycaSparkTransformation.SparkSessionBuilder import SparkSessionBuilder
@@ -19,20 +20,24 @@ class LycaCommonETLLoad:
        :parameter sub-module
        :parameter application property file path"""
 
-    def __init__(self, module, submodule, configfile, connfile, master):
+    def __init__(self, module, submodule, configfile, connfile, master, run_date=None, batchID= None):
+        self.batchID = batchID
         self.module = module
         self.submodule = submodule
         self.configfile = configfile
         self.connfile = connfile
         self.master = master
+        self.run_date = run_date
 
     def parseArguments(self):
         return {
+            "run_date": self.run_date,
             "module": self.module,
             "submodule": self.submodule,
             "configfile": self.configfile,
             "connfile": self.connfile,
-            "master": self.master
+            "master": self.master,
+            "batchID": self.batchID
         }
 
     def hourRounder(self, t):
@@ -44,13 +49,18 @@ class LycaCommonETLLoad:
         return now + timedelta(hours=6)
 
 def start_execution(args):
-    lycaETL = LycaCommonETLLoad(args.get('module'), args.get('submodule'), args.get('configfile'), args.get('connfile'), args.get('master'))
+    lycaETL = LycaCommonETLLoad(args.get('module'), args.get('submodule'), args.get('configfile'), args.get('connfile'),
+                                args.get('master'), args.get('run_date'), args.get('batchID'))
     args = lycaETL.parseArguments()
-    prevDate = datetime.now() + timedelta(days=-1)
-    run_date = prevDate.date().strftime('%Y%m%d')
-    batch_from = lycaETL.hourRounder(prevDate)
-    batch_to = lycaETL.getTimeInterval(batch_from)
-    print("Running application for : batch_from={batch_from}, batch_to={batch_to}".format(batch_from=batch_from, batch_to=batch_to))
+    batch_from = ''
+    batch_to = ''
+    if not (args.get('run_date') and args.get('batchID')):
+        prevDate = datetime.now() + timedelta(days=-1)
+        run_date = prevDate.date().strftime('%Y%m%d')
+        batch_from = lycaETL.hourRounder(prevDate)
+        batch_to = lycaETL.getTimeInterval(batch_from)
+    else:
+        run_date = args.get('run_date')
     appname = args.get('module') + '-' + args.get('submodule')
     configfile = args.get('configfile')
     connfile = args.get('connfile')
@@ -58,17 +68,21 @@ def start_execution(args):
     sparkSession = sparkSessionBuild.get("sparkSession")
     logger = sparkSessionBuild.get("logger")
     tf = TransformActionChain(logger, args.get('module'), args.get('submodule'), configfile, connfile, run_date, batch_from, batch_to)
-    batch_id = tf.getBatchID(sparkSession)
-    logger.info("running batch id : batch_id={batch_id}".format(batch_id=batch_id))
+    if not (args.get('run_date') and args.get('batchID')):
+        batch_id = tf.getBatchID(sparkSession)
+    else:
+        batch_id = args.get('batchID')
     if not batch_id:
         logger.error("Batch ID not available for current timestamp : batch_from={batch_from}, batch_to={batch_to}".format(batch_from=batch_from, batch_to=batch_to))
         sys.exit(1)
+    logger.info("Running application for : run_date={run_date}, batch_id={batch_id}, batch_from={batch_from}, "
+                "batch_to={batch_to} "
+                .format(batch_id=batch_id, run_date=run_date,batch_from=batch_from, batch_to=batch_to))
     propColumns = tf.srcSchema()
     duplicateData, lateUnique, normalUnique = tf.getSourceData(sparkSession, batch_id, propColumns.get("srcSchema"), propColumns.get("checkSumColumns"))
     normalDB, lateDB = tf.getDbDuplicate(sparkSession)
     normalNew, normalDuplicate = tf.getNormalCDR(normalUnique, normalDB)
     lateNew, lateDuplicate = tf.getLateCDR(lateUnique, lateDB)
-    outputCDR = [duplicateData, normalNew, normalDuplicate, lateNew, lateNew, lateDuplicate]
     normalNewcnt = normalNew.count()
     lateNewCnt = lateNew.count()
     lateDuplicateCnt = lateDuplicate.count()
@@ -76,32 +90,9 @@ def start_execution(args):
     normalDuplicateCnt = normalDuplicate.count()
     print("we are processing : normalNew={normalNew}, lateNew={lateNew}, lateDuplicate={lateDuplicate}, duplicateData={duplicateData}, normalDuplicate={normalDuplicate}"
           .format(normalNew=normalNewcnt, lateNew=lateNewCnt, lateDuplicate=lateDuplicateCnt, duplicateData=duplicateDataCnt, normalDuplicate=normalDuplicateCnt))
-    tf.writetoDataMart(normalNew, propColumns.get("tgtSchema"))
-    tf.writetoLateCDR(lateNew, propColumns.get("tgtSchema"))
-    tf.writetoDuplicateCDR(lateDuplicate, propColumns.get("tgtSchema"))
-    tf.writetoDuplicateCDR(duplicateData, propColumns.get("tgtSchema"))
-    tf.writetoDuplicateCDR(normalDuplicate, propColumns.get("tgtSchema"))
-    tf.writetoDataMart(lateNew, propColumns.get("tgtSchema"))
-
-
-#
-# def parseArguments():
-#     parser = argparse.ArgumentParser()
-#     parser.add_argument('--run_date', help='run date required for trigger pipeline')
-#     parser.add_argument('--module', help='module name required to process data')
-#     parser.add_argument('--submodule', help='submodule name required to process data')
-#     parser.add_argument('--configfile', help='application module level config file path')
-#     parser.add_argument('--connfile', help='connection config file path')
-#     parser.add_argument('--master', help='session for glue')
-#     known_arguments, unknown_arguments = parser.parse_known_args()
-#     arguments = vars(known_arguments)
-#     if arguments:
-#         if not (arguments.get('run_date') and arguments.get('module') and arguments.get('submodule')):
-#             print("--run_date --module, --submodule required for trigger pipeline")
-#             sys.exit(1)
-#     return arguments
-#
-#
-# if __name__ == '__main__':
-#     args = parseArguments()
-#     start_execution(args)
+    tf.writetoDataMart(sparkSession, normalNew, propColumns.get("tgtSchema"))
+    tf.writetoLateCDR(sparkSession, lateNew, propColumns.get("tgtSchema"))
+    tf.writetoDuplicateCDR(sparkSession, lateDuplicate, propColumns.get("tgtSchema"))
+    tf.writetoDuplicateCDR(sparkSession, duplicateData, propColumns.get("tgtSchema"))
+    tf.writetoDuplicateCDR(sparkSession, normalDuplicate, propColumns.get("tgtSchema"))
+    tf.writetoDataMart(sparkSession, lateNew, propColumns.get("tgtSchema"))

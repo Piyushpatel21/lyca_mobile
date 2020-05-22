@@ -40,6 +40,7 @@ class DataTransformation:
                 df_source = "df_" + file_identifier
                 self._logger.info("Reading source file : {file}".format(file=file))
                 file = path + file
+                print(file)
                 df_source = spark.read.option("header", "false").option("dateFormat", 'dd-MM-yyyy').schema(structtype).csv(file)
                 df_trans = df_source.withColumn("rec_checksum",
                                                 py_function.md5(py_function.concat_ws(",", *checkSumColumns))) \

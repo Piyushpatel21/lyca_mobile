@@ -19,7 +19,7 @@ from awsUtils.AwsReader import AwsReader
 
 
 class TransformActionChain:
-    def __init__(self, logger, module, subModule, configfile, connfile, run_date, batch_from, batch_to):
+    def __init__(self, logger, module, subModule, configfile, connfile, run_date, batch_from=None, batch_to=None):
         self.logger = logger
         self.module = module
         self.subModule = subModule
@@ -28,7 +28,7 @@ class TransformActionChain:
         self.configfile = AwsReader.s3ReadFile('s3', 'aws-glue-temporary-484320814466-eu-west-2', configfile)
         self.connfile = AwsReader.s3ReadFile('s3', 'aws-glue-temporary-484320814466-eu-west-2', connfile)
         self.trans = DataTransformation()
-        self.run_date = self.trans.getPrevRangeDate(run_date)
+        self.run_date = run_date
         self.jsonParser = JSONBuilder(self.module, self.subModule, self.configfile, self.connfile)
         self.property = self.jsonParser.getAppPrpperty()
         self.connpropery = self.jsonParser.getConnPrpperty()
@@ -58,7 +58,8 @@ class TransformActionChain:
     def getSourceData(self, sparkSession: SparkSession, batchid, srcSchema, checkSumColumns) -> Tuple[DataFrame, DataFrame, DataFrame]:
         try:
             self.logger.info("***** reading source data from s3 *****")
-            file_list = self.redshiftprop.getFileList(sparkSession, batchid)
+            # file_list = self.redshiftprop.getFileList(sparkSession, batchid)
+            file_list = ['sample.csv']
             prmryKey = "sk_rrbs_" + self.subModule
             path = self.property.get("sourceFilePath") + "/" + self.module.upper() + "/" + "UK" + "/" +self.subModule.upper() + "/" + self.run_date[:4] + "/" + self.run_date[4:6] + "/" + self.run_date[6:8] + "/"
             df_source = self.trans.readSourceFile(sparkSession, path, srcSchema, batchid, prmryKey, checkSumColumns, file_list)
@@ -107,30 +108,44 @@ class TransformActionChain:
         except Exception as ex:
             self.logger.error("Failed to compute Normal CDR data : {error}".format(error=ex))
 
-    def writetoDataMart(self, dataframe: DataFrame, tgtColmns=[]):
+    def writetoDataMart(self, sparkSession: SparkSession, dataframe: DataFrame, tgtColmns=[]):
         try:
             self.logger.info("***** started writing to data mart *****")
             df = dataframe.select(*tgtColmns)
-            self.redshiftprop.writeToRedshift(df, self.property.get("database"), self.property.get("normalcdrtbl"))
+            tempTbl = '_'.join(['df_temp', self.property.get("normalcdrtbl")])
+            dataframe.createGlobalTempView(tempTbl)
+            self.redshiftprop.writeToRedshift(df, self.property.get("database"), self.property.get("normalcdrtbl"), tempTbl)
             self.logger.info("***** started writing to data mart - completed *****")
+            self.logger.info("***** dropping temp view : {tempTbl}*****".format(tempTbl=tempTbl))
+            sparkSession.catalog.dropGlobalTempView(tempTbl)
+            self.logger.info("***** dropped temp view : {tempTbl} *****".format(tempTbl=tempTbl))
         except Exception as ex:
             self.logger.error("Failed to write data in data mart : {error}".format(error=ex))
 
-    def writetoDuplicateCDR(self, dataframe: DataFrame, tgtColmns=[]):
+    def writetoDuplicateCDR(self, sparkSession: SparkSession, dataframe: DataFrame, tgtColmns=[]):
         try:
             self.logger.info("***** started writing to duplicate mart *****")
             df = dataframe.select(*tgtColmns)
-            self.redshiftprop.writeToRedshift(df, self.property.get("database"), self.property.get("duplicatecdrtbl"))
+            tempTbl = '_'.join(['df_temp', self.property.get("duplicatecdrtbl")])
+            dataframe.createGlobalTempView(tempTbl)
+            self.redshiftprop.writeToRedshift(df, self.property.get("database"), self.property.get("duplicatecdrtbl"), tempTbl)
             self.logger.info("***** started writing to duplicate mart - completed *****")
+            self.logger.info("***** dropping temp view : {tempTbl}*****".format(tempTbl=tempTbl))
+            sparkSession.catalog.dropGlobalTempView(tempTbl)
+            self.logger.info("***** dropped temp view : {tempTbl} *****".format(tempTbl=tempTbl))
         except Exception as ex:
             self.logger.error("Failed to write data in duplicate mart : {error}".format(error=ex))
 
-    def writetoLateCDR(self, dataframe: DataFrame, tgtColmns=[]):
+    def writetoLateCDR(self, sparkSession: SparkSession, dataframe: DataFrame, tgtColmns=[]):
         try:
             self.logger.info("***** started writing to late mart *****")
-            dataframe.show(20, False)
             df = dataframe.select(*tgtColmns)
-            self.redshiftprop.writeToRedshift(df, self.property.get("database"), self.property.get("latecdrtbl"))
+            tempTbl = '_'.join(['df_temp', self.property.get("latecdrtbl")])
+            dataframe.createGlobalTempView(tempTbl)
+            self.redshiftprop.writeToRedshift(df, self.property.get("database"), self.property.get("latecdrtbl"), tempTbl)
             self.logger.info("***** started writing to late mart - completed *****")
+            self.logger.info("***** dropping temp view : {tempTbl}*****".format(tempTbl=tempTbl))
+            sparkSession.catalog.dropGlobalTempView(tempTbl)
+            self.logger.info("***** dropped temp view : {tempTbl} *****".format(tempTbl=tempTbl))
         except Exception as ex:
             self.logger.error("Failed to write data in late mart : {error}".format(error=ex))
