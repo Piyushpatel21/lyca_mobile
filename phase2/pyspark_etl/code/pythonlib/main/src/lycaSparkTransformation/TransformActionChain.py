@@ -56,11 +56,11 @@ class TransformActionChain:
         except Exception as ex:
             self.logger.error("Failed to create src, tgt, cheksum schema : {error}".format(error=ex))
 
-    def getSourceData(self, sparkSession: SparkSession, batchid, srcSchema, checkSumColumns) -> Tuple[DataFrame, DataFrame, DataFrame]:
+    def getSourceData(self, sparkSession: SparkSession, batchid, srcSchema, checkSumColumns) -> Tuple[DataFrame, DataFrame, DataFrame, DataFrame]:
         try:
             self.logger.info("***** reading source data from s3 *****")
             file_list = self.redshiftprop.getFileList(sparkSession, batchid)
-            # file_list = ['sample.csv']
+            # file_list = ['sample.csv', 'sample2.csv']
             prmryKey = "sk_rrbs_" + self.subModule
             path = self.property.get("sourceFilePath") + "/" + self.module.upper() + "/" + "UK" + "/" +self.subModule.upper() + "/" + self.run_date[:4] + "/" + self.run_date[4:6] + "/" + self.run_date[6:8] + "/"
             df_source = self.trans.readSourceFile(sparkSession, path, srcSchema, batchid, prmryKey, checkSumColumns, file_list)
@@ -70,13 +70,8 @@ class TransformActionChain:
             df_unique_late = self.trans.getUnique(lateOrNormalCdr, "rec_checksum").filter("normalOrlate == 'Late'")
             df_unique_normal = self.trans.getUnique(lateOrNormalCdr, "rec_checksum").filter("normalOrlate == 'Normal'")
             self.logger.info("***** source data prepared for transformation *****")
-            file_count = df_source.groupBy(['filename']).count()
-            file_status = file_count.withColumn("batch_status", py_function.lit("P"))
-            latecdr_dm_count = df_unique_late.groupBy(['filename']).count()
-            latecdr_lm_count = latecdr_dm_count
-            joindf = file_count.jo
-            self.redshiftprop.updateLogBatchFiles(sparkSession, file_status, batchid)
-            return df_duplicate, df_unique_late, df_unique_normal
+            record_count = df_source.groupBy('filename').agg(py_function.count('batch_id').alias('record_count'))
+            return df_duplicate, df_unique_late, df_unique_normal, record_count
         except Exception as ex:
             self.logger.error("Failed to create source data : {error}".format(error=ex))
 
@@ -93,27 +88,29 @@ class TransformActionChain:
         except Exception as ex:
             self.logger.error("Failed to read redshift for db duplicate : {error}".format(error=ex))
 
-    def getLateCDR(self, srcDataFrame: DataFrame, lateDBDataFrame: DataFrame) -> Tuple[DataFrame, DataFrame]:
+    def getLateCDR(self, srcDataFrame: DataFrame, lateDBDataFrame: DataFrame) -> Tuple[DataFrame, DataFrame, DataFrame, DataFrame]:
         try:
             self.logger.info("***** generating data for late cdr *****")
             dfLateCDRND = self.trans.checkDuplicate(srcDataFrame, lateDBDataFrame)
             dfLateCDRNewRecord = dfLateCDRND.filter("newOrDupl == 'New'")
             dfLateCDRDuplicate = dfLateCDRND.filter("newOrDupl == 'Duplicate'")
             self.logger.info("***** generating data for late cdr - completed *****")
-            latecdr_duplicate_count = dfLateCDRDuplicate.groupBy(['filename']).count()
-            return dfLateCDRNewRecord, dfLateCDRDuplicate
+            latecdr_count = dfLateCDRNewRecord.groupBy('filename').agg(py_function.count('batch_id').alias('latecdr_dm_count'))
+            latecdr_dupl_count = dfLateCDRDuplicate.groupBy('filename').agg(py_function.count('batch_id').alias('latecdr_duplicate_count'))
+            return dfLateCDRNewRecord, dfLateCDRDuplicate, latecdr_count, latecdr_dupl_count
         except Exception as ex:
             self.logger.error("Failed to compute Late CDR data : {error}".format(error=ex))
 
-    def getNormalCDR(self, srcDataFrame: DataFrame, normalDBDataFrame: DataFrame) -> Tuple[DataFrame, DataFrame]:
+    def getNormalCDR(self, srcDataFrame: DataFrame, normalDBDataFrame: DataFrame) -> Tuple[DataFrame, DataFrame, DataFrame, DataFrame]:
         try:
             self.logger.info("***** generating data for normal cdr *****")
             dfNormalCDRND = self.trans.checkDuplicate(srcDataFrame, normalDBDataFrame)
             dfNormalCDRNewRecord = dfNormalCDRND.filter("newOrDupl == 'New'")
             dfNormalCDRDuplicate = dfNormalCDRND.filter("newOrDupl == 'Duplicate'")
             self.logger.info("***** generating data for normal cdr - completed *****")
-            newrec_duplicate_count = dfNormalCDRDuplicate.groupBy(['filename']).count()
-            return dfNormalCDRNewRecord, dfNormalCDRDuplicate
+            normalcdr_count = dfNormalCDRNewRecord.groupBy('filename').agg(py_function.count('batch_id').alias('newrec_dm_count'))
+            normalcdr_dupl_count = dfNormalCDRDuplicate.groupBy('filename').agg(py_function.count('batch_id').alias('newrec_duplicate_count'))
+            return dfNormalCDRNewRecord, dfNormalCDRDuplicate, normalcdr_count, normalcdr_dupl_count
         except Exception as ex:
             self.logger.error("Failed to compute Normal CDR data : {error}".format(error=ex))
 
@@ -158,3 +155,11 @@ class TransformActionChain:
             self.logger.info("***** dropped temp view : {tempTbl} *****".format(tempTbl=tempTbl))
         except Exception as ex:
             self.logger.error("Failed to write data in late mart : {error}".format(error=ex))
+
+    def writeBatchFileStatus(self, sparkSession: SparkSession, dataframe : DataFrame, batch_id):
+        try:
+            self.logger.info("Writing batch status metadata")
+            self.redshiftprop.updateLogBatchFiles(sparkSession, dataframe, batch_id)
+            self.logger.info("Writing batch status metadata - completed")
+        except Exception as ex:
+            self.logger.error("Failed to write batch status metadata: {error}".format(error=ex))

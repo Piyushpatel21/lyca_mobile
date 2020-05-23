@@ -10,10 +10,7 @@
 
 from pyspark.sql import DataFrame
 from pyspark.sql import SparkSession
-from pyspark.sql.types import StructType, StructField
-
 from commonUtils.Log4j import Log4j
-import sqlalchemy
 
 
 class RedshiftUtils:
