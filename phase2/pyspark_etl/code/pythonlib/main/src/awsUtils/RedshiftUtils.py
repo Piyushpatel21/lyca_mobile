@@ -10,7 +10,10 @@
 
 from pyspark.sql import DataFrame
 from pyspark.sql import SparkSession
+from pyspark.sql.types import StructType, StructField
+
 from commonUtils.Log4j import Log4j
+import sqlalchemy
 
 
 class RedshiftUtils:
@@ -123,3 +126,45 @@ class RedshiftUtils:
             return batchID
         except Exception as ex:
             self._logger.error("failed to get batch Id from redshift : {error}".format(error=ex))
+
+    def updateLogBatchFiles(self, sparkSession: SparkSession, dataframe : DataFrame, batch_id):
+        """
+        Update log_batch_files table in Redshift with file record count and batch status
+        :parameter sparkSession - spark session
+        :parameter file_list - list of filename to be read from S3
+        :parameter data_frame_list - list of dataframe
+        :parameter batch_id - batch id for the batch interval to read files
+        :return:
+        """
+        global joinedDF
+        table = "uk_rrbs_dm.log_batch_files_rrbs"
+
+        try:
+            self._logger.info("Updating Log Batch Files table :")
+            query = "SELECT * FROM uk_rrbs_dm.log_batch_files_rrbs WHERE batch_id='{batch_id}'".format(
+                batch_id=batch_id)
+            self._logger.info("Query {query}".format(query=query))
+            df = sparkSession.read \
+                .format("com.databricks.spark.redshift") \
+                .option("url", self.jdbcUrl) \
+                .option("query", query) \
+                .option("forward_spark_s3_credentials", "true") \
+                .option("tempdir", self.redshiftTmpDir) \
+                .load()
+            joinedDF = df.join(dataframe, df.file_name == dataframe.filename, "inner")
+        except Exception as ex:
+            self._logger.error("failed to read log_batch_status data from redshift : {error}".format(error=ex))
+
+        preDelQuery = "DELETE FROM uk_rrbs_dm.log_batch_files_rrbs WHERE batch_id='{batch_id}'".format(
+            batch_id=batch_id)
+        try:
+            joinedDF.write.format("com.databricks.spark.redshift") \
+                .option("url", self.jdbcUrl) \
+                .option("dbtable", table) \
+                .option("preactions", preDelQuery) \
+                .option("forward_spark_s3_credentials", "true") \
+                .option("tempdir", self.redshiftTmpDir) \
+                .mode("append") \
+                .save()
+        except Exception as ex:
+            self._logger.error("failed to write log_batch_status data to redshift : {error}".format(error=ex))

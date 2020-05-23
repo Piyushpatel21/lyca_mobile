@@ -16,6 +16,7 @@ from pyspark.sql import DataFrame
 from lycaSparkTransformation.JSONBuilder import JSONBuilder
 from awsUtils.RedshiftUtils import RedshiftUtils
 from awsUtils.AwsReader import AwsReader
+from pyspark.sql import functions as py_function
 
 
 class TransformActionChain:
@@ -59,9 +60,10 @@ class TransformActionChain:
         try:
             self.logger.info("***** reading source data from s3 *****")
             # file_list = self.redshiftprop.getFileList(sparkSession, batchid)
-            file_list = ['sample.csv']
+            file_list = ['sample.csv', 'sample2.csv']
             prmryKey = "sk_rrbs_" + self.subModule
-            path = self.property.get("sourceFilePath") + "/" + self.module.upper() + "/" + "UK" + "/" +self.subModule.upper() + "/" + self.run_date[:4] + "/" + self.run_date[4:6] + "/" + self.run_date[6:8] + "/"
+            path = '/Users/narenk/PycharmProjects/lycamobile-etl-movements/phase2/pyspark_etl/code/pythonlib/test/resources/'
+            # path = self.property.get("sourceFilePath") + "/" + self.module.upper() + "/" + "UK" + "/" +self.subModule.upper() + "/" + self.run_date[:4] + "/" + self.run_date[4:6] + "/" + self.run_date[6:8] + "/"
             df_source = self.trans.readSourceFile(sparkSession, path, srcSchema, batchid, prmryKey, checkSumColumns, file_list)
             date_range = int(self.trans.getPrevRangeDate(self.run_date, self.property.get("normalcdrfrq"), self.property.get("numofdayormnthnormal")))
             lateOrNormalCdr = self.trans.getLateOrNormalCdr(df_source, self.property.get("dateColumn"), self.property.get("formattedDateColumn"), self.property.get("integerDateColumn"), date_range)
@@ -69,6 +71,11 @@ class TransformActionChain:
             df_unique_late = self.trans.getUnique(lateOrNormalCdr, "rec_checksum").filter("normalOrlate == 'Late'")
             df_unique_normal = self.trans.getUnique(lateOrNormalCdr, "rec_checksum").filter("normalOrlate == 'Normal'")
             self.logger.info("***** source data prepared for transformation *****")
+            file_count = df_source.groupBy(['filename']).count()
+            file_status = file_count.withColumn("batch_status", py_function.lit("P"))
+            latecdr_dm_count = df_unique_late.groupBy(['filename']).count()
+            latecdr_lm_count = latecdr_dm_count
+            joindf = file_count.jo
             return df_duplicate, df_unique_late, df_unique_normal
         except Exception as ex:
             self.logger.error("Failed to create source data : {error}".format(error=ex))
@@ -93,6 +100,7 @@ class TransformActionChain:
             dfLateCDRNewRecord = dfLateCDRND.filter("newOrDupl == 'New'")
             dfLateCDRDuplicate = dfLateCDRND.filter("newOrDupl == 'Duplicate'")
             self.logger.info("***** generating data for late cdr - completed *****")
+            latecdr_duplicate_count = dfLateCDRDuplicate.groupBy(['filename']).count()
             return dfLateCDRNewRecord, dfLateCDRDuplicate
         except Exception as ex:
             self.logger.error("Failed to compute Late CDR data : {error}".format(error=ex))
@@ -104,6 +112,7 @@ class TransformActionChain:
             dfNormalCDRNewRecord = dfNormalCDRND.filter("newOrDupl == 'New'")
             dfNormalCDRDuplicate = dfNormalCDRND.filter("newOrDupl == 'Duplicate'")
             self.logger.info("***** generating data for normal cdr - completed *****")
+            newrec_duplicate_count = dfNormalCDRDuplicate.groupBy(['filename']).count()
             return dfNormalCDRNewRecord, dfNormalCDRDuplicate
         except Exception as ex:
             self.logger.error("Failed to compute Normal CDR data : {error}".format(error=ex))
