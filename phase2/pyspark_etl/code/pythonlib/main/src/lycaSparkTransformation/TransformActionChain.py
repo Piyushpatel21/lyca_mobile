@@ -59,11 +59,10 @@ class TransformActionChain:
     def getSourceData(self, sparkSession: SparkSession, batchid, srcSchema, checkSumColumns) -> Tuple[DataFrame, DataFrame, DataFrame]:
         try:
             self.logger.info("***** reading source data from s3 *****")
-            # file_list = self.redshiftprop.getFileList(sparkSession, batchid)
-            file_list = ['sample.csv', 'sample2.csv']
+            file_list = self.redshiftprop.getFileList(sparkSession, batchid)
+            # file_list = ['sample.csv']
             prmryKey = "sk_rrbs_" + self.subModule
-            path = '/Users/narenk/PycharmProjects/lycamobile-etl-movements/phase2/pyspark_etl/code/pythonlib/test/resources/'
-            # path = self.property.get("sourceFilePath") + "/" + self.module.upper() + "/" + "UK" + "/" +self.subModule.upper() + "/" + self.run_date[:4] + "/" + self.run_date[4:6] + "/" + self.run_date[6:8] + "/"
+            path = self.property.get("sourceFilePath") + "/" + self.module.upper() + "/" + "UK" + "/" +self.subModule.upper() + "/" + self.run_date[:4] + "/" + self.run_date[4:6] + "/" + self.run_date[6:8] + "/"
             df_source = self.trans.readSourceFile(sparkSession, path, srcSchema, batchid, prmryKey, checkSumColumns, file_list)
             date_range = int(self.trans.getPrevRangeDate(self.run_date, self.property.get("normalcdrfrq"), self.property.get("numofdayormnthnormal")))
             lateOrNormalCdr = self.trans.getLateOrNormalCdr(df_source, self.property.get("dateColumn"), self.property.get("formattedDateColumn"), self.property.get("integerDateColumn"), date_range)
@@ -76,6 +75,7 @@ class TransformActionChain:
             latecdr_dm_count = df_unique_late.groupBy(['filename']).count()
             latecdr_lm_count = latecdr_dm_count
             joindf = file_count.jo
+            self.redshiftprop.updateLogBatchFiles(sparkSession, file_status, batchid)
             return df_duplicate, df_unique_late, df_unique_normal
         except Exception as ex:
             self.logger.error("Failed to create source data : {error}".format(error=ex))
