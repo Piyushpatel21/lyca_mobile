@@ -56,23 +56,10 @@ def chekNull(x):
 
 
 # udf_calc = udf(chekNull, StringType())
-sparkSession = SparkSession.builder.master("local").config("spark.sql.crossJoin.enabled", "true").appName("appname").getOrCreate()
-# schemafile = "/Users/narenk/PycharmProjects/lycamobile-etl-movements/phase2/pyspark_etl/code/config/rrbs_src_fct_sms.json"
-# structtype = structTypemapping(schemafile)
-# print(structtype)
-file = "/Users/narenk/PycharmProjects/lycamobile-etl-movements/phase2/pyspark_etl/code/pythonlib/test/resources/sample.csv"
-df1 = sparkSession.read.option("header", "false").option("dateFormat", 'dd-MM-yyyy').csv(file)
-df2 = df1.withColumn("filename", fa.lit('sample'))
-df3 = df2.groupBy('filename').agg(fa.count('_c1').alias('lateCDR'))
-
-file = "/Users/narenk/PycharmProjects/lycamobile-etl-movements/phase2/pyspark_etl/code/pythonlib/test/resources/sample2.csv"
-df4 = sparkSession.read.option("header", "false").option("dateFormat", 'dd-MM-yyyy').csv(file)
-df5 = df4.withColumn("filename", fa.lit('sample'))
-df6 = df5.groupBy('filename').agg(fa.count('_c1').alias('lateCDR1'))
-
-df3.show(20, False)
-df6.show(20, False)
-output = df3.join(df6, df3['filename'] == df6['filename']).select(df3['filename'], df3['lateCDR'], df6['lateCDR1'])
-output.show(20, False)
-
-
+sparkSession = SparkSession.builder.master("local").appName("appname").getOrCreate()
+schemafile = "/Users/narenk/PycharmProjects/lycamobile-etl-movements/phase2/pyspark_etl/code/config/rrbs_src_fct_sms.json"
+structtype = structTypemapping(schemafile)
+print(structtype)
+file = "/Users/narenk/PycharmProjects/lycamobile-etl-movements/phase2/pyspark_etl/code/pythonlib/test/resources/UKR6_CS_08_05_2020_05_36_50_24934.csv"
+df1 = sparkSession.read.option("header", "false").schema(structtype).option("dateFormat", 'dd-MM-yyyy').csv(file)
+df1.show(20, False)
