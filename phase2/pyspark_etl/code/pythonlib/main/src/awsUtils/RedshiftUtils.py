@@ -108,8 +108,11 @@ class RedshiftUtils:
         :return:
         """
         try:
-            self._logger.info("Batch ID info : source_identifier={source_identifier}, batch_from={batch_from}, batch_to={batch_to}".format(batch_to=batch_to, batch_from=batch_from, source_identifier=source_identifier))
-            query = "SELECT DISTINCT batch_id FROM uk_rrbs_dm.log_batch_files_rrbs WHERE file_source LIKE '%{source_identifier}%' AND batch_from >= '{batch_from}' AND batch_to <= '{batch_to}'".format(source_identifier=source_identifier, batch_from=batch_from, batch_to=batch_to)
+            self._logger.info(
+                "Batch ID info : source_identifier={source_identifier}, batch_from={batch_from}, batch_to={batch_to}".format(
+                    batch_to=batch_to, batch_from=batch_from, source_identifier=source_identifier))
+            query = "SELECT DISTINCT batch_id FROM uk_rrbs_dm.log_batch_files_rrbs WHERE file_source LIKE '%{source_identifier}%' AND batch_from >= '{batch_from}' AND batch_to <= '{batch_to}'".format(
+                source_identifier=source_identifier, batch_from=batch_from, batch_to=batch_to)
             self._logger.info("Query {query}".format(query=query))
             df = sparkSession.read \
                 .format("com.databricks.spark.redshift") \
@@ -124,22 +127,19 @@ class RedshiftUtils:
         except Exception as ex:
             self._logger.error("failed to get batch Id from redshift : {error}".format(error=ex))
 
-    def updateLogBatchFiles(self, sparkSession: SparkSession, dataframe : DataFrame, batch_id):
+    def writeBatchFileStatus(self, sparkSession: SparkSession, dataframe: DataFrame, batchId):
         """
         Update log_batch_files table in Redshift with file record count and batch status
         :parameter sparkSession - spark session
-        :parameter file_list - list of filename to be read from S3
-        :parameter data_frame_list - list of dataframe
+        :parameter dataframe - dataframe with filename, record_count and batch_status
         :parameter batch_id - batch id for the batch interval to read files
         :return:
         """
         global joinedDF
-        table = "uk_rrbs_dm.log_batch_files_rrbs"
-
         try:
             self._logger.info("Updating Log Batch Files table :")
-            query = "SELECT * FROM uk_rrbs_dm.log_batch_files_rrbs WHERE batch_id='{batch_id}'".format(
-                batch_id=batch_id)
+            query = "SELECT batch_id, file_source, file_id, filename, batch_from, batch_to, is_valid, batch_createtime FROM uk_rrbs_dm.log_batch_files_rrbs WHERE batch_id ='{batchId}'".format(
+                batchId=batchId)
             self._logger.info("Query {query}".format(query=query))
             df = sparkSession.read \
                 .format("com.databricks.spark.redshift") \
@@ -148,14 +148,20 @@ class RedshiftUtils:
                 .option("forward_spark_s3_credentials", "true") \
                 .option("tempdir", self.redshiftTmpDir) \
                 .load()
-            joinedDF = df.join(dataframe, df.file_name == dataframe.filename, "inner")
+            df2 = df.withColumnRenamed("filename", "file_name")
+            joinedDF = df2.join(dataframe, df2.file_name == dataframe.filename, "inner")
         except Exception as ex:
             self._logger.error("failed to read log_batch_status data from redshift : {error}".format(error=ex))
+        arrangedDF = joinedDF.select("batch_id", "file_source", "file_id", "filename", "batch_from", "batch_to",
+                                     "record_count", "latecdr_dm_count", "latecdr_lm_count", "newrec_duplicate_count",
+                                     "latecdr_duplicate_count", "is_valid", "batch_createtime")
 
-        preDelQuery = "DELETE FROM uk_rrbs_dm.log_batch_files_rrbs WHERE batch_id='{batch_id}'".format(
-            batch_id=batch_id)
+        preDelQuery = "DELETE FROM uk_rrbs_dm.log_batch_files_rrbs_temp WHERE batchId='{batchId}'".format(
+            batchId=batchId)
+        # postQuery = "UPDATE TABLE"
+        table = "uk_rrbs_dm.log_batch_files_rrbs"
         try:
-            joinedDF.write.format("com.databricks.spark.redshift") \
+            arrangedDF.write.format("com.databricks.spark.redshift") \
                 .option("url", self.jdbcUrl) \
                 .option("dbtable", table) \
                 .option("preactions", preDelQuery) \
@@ -163,5 +169,6 @@ class RedshiftUtils:
                 .option("tempdir", self.redshiftTmpDir) \
                 .mode("append") \
                 .save()
+            self._logger.info("Successfully Updated Log Batch Files table :")
         except Exception as ex:
             self._logger.error("failed to write log_batch_status data to redshift : {error}".format(error=ex))
