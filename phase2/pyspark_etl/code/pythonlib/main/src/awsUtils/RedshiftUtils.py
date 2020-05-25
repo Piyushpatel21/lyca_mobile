@@ -10,6 +10,8 @@
 
 from pyspark.sql import DataFrame
 from pyspark.sql import SparkSession
+from pyspark.sql.types import *
+
 from commonUtils.Log4j import Log4j
 
 
@@ -153,7 +155,8 @@ class RedshiftUtils:
         except Exception as ex:
             self._logger.error("failed to read log_batch_status data from redshift : {error}".format(error=ex))
         arrangedDF = joinedDF.select("batch_id", "file_source", "file_id", "filename", "batch_from", "batch_to",
-                                     "record_count", "latecdr_dm_count", "latecdr_lm_count", "newrec_duplicate_count",
+                                     "record_count", "newrec_dm_count", "latecdr_dm_count", "latecdr_lm_count",
+                                     "newrec_duplicate_count",
                                      "latecdr_duplicate_count", "is_valid", "batch_createtime")
 
         preDelQuery = "DELETE FROM uk_rrbs_dm.log_batch_files_rrbs_temp WHERE batch_id='{batchId}'".format(
@@ -173,7 +176,7 @@ class RedshiftUtils:
         except Exception as ex:
             self._logger.error("failed to write log_batch_status data to redshift : {error}".format(error=ex))
 
-    def writeBatchStatus(self, sparkSession: SparkSession, dataframe: DataFrame, batchId):
+    def writeBatchStatus(self, sparkSession: SparkSession, updateQuery):
         """
         Update log_batch_status_rrbs table in Redshift with file record count and batch status
         :parameter sparkSession - spark session
@@ -181,33 +184,35 @@ class RedshiftUtils:
         :parameter batch_id - batch id for the batch interval to read files
         :return:
         """
-        global joinedDF
-        try:
-            self._logger.info("Updating Log Batch Status RRBS table :")
-            query = "SELECT * FROM uk_rrbs_dm.log_batch_status_rrbs WHERE batch_id ='{batchId}'".format(
-                batchId=batchId)
-            self._logger.info("Query {query}".format(query=query))
-            df = sparkSession.read \
-                .format("com.databricks.spark.redshift") \
-                .option("url", self.jdbcUrl) \
-                .option("query", query) \
-                .option("forward_spark_s3_credentials", "true") \
-                .option("tempdir", self.redshiftTmpDir) \
-                .load()
-            df2 = df.withColumnRenamed("batch_id", "batchId")
-            joinedDF = df2.join(dataframe, df2.batchId == dataframe.batch_id, "inner")
-        except Exception as ex:
-            self._logger.error("failed to read log_batch_status data from redshift : {error}".format(error=ex))
 
-        preDelQuery = "DELETE FROM uk_rrbs_dm.log_batch_status_rrbs WHERE batch_id='{batchId}'".format(
-            batchId=batchId)
-        # postQuery = "UPDATE TABLE"
+        schema = StructType(
+            [StructField('batch_id', IntegerType(), True), StructField('s3_batchreadcount', IntegerType(), True),
+             StructField('s3_filecount', IntegerType(), True),
+             StructField('datamart_insert_count', IntegerType(), True),
+             StructField('db_duplicate_count', IntegerType(), True),
+             StructField('intrabatch_dupl_count', IntegerType(), True),
+             StructField('intrabatch_dist_dupl_count', IntegerType(), True),
+             StructField('intrabatch_dedup_status', StringType(), True),
+             StructField('intrabatch_dupl_insrt_status', StringType(), True),
+             StructField('dm_dedup_status', StringType(), True),
+             StructField('dm_insrt_status', StringType(), True),
+             StructField('latecdr_dm_insrt_status', StringType(), True),
+             StructField('latecdr_lm_insrt_status', StringType(), True),
+             StructField('batch_start_dt', TimestampType, True),
+             StructField('batch_end_dt', TimestampType, True), StructField('batch_status', StringType(), True)])
+
+        data = [(0, 0, 0, 0, 0, 0, 0, '', '', '', '', '', '', '', '', '')]
+        rdd = sparkSession.sparkContext.parallelize(data)
+        df = sparkSession.createDataFrame(rdd, schema)
+        preQuery = updateQuery
+        postQuery = "DELETE FROM uk_rrbs_dm.log_batch_status_rrbs WHERE batch_id = 0"
         table = "uk_rrbs_dm.log_batch_status_rrbs"
         try:
-            joinedDF.write.format("com.databricks.spark.redshift") \
+            df.write.format("com.databricks.spark.redshift") \
                 .option("url", self.jdbcUrl) \
                 .option("dbtable", table) \
-                .option("preactions", preDelQuery) \
+                .option("preactions", preQuery) \
+                .option("postactions", postQuery) \
                 .option("forward_spark_s3_credentials", "true") \
                 .option("tempdir", self.redshiftTmpDir) \
                 .mode("append") \
