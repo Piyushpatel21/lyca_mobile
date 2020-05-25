@@ -133,7 +133,7 @@
   },
   {
     "column_name" : "free_sms_account_balance",
-    "column_type" : "integer",
+    "column_type" : "numeric",
     "required" : false,
     "check_sum" : true
   },
