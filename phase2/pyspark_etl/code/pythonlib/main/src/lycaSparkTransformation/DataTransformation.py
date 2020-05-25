@@ -8,16 +8,18 @@
 # notes           :                                                    #
 ########################################################################
 
-from commonUtils.JsonProcessor import JsonProcessor
-from pyspark.sql import DataFrame, Window
-from functools import reduce
-from pyspark.sql import functions as py_function
-from pyspark.sql.types import StructType
 from datetime import datetime
-from dateutil.relativedelta import relativedelta
-from pyspark.sql.types import IntegerType, StringType, DoubleType, LongType, FloatType, DateType, TimestampType
-from commonUtils.Log4j import Log4j
+from functools import reduce
+
 import pyspark.sql.functions as F
+from dateutil.relativedelta import relativedelta
+from pyspark.sql import DataFrame, Window
+from pyspark.sql import functions as py_function
+from pyspark.sql.types import IntegerType, StringType, DoubleType, LongType, FloatType, DateType, TimestampType
+from pyspark.sql.types import StructType
+
+from commonUtils.JsonProcessor import JsonProcessor
+from commonUtils.Log4j import Log4j
 
 
 class DataTransformation:
@@ -44,8 +46,15 @@ class DataTransformation:
                 file = path + file
                 print(file)
                 df_source = spark.read.option("header", "false").option("dateFormat", 'dd-MM-yyyy').schema(structtype).csv(file)
-                df_trans = df_source.withColumn("rec_checksum",
-                                                py_function.md5(py_function.concat_ws(",", *checkSumColumns))) \
+                df_trimmed = self.trimAllCols(df_source).withColumn("unique_id", F.monotonically_increasing_id())
+                df_cleaned_checksum = self.cleanDataForChecksum(df_trimmed)
+                df_checksum = df_cleaned_checksum.\
+                    withColumn("rec_checksum",
+                               py_function.md5(
+                                   py_function.concat_ws(",", *checkSumColumns))).select("unique_id", "rec_checksum")
+                df_with_checksum = df_trimmed.join(df_checksum, on=["unique_id"]).drop("unique_id")
+
+                df_trans = df_with_checksum \
                     .withColumn("filename", py_function.lit(file_identifier)) \
                     .withColumn(prmryKey, py_function.lit(1)) \
                     .withColumn("batch_id", py_function.lit(batchid).cast(IntegerType())) \
@@ -135,12 +144,14 @@ class DataTransformation:
 
     def getLateOrNormalCdr(self, dataFrame: DataFrame, dateColumn, formattedDateColumn, integerDateColumn,
                            dateRange) -> DataFrame:
-        """:parameter dataFrame- source as dataFrame
-           :parameter dateColumn column
-           :parameter formattedDateColumn - formatted Date Column name
-           :parameter integerDateColumn - numeric column name of date column
-           :parameter dateRange
-           :return dataframe with new derived columns"""
+        """
+        :parameter dataFrame- source as dataFrame
+        :parameter dateColumn column
+        :parameter formattedDateColumn - formatted Date Column name
+        :parameter integerDateColumn - numeric column name of date column
+        :parameter dateRange
+        :return dataframe with new derived columns
+        """
         try:
             self._logger.info("Identifying late and normal records within source")
             df_event_date = dataFrame.withColumn(integerDateColumn,
@@ -156,9 +167,12 @@ class DataTransformation:
             self._logger.error("Failed to return late and normal records : {error}".format(error=ex))
 
     def checkDuplicate(self, dfSource: DataFrame, dfRedshift: DataFrame) -> DataFrame:
-        """:parameter dfSource - get from source file
-           :parameter dfRedshift - reading data from redshift late CDR or data mart db
-           :return dataframe with new column weather record exist in dfRedshift"""
+        """
+
+        :parameter dfSource - get from source file
+        :parameter dfRedshift - reading data from redshift late CDR or data mart db
+        :return dataframe with new column weather record exist in dfRedshift
+        """
         try:
             self._logger.info("Identifying db duplicate within source")
             dfDB = dfRedshift.select(dfRedshift["rec_checksum"])
@@ -171,7 +185,7 @@ class DataTransformation:
         except Exception as ex:
             self._logger.error("Failed to return unique records : {error}".format(error=ex))
 
-    def trimWhiteSpaces(self, column):
+    def trimColumn(self, column):
         """
         Trims the white space from start and end
 
@@ -205,6 +219,22 @@ class DataTransformation:
 
         return df.fillna(col_default_values)
 
+    def fillBlanks(self, df, value=None):
+        """
+        Fill the blank column with the value specified.
+
+        :param df:
+        :param value:
+        :return:
+        """
+        final_df = df
+        for elem in df.schema:
+            if elem.dataType == StringType():
+                final_df = final_df.withColumn(elem.name,
+                                               F.when(F.col(elem.name) == "", value)
+                                               .otherwise(F.when(F.col(elem.name) == " ", value).otherwise(F.col(elem.name))))
+        return final_df
+
     def trimAllCols(self, df):
         """
         Trim all the space string from columns
@@ -215,8 +245,23 @@ class DataTransformation:
         final_df = df
         for elem in df.schema:
             if elem.dataType == StringType():
-                print("Triming {name}".format(name=elem.name))
-                final_df = final_df.withColumn(elem.name, self.trimWhiteSpaces(F.col(elem.name)))
+                final_df = final_df.withColumn(elem.name, self.trimColumn(F.col(elem.name)))
 
         return final_df
+
+    def cleanDataForChecksum(self, df):
+        """
+        Clean the data for generating checksum
+
+        :param df:
+        :return:
+        """
+        new_df = df
+        for elem in new_df.schema:
+            if elem.dataType != StringType():
+                new_df = new_df.withColumn(elem.name, new_df[elem.name].cast(StringType()))
+        no_blanks_df = self.fillBlanks(new_df, "0")
+        no_null_df = self.fillNull(no_blanks_df)
+
+        return no_null_df
 
