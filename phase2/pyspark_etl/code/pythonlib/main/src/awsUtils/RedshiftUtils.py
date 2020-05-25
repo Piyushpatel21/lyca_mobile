@@ -129,7 +129,7 @@ class RedshiftUtils:
 
     def writeBatchFileStatus(self, sparkSession: SparkSession, dataframe: DataFrame, batchId):
         """
-        Update log_batch_files table in Redshift with file record count and batch status
+        Update log_batch_files_rrbs table in Redshift with file record count and batch status
         :parameter sparkSession - spark session
         :parameter dataframe - dataframe with filename, record_count and batch_status
         :parameter batch_id - batch id for the batch interval to read files
@@ -137,7 +137,7 @@ class RedshiftUtils:
         """
         global joinedDF
         try:
-            self._logger.info("Updating Log Batch Files table :")
+            self._logger.info("Updating Log Batch Files RRBS table :")
             query = "SELECT batch_id, file_source, file_id, filename, batch_from, batch_to, is_valid, batch_createtime FROM uk_rrbs_dm.log_batch_files_rrbs WHERE batch_id ='{batchId}'".format(
                 batchId=batchId)
             self._logger.info("Query {query}".format(query=query))
@@ -170,5 +170,48 @@ class RedshiftUtils:
                 .mode("append") \
                 .save()
             self._logger.info("Successfully Updated Log Batch Files table :")
+        except Exception as ex:
+            self._logger.error("failed to write log_batch_status data to redshift : {error}".format(error=ex))
+
+    def writeBatchStatus(self, sparkSession: SparkSession, dataframe: DataFrame, batchId):
+        """
+        Update log_batch_status_rrbs table in Redshift with file record count and batch status
+        :parameter sparkSession - spark session
+        :parameter dataframe - dataframe with filename, record_count and batch_status
+        :parameter batch_id - batch id for the batch interval to read files
+        :return:
+        """
+        global joinedDF
+        try:
+            self._logger.info("Updating Log Batch Status RRBS table :")
+            query = "SELECT * FROM uk_rrbs_dm.log_batch_status_rrbs WHERE batch_id ='{batchId}'".format(
+                batchId=batchId)
+            self._logger.info("Query {query}".format(query=query))
+            df = sparkSession.read \
+                .format("com.databricks.spark.redshift") \
+                .option("url", self.jdbcUrl) \
+                .option("query", query) \
+                .option("forward_spark_s3_credentials", "true") \
+                .option("tempdir", self.redshiftTmpDir) \
+                .load()
+            df2 = df.withColumnRenamed("batch_id", "batchId")
+            joinedDF = df2.join(dataframe, df2.batchId == dataframe.batch_id, "inner")
+        except Exception as ex:
+            self._logger.error("failed to read log_batch_status data from redshift : {error}".format(error=ex))
+
+        preDelQuery = "DELETE FROM uk_rrbs_dm.log_batch_status_rrbs WHERE batchId='{batchId}'".format(
+            batchId=batchId)
+        # postQuery = "UPDATE TABLE"
+        table = "uk_rrbs_dm.log_batch_status_rrbs"
+        try:
+            joinedDF.write.format("com.databricks.spark.redshift") \
+                .option("url", self.jdbcUrl) \
+                .option("dbtable", table) \
+                .option("preactions", preDelQuery) \
+                .option("forward_spark_s3_credentials", "true") \
+                .option("tempdir", self.redshiftTmpDir) \
+                .mode("append") \
+                .save()
+            self._logger.info("Successfully Updated Log Batch Status table :")
         except Exception as ex:
             self._logger.error("failed to write log_batch_status data to redshift : {error}".format(error=ex))
