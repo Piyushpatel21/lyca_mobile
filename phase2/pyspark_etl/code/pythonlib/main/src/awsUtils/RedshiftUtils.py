@@ -156,7 +156,7 @@ class RedshiftUtils:
                                      "record_count", "latecdr_dm_count", "latecdr_lm_count", "newrec_duplicate_count",
                                      "latecdr_duplicate_count", "is_valid", "batch_createtime")
 
-        preDelQuery = "DELETE FROM uk_rrbs_dm.log_batch_files_rrbs_temp WHERE batchId='{batchId}'".format(
+        preDelQuery = "DELETE FROM uk_rrbs_dm.log_batch_files_rrbs_temp WHERE batch_id='{batchId}'".format(
             batchId=batchId)
         # postQuery = "UPDATE TABLE"
         table = "uk_rrbs_dm.log_batch_files_rrbs"
@@ -199,7 +199,7 @@ class RedshiftUtils:
         except Exception as ex:
             self._logger.error("failed to read log_batch_status data from redshift : {error}".format(error=ex))
 
-        preDelQuery = "DELETE FROM uk_rrbs_dm.log_batch_status_rrbs WHERE batchId='{batchId}'".format(
+        preDelQuery = "DELETE FROM uk_rrbs_dm.log_batch_status_rrbs WHERE batch_id='{batchId}'".format(
             batchId=batchId)
         # postQuery = "UPDATE TABLE"
         table = "uk_rrbs_dm.log_batch_status_rrbs"
