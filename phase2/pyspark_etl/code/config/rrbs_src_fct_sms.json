@@ -133,7 +133,7 @@
   },
   {
     "column_name" : "free_sms_account_balance",
-    "column_type" : "integer",
+    "column_type" : "numeric",
     "required" : false,
     "check_sum" : true
   },
@@ -142,14 +142,7 @@
     "column_type" : "character",
     "required" : false,
     "check_sum" : true
-  },
-  {
-    "column_name" : "msg_date",
-    "column_type" : "timestamp without time zone",
-    "required" : false,
-    "check_sum" : true
-  },
-  {
+  },{
     "column_name" : "account_id",
     "column_type" : "integer",
     "required" : false,
@@ -216,7 +209,7 @@
     "check_sum" : true
   },
   {
-    "column_name" : "cdr_time_stamp",
+    "column_name" : "msg_date",
     "column_type" : "timestamp without time zone",
     "required" : false,
     "check_sum" : true

@@ -75,9 +75,6 @@
     "column_name": "instance_id_session_id"
   },
   {
-    "column_name": "msg_date"
-  },
-  {
     "column_name": "account_id"
   },
   {
@@ -111,7 +108,7 @@
     "column_name": "local_roam_country_code"
   },
   {
-    "column_name": "cdr_time_stamp"
+    "column_name": "msg_date"
   },
   {
     "column_name": "bucket_type"
@@ -186,10 +183,28 @@
     "column_name": "roaming_partner_id"
   },
   {
+    "column_name": "msg_date_month"
+  },
+  {
     "column_name": "msg_date_dt"
   },
   {
     "column_name": "msg_date_num"
+  },
+  {
+    "column_name": "msg_date_hour"
+  },
+  {
+    "column_name": "msg_date_month_gmt"
+  },
+  {
+    "column_name": "msg_date_num_gmt"
+  },
+  {
+    "column_name": "msg_date_hour_gmt"
+  },
+  {
+    "column_name": "msg_date_time_gmt"
   },
   {
     "column_name": "free_zone_expiry_date_num"
