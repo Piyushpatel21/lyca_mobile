@@ -79,6 +79,8 @@ class TransformActionChain:
             # path ='/Users/narenk/PycharmProjects/lycamobile-etl-movements/phase2/pyspark_etl/code/pythonlib/test/resources/'
             path = self.property.get("sourceFilePath") + "/" + self.module.upper() + "/" + "UK" + "/" +self.subModule.upper() + "/" + self.run_date[:4] + "/" + self.run_date[4:6] + "/" + self.run_date[6:8] + "/"
             df_source = self.trans.readSourceFile(self.sparkSession, path, srcSchema, batchid, checkSumColumns, file_list)
+            print("show source data")
+            df_source.show(50, False)
             s3_batchreadcount = df_source.agg(py_function.count('batch_id').cast(IntegerType()).alias('s3_batchreadcount')).rdd.flatMap(lambda row: row).collect()
             s3_filecount = df_source.agg(py_function.countDistinct('filename').cast(IntegerType()).alias('s3_filecount')).rdd.flatMap(lambda row: row).collect()
             batch_status = 'Started'
@@ -193,6 +195,7 @@ class TransformActionChain:
     def writeBatchFileStatus(self, dataframe : DataFrame, batch_id):
         try:
             self.logger.info("Writing batch status metadata")
+            dataframe.show(20, False)
             self.redshiftprop.writeBatchFileStatus(self.sparkSession, dataframe, batch_id)
             self.logger.info("Writing batch status metadata - completed")
         except Exception as ex:
