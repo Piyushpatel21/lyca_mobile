@@ -86,6 +86,8 @@ class TransformActionChain:
             else:
                 df_source = df_source_raw
 
+            print("show source data")
+            df_source.show(50, False)
             s3_batchreadcount = df_source.agg(py_function.count('batch_id').cast(IntegerType()).alias('s3_batchreadcount')).rdd.flatMap(lambda row: row).collect()
             s3_filecount = df_source.agg(py_function.countDistinct('filename').cast(IntegerType()).alias('s3_filecount')).rdd.flatMap(lambda row: row).collect()
             batch_status = 'Started'
@@ -200,6 +202,7 @@ class TransformActionChain:
     def writeBatchFileStatus(self, dataframe : DataFrame, batch_id):
         try:
             self.logger.info("Writing batch status metadata")
+            dataframe.show(20, False)
             self.redshiftprop.writeBatchFileStatus(self.sparkSession, dataframe, batch_id)
             self.logger.info("Writing batch status metadata - completed")
         except Exception as ex:

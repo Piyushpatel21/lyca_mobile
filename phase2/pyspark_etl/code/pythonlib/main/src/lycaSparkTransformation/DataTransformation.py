@@ -23,7 +23,12 @@ from commonUtils.Log4j import Log4j
 
 
 class SmsDataTransformation:
+    """
+    Class to perform transformations on SMS data
+    """
+
     def __init__(self):
+        self._logger = Log4j().getLogger()
         self._cdr_date_col = "msg_date"
         self._date_cols = ["free_zone_expiry_date"]
         self._date_cols_format = "dd-MM-yyyy"
@@ -32,23 +37,42 @@ class SmsDataTransformation:
         self.time_zone = "Europe/London"
 
     def generateDerivedColumnsForSms(self, df):
-        new_df = df.withColumn("_temp_datetime_col", F.to_timestamp(df[self._cdr_date_col], self._cdr_date_col_format)) \
-                   .withColumn("msg_date_month", F.date_format(F.col("_temp_datetime_col"), "yyyyMM").cast(IntegerType())) \
-                   .withColumn("msg_date_dt", F.to_date(F.col("_temp_datetime_col"))) \
-                   .withColumn("msg_date_num", F.date_format(F.col("_temp_datetime_col"), "yyyyMMdd").cast(IntegerType())) \
-                   .withColumn("msg_date_hour", F.date_format(F.col("_temp_datetime_col"), "yyyyMMddHH").cast(IntegerType())) \
-                   .withColumn("_temp_datetime_col_utc", F.to_utc_timestamp(F.col("_temp_datetime_col"), F.lit(self.time_zone))) \
-                   .withColumn("msg_date_time_gmt", F.from_utc_timestamp(F.col("_temp_datetime_col_utc"), "GMT")) \
-                   .withColumn("msg_date_month_gmt", F.date_format(F.col("msg_date_time_gmt"), "yyyyMM").cast(IntegerType())) \
-                   .withColumn("msg_date_num_gmt", F.date_format(F.col("msg_date_time_gmt"), "yyyyMMdd").cast(IntegerType())) \
-                   .withColumn("msg_date_hour_gmt", F.date_format(F.col("msg_date_time_gmt"), "yyyyMMddHH").cast(IntegerType())) \
-                   .withColumn("free_zone_expiry_date_num", F.date_format(df[self.free_zone_expiry_date], "yyyyMMdd").cast(IntegerType())) \
-                   .drop('_temp_datetime_col', '_temp_datetime_col_utc')
-        return new_df
+        """
+        Module to generate derived columns from dataframe
+
+        :param df:
+        :return:
+        """
+
+        try:
+            self._logger.info("Generating derived columns for SMS data.")
+            new_df = df.withColumn("_temp_datetime_col", F.to_timestamp(df[self._cdr_date_col], self._cdr_date_col_format)) \
+                       .withColumn("msg_date_month", F.date_format(F.col("_temp_datetime_col"), "yyyyMM").cast(IntegerType())) \
+                       .withColumn("msg_date_dt", F.to_date(F.col("_temp_datetime_col"))) \
+                       .withColumn("msg_date_num", F.date_format(F.col("_temp_datetime_col"), "yyyyMMdd").cast(IntegerType())) \
+                       .withColumn("msg_date_hour", F.date_format(F.col("_temp_datetime_col"), "yyyyMMddHH").cast(IntegerType())) \
+                       .withColumn("_temp_datetime_col_utc", F.to_utc_timestamp(F.col("_temp_datetime_col"), F.lit(self.time_zone))) \
+                       .withColumn("msg_date_time_gmt", F.from_utc_timestamp(F.col("_temp_datetime_col_utc"), "GMT")) \
+                       .withColumn("msg_date_month_gmt", F.date_format(F.col("msg_date_time_gmt"), "yyyyMM").cast(IntegerType())) \
+                       .withColumn("msg_date_num_gmt", F.date_format(F.col("msg_date_time_gmt"), "yyyyMMdd").cast(IntegerType())) \
+                       .withColumn("msg_date_hour_gmt", F.date_format(F.col("msg_date_time_gmt"), "yyyyMMddHH").cast(IntegerType())) \
+                       .withColumn("free_zone_expiry_date_num", F.date_format(df[self.free_zone_expiry_date], "yyyyMMdd").cast(IntegerType())) \
+                       .drop('_temp_datetime_col', '_temp_datetime_col_utc')
+            return new_df
+        except Exception as ex:
+            self._logger.error("Failed to generate derived columns with error: {err}".format(err=ex))
 
     def convertTargetDataType(self, df: DataFrame, schema: StructType):
+        """
+        Module to convert Data Type to required format
+
+        :param df: spark dataframe
+        :param schema: schema as StructType
+        :return:
+        """
         # Drop whole file if error occur in converting
         new_df = df
+        self._logger.info("Converting data type to required format")
 
         files_to_ignore = []
         for elem in schema:

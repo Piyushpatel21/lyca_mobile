@@ -151,7 +151,7 @@ class RedshiftUtils:
                 .option("tempdir", self.redshiftTmpDir) \
                 .load()
             df2 = df.withColumnRenamed("filename", "file_name")
-            joinedDF = df2.join(dataframe, df2.file_name == dataframe.filename, "inner")
+            joinedDF = df2.join(dataframe, df2.file_name == dataframe.filename, "left_outer")
         except Exception as ex:
             self._logger.error("failed to read log_batch_status data from redshift : {error}".format(error=ex))
         arrangedDF = joinedDF.select("batch_id", "file_source", "file_id", "filename", "batch_from", "batch_to",
@@ -200,11 +200,11 @@ class RedshiftUtils:
              StructField('ldm_latecdr_count', IntegerType(), True),
              StructField('ldm_latecdr_dupl_count', IntegerType(), True),
              StructField('ldm_latecdr_status', StringType(), True),
-             StructField('batch_start_dt', TimestampType(), True),
-             StructField('batch_end_dt', TimestampType(), True),
+             StructField('batch_start_dt', StringType(), True),
+             StructField('batch_end_dt', StringType(), True),
              StructField('batch_status', StringType(), True)])
 
-        data = [(0, 0, 0, 0, 0, 0, 0, '', '', '', '', '', '', '', '', '')]
+        data = [(0, 0, 0, 0, 0, 0, 0, '', 0, 0, '', 0, 0, '', '2020-05-08 07:14:50', '2020-05-08 07:14:50', '')]
         rdd = sparkSession.sparkContext.parallelize(data)
         df = sparkSession.createDataFrame(rdd, schema)
         preQuery = query

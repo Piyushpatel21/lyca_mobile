@@ -83,7 +83,7 @@ def start_execution(args):
     duplicateData, lateUnique, normalUnique, recordCount = tf.getSourceData(batch_id, propColumns.get("srcSchema"), propColumns.get("checkSumColumns"))
     normalDB, lateDB,  = tf.getDbDuplicate()
     normalNew, normalDuplicate, normalcdr_count, normalcdr_dupl_count = tf.getNormalCDR(normalUnique, normalDB, batch_id)
-    lateNew, lateDuplicate, latecdr_count, latecdr_dupl_count = tf.getLateCDR(lateUnique, lateDB)
+    lateNew, lateDuplicate, latecdr_count, latecdr_dupl_count = tf.getLateCDR(lateUnique, lateDB, batch_id)
     dfmetadata = recordCount.join(normalcdr_count, on='filename', how='left_outer') \
                             .join(normalcdr_dupl_count, on='filename', how='left_outer') \
                             .join(latecdr_count, on='filename', how='left_outer') \
@@ -98,26 +98,26 @@ def start_execution(args):
     tf.writetoDuplicateCDR(normalDuplicate, propColumns.get("tgtSchema"))
     tf.writetoDataMart(lateNew, propColumns.get("tgtSchema"))
     tf.writeBatchFileStatus(dfmetadata, batch_id)
-
-
-def parseArguments():
-    parser = argparse.ArgumentParser()
-    parser.add_argument('--run_date', help='run date required for trigger pipeline')
-    parser.add_argument('--batchID', help='run date required for trigger pipeline')
-    parser.add_argument('--module', help='module name required to process data')
-    parser.add_argument('--submodule', help='submodule name required to process data')
-    parser.add_argument('--configfile', help='application module level config file path')
-    parser.add_argument('--connfile', help='connection config file path')
-    parser.add_argument('--master', help='session for glue')
-    known_arguments, unknown_arguments = parser.parse_known_args()
-    arguments = vars(known_arguments)
-    if arguments:
-        if not (arguments.get('module') and arguments.get('submodule')):
-            print("--run_date --module, --submodule required for trigger pipeline")
-            sys.exit(1)
-    return arguments
-
-
-if __name__ == '__main__':
-    args = parseArguments()
-    start_execution(args)
+#
+#
+# def parseArguments():
+#     parser = argparse.ArgumentParser()
+#     parser.add_argument('--run_date', help='run date required for trigger pipeline')
+#     parser.add_argument('--batchID', help='run date required for trigger pipeline')
+#     parser.add_argument('--module', help='module name required to process data')
+#     parser.add_argument('--submodule', help='submodule name required to process data')
+#     parser.add_argument('--configfile', help='application module level config file path')
+#     parser.add_argument('--connfile', help='connection config file path')
+#     parser.add_argument('--master', help='session for glue')
+#     known_arguments, unknown_arguments = parser.parse_known_args()
+#     arguments = vars(known_arguments)
+#     if arguments:
+#         if not (arguments.get('module') and arguments.get('submodule')):
+#             print("--run_date --module, --submodule required for trigger pipeline")
+#             sys.exit(1)
+#     return arguments
+#
+#
+# if __name__ == '__main__':
+#     args = parseArguments()
+#     start_execution(args)
