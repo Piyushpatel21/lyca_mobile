@@ -28,7 +28,7 @@ class DataTransformation:
         self._logger = Log4j().getLogger()
         self.default_value_dict = {'string': '0', 'number': 0, 'date': '1970-01-01', 'datetime': '1970-01-01 00:00:00'}
 
-    def readSourceFile(self, spark, path, structtype: StructType, batchid, prmryKey, checkSumColumns=[],
+    def readSourceFile(self, spark, path, structtype: StructType, batchid, checkSumColumns=[],
                        fList=[]) -> DataFrame:
         """ :parameter spark
             :parameter path of source files
@@ -57,7 +57,6 @@ class DataTransformation:
 
                 df_trans = df_with_checksum \
                     .withColumn("filename", py_function.lit(file_identifier)) \
-                    .withColumn(prmryKey, py_function.lit(1)) \
                     .withColumn("batch_id", py_function.lit(batchid).cast(IntegerType())) \
                     .withColumn("created_date", py_function.current_timestamp()) \
                     .withColumn("free_zone_expiry_date_num", py_function.lit(1).cast(IntegerType()))
