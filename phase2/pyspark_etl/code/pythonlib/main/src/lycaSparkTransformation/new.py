@@ -34,24 +34,32 @@
 #     var = True
 #
 # print(var)
-from datetime import datetime, timedelta
+# from datetime import datetime, timedelta
+#
+#
+# def hourRounder(t):
+#     # Rounds to nearest hour by adding a timedelta hour if minute >= 30
+#     return (t.replace(second=0, microsecond=0, minute=0, hour=t.hour)
+#             + timedelta(hours=t.minute // 30))
+#
+#
+# def getTimeInterval(now):
+#     return now + timedelta(hours=6)
+#
+#
+# prevDate = datetime.now() + timedelta(days=-1)
+# run_date = prevDate.date().strftime('%Y%m%d')
+# batch_from = hourRounder(prevDate)
+# batch_to = getTimeInterval(batch_from)
+#
+# print(prevDate)
+#
+# print(hourRounder(prevDate))
 
-
-def hourRounder(t):
-    # Rounds to nearest hour by adding a timedelta hour if minute >= 30
-    return (t.replace(second=0, microsecond=0, minute=0, hour=t.hour)
-            + timedelta(hours=t.minute // 30))
-
-
-def getTimeInterval(now):
-    return now + timedelta(hours=6)
-
-
-prevDate = datetime.now() + timedelta(days=-1)
-run_date = prevDate.date().strftime('%Y%m%d')
-batch_from = hourRounder(prevDate)
-batch_to = getTimeInterval(batch_from)
-
-print(prevDate)
-
-print(hourRounder(prevDate))
+dm_normal_count = [10]
+dm_normal_dupl_count = [30]
+batchid = 1
+dm_normal_status = 'Complete'
+metaQuery = ("update uk_rrbs_dm.log_batch_status_rrbs set dm_normal_status='{dm_normal_status}', dm_normal_count={dm_normal_count}, dm_normal_dupl_count={dm_normal_dupl_count} where batch_id={batch_id}"
+                .format(batch_id=batchid, dm_normal_status=dm_normal_status, dm_normal_count=''.join(str(e) for e in dm_normal_count),dm_normal_dupl_count=''.join(str(e) for e in dm_normal_dupl_count)))
+print(metaQuery)

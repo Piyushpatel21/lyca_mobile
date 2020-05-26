@@ -176,7 +176,7 @@ class RedshiftUtils:
         except Exception as ex:
             self._logger.error("failed to write log_batch_status data to redshift : {error}".format(error=ex))
 
-    def writeBatchStatus(self, sparkSession: SparkSession, updateQuery):
+    def writeBatchStatus(self, sparkSession: SparkSession, query):
         """
         Update log_batch_status_rrbs table in Redshift with file record count and batch status
         :parameter sparkSession - spark session
@@ -186,25 +186,28 @@ class RedshiftUtils:
         """
 
         schema = StructType(
-            [StructField('batch_id', IntegerType(), True), StructField('s3_batchreadcount', IntegerType(), True),
+            [StructField('batch_id', IntegerType(), True),
+             StructField('s3_batchreadcount', IntegerType(), True),
              StructField('s3_filecount', IntegerType(), True),
-             StructField('datamart_insert_count', IntegerType(), True),
-             StructField('db_duplicate_count', IntegerType(), True),
+             StructField('intrabatch_new_count', IntegerType(), True),
+             StructField('intrabatch_late_count', IntegerType(), True),
              StructField('intrabatch_dupl_count', IntegerType(), True),
              StructField('intrabatch_dist_dupl_count', IntegerType(), True),
-             StructField('intrabatch_dedup_status', StringType(), True),
-             StructField('intrabatch_dupl_insrt_status', StringType(), True),
-             StructField('dm_dedup_status', StringType(), True),
-             StructField('dm_insrt_status', StringType(), True),
-             StructField('latecdr_dm_insrt_status', StringType(), True),
-             StructField('latecdr_lm_insrt_status', StringType(), True),
-             StructField('batch_start_dt', TimestampType, True),
-             StructField('batch_end_dt', TimestampType, True), StructField('batch_status', StringType(), True)])
+             StructField('intrabatch_status', StringType(), True),
+             StructField('dm_normal_count', IntegerType(), True),
+             StructField('dm_normal_dupl_count', IntegerType(), True),
+             StructField('dm_normal_status', StringType(), True),
+             StructField('ldm_latecdr_count', IntegerType(), True),
+             StructField('ldm_latecdr_dupl_count', IntegerType(), True),
+             StructField('ldm_latecdr_status', StringType(), True),
+             StructField('batch_start_dt', TimestampType(), True),
+             StructField('batch_end_dt', TimestampType(), True),
+             StructField('batch_status', StringType(), True)])
 
         data = [(0, 0, 0, 0, 0, 0, 0, '', '', '', '', '', '', '', '', '')]
         rdd = sparkSession.sparkContext.parallelize(data)
         df = sparkSession.createDataFrame(rdd, schema)
-        preQuery = updateQuery
+        preQuery = query
         postQuery = "DELETE FROM uk_rrbs_dm.log_batch_status_rrbs WHERE batch_id = 0"
         table = "uk_rrbs_dm.log_batch_status_rrbs"
         try:

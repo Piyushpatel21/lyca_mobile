@@ -10,9 +10,6 @@
 import argparse
 import sys
 from datetime import datetime, timedelta
-
-from pyspark.sql.types import StringType
-
 from lycaSparkTransformation.TransformActionChain import TransformActionChain
 from lycaSparkTransformation.SparkSessionBuilder import SparkSessionBuilder
 
@@ -69,7 +66,7 @@ def start_execution(args):
     sparkSessionBuild = SparkSessionBuilder(args.get('master'), appname).sparkSessionBuild()
     sparkSession = sparkSessionBuild.get("sparkSession")
     logger = sparkSessionBuild.get("logger")
-    tf = TransformActionChain(logger, args.get('module'), args.get('submodule'), configfile, connfile, run_date, batch_from, batch_to)
+    tf = TransformActionChain(sparkSession, logger, args.get('module'), args.get('submodule'), configfile, connfile, run_date, batch_from, batch_to)
     if not (args.get('run_date') and args.get('batchID')):
         batch_id = tf.getBatchID(sparkSession)
     else:
@@ -81,11 +78,10 @@ def start_execution(args):
                 "batch_to={batch_to} "
                 .format(batch_id=batch_id, run_date=run_date, batch_from=batch_from, batch_to=batch_to))
     propColumns = tf.srcSchema()
-    dmDedupStatus = tf.getstatus(sparkSession, batch_id, 'dm_dedup_status', 'C')
-    duplicateData, lateUnique, normalUnique, recordCount = tf.getSourceData(sparkSession, batch_id, propColumns.get("srcSchema"), propColumns.get("checkSumColumns"))
-    normalDB, lateDB,  = tf.getDbDuplicate(sparkSession)
-    normalNew, normalDuplicate, normalcdr_count, normalcdr_dupl_count = tf.getNormalCDR(normalUnique, normalDB)
-    # DB duplicate status ##
+    print(propColumns.get("tgtSchema"))
+    duplicateData, lateUnique, normalUnique, recordCount = tf.getSourceData(batch_id, propColumns.get("srcSchema"), propColumns.get("checkSumColumns"))
+    normalDB, lateDB,  = tf.getDbDuplicate()
+    normalNew, normalDuplicate, normalcdr_count, normalcdr_dupl_count = tf.getNormalCDR(normalUnique, normalDB, batch_id)
     lateNew, lateDuplicate, latecdr_count, latecdr_dupl_count = tf.getLateCDR(lateUnique, lateDB)
     dfmetadata = recordCount.join(normalcdr_count, on='filename', how='left_outer') \
                             .join(normalcdr_dupl_count, on='filename', how='left_outer') \
@@ -94,36 +90,33 @@ def start_execution(args):
     print("we are processing : normalNew={normalNew}, lateNew={lateNew}, lateDuplicate={lateDuplicate}, "
           "normalDuplicate={normalDuplicate} "
           .format(normalNew=normalcdr_count.count(), lateNew=latecdr_count.count(), lateDuplicate=latecdr_dupl_count.count(), normalDuplicate=normalcdr_dupl_count.count()))
-    datamartCNT = normalNew.count() + lateNew.count()
-    datamartCNTS = tf.getdmCNT(sparkSession, batch_id, 'datamart_insert_count', datamartCNT)
-    latecdrDMS = tf.getstatus(sparkSession, batch_id, 'latecdr_dm_status', 'C')
-    tf.writetoDataMart(sparkSession, normalNew, propColumns.get("tgtSchema"))
-    tf.writetoLateCDR(sparkSession, lateNew, latecdrDMS, propColumns.get("tgtSchema"))
-    tf.writetoDuplicateCDR(sparkSession, lateDuplicate, propColumns.get("tgtSchema"))
-    tf.writetoDuplicateCDR(sparkSession, duplicateData, propColumns.get("tgtSchema"))
-    tf.writetoDuplicateCDR(sparkSession, normalDuplicate, propColumns.get("tgtSchema"))
-    tf.writetoDataMart(sparkSession, lateNew, datamartCNTS, propColumns.get("tgtSchema"))
-    tf.writeBatchFileStatus(sparkSession, dfmetadata, batch_id)
+    # tf.writetoDataMart(sparkSession, propColumns.get("tgtSchema"))
+    # tf.writetoLateCDR(lateNew, propColumns.get("tgtSchema"))
+    # tf.writetoDuplicateCDR(lateDuplicate, propColumns.get("tgtSchema"))
+    # tf.writetoDuplicateCDR(duplicateData, propColumns.get("tgtSchema"))
+    # tf.writetoDuplicateCDR(normalDuplicate, propColumns.get("tgtSchema"))
+    # tf.writetoDataMart(lateNew, propColumns.get("tgtSchema"))
+    tf.writeBatchFileStatus(dfmetadata, batch_id)
 
-#
-# def parseArguments():
-#     parser = argparse.ArgumentParser()
-#     parser.add_argument('--run_date', help='run date required for trigger pipeline')
-#     parser.add_argument('--batchID', help='run date required for trigger pipeline')
-#     parser.add_argument('--module', help='module name required to process data')
-#     parser.add_argument('--submodule', help='submodule name required to process data')
-#     parser.add_argument('--configfile', help='application module level config file path')
-#     parser.add_argument('--connfile', help='connection config file path')
-#     parser.add_argument('--master', help='session for glue')
-#     known_arguments, unknown_arguments = parser.parse_known_args()
-#     arguments = vars(known_arguments)
-#     if arguments:
-#         if not (arguments.get('module') and arguments.get('submodule')):
-#             print("--run_date --module, --submodule required for trigger pipeline")
-#             sys.exit(1)
-#     return arguments
-#
-#
-# if __name__ == '__main__':
-#     args = parseArguments()
-#     start_execution(args)
+
+def parseArguments():
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--run_date', help='run date required for trigger pipeline')
+    parser.add_argument('--batchID', help='run date required for trigger pipeline')
+    parser.add_argument('--module', help='module name required to process data')
+    parser.add_argument('--submodule', help='submodule name required to process data')
+    parser.add_argument('--configfile', help='application module level config file path')
+    parser.add_argument('--connfile', help='connection config file path')
+    parser.add_argument('--master', help='session for glue')
+    known_arguments, unknown_arguments = parser.parse_known_args()
+    arguments = vars(known_arguments)
+    if arguments:
+        if not (arguments.get('module') and arguments.get('submodule')):
+            print("--run_date --module, --submodule required for trigger pipeline")
+            sys.exit(1)
+    return arguments
+
+
+if __name__ == '__main__':
+    args = parseArguments()
+    start_execution(args)
