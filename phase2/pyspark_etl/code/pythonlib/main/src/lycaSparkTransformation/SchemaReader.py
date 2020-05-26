@@ -8,7 +8,7 @@
 # notes           :                                                    #
 ########################################################################
 
-from pyspark.sql.types import StructType, StructField, StringType, IntegerType, DateType, DecimalType, LongType
+from pyspark.sql.types import StructType, StructField, StringType, IntegerType, DateType, DecimalType, LongType, TimestampType, FloatType
 from commonUtils.JsonProcessor import JsonProcessor
 
 
@@ -23,11 +23,13 @@ class SchemaReader:
         elif columnType in "bigint":
             return LongType()
         elif columnType in "numeric":
-            return DecimalType()
+            return DecimalType(22, 6)
         elif columnType in "character":
             return StringType()
         elif columnType in "date":
             return DateType()
+        elif columnType in ("timestamp without time zone", "timestamp"):
+            return TimestampType()
         else:
             return StringType()
 
