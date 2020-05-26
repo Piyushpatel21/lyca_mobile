@@ -83,27 +83,27 @@ def start_execution(args):
     propColumns = tf.srcSchema()
     dmDedupStatus = tf.getstatus(sparkSession, batch_id, 'dm_dedup_status', 'C')
     duplicateData, lateUnique, normalUnique, recordCount = tf.getSourceData(sparkSession, batch_id, propColumns.get("srcSchema"), propColumns.get("checkSumColumns"))
-    normalDB, lateDB,  = tf.getDbDuplicate(sparkSession)
-    normalNew, normalDuplicate, normalcdr_count, normalcdr_dupl_count = tf.getNormalCDR(normalUnique, normalDB)
-    # DB duplicate status ##
-    lateNew, lateDuplicate, latecdr_count, latecdr_dupl_count = tf.getLateCDR(lateUnique, lateDB)
-    dfmetadata = recordCount.join(normalcdr_count, on='filename', how='left_outer') \
-                            .join(normalcdr_dupl_count, on='filename', how='left_outer') \
-                            .join(latecdr_count, on='filename', how='left_outer') \
-                            .join(latecdr_dupl_count, on='filename', how='left_outer')
-    print("we are processing : normalNew={normalNew}, lateNew={lateNew}, lateDuplicate={lateDuplicate}, "
-          "normalDuplicate={normalDuplicate} "
-          .format(normalNew=normalcdr_count.count(), lateNew=latecdr_count.count(), lateDuplicate=latecdr_dupl_count.count(), normalDuplicate=normalcdr_dupl_count.count()))
-    datamartCNT = normalNew.count() + lateNew.count()
-    datamartCNTS = tf.getdmCNT(sparkSession, batch_id, 'datamart_insert_count', datamartCNT)
-    latecdrDMS = tf.getstatus(sparkSession, batch_id, 'latecdr_dm_status', 'C')
-    tf.writetoDataMart(sparkSession, normalNew, propColumns.get("tgtSchema"))
-    tf.writetoLateCDR(sparkSession, lateNew, latecdrDMS, propColumns.get("tgtSchema"))
-    tf.writetoDuplicateCDR(sparkSession, lateDuplicate, propColumns.get("tgtSchema"))
-    tf.writetoDuplicateCDR(sparkSession, duplicateData, propColumns.get("tgtSchema"))
-    tf.writetoDuplicateCDR(sparkSession, normalDuplicate, propColumns.get("tgtSchema"))
-    tf.writetoDataMart(sparkSession, lateNew, datamartCNTS, propColumns.get("tgtSchema"))
-    tf.writeBatchFileStatus(sparkSession, dfmetadata, batch_id)
+    # normalDB, lateDB,  = tf.getDbDuplicate(sparkSession)
+    # normalNew, normalDuplicate, normalcdr_count, normalcdr_dupl_count = tf.getNormalCDR(normalUnique, normalDB)
+    # # DB duplicate status ##
+    # lateNew, lateDuplicate, latecdr_count, latecdr_dupl_count = tf.getLateCDR(lateUnique, lateDB)
+    # dfmetadata = recordCount.join(normalcdr_count, on='filename', how='left_outer') \
+    #                         .join(normalcdr_dupl_count, on='filename', how='left_outer') \
+    #                         .join(latecdr_count, on='filename', how='left_outer') \
+    #                         .join(latecdr_dupl_count, on='filename', how='left_outer')
+    # print("we are processing : normalNew={normalNew}, lateNew={lateNew}, lateDuplicate={lateDuplicate}, "
+    #       "normalDuplicate={normalDuplicate} "
+    #       .format(normalNew=normalcdr_count.count(), lateNew=latecdr_count.count(), lateDuplicate=latecdr_dupl_count.count(), normalDuplicate=normalcdr_dupl_count.count()))
+    # datamartCNT = normalNew.count() + lateNew.count()
+    # datamartCNTS = tf.getdmCNT(sparkSession, batch_id, 'datamart_insert_count', datamartCNT)
+    # latecdrDMS = tf.getstatus(sparkSession, batch_id, 'latecdr_dm_status', 'C')
+    # tf.writetoDataMart(sparkSession, normalNew, propColumns.get("tgtSchema"))
+    # tf.writetoLateCDR(sparkSession, lateNew, latecdrDMS, propColumns.get("tgtSchema"))
+    # tf.writetoDuplicateCDR(sparkSession, lateDuplicate, propColumns.get("tgtSchema"))
+    # tf.writetoDuplicateCDR(sparkSession, duplicateData, propColumns.get("tgtSchema"))
+    # tf.writetoDuplicateCDR(sparkSession, normalDuplicate, propColumns.get("tgtSchema"))
+    # tf.writetoDataMart(sparkSession, lateNew, datamartCNTS, propColumns.get("tgtSchema"))
+    # tf.writeBatchFileStatus(sparkSession, dfmetadata, batch_id)
 
 
 def parseArguments():

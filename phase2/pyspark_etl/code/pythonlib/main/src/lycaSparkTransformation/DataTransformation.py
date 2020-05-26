@@ -45,6 +45,7 @@ class DataTransformation:
                 self._logger.info("Reading source file : {file}".format(file=file))
                 file = path + file
                 print(file)
+                src_schema_string = ""
                 df_source = spark.read.option("header", "false").option("dateFormat", 'dd-MM-yyyy').schema(structtype).csv(file)
                 df_trimmed = self.trimAllCols(df_source).withColumn("unique_id", F.monotonically_increasing_id())
                 df_cleaned_checksum = self.cleanDataForChecksum(df_trimmed)

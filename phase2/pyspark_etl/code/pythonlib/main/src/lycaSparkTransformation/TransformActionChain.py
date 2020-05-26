@@ -74,12 +74,12 @@ class TransformActionChain:
             BATCH_START_DT = datetime.now()
             self.logger.info("***** reading source data from s3 *****")
             # file_list = self.redshiftprop.getFileList(sparkSession, batchid)
-            file_list = ['sample.csv']
+            file_list = ['new_sample_file.cdr']
             prmryKey = "sk_rrbs_" + self.subModule
             # To run on Glue
             #path = self.property.get("sourceFilePath") + "/" + self.module.upper() + "/" + "UK" + "/" +self.subModule.upper() + "/" + self.run_date[:4] + "/" + self.run_date[4:6] + "/" + self.run_date[6:8] + "/"
             # To run Locally
-            path = '/Users/bhavintandel/Documents/Documents/Cloudwick/Projects/lyca/lycamobile-etl-movements/phase2/pyspark_etl/code/pythonlib/test/resources'
+            path = '/Users/bhavintandel/Documents/Documents/Cloudwick/Projects/lyca/lycamobile-etl-movements/phase2/pyspark_etl/code/pythonlib/test/resources/'
             df_source = self.trans.readSourceFile(sparkSession, path, srcSchema, batchid, prmryKey, checkSumColumns, file_list)
             date_range = int(self.trans.getPrevRangeDate(self.run_date, self.property.get("normalcdrfrq"), self.property.get("numofdayormnthnormal")))
             lateOrNormalCdr = self.trans.getLateOrNormalCdr(df_source, self.property.get("dateColumn"), self.property.get("formattedDateColumn"), self.property.get("integerDateColumn"), date_range)
