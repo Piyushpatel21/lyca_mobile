@@ -16,10 +16,49 @@ from dateutil.relativedelta import relativedelta
 from pyspark.sql import DataFrame, Window
 from pyspark.sql import functions as py_function
 from pyspark.sql.types import IntegerType, StringType, DoubleType, LongType, FloatType, DateType, TimestampType
-from pyspark.sql.types import StructType
+from pyspark.sql.types import StructType, StructField
 
 from commonUtils.JsonProcessor import JsonProcessor
 from commonUtils.Log4j import Log4j
+
+
+class SmsDataTransformation:
+    def __init__(self):
+        self._cdr_date_col = "msg_date"
+        self._date_cols = ["free_zone_expiry_date"]
+        self._date_cols_format = "dd-MM-yyyy"
+        self.free_zone_expiry_date = "free_zone_expiry_date"
+        self._cdr_date_col_format = "yyyyMMddHHmmss"
+        self.time_zone = "Europe/London"
+
+    def generateDerivedColumnsForSms(self, df):
+        new_df = df.withColumn("_temp_datetime_col", F.to_timestamp(df[self._cdr_date_col], self._cdr_date_col_format)) \
+                   .withColumn("msg_date_month", F.date_format(F.col("_temp_datetime_col"), "yyyyMM").cast(IntegerType())) \
+                   .withColumn("msg_date_dt", F.to_date(F.col("_temp_datetime_col"))) \
+                   .withColumn("msg_date_num", F.date_format(F.col("_temp_datetime_col"), "yyyyMMdd").cast(IntegerType())) \
+                   .withColumn("msg_date_hour", F.date_format(F.col("_temp_datetime_col"), "yyyyMMddHH").cast(IntegerType())) \
+                   .withColumn("_temp_datetime_col_utc", F.to_utc_timestamp(F.col("_temp_datetime_col"), F.lit(self.time_zone))) \
+                   .withColumn("msg_date_time_gmt", F.from_utc_timestamp(F.col("_temp_datetime_col_utc"), "GMT")) \
+                   .withColumn("msg_date_month_gmt", F.date_format(F.col("msg_date_time_gmt"), "yyyyMM").cast(IntegerType())) \
+                   .withColumn("msg_date_num_gmt", F.date_format(F.col("msg_date_time_gmt"), "yyyyMMdd").cast(IntegerType())) \
+                   .withColumn("msg_date_hour_gmt", F.date_format(F.col("msg_date_time_gmt"), "yyyyMMddHH").cast(IntegerType())) \
+                   .withColumn("free_zone_expiry_date_num", F.date_format(df[self.free_zone_expiry_date], "yyyyMMdd").cast(IntegerType())) \
+                   .drop('_temp_datetime_col', '_temp_datetime_col_utc')
+        return new_df
+
+    def convertTargetDataType(self, df: DataFrame, schema: StructType):
+        # Drop whole file if error occur in converting
+        new_df = df
+
+        files_to_ignore = []
+        for elem in schema:
+            if elem.name == self._cdr_date_col:
+                new_df = new_df.withColumn(elem.name, F.to_timestamp(new_df[elem.name], self._cdr_date_col_format))
+            elif elem.name in self._date_cols:
+                new_df = new_df.withColumn(elem.name, F.to_date(new_df[elem.name], self._date_cols_format))
+            else:
+                new_df = new_df.withColumn(elem.name, new_df[elem.name].cast(elem.dataType))
+        return new_df
 
 
 class DataTransformation:
@@ -45,21 +84,24 @@ class DataTransformation:
                 self._logger.info("Reading source file : {file}".format(file=file))
                 file = path + file
                 print(file)
-                src_schema_string = ""
-                df_source = spark.read.option("header", "false").option("dateFormat", 'dd-MM-yyyy').schema(structtype).csv(file)
+                src_schema_string = []
+                for elem in structtype:
+                    src_schema_string.append(StructField(elem.name, StringType()))
+                df_source = spark.read.option("header", "false").option("dateFormat", 'dd-MM-yyyy')\
+                    .schema(StructType(src_schema_string)).csv(file)
                 df_trimmed = self.trimAllCols(df_source).withColumn("unique_id", F.monotonically_increasing_id())
                 df_cleaned_checksum = self.cleanDataForChecksum(df_trimmed)
                 df_checksum = df_cleaned_checksum.\
                     withColumn("rec_checksum",
                                py_function.md5(
                                    py_function.concat_ws(",", *checkSumColumns))).select("unique_id", "rec_checksum")
+
                 df_with_checksum = df_trimmed.join(df_checksum, on=["unique_id"]).drop("unique_id")
 
                 df_trans = df_with_checksum \
                     .withColumn("filename", py_function.lit(file_identifier)) \
                     .withColumn("batch_id", py_function.lit(batchid).cast(IntegerType())) \
-                    .withColumn("created_date", py_function.current_timestamp()) \
-                    .withColumn("free_zone_expiry_date_num", py_function.lit(1).cast(IntegerType()))
+                    .withColumn("created_date", py_function.current_timestamp())
                 self._logger.info("Merging all source file using union all")
                 df_list.append(df_trans)
             return reduce(DataFrame.union, df_list)
