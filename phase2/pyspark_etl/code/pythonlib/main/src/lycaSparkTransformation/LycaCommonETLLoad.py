@@ -10,6 +10,7 @@
 import argparse
 import sys
 from datetime import datetime, timedelta
+import pyspark.sql.functions as F
 from lycaSparkTransformation.TransformActionChain import TransformActionChain
 from lycaSparkTransformation.SparkSessionBuilder import SparkSessionBuilder
 
@@ -90,12 +91,12 @@ def start_execution(args):
     print("we are processing : normalNew={normalNew}, lateNew={lateNew}, lateDuplicate={lateDuplicate}, "
           "normalDuplicate={normalDuplicate} "
           .format(normalNew=normalcdr_count.count(), lateNew=latecdr_count.count(), lateDuplicate=latecdr_dupl_count.count(), normalDuplicate=normalcdr_dupl_count.count()))
-    # tf.writetoDataMart(sparkSession, propColumns.get("tgtSchema"))
-    # tf.writetoLateCDR(lateNew, propColumns.get("tgtSchema"))
-    # tf.writetoDuplicateCDR(lateDuplicate, propColumns.get("tgtSchema"))
-    # tf.writetoDuplicateCDR(duplicateData, propColumns.get("tgtSchema"))
-    # tf.writetoDuplicateCDR(normalDuplicate, propColumns.get("tgtSchema"))
-    # tf.writetoDataMart(lateNew, propColumns.get("tgtSchema"))
+    tf.writetoDataMart(sparkSession, propColumns.get("tgtSchema"))
+    tf.writetoLateCDR(lateNew, propColumns.get("tgtSchema"))
+    tf.writetoDuplicateCDR(lateDuplicate, propColumns.get("tgtSchema"))
+    tf.writetoDuplicateCDR(duplicateData, propColumns.get("tgtSchema"))
+    tf.writetoDuplicateCDR(normalDuplicate, propColumns.get("tgtSchema"))
+    tf.writetoDataMart(lateNew, propColumns.get("tgtSchema"))
     tf.writeBatchFileStatus(dfmetadata, batch_id)
 
 
@@ -120,4 +121,3 @@ def parseArguments():
 if __name__ == '__main__':
     args = parseArguments()
     start_execution(args)
->>>>>>> b4d18c101d9e7c3a805cb81fb0aa32565782d648
