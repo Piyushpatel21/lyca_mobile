@@ -25,7 +25,7 @@ class GlueSpark:
         >>> glue_spark = GlueSpark()
         """
         # pylint: disable=invalid-name
-        sc = SparkContext()
+        sc = SparkContext().getConf()
         self.glue_context = GlueContext(sc)
         self.spark = self.glue_context.spark_session
         self.job = Job(self.glue_context)

@@ -62,7 +62,7 @@ class RedshiftUtils:
         except Exception as ex:
             self._logger.error("failed to get data from redshift : {error}".format(error=ex))
 
-    def writeToRedshift(self, dataframe: DataFrame, db_name, dataset_name, tempTbl):
+    def writeToRedshift(self, dataframe: DataFrame, db_name, dataset_name):
         """
         Return response with data from Redshift
         :parameter dataframe - need to write data in redshift

@@ -1,15 +1,18 @@
 
-from datetime import datetime, timedelta
+
+from pyspark.sql import SparkSession, DataFrame
+
+from pyspark.sql.types import IntegerType, StringType, StructType, StructField
 
 
-def hourRounder(self, t):
-    # Rounds to nearest hour by adding a timedelta hour if minute >= 30
-    return (t.replace(second=0, microsecond=0, minute=0, hour=t.hour)
-            + timedelta(hours=t.minute // 30))
-def getTimeInterval(self, now):
-    return now + timedelta(hours=6)
+def getDataFrmae(sparkSession: SparkSession, filename, cnt) -> DataFrame:
+    schema = StructType([StructField('filename', StringType(), True), StructField(cnt, IntegerType(), True)])
+    data = [(filename, cnt)]
+    print(data)
+    rdd = sparkSession.sparkContext.parallelize(data)
+    return sparkSession.createDataFrame(rdd, schema)
 
-prevDate = datetime.now() + timedelta(days=-1)
-run_date = prevDate.date().strftime('%Y%m%d')
-batch_from = prevDate
-# batch_to = lycaETL.getTimeInterval(batch_from)
+
+sparkSession = SparkSession.builder.master("local").appName("appname").getOrCreate()
+recourdCount = getDataFrmae(sparkSession, 'sample', '20')
+recourdCount.show(20, False)
