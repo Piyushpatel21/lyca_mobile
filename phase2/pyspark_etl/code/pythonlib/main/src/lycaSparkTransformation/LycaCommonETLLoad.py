@@ -53,13 +53,9 @@ def start_execution(args):
     lycaETL = LycaCommonETLLoad(args.get('module'), args.get('submodule'), args.get('configfile'), args.get('connfile'),
                                 args.get('master'), args.get('run_date'), args.get('batchID'))
     args = lycaETL.parseArguments()
-    batch_from = ''
-    batch_to = ''
     if not (args.get('run_date') and args.get('batchID')):
         prevDate = datetime.now() + timedelta(days=-1)
         run_date = prevDate.date().strftime('%Y%m%d')
-        batch_from = lycaETL.hourRounder(prevDate)
-        batch_to = lycaETL.getTimeInterval(batch_from)
     else:
         run_date = args.get('run_date')
     appname = args.get('module') + '-' + args.get('submodule')
@@ -68,17 +64,16 @@ def start_execution(args):
     sparkSessionBuild = SparkSessionBuilder(args.get('master'), appname).sparkSessionBuild()
     sparkSession = sparkSessionBuild.get("sparkSession")
     logger = sparkSessionBuild.get("logger")
-    tf = TransformActionChain(sparkSession, logger, args.get('module'), args.get('submodule'), configfile, connfile, run_date, batch_from, batch_to)
+    tf = TransformActionChain(sparkSession, logger, args.get('module'), args.get('submodule'), configfile, connfile, run_date, prevDate)
     if not (args.get('run_date') and args.get('batchID')):
-        batch_id = tf.getBatchID(sparkSession)
+        batch_id = tf.getBatchID()
     else:
         batch_id = args.get('batchID')
     if not batch_id:
-        logger.error("Batch ID not available for current timestamp : batch_from={batch_from}, batch_to={batch_to}".format(batch_from=batch_from, batch_to=batch_to))
+        logger.error("Batch ID not available for current timestamp : prevDate={prevDate}".format(prevDate=prevDate))
         sys.exit(1)
-    logger.info("Running application for : run_date={run_date}, batch_id={batch_id}, batch_from={batch_from}, "
-                "batch_to={batch_to} "
-                .format(batch_id=batch_id, run_date=run_date, batch_from=batch_from, batch_to=batch_to))
+    logger.info("Running application for : run_date={run_date}, batch_id={batch_id}, prevDate={prevDate}"
+                .format(batch_id=batch_id, run_date=run_date, prevDate=prevDate))
     propColumns = tf.srcSchema()
     print(propColumns.get("tgtSchema"))
     try:
@@ -116,12 +111,12 @@ def start_execution(args):
         # tf.writetoDataMart(lateNew, propColumns.get("tgtSchema"))
         # tf.writeBatchFileStatus(dfmetadata, batch_id)
         logger.error("ETL processing completed for batch - {batch_id}".format(batch_id=batch_id))
-        tf.writeBatchFileStatus(batch_id, "Complete")
+        tf.writeBatchFailed(batch_id, "Complete")
     except Exception as ex:
         logger.error("ETL processing failed for batch - {batch_id} : {error}".format(error=ex, batch_id=batch_id))
-        tf.writeBatchFileStatus(batch_id, "Failed")
+        tf.writeBatchFailed(batch_id, "Failed")
 
-#
+
 # def parseArguments():
 #     parser = argparse.ArgumentParser()
 #     parser.add_argument('--run_date', help='run date required for trigger pipeline')
@@ -143,7 +138,3 @@ def start_execution(args):
 # if __name__ == '__main__':
 #     args = parseArguments()
 #     start_execution(args)
-#
-#
-# # Output of getLateCDR data l=183, ld=0, nc=1, ndc = 0
-# # Output of src data d=0, l=183, n=0, rc = 1

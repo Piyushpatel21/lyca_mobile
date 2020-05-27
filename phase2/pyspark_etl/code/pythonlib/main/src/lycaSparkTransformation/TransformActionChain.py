@@ -21,38 +21,25 @@ from pyspark.sql import functions as py_function
 
 
 class TransformActionChain:
-    def __init__(self, sparkSession: SparkSession, logger, module, subModule, configfile, connfile, run_date, batch_from=None, batch_to=None):
+    def __init__(self, sparkSession: SparkSession, logger, module, subModule, configfile, connfile, run_date, prevDate):
         self.sparkSession = sparkSession
         self.logger = logger
         self.module = module
         self.subModule = subModule
-        self.batch_from = batch_from
-        self.batch_to = batch_to
         self.configfile = AwsReader.s3ReadFile('s3', 'aws-glue-temporary-484320814466-eu-west-2', configfile)
         self.connfile = AwsReader.s3ReadFile('s3', 'aws-glue-temporary-484320814466-eu-west-2', connfile)
         self.trans = DataTransformation()
         self.run_date = run_date
+        self.prevDate = prevDate
         self.jsonParser = JSONBuilder(self.module, self.subModule, self.configfile, self.connfile)
         self.property = self.jsonParser.getAppPrpperty()
         self.connpropery = self.jsonParser.getConnPrpperty()
         self.redshiftprop = RedshiftUtils(self.connpropery.get("host"), self.connpropery.get("port"), self.connpropery.get("domain"),
                                           self.connpropery.get("user"), self.connpropery.get("password"), self.connpropery.get("tmpdir"))
+        self.batch_start_dt = datetime.now()
 
-    batch_start_dt = datetime.now()
-    def getstatus(self, sparkSession: SparkSession, batch_ID: int, column, status) -> DataFrame:
-        schema = StructType([StructField('batch_ID', IntegerType(), True), StructField(column, StringType(), True)])
-        data = [(batch_ID, status)]
-        rdd = sparkSession.sparkContext.parallelize(data)
-        return sparkSession.createDataFrame(rdd, schema)
-
-    def getdmCNT(self, sparkSession: SparkSession, batch_ID: int, column, cnt: int) -> DataFrame:
-        schema = StructType([StructField('batch_ID', IntegerType(), True), StructField(column, IntegerType(), True)])
-        data = [(batch_ID, cnt)]
-        rdd = sparkSession.sparkContext.parallelize(data)
-        return sparkSession.createDataFrame(rdd, schema)
-
-    def getBatchID(self, sparkSession: SparkSession) -> int:
-        return self.redshiftprop.getBatchId(sparkSession, self.subModule.upper(), self.batch_from, self.batch_to)
+    def getBatchID(self) -> int:
+        return self.redshiftprop.getBatchId(self.sparkSession, self.subModule.upper(), self.prevDate)
 
     def srcSchema(self):
         try:
@@ -75,7 +62,7 @@ class TransformActionChain:
         try:
             self.logger.info("***** reading source data from s3 *****")
             # file_list = self.redshiftprop.getFileList(sparkSession, batchid)
-            file_list = ['new_sample_file.cdr']
+            file_list = ['UKR6_CS_08_05_2020_04_15_58_24910.cdr']
             path = self.property.get("sourceFilePath") + "/" + self.module.upper() + "/" + "UK" + "/" +self.subModule.upper() + "/" + self.run_date[:4] + "/" + self.run_date[4:6] + "/" + self.run_date[6:8] + "/"
             df_source_raw = self.trans.readSourceFile(self.sparkSession, path, srcSchema, batchid, checkSumColumns, file_list)
             # Covert to target data type
@@ -85,14 +72,11 @@ class TransformActionChain:
                 df_source = smsModuleTransformation.generateDerivedColumnsForSms(df_source_with_datatype)
             else:
                 df_source = df_source_raw
-
-            print("show source data")
-            df_source.show(50, False)
             s3_batchreadcount = df_source.agg(py_function.count('batch_id').cast(IntegerType()).alias('s3_batchreadcount')).rdd.flatMap(lambda row: row).collect()
             s3_filecount = df_source.agg(py_function.countDistinct('filename').cast(IntegerType()).alias('s3_filecount')).rdd.flatMap(lambda row: row).collect()
             batch_status = 'Started'
             metaQuery = ("INSERT INTO uk_rrbs_dm.log_batch_status_rrbs (batch_id, s3_batchreadcount, s3_filecount, batch_status, batch_start_dt) values({batch_id},{s3_batchreadcount},{s3_filecount},'{batch_status}','{batch_start_dt}')"
-                         .format(batch_id=batchid, s3_batchreadcount=''.join(str(e) for e in s3_batchreadcount), s3_filecount=''.join(str(e) for e in s3_filecount), batch_status=batch_status, batch_start_dt=batch_start_dt))
+                         .format(batch_id=batchid, s3_batchreadcount=''.join(str(e) for e in s3_batchreadcount), s3_filecount=''.join(str(e) for e in s3_filecount), batch_status=batch_status, batch_start_dt=self.batch_start_dt))
             self.redshiftprop.writeBatchStatus(self.sparkSession, metaQuery)
             date_range = int(self.trans.getPrevRangeDate(self.run_date, self.property.get("normalcdrfrq"), self.property.get("numofdayormnthnormal")))
             lateOrNormalCdr = self.trans.getLateOrNormalCdr(df_source, self.property.get("dateColumn"), self.property.get("formattedDateColumn"), self.property.get("integerDateColumn"), date_range)
@@ -114,7 +98,6 @@ class TransformActionChain:
             self.redshiftprop.writeBatchStatus(self.sparkSession, metaQuery)
             self.logger.info("***** source data prepared for transformation *****")
             record_count = df_source.groupBy('filename').agg(py_function.count('batch_id').cast(IntegerType()).alias('record_count'))
-            record_count.show(20, False)
             return df_duplicate, df_unique_late, df_unique_normal, record_count
         except Exception as ex:
             self.logger.error("Failed to create source data : {error}".format(error=ex))
@@ -139,7 +122,7 @@ class TransformActionChain:
             dfLateCDRNewRecord = dfLateCDRND.filter("newOrDupl == 'New'")
             dfLateCDRDuplicate = dfLateCDRND.filter("newOrDupl == 'Duplicate'")
             self.logger.info("***** generating data for late cdr - completed *****")
-            latecdr_count = dfLateCDRNewRecord.groupBy('filename').agg(py_function.count('batch_id').cast(IntegerType().alias('latecdr_dm_count'))
+            latecdr_count = dfLateCDRNewRecord.groupBy('filename').agg(py_function.count('batch_id').cast(IntegerType()).alias('latecdr_dm_count')
                                                                       ,py_function.count('batch_id').cast(IntegerType()).alias('latecdr_lm_count'))
             latecdr_dupl_count = dfLateCDRDuplicate.groupBy('filename').agg(py_function.count('batch_id').cast(IntegerType()).alias('latecdr_duplicate_count'))
             ldm_latecdr_count = dfLateCDRNewRecord.agg(py_function.count('batch_id').cast(IntegerType()).alias('intrabatch_dupl_count')).rdd.flatMap(lambda row: row).collect()
@@ -175,7 +158,7 @@ class TransformActionChain:
         try:
             self.logger.info("***** started writing to data mart *****")
             df = srcDataframe.select(*tgtColmns)
-            self.redshiftprop.writeToRedshift(df, self.property.get("database"), self.property.get("normalcdrtbl"))
+            self.redshiftprop.writeToRedshift(df, self.property.get("database"), self.property.get("normalcdrtbl"), tgtColmns)
             self.logger.info("***** started writing to data mart - completed *****")
         except Exception as ex:
             self.logger.error("Failed to write data in data mart : {error}".format(error=ex))
@@ -184,7 +167,7 @@ class TransformActionChain:
         try:
             self.logger.info("***** started writing to duplicate mart *****")
             df = dataframe.select(*tgtColmns)
-            self.redshiftprop.writeToRedshift(df, self.property.get("database"), self.property.get("duplicatecdrtbl"))
+            self.redshiftprop.writeToRedshift(df, self.property.get("database"), self.property.get("duplicatecdrtbl"), tgtColmns)
             self.logger.info("***** started writing to duplicate mart - completed *****")
         except Exception as ex:
             self.logger.error("Failed to write data in duplicate mart : {error}".format(error=ex))
@@ -193,7 +176,7 @@ class TransformActionChain:
         try:
             self.logger.info("***** started writing to late mart *****")
             df = srcDataframe.select(*tgtColmns)
-            self.redshiftprop.writeToRedshift(df, self.property.get("database"), self.property.get("latecdrtbl"))
+            self.redshiftprop.writeToRedshift(df, self.property.get("database"), self.property.get("latecdrtbl"), tgtColmns)
             self.logger.info("***** started writing to late mart - completed *****")
         except Exception as ex:
             self.logger.error("Failed to write data in late mart : {error}".format(error=ex))
