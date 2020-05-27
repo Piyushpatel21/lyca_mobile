@@ -1,6 +1,7 @@
 #! /bin/bash
 set -eux
-mkdir ~/.aws
+
+mkdir -p ~/.aws
 cat <<EOF > creds.tpl
 [mis_lycamobile]
 aws_access_key_id = {{ AWS_ACCESS_KEY_ID }}
@@ -23,7 +24,9 @@ git config --global user.name "Git CI/CD"
 
 git remote remove code_commit || printf "code_commit does not exist"
 git remote add code_commit https://git-codecommit.eu-west-2.amazonaws.com/v1/repos/lycamobile-etl-movements
-# git remote set-url origin https://git-codecommit.eu-west-2.amazonaws.com/v1/repos/lycamobile-etl-movements
+
 git remote -v
-git checkout ${CI_COMMIT_REF_NAME}
+
+git fetch && git checkout ${CI_COMMIT_REF_NAME} && git pull origin ${CI_COMMIT_REF_NAME}
+printf "hash: $(git rev-parse HEAD) ci_ref: ${CI_COMMIT_REF_NAME}\n"
 git push code_commit ${CI_COMMIT_REF_NAME}

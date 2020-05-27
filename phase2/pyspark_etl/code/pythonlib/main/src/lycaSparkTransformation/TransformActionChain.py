@@ -11,7 +11,7 @@ from typing import Tuple
 from pyspark.sql import SparkSession
 from pyspark.sql.types import IntegerType, StringType, StructField, StructType
 from datetime import datetime
-from lycaSparkTransformation.DataTransformation import DataTransformation
+from lycaSparkTransformation.DataTransformation import DataTransformation, SmsDataTransformation
 from lycaSparkTransformation.SchemaReader import SchemaReader
 from pyspark.sql import DataFrame
 from lycaSparkTransformation.JSONBuilder import JSONBuilder
@@ -75,10 +75,19 @@ class TransformActionChain:
         try:
             self.logger.info("***** reading source data from s3 *****")
             # file_list = self.redshiftprop.getFileList(sparkSession, batchid)
-            file_list = ['UKR6_CS_08_05_2020_04_15_58_24910.cdr']
-            path ='/Users/narenk/PycharmProjects/lycamobile-etl-movements/phase2/pyspark_etl/code/pythonlib/test/resources/'
-            # path = self.property.get("sourceFilePath") + "/" + self.module.upper() + "/" + "UK" + "/" +self.subModule.upper() + "/" + self.run_date[:4] + "/" + self.run_date[4:6] + "/" + self.run_date[6:8] + "/"
-            df_source = self.trans.readSourceFile(self.sparkSession, path, srcSchema, batchid, checkSumColumns, file_list)
+            file_list = ['new_sample_file.cdr']
+            path = self.property.get("sourceFilePath") + "/" + self.module.upper() + "/" + "UK" + "/" +self.subModule.upper() + "/" + self.run_date[:4] + "/" + self.run_date[4:6] + "/" + self.run_date[6:8] + "/"
+            df_source_raw = self.trans.readSourceFile(self.sparkSession, path, srcSchema, batchid, checkSumColumns, file_list)
+            # Covert to target data type
+            if self.property.get("subModule") == "sms":
+                smsModuleTransformation = SmsDataTransformation()
+                df_source_with_datatype = smsModuleTransformation.convertTargetDataType(df_source_raw, srcSchema)
+                df_source = smsModuleTransformation.generateDerivedColumnsForSms(df_source_with_datatype)
+            else:
+                df_source = df_source_raw
+
+            print("show source data")
+            df_source.show(50, False)
             s3_batchreadcount = df_source.agg(py_function.count('batch_id').cast(IntegerType()).alias('s3_batchreadcount')).rdd.flatMap(lambda row: row).collect()
             s3_filecount = df_source.agg(py_function.countDistinct('filename').cast(IntegerType()).alias('s3_filecount')).rdd.flatMap(lambda row: row).collect()
             batch_status = 'Started'

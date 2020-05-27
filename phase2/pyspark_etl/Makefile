@@ -21,8 +21,8 @@ bdist_egg:
 bdist_egg_compiled:
 	python setup.py bdist_egg --exclude-source-files
 
-# build_szip:
-# 	tox -e sdist
+build_szip:
+	tox -e sdist
 
 build_pyspark_zip:
 	rm -rf dist/${PROJECT_NAME}-pyspark-${VERSION}.zip

@@ -56,6 +56,7 @@ This is a simple Lambda function and accompanying resources to catch files in th
 ```
 export SFTP_BUCKET="mis-dl-${country_code}-${aws_region}-${aws_account}-${environment}-raw"
 export CFN_BUCKET="mis-dl-${country_code}-${aws_region}-${aws_account}-${environment}-cloudform"
+export NOTIFICATION_EMAIL="example@example.com"
 
 aws cloudformation package --template-file s3_scripts/file_mover/file_mover.yaml --s3-bucket $CFN_BUCKET \
 --output-template-file s3_scripts/file_mover/file_mover_out.yaml \
@@ -63,7 +64,7 @@ aws cloudformation package --template-file s3_scripts/file_mover/file_mover.yaml
 
 aws cloudformation deploy --template-file s3_scripts/file_mover/file_mover_out.yaml \
 --stack-name mis-dl-lambda-file-mover-uk-dev \
---parameter-overrides LandingBucket=$SFTP_BUCKET \
+--parameter-overrides LandingBucket=$SFTP_BUCKET,NotificationEmailId=$NOTIFICATION_EMAIL \
 --profile $aws_profile --region $aws_region --capabilities CAPABILITY_NAMED_IAM
 
 ```
