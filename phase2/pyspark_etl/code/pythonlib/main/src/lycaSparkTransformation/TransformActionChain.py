@@ -199,4 +199,3 @@ class TransformActionChain:
             .format(batch_status=batch_status, batch_end_dt=batch_end_dt, batch_id=batch_id))
         self.redshiftprop.writeBatchStatus(self.sparkSession, metaQuery)
 
-

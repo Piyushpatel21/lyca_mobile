@@ -62,29 +62,38 @@ class RedshiftUtils:
         except Exception as ex:
             self._logger.error("failed to get data from redshift : {error}".format(error=ex))
 
-    def writeToRedshift(self, dataframe: DataFrame, db_name, dataset_name, tgtSchemaCols=[]):
+    def writeToRedshift(self, df: DataFrame, db_name, dataset_name, tgtSchemaCols=[]):
         """
         Return response with data from Redshift
-        :parameter dataframe - need to write data in redshift
+        :parameter df - need to write data in redshift
         :parameter db_name - schema name
         :parameter dataset_name - table name
         :return:
         """
-        cols = (*tgtSchemaCols,)
+        cols = str((*tgtSchemaCols,)).replace("'", "")
         table = ".".join([db_name, dataset_name])
         tempTable = ".temp_".join([db_name, dataset_name])
-        postQuery = "INSERT INTO {table} {cols} select {cols} from {tempTable}".format(table=table, tempTable=tempTable,
-                                                                                       cols=cols)
+        print("Temp Table : {tempTable}".format(tempTable=tempTable))
+        print("Printing DataFrame: ")
+        df.show(20, False)
+        print("Printing Schema:")
+        df.printSchema()
+
+        post_Query_1 = "INSERT INTO {table} {cols}".format(table=table, cols=cols)
+        post_Query_2 = " select {cols} from {tempTable}".format(tempTable=tempTable, cols=cols)
+
+        postQuery = post_Query_1 + post_Query_2.replace("(", "").replace(")", "")
+
+        print("Printing PostQuery: {postQuery}".format(postQuery=postQuery))
         try:
-             dataframe.write \
-                 .format("com.databricks.spark.redshift") \
-                 .option("url", self.jdbcUrl) \
-                 .option("dbtable", tempTable) \
-                 .option("postaction", postQuery) \
-                 .option("forward_spark_s3_credentials", "true") \
-                 .option("tempdir", self.redshiftTmpDir) \
-                 .mode("overwrite") \
-                 .save()
+            df.write.format("com.databricks.spark.redshift") \
+                .option("url", self.jdbcUrl) \
+                .option("dbtable", tempTable) \
+                .option("postactions", postQuery) \
+                .option("forward_spark_s3_credentials", "true") \
+                .option("tempdir", self.redshiftTmpDir) \
+                .mode("overwrite") \
+                .save()
         except Exception as ex:
             self._logger.error("failed to write data in redshift : {error}".format(error=ex))
 
