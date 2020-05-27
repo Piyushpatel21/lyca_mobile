@@ -162,7 +162,7 @@ class RedshiftUtils:
                                      "newrec_duplicate_count",
                                      "latecdr_duplicate_count", "is_valid", "batch_createtime")
 
-        preDelQuery = "DELETE FROM uk_rrbs_dm.log_batch_files_rrbs_temp WHERE batch_id='{batchId}'".format(batchId=batchId)
+        preDelQuery = "DELETE FROM uk_rrbs_dm.log_batch_files_rrbs WHERE batch_id='{batchId}'".format(batchId=batchId)
         table = "uk_rrbs_dm.log_batch_files_rrbs"
         try:
             arrangedDF.write.format("com.databricks.spark.redshift") \
