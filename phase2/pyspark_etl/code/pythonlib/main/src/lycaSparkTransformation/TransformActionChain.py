@@ -59,11 +59,11 @@ class TransformActionChain:
             self.logger.error("Failed to create src, tgt, cheksum schema : {error}".format(error=ex))
 
     def getSourceData(self, batchid, srcSchema, checkSumColumns) -> Tuple[DataFrame, DataFrame, DataFrame, DataFrame]:
+        self.logger.info("***** reading source data from s3 *****")
+        # file_list = self.redshiftprop.getFileList(sparkSession, batchid)
+        file_list = ['UKR6_CS_08_05_2020_04_15_58_24910.cdr']
+        path = self.property.get("sourceFilePath") + "/" + self.module.upper() + "/" + "UK" + "/" +self.subModule.upper() + "/" + self.run_date[:4] + "/" + self.run_date[4:6] + "/" + self.run_date[6:8] + "/"
         try:
-            self.logger.info("***** reading source data from s3 *****")
-            # file_list = self.redshiftprop.getFileList(sparkSession, batchid)
-            file_list = ['UKR6_CS_08_05_2020_04_15_58_24910.cdr']
-            path = self.property.get("sourceFilePath") + "/" + self.module.upper() + "/" + "UK" + "/" +self.subModule.upper() + "/" + self.run_date[:4] + "/" + self.run_date[4:6] + "/" + self.run_date[6:8] + "/"
             df_source_raw = self.trans.readSourceFile(self.sparkSession, path, srcSchema, batchid, checkSumColumns, file_list)
             # Covert to target data type
             if self.property.get("subModule") == "sms":
@@ -100,6 +100,8 @@ class TransformActionChain:
             record_count = df_source.groupBy('filename').agg(py_function.count('batch_id').cast(IntegerType()).alias('record_count'))
             return df_duplicate, df_unique_late, df_unique_normal, record_count
         except Exception as ex:
+            metaQuery = ("INSERT INTO uk_rrbs_dm.log_batch_status_rrbs (batch_id,batch_status, batch_start_dt, batch_end_dt) values({batch_id}, '{batch_status}', '{batch_start_dt}', '{batch_end_dt}')".format(batch_id=batchid, batch_status='Failed', batch_start_dt=self.batch_start_dt, batch_end_dt=datetime.now()))
+            self.redshiftprop.writeBatchStatus(self.sparkSession, metaQuery)
             self.logger.error("Failed to create source data : {error}".format(error=ex))
 
     def getDbDuplicate(self) -> Tuple[DataFrame, DataFrame]:
@@ -191,10 +193,10 @@ class TransformActionChain:
         except Exception as ex:
             self.logger.error("Failed to write batch status metadata: {error}".format(error=ex))
 
-    def writeBatchFailed(self, batch_id, status):
+    def writeBatchStatus(self, batch_id, status):
         batch_end_dt = datetime.now()
         batch_status = status
-        metaQuery = ("update uk_rrbs_dm.log_batch_status_rrbs set batch_status='{batch_status}', batch_end_dt='{batch_end_dt}' where batch_id = batch_id and batch_end_dt is null"
+        metaQuery = ("update uk_rrbs_dm.log_batch_status_rrbs set batch_status='{batch_status}', batch_end_dt='{batch_end_dt}' where batch_id = {batch_id} and batch_end_dt is null"
             .format(batch_status=batch_status, batch_end_dt=batch_end_dt, batch_id=batch_id))
         self.redshiftprop.writeBatchStatus(self.sparkSession, metaQuery)
 

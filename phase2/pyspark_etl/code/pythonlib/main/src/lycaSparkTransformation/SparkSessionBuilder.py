@@ -26,6 +26,7 @@ class SparkSessionBuilder:
             if self.master:
                 glueSpark = GlueSpark()
                 sparkSession = glueSpark.getSpark()
+                sparkSession.conf.set("spark.sql.crossJoin.enabled", "true")
                 logger = glueSpark.getLogger()
                 logger.info("Initialized Glue Context")
                 return {

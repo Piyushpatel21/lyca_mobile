@@ -123,7 +123,7 @@ class DataTransformation:
                 df_with_checksum = df_trimmed.join(df_checksum, on=["unique_id"]).drop("unique_id")
 
                 df_trans = df_with_checksum \
-                    .withColumn("filename", py_function.lit(file_identifier)) \
+                    .withColumn("filename", py_function.lit(file)) \
                     .withColumn("batch_id", py_function.lit(batchid).cast(IntegerType())) \
                     .withColumn("created_date", py_function.current_timestamp())
                 self._logger.info("Merging all source file using union all")

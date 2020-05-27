@@ -10,7 +10,6 @@
 import argparse
 import sys
 from datetime import datetime, timedelta
-import pyspark.sql.functions as F
 from lycaSparkTransformation.TransformActionChain import TransformActionChain
 from lycaSparkTransformation.SparkSessionBuilder import SparkSessionBuilder
 
@@ -53,8 +52,8 @@ def start_execution(args):
     lycaETL = LycaCommonETLLoad(args.get('module'), args.get('submodule'), args.get('configfile'), args.get('connfile'),
                                 args.get('master'), args.get('run_date'), args.get('batchID'))
     args = lycaETL.parseArguments()
+    prevDate = datetime.now() + timedelta(days=-1)
     if not (args.get('run_date') and args.get('batchID')):
-        prevDate = datetime.now() + timedelta(days=-1)
         run_date = prevDate.date().strftime('%Y%m%d')
     else:
         run_date = args.get('run_date')
@@ -96,13 +95,16 @@ def start_execution(args):
         lc = latecdr_count.rdd.flatMap(lambda row: row).collect()
         ldc = latecdr_dupl_count.rdd.flatMap(lambda row: row).collect()
         print("Output of getLateCDR data l={l}, ld={ld}, nc={lc}, ndc = {ldc}".format(l=l, ld=ld, lc=lc, ldc=ldc))
-        # dfmetadata = recordCount.join(normalcdr_count, on='filename', how='left_outer') \
-        #                         .join(normalcdr_dupl_count, on='filename', how='left_outer') \
-        #                         .join(latecdr_count, on='filename', how='left_outer') \
-        #                         .join(latecdr_dupl_count, on='filename', how='left_outer')
+        normalcdr_count.show(20, False)
+        dfmetadata = recordCount.join(normalcdr_count, on='filename', how='left_outer') \
+                                .join(normalcdr_dupl_count, on='filename', how='left_outer') \
+                                .join(latecdr_count, on='filename', how='left_outer') \
+                                .join(latecdr_dupl_count, on='filename', how='left_outer')
         print("we are processing : normalNew={normalNew}, lateNew={lateNew}, lateDuplicate={lateDuplicate}, "
               "normalDuplicate={normalDuplicate} "
               .format(normalNew=normalcdr_count.count(), lateNew=latecdr_count.count(), lateDuplicate=latecdr_dupl_count.count(), normalDuplicate=normalcdr_dupl_count.count()))
+        dfmetadata.printSchema()
+        dfmetadata.show(20, False)
         # tf.writetoDataMart(normalNew, propColumns.get("tgtSchema"))
         # tf.writetoLateCDR(lateNew, propColumns.get("tgtSchema"))
         # tf.writetoDuplicateCDR(lateDuplicate, propColumns.get("tgtSchema"))
@@ -111,10 +113,11 @@ def start_execution(args):
         # tf.writetoDataMart(lateNew, propColumns.get("tgtSchema"))
         # tf.writeBatchFileStatus(dfmetadata, batch_id)
         logger.error("ETL processing completed for batch - {batch_id}".format(batch_id=batch_id))
-        tf.writeBatchFailed(batch_id, "Complete")
+        tf.writeBatchStatus(batch_id, "Complete")
+        tf.writeBatchFileStatus(dfmetadata, batch_id)
     except Exception as ex:
         logger.error("ETL processing failed for batch - {batch_id} : {error}".format(error=ex, batch_id=batch_id))
-        tf.writeBatchFailed(batch_id, "Failed")
+        tf.writeBatchStatus(batch_id, "Failed")
 
 
 # def parseArguments():
