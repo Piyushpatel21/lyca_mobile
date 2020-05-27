@@ -8,21 +8,88 @@
 # notes           :                                                    #
 ########################################################################
 
-from commonUtils.JsonProcessor import JsonProcessor
-from pyspark.sql import DataFrame, Window
-from functools import reduce
-from pyspark.sql import functions as py_function
-from pyspark.sql.types import StructType
 from datetime import datetime
+from functools import reduce
+
+import pyspark.sql.functions as F
 from dateutil.relativedelta import relativedelta
-from pyspark.sql.types import IntegerType, StringType
+from pyspark.sql import DataFrame, Window
+from pyspark.sql import functions as py_function
+from pyspark.sql.types import IntegerType, StringType, DoubleType, LongType, FloatType, DateType, TimestampType
+from pyspark.sql.types import StructType, StructField
+
+from commonUtils.JsonProcessor import JsonProcessor
 from commonUtils.Log4j import Log4j
+
+
+class SmsDataTransformation:
+    """
+    Class to perform transformations on SMS data
+    """
+
+    def __init__(self):
+        self._logger = Log4j().getLogger()
+        self._cdr_date_col = "msg_date"
+        self._date_cols = ["free_zone_expiry_date"]
+        self._date_cols_format = "dd-MM-yyyy"
+        self.free_zone_expiry_date = "free_zone_expiry_date"
+        self._cdr_date_col_format = "yyyyMMddHHmmss"
+        self.time_zone = "Europe/London"
+
+    def generateDerivedColumnsForSms(self, df):
+        """
+        Module to generate derived columns from dataframe
+
+        :param df:
+        :return:
+        """
+
+        try:
+            self._logger.info("Generating derived columns for SMS data.")
+            new_df = df.withColumn("_temp_datetime_col", F.to_timestamp(df[self._cdr_date_col], self._cdr_date_col_format)) \
+                       .withColumn("msg_date_month", F.date_format(F.col("_temp_datetime_col"), "yyyyMM").cast(IntegerType())) \
+                       .withColumn("msg_date_dt", F.to_date(F.col("_temp_datetime_col"))) \
+                       .withColumn("msg_date_num", F.date_format(F.col("_temp_datetime_col"), "yyyyMMdd").cast(IntegerType())) \
+                       .withColumn("msg_date_hour", F.date_format(F.col("_temp_datetime_col"), "yyyyMMddHH").cast(IntegerType())) \
+                       .withColumn("_temp_datetime_col_utc", F.to_utc_timestamp(F.col("_temp_datetime_col"), F.lit(self.time_zone))) \
+                       .withColumn("msg_date_time_gmt", F.from_utc_timestamp(F.col("_temp_datetime_col_utc"), "GMT")) \
+                       .withColumn("msg_date_month_gmt", F.date_format(F.col("msg_date_time_gmt"), "yyyyMM").cast(IntegerType())) \
+                       .withColumn("msg_date_num_gmt", F.date_format(F.col("msg_date_time_gmt"), "yyyyMMdd").cast(IntegerType())) \
+                       .withColumn("msg_date_hour_gmt", F.date_format(F.col("msg_date_time_gmt"), "yyyyMMddHH").cast(IntegerType())) \
+                       .withColumn("free_zone_expiry_date_num", F.date_format(df[self.free_zone_expiry_date], "yyyyMMdd").cast(IntegerType())) \
+                       .drop('_temp_datetime_col', '_temp_datetime_col_utc')
+            return new_df
+        except Exception as ex:
+            self._logger.error("Failed to generate derived columns with error: {err}".format(err=ex))
+
+    def convertTargetDataType(self, df: DataFrame, schema: StructType):
+        """
+        Module to convert Data Type to required format
+
+        :param df: spark dataframe
+        :param schema: schema as StructType
+        :return:
+        """
+        # Drop whole file if error occur in converting
+        new_df = df
+        self._logger.info("Converting data type to required format")
+
+        files_to_ignore = []
+        for elem in schema:
+            if elem.name == self._cdr_date_col:
+                new_df = new_df.withColumn(elem.name, F.to_timestamp(new_df[elem.name], self._cdr_date_col_format))
+            elif elem.name in self._date_cols:
+                new_df = new_df.withColumn(elem.name, F.to_date(new_df[elem.name], self._date_cols_format))
+            else:
+                new_df = new_df.withColumn(elem.name, new_df[elem.name].cast(elem.dataType))
+        return new_df
 
 
 class DataTransformation:
 
     def __init__(self):
         self._logger = Log4j().getLogger()
+        self.default_value_dict = {'string': '0', 'number': 0, 'date': '1970-01-01', 'datetime': '1970-01-01 00:00:00'}
 
     def readSourceFile(self, spark, path, structtype: StructType, batchid, checkSumColumns=[],
                        fList=[]) -> DataFrame:
@@ -41,13 +108,24 @@ class DataTransformation:
                 self._logger.info("Reading source file : {file}".format(file=file))
                 file = path + file
                 print(file)
-                df_source = spark.read.option("header", "false").option("dateFormat", 'dd-MM-yyyy').schema(structtype).csv(file)
-                df_trans = df_source.withColumn("rec_checksum",
-                                                py_function.md5(py_function.concat_ws(",", *checkSumColumns))) \
+                src_schema_string = []
+                for elem in structtype:
+                    src_schema_string.append(StructField(elem.name, StringType()))
+                df_source = spark.read.option("header", "false").option("dateFormat", 'dd-MM-yyyy')\
+                    .schema(StructType(src_schema_string)).csv(file)
+                df_trimmed = self.trimAllCols(df_source).withColumn("unique_id", F.monotonically_increasing_id())
+                df_cleaned_checksum = self.cleanDataForChecksum(df_trimmed)
+                df_checksum = df_cleaned_checksum.\
+                    withColumn("rec_checksum",
+                               py_function.md5(
+                                   py_function.concat_ws(",", *checkSumColumns))).select("unique_id", "rec_checksum")
+
+                df_with_checksum = df_trimmed.join(df_checksum, on=["unique_id"]).drop("unique_id")
+
+                df_trans = df_with_checksum \
                     .withColumn("filename", py_function.lit(file_identifier)) \
                     .withColumn("batch_id", py_function.lit(batchid).cast(IntegerType())) \
-                    .withColumn("created_date", py_function.current_timestamp()) \
-                    .withColumn("free_zone_expiry_date_num", py_function.lit(1).cast(IntegerType()))
+                    .withColumn("created_date", py_function.current_timestamp())
                 self._logger.info("Merging all source file using union all")
                 df_list.append(df_trans)
             return reduce(DataFrame.union, df_list)
@@ -132,12 +210,14 @@ class DataTransformation:
 
     def getLateOrNormalCdr(self, dataFrame: DataFrame, dateColumn, formattedDateColumn, integerDateColumn,
                            dateRange) -> DataFrame:
-        """:parameter dataFrame- source as dataFrame
-           :parameter dateColumn column
-           :parameter formattedDateColumn - formatted Date Column name
-           :parameter integerDateColumn - numeric column name of date column
-           :parameter dateRange
-           :return dataframe with new derived columns"""
+        """
+        :parameter dataFrame- source as dataFrame
+        :parameter dateColumn column
+        :parameter formattedDateColumn - formatted Date Column name
+        :parameter integerDateColumn - numeric column name of date column
+        :parameter dateRange
+        :return dataframe with new derived columns
+        """
         try:
             self._logger.info("Identifying late and normal records within source")
             df_event_date = dataFrame.withColumn(integerDateColumn,
@@ -153,9 +233,12 @@ class DataTransformation:
             self._logger.error("Failed to return late and normal records : {error}".format(error=ex))
 
     def checkDuplicate(self, dfSource: DataFrame, dfRedshift: DataFrame) -> DataFrame:
-        """:parameter dfSource - get from source file
-           :parameter dfRedshift - reading data from redshift late CDR or data mart db
-           :return dataframe with new column weather record exist in dfRedshift"""
+        """
+
+        :parameter dfSource - get from source file
+        :parameter dfRedshift - reading data from redshift late CDR or data mart db
+        :return dataframe with new column weather record exist in dfRedshift
+        """
         try:
             self._logger.info("Identifying db duplicate within source")
             dfDB = dfRedshift.select(dfRedshift["rec_checksum"])
@@ -167,3 +250,84 @@ class DataTransformation:
             return dfnormalOrDuplicate
         except Exception as ex:
             self._logger.error("Failed to return unique records : {error}".format(error=ex))
+
+    def trimColumn(self, column):
+        """
+        Trims the white space from start and end
+
+        :param column:
+        :return:
+        """
+        return F.trim(column)
+
+    def fillNull(self, df, value_dict=None):
+        """
+        Fill the null value with respect to data type.
+
+        :param df: spark dataframe
+        :param value_dict: default: {'string': '0', 'number': 0, 'date': '1970-01-01', 'datetime': '1970-01-01 00:00:00'}
+        :return:
+        """
+
+        if not value_dict:
+            value_dict = self.default_value_dict
+
+        col_default_values = {}
+        for elem in df.schema:
+            if elem.dataType == StringType():
+                col_default_values[elem.name] = value_dict['string']
+            elif elem.dataType in [IntegerType(), DoubleType(), FloatType(), LongType()]:
+                col_default_values[elem.name] = value_dict['number']
+            elif elem.dataType == DateType():
+                col_default_values[elem.name] = value_dict['date']
+            elif elem.dataType == TimestampType():
+                col_default_values[elem.name] = value_dict['datetime']
+
+        return df.fillna(col_default_values)
+
+    def fillBlanks(self, df, value=None):
+        """
+        Fill the blank column with the value specified.
+
+        :param df:
+        :param value:
+        :return:
+        """
+        final_df = df
+        for elem in df.schema:
+            if elem.dataType == StringType():
+                final_df = final_df.withColumn(elem.name,
+                                               F.when(F.col(elem.name) == "", value)
+                                               .otherwise(F.when(F.col(elem.name) == " ", value).otherwise(F.col(elem.name))))
+        return final_df
+
+    def trimAllCols(self, df):
+        """
+        Trim all the space string from columns
+
+        :param df: spark dataframe
+        :return:
+        """
+        final_df = df
+        for elem in df.schema:
+            if elem.dataType == StringType():
+                final_df = final_df.withColumn(elem.name, self.trimColumn(F.col(elem.name)))
+
+        return final_df
+
+    def cleanDataForChecksum(self, df):
+        """
+        Clean the data for generating checksum
+
+        :param df:
+        :return:
+        """
+        new_df = df
+        for elem in new_df.schema:
+            if elem.dataType != StringType():
+                new_df = new_df.withColumn(elem.name, new_df[elem.name].cast(StringType()))
+        no_blanks_df = self.fillBlanks(new_df, "0")
+        no_null_df = self.fillNull(no_blanks_df)
+
+        return no_null_df
+
