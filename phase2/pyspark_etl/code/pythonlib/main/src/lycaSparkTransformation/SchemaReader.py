@@ -8,7 +8,7 @@
 # notes           :                                                    #
 ########################################################################
 
-from pyspark.sql.types import StructType, StructField, StringType, IntegerType, DateType, DecimalType, LongType, TimestampType, FloatType
+from pyspark.sql.types import StructType, StructField, StringType, IntegerType, DateType, DecimalType, LongType, TimestampType
 from commonUtils.JsonProcessor import JsonProcessor
 
 

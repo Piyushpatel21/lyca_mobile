@@ -9,7 +9,7 @@
 ########################################################################
 from typing import Tuple
 from pyspark.sql import SparkSession
-from pyspark.sql.types import IntegerType, StringType, StructField, StructType
+from pyspark.sql.types import IntegerType
 from datetime import datetime
 from lycaSparkTransformation.DataTransformation import DataTransformation, SmsDataTransformation
 from lycaSparkTransformation.SchemaReader import SchemaReader
@@ -60,12 +60,11 @@ class TransformActionChain:
 
     def getSourceData(self, batchid, srcSchema, checkSumColumns) -> Tuple[DataFrame, DataFrame, DataFrame, DataFrame]:
         self.logger.info("***** reading source data from s3 *****")
-        # file_list = self.redshiftprop.getFileList(sparkSession, batchid)
-        file_list = ['UKR6_CS_08_05_2020_04_15_58_24910.cdr']
+        file_list = self.redshiftprop.getFileList(self.sparkSession, batchid)
+        # file_list = ['UKR6_CS_08_05_2020_04_15_58_24910.cdr']
         path = self.property.get("sourceFilePath") + "/" + self.module.upper() + "/" + "UK" + "/" +self.subModule.upper() + "/" + self.run_date[:4] + "/" + self.run_date[4:6] + "/" + self.run_date[6:8] + "/"
         try:
             df_source_raw = self.trans.readSourceFile(self.sparkSession, path, srcSchema, batchid, checkSumColumns, file_list)
-            # Covert to target data type
             if self.property.get("subModule") == "sms":
                 smsModuleTransformation = SmsDataTransformation()
                 df_source_with_datatype = smsModuleTransformation.convertTargetDataType(df_source_raw, srcSchema)
