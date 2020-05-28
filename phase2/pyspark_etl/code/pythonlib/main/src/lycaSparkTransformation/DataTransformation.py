@@ -46,18 +46,25 @@ class SmsDataTransformation:
 
         try:
             self._logger.info("Generating derived columns for SMS data.")
-            new_df = df.withColumn("_temp_datetime_col", F.to_timestamp(df[self._cdr_date_col], self._cdr_date_col_format)) \
-                       .withColumn("msg_date_month", F.date_format(F.col("_temp_datetime_col"), "yyyyMM").cast(IntegerType())) \
-                       .withColumn("msg_date_dt", F.to_date(F.col("_temp_datetime_col"))) \
-                       .withColumn("msg_date_num", F.date_format(F.col("_temp_datetime_col"), "yyyyMMdd").cast(IntegerType())) \
-                       .withColumn("msg_date_hour", F.date_format(F.col("_temp_datetime_col"), "yyyyMMddHH").cast(IntegerType())) \
-                       .withColumn("_temp_datetime_col_utc", F.to_utc_timestamp(F.col("_temp_datetime_col"), F.lit(self.time_zone))) \
-                       .withColumn("msg_date_time_gmt", F.from_utc_timestamp(F.col("_temp_datetime_col_utc"), "GMT")) \
-                       .withColumn("msg_date_month_gmt", F.date_format(F.col("msg_date_time_gmt"), "yyyyMM").cast(IntegerType())) \
-                       .withColumn("msg_date_num_gmt", F.date_format(F.col("msg_date_time_gmt"), "yyyyMMdd").cast(IntegerType())) \
-                       .withColumn("msg_date_hour_gmt", F.date_format(F.col("msg_date_time_gmt"), "yyyyMMddHH").cast(IntegerType())) \
-                       .withColumn("free_zone_expiry_date_num", F.date_format(df[self.free_zone_expiry_date], "yyyyMMdd").cast(IntegerType())) \
-                       .drop('_temp_datetime_col', '_temp_datetime_col_utc')
+            new_df = df.withColumn("_temp_datetime_col",
+                                   F.to_timestamp(df[self._cdr_date_col], self._cdr_date_col_format)) \
+                .withColumn("msg_date_month", F.date_format(F.col("_temp_datetime_col"), "yyyyMM").cast(IntegerType())) \
+                .withColumn("msg_date_dt", F.to_date(F.col("_temp_datetime_col"))) \
+                .withColumn("msg_date_num", F.date_format(F.col("_temp_datetime_col"), "yyyyMMdd").cast(IntegerType())) \
+                .withColumn("msg_date_hour",
+                            F.date_format(F.col("_temp_datetime_col"), "yyyyMMddHH").cast(IntegerType())) \
+                .withColumn("_temp_datetime_col_utc",
+                            F.to_utc_timestamp(F.col("_temp_datetime_col"), F.lit(self.time_zone))) \
+                .withColumn("msg_date_time_gmt", F.from_utc_timestamp(F.col("_temp_datetime_col_utc"), "GMT")) \
+                .withColumn("msg_date_month_gmt",
+                            F.date_format(F.col("msg_date_time_gmt"), "yyyyMM").cast(IntegerType())) \
+                .withColumn("msg_date_num_gmt",
+                            F.date_format(F.col("msg_date_time_gmt"), "yyyyMMdd").cast(IntegerType())) \
+                .withColumn("msg_date_hour_gmt",
+                            F.date_format(F.col("msg_date_time_gmt"), "yyyyMMddHH").cast(IntegerType())) \
+                .withColumn("free_zone_expiry_date_num",
+                            F.date_format(df[self.free_zone_expiry_date], "yyyyMMdd").cast(IntegerType())) \
+                .drop('_temp_datetime_col', '_temp_datetime_col_utc')
             return new_df
         except Exception as ex:
             self._logger.error("Failed to generate derived columns with error: {err}".format(err=ex))
@@ -112,11 +119,11 @@ class DataTransformation:
                 src_schema_string = []
                 for elem in structtype:
                     src_schema_string.append(StructField(elem.name, StringType()))
-                df_source = spark.read.option("header", "false").option("dateFormat", 'dd-MM-yyyy')\
+                df_source = spark.read.option("header", "false").option("dateFormat", 'dd-MM-yyyy') \
                     .schema(StructType(src_schema_string)).csv(file)
                 df_trimmed = self.trimAllCols(df_source).withColumn("unique_id", F.monotonically_increasing_id())
                 df_cleaned_checksum = self.cleanDataForChecksum(df_trimmed)
-                df_checksum = df_cleaned_checksum.\
+                df_checksum = df_cleaned_checksum. \
                     withColumn("rec_checksum",
                                py_function.md5(
                                    py_function.concat_ws(",", *checkSumColumns))).select("unique_id", "rec_checksum")
@@ -209,8 +216,7 @@ class DataTransformation:
         except Exception as ex:
             self._logger.error("Failed to compute date range : {error}".format(error=ex))
 
-    def getLateOrNormalCdr(self, dataFrame: DataFrame, dateColumn, formattedDateColumn, integerDateColumn,
-                           dateRange) -> DataFrame:
+    def getLateOrNormalCdr(self, dataFrame: DataFrame, integerDateColumn, dateRange) -> DataFrame:
         """
         :parameter dataFrame- source as dataFrame
         :parameter dateColumn column
@@ -221,14 +227,10 @@ class DataTransformation:
         """
         try:
             self._logger.info("Identifying late and normal records within source")
-            df_event_date = dataFrame.withColumn(integerDateColumn,
-                                                 py_function.substring(py_function.col(dateColumn), 0, 8).cast(
-                                                     IntegerType()))
-            df_normalOrLate = df_event_date.withColumn(formattedDateColumn, py_function.to_date(
-                py_function.to_date(py_function.col(integerDateColumn).cast(StringType()), 'yyyyMMdd'), 'yyyy-MM-dd')) \
-                .withColumn("normalOrlate",
-                            py_function.when(py_function.col(integerDateColumn) < int(dateRange), "Late").otherwise(
-                                "Normal"))
+            df_normalOrLate = dataFrame.withColumn("normalOrlate",
+                                                   py_function.when(py_function.col(integerDateColumn) < int(dateRange),
+                                                                    "Late").otherwise(
+                                                       "Normal"))
             return df_normalOrLate
         except Exception as ex:
             self._logger.error("Failed to return late and normal records : {error}".format(error=ex))
@@ -299,7 +301,8 @@ class DataTransformation:
             if elem.dataType == StringType():
                 final_df = final_df.withColumn(elem.name,
                                                F.when(F.col(elem.name) == "", value)
-                                               .otherwise(F.when(F.col(elem.name) == " ", value).otherwise(F.col(elem.name))))
+                                               .otherwise(
+                                                   F.when(F.col(elem.name) == " ", value).otherwise(F.col(elem.name))))
         return final_df
 
     def trimAllCols(self, df):
@@ -331,4 +334,3 @@ class DataTransformation:
         no_null_df = self.fillNull(no_blanks_df)
 
         return no_null_df
-

@@ -61,7 +61,6 @@ class TransformActionChain:
     def getSourceData(self, batchid, srcSchema, checkSumColumns) -> Tuple[DataFrame, DataFrame, DataFrame, DataFrame]:
         self.logger.info("***** reading source data from s3 *****")
         file_list = self.redshiftprop.getFileList(self.sparkSession, batchid)
-        # file_list = ['UKR6_CS_08_05_2020_04_15_58_24910.cdr']
         path = self.property.get("sourceFilePath") + "/" + self.module.upper() + "/" + "UK" + "/" +self.subModule.upper() + "/" + self.run_date[:4] + "/" + self.run_date[4:6] + "/" + self.run_date[6:8] + "/"
         try:
             df_source_raw = self.trans.readSourceFile(self.sparkSession, path, srcSchema, batchid, checkSumColumns, file_list)
@@ -78,7 +77,7 @@ class TransformActionChain:
                          .format(batch_id=batchid, s3_batchreadcount=''.join(str(e) for e in s3_batchreadcount), s3_filecount=''.join(str(e) for e in s3_filecount), batch_status=batch_status, batch_start_dt=self.batch_start_dt))
             self.redshiftprop.writeBatchStatus(self.sparkSession, metaQuery)
             date_range = int(self.trans.getPrevRangeDate(self.run_date, self.property.get("normalcdrfrq"), self.property.get("numofdayormnthnormal")))
-            lateOrNormalCdr = self.trans.getLateOrNormalCdr(df_source, self.property.get("dateColumn"), self.property.get("formattedDateColumn"), self.property.get("integerDateColumn"), date_range)
+            lateOrNormalCdr = self.trans.getLateOrNormalCdr(df_source, self.property.get("integerDateColumn"), date_range)
             df_duplicate = self.trans.getDuplicates(lateOrNormalCdr, "rec_checksum")
             batch_status = 'In-Progress'
             intrabatch_dupl_count = df_duplicate.agg(py_function.count('batch_id').cast(IntegerType()).alias('intrabatch_dupl_count')).rdd.flatMap(lambda row: row).collect()
