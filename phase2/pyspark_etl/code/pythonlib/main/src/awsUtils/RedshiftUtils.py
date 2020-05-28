@@ -164,10 +164,6 @@ class RedshiftUtils:
             except Exception as ex:
                 self._logger.error("failed to read log_batch_status data from redshift : {error}".format(error=ex))
         batchFileDF = getMetadataDF()
-        batchFileDF.printSchema()
-        metaDF.printSchema()
-        metaDF.show(20, False)
-        batchFileDF.show(20, False)
         preDelQuery = "DELETE FROM uk_rrbs_dm.log_batch_files_rrbs WHERE batch_id='{batchId}'".format(batchId=batchId)
         table = "uk_rrbs_dm.log_batch_files_rrbs"
         try:
