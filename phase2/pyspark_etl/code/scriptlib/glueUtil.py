@@ -211,7 +211,7 @@ def json_to_dict(json_file):
     return dict_data
 
 
-def manage_command(command, job_name=None, config_file=None, configs=None):
+def manage_command(command, job_name=None, config_file=None, configs=None, region=None):
     """
     Entry point for util execution.
 
@@ -219,6 +219,7 @@ def manage_command(command, job_name=None, config_file=None, configs=None):
     :param job_name: Name of the job. Required if command is get_job, update_job, delete_job
     :param config_file: json file containing configs
     :param configs: dictionary with configs
+    :param region: AWS region
     :return:
     """
 
@@ -232,8 +233,10 @@ def manage_command(command, job_name=None, config_file=None, configs=None):
         raise Exception("-f <config-file> or --configs <configs dict> is mandatory when command is create_job")
 
     try:
-
-        glue_client = boto3.client('glue')
+        if region:
+            glue_client = boto3.client('glue', region_name=region)
+        else:
+            glue_client = boto3.client('glue')
         if command == "get_job":
             response = get_job(glue_client, job_name)
         elif command == 'create_job':
@@ -274,6 +277,7 @@ def parse_arguments():
     ap.add_argument('-j', '--job_name', help='Name of the job')
     ap.add_argument('-f', '--config_file', help='Config file for glue job')
     ap.add_argument('--configs', help='Configs as dictionary which is compliment to config_file.')
+    ap.add_argument('--region', help='Region in which to perform operation')
     known_arguments, unknown_arguments = ap.parse_known_args()
     arguments = vars(known_arguments)
     return arguments
