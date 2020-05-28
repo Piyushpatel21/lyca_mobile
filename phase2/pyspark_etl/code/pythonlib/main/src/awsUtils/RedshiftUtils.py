@@ -73,18 +73,9 @@ class RedshiftUtils:
         cols = str((*tgtSchemaCols,)).replace("'", "")
         table = ".".join([db_name, dataset_name])
         tempTable = ".temp_".join([db_name, dataset_name])
-        print("Temp Table : {tempTable}".format(tempTable=tempTable))
-        print("Printing DataFrame: ")
-        df.show(20, False)
-        print("Printing Schema:")
-        df.printSchema()
-
         post_Query_1 = "INSERT INTO {table} {cols}".format(table=table, cols=cols)
         post_Query_2 = " select {cols} from {tempTable}".format(tempTable=tempTable, cols=cols)
-
         postQuery = post_Query_1 + post_Query_2.replace("(", "").replace(")", "")
-
-        print("Printing PostQuery: {postQuery}".format(postQuery=postQuery))
         try:
             df.write.format("com.databricks.spark.redshift") \
                 .option("url", self.jdbcUrl) \

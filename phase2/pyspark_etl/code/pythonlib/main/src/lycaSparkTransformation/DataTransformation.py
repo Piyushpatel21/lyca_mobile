@@ -219,8 +219,6 @@ class DataTransformation:
     def getLateOrNormalCdr(self, dataFrame: DataFrame, integerDateColumn, dateRange) -> DataFrame:
         """
         :parameter dataFrame- source as dataFrame
-        :parameter dateColumn column
-        :parameter formattedDateColumn - formatted Date Column name
         :parameter integerDateColumn - numeric column name of date column
         :parameter dateRange
         :return dataframe with new derived columns
@@ -332,5 +330,4 @@ class DataTransformation:
                 new_df = new_df.withColumn(elem.name, new_df[elem.name].cast(StringType()))
         no_blanks_df = self.fillBlanks(new_df, "0")
         no_null_df = self.fillNull(no_blanks_df)
-
         return no_null_df
