@@ -46,7 +46,6 @@ class SmsDataTransformation:
 
         try:
             self._logger.info("Generating derived columns for SMS data.")
-
             new_df = df.withColumn("_temp_datetime_col",
                                    F.to_timestamp(df[self._cdr_date_col], self._cdr_date_col_format)) \
                 .withColumn("msg_date_month", F.date_format(F.col("_temp_datetime_col"), "yyyyMM").cast(IntegerType())) \
@@ -120,7 +119,6 @@ class DataTransformation:
                 src_schema_string = []
                 for elem in structtype:
                     src_schema_string.append(StructField(elem.name, StringType()))
-
                 df_source = spark.read.option("header", "false").option("dateFormat", 'dd-MM-yyyy') \
                     .schema(StructType(src_schema_string)).csv(file)
                 df_trimmed = self.trimAllCols(df_source).withColumn("unique_id", F.monotonically_increasing_id())

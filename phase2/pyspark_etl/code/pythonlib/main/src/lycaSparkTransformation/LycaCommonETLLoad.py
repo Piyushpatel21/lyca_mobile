@@ -10,7 +10,6 @@
 import argparse
 import sys
 from datetime import datetime, timedelta
-import pyspark.sql.functions as F
 from lycaSparkTransformation.TransformActionChain import TransformActionChain
 from lycaSparkTransformation.SparkSessionBuilder import SparkSessionBuilder
 
