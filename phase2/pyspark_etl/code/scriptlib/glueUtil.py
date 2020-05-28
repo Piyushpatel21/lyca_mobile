@@ -39,6 +39,13 @@ MANDATORY_JOB_PARAMETERS = ['Name', 'Description', 'Role', 'ScriptLocation']
 
 
 def build_job_args(default_args, new_job_args):
+    """
+    Validates parameters and create final arguments dict
+
+    :param default_args: existing of default arguments
+    :param new_job_args: new arguments
+    :return:
+    """
     default_args.update(new_job_args)
 
     for k, validation_func in JOB_PARAMETERS_VALIDATIONS.items():
@@ -86,6 +93,12 @@ def build_job_args(default_args, new_job_args):
 
 
 def error_response(msg):
+    """
+    Structure error message
+
+    :param msg:
+    :return:
+    """
     return {
         "exitcode": 1,
         "message": msg
@@ -93,6 +106,13 @@ def error_response(msg):
 
 
 def create_job(glue_client, job_args: dict):
+    """
+    Creates Glue job
+
+    :param glue_client: Glue Client
+    :param job_args: arguments for the job
+    :return:
+    """
     missing_params = MANDATORY_JOB_PARAMETERS - job_args.keys()
     if missing_params:
         raise Exception("Following Mandatory parameters are missing: {missing}".format(missing=missing_params))
@@ -102,6 +122,14 @@ def create_job(glue_client, job_args: dict):
 
 
 def update_job(glue_client, job_name, job_args: dict):
+    """
+    Updates the existing job
+
+    :param glue_client: Glue Client
+    :param job_name: Name of the job
+    :param job_args: arguments for the job
+    :return:
+    """
     job_details = get_job(glue_client, job_name)
     if 'exitcode' in job_details and job_details['exitcode'] == 1:
         response = job_details
@@ -141,6 +169,13 @@ def update_job(glue_client, job_name, job_args: dict):
 
 
 def delete_job(glue_client, job_name):
+    """
+    Deletes the glue job
+
+    :param glue_client: Glue Client
+    :param job_name: Name of the job
+    :return:
+    """
 
     response = glue_client.delete_job(
         JobName=job_name
@@ -150,6 +185,13 @@ def delete_job(glue_client, job_name):
 
 
 def get_job(glue_client, job_name):
+    """
+    Get the glue job details
+
+    :param glue_client: Glue Client
+    :param job_name: Name of the job
+    :return:
+    """
 
     response = glue_client.get_job(
         JobName=job_name
@@ -158,12 +200,27 @@ def get_job(glue_client, job_name):
 
 
 def json_to_dict(json_file):
+    """
+    Convert json file to dictionary
+
+    :param json_file: json file location, must be local
+    :return:
+    """
     with open(json_file) as f:
         dict_data = json.load(f)
     return dict_data
 
 
 def manage_command(command, job_name=None, config_file=None, configs=None):
+    """
+    Entry point for util execution.
+
+    :param command: (Required) Type of operation, allowed values: get_job, create_job, update_job, delete_job
+    :param job_name: Name of the job. Required if command is get_job, update_job, delete_job
+    :param config_file: json file containing configs
+    :param configs: dictionary with configs
+    :return:
+    """
 
     if command not in ['get_job', 'create_job', 'update_job', 'delete_job']:
         raise Exception('Command {cmd} is not available, can be one of following: get_job, create_job, '
@@ -205,6 +262,11 @@ def manage_command(command, job_name=None, config_file=None, configs=None):
 
 
 def parse_arguments():
+    """
+    Parse the input arguments
+
+    :return:
+    """
     ap = argparse.ArgumentParser()
 
     ap.add_argument('-c', '--command', required=True, help='Can be one of following: get_job, create_job, '
