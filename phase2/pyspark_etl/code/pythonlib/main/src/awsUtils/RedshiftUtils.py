@@ -62,25 +62,29 @@ class RedshiftUtils:
         except Exception as ex:
             self._logger.error("failed to get data from redshift : {error}".format(error=ex))
 
-    def writeToRedshift(self, dataframe: DataFrame, db_name, dataset_name, tempTbl):
+    def writeToRedshift(self, df: DataFrame, db_name, dataset_name, tgtSchemaCols=[]):
         """
         Return response with data from Redshift
-        :parameter dataframe - need to write data in redshift
+        :parameter df - need to write data in redshift
         :parameter db_name - schema name
         :parameter dataset_name - table name
         :return:
         """
+        cols = str((*tgtSchemaCols,)).replace("'", "")
+        table = ".".join([db_name, dataset_name])
+        tempTable = ".temp_".join([db_name, dataset_name])
+        post_Query_1 = "INSERT INTO {table} {cols}".format(table=table, cols=cols)
+        post_Query_2 = " select {cols} from {tempTable}".format(tempTable=tempTable, cols=cols)
+        postQuery = post_Query_1 + post_Query_2.replace("(", "").replace(")", "")
         try:
-            table = ".".join([db_name, dataset_name])
-            dataframe.write \
-                .format("com.databricks.spark.redshift") \
+            df.write.format("com.databricks.spark.redshift") \
                 .option("url", self.jdbcUrl) \
-                .option("dbtable", table) \
+                .option("dbtable", tempTable) \
+                .option("postactions", postQuery) \
                 .option("forward_spark_s3_credentials", "true") \
                 .option("tempdir", self.redshiftTmpDir) \
-                .mode("append") \
+                .mode("overwrite") \
                 .save()
-
         except Exception as ex:
             self._logger.error("failed to write data in redshift : {error}".format(error=ex))
 
@@ -91,7 +95,7 @@ class RedshiftUtils:
                 .option("url", self.jdbcUrl) \
                 .option("forward_spark_s3_credentials", "true") \
                 .option("query",
-                        "SELECT file_name FROM uk_rrbs_dm.log_batch_files_rrbs where batch_id = {batch_id}".format(
+                        "SELECT filename FROM uk_rrbs_dm.log_batch_files_rrbs where batch_id = {batch_id}".format(
                             batch_id=batchid)) \
                 .option("tempdir", self.redshiftTmpDir) \
                 .load()
@@ -100,21 +104,20 @@ class RedshiftUtils:
         except Exception as ex:
             self._logger.error("failed to get file list from redshift : {error}".format(error=ex))
 
-    def getBatchId(self, sparkSession: SparkSession, source_identifier, batch_from, batch_to) -> int:
+    def getBatchId(self, sparkSession: SparkSession, source_identifier, prevDate) -> int:
         """
         Return response with batchId from Redshift
         :parameter sparkSession - spark session
         :parameter source_identifier - source identifier(SMS,TOPUP etc.)
-        :parameter batch_from - batch interval start datetime
-        :parameter batch_to - batch interval end datetime
+        :parameter prevDate - previous date to run the batch
         :return:
         """
         try:
             self._logger.info(
-                "Batch ID info : source_identifier={source_identifier}, batch_from={batch_from}, batch_to={batch_to}".format(
-                    batch_to=batch_to, batch_from=batch_from, source_identifier=source_identifier))
-            query = "SELECT DISTINCT batch_id FROM uk_rrbs_dm.log_batch_files_rrbs WHERE file_source LIKE '%{source_identifier}%' AND batch_from >= '{batch_from}' AND batch_to <= '{batch_to}'".format(
-                source_identifier=source_identifier, batch_from=batch_from, batch_to=batch_to)
+                "Batch ID info : source_identifier={source_identifier}, previousDate={prevDate}".format(
+                    prevDate=prevDate, source_identifier=source_identifier))
+            query = "SELECT DISTINCT batch_id FROM uk_rrbs_dm.log_batch_files_rrbs WHERE file_source LIKE '%{source_identifier}%' AND batch_from <= '{prevDate}' AND batch_to => '{prevDate}'".format(
+                source_identifier=source_identifier, prevDate=prevDate)
             self._logger.info("Query {query}".format(query=query))
             df = sparkSession.read \
                 .format("com.databricks.spark.redshift") \
@@ -159,9 +162,7 @@ class RedshiftUtils:
                                      "newrec_duplicate_count",
                                      "latecdr_duplicate_count", "is_valid", "batch_createtime")
 
-        preDelQuery = "DELETE FROM uk_rrbs_dm.log_batch_files_rrbs_temp WHERE batch_id='{batchId}'".format(
-            batchId=batchId)
-        # postQuery = "UPDATE TABLE"
+        preDelQuery = "DELETE FROM uk_rrbs_dm.log_batch_files_rrbs WHERE batch_id='{batchId}'".format(batchId=batchId)
         table = "uk_rrbs_dm.log_batch_files_rrbs"
         try:
             arrangedDF.write.format("com.databricks.spark.redshift") \

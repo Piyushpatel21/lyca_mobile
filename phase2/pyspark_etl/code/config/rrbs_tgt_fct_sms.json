@@ -1,8 +1,5 @@
 [
   {
-    "column_name": "sk_rrbs_sms"
-  },
-  {
     "column_name": "cdr_types"
   },
   {
@@ -181,6 +178,36 @@
   },
   {
     "column_name": "roaming_partner_id"
+  },
+  {
+    "column_name": "fct_free_text_1"
+  },
+  {
+    "column_name": "fct_free_text_2"
+  },
+  {
+    "column_name": "fct_free_text_3"
+  },
+  {
+    "column_name": "fct_free_text_4"
+  },
+  {
+    "column_name": "fct_free_text_5"
+  },
+  {
+    "column_name": "fct_free_text_6"
+  },
+  {
+    "column_name": "fct_free_text_7"
+  },
+  {
+    "column_name": "fct_free_text_8"
+  },
+  {
+    "column_name": "fct_free_text_9"
+  },
+  {
+    "column_name": "fct_free_text_10"
   },
   {
     "column_name": "msg_date_month"
