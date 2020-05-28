@@ -97,14 +97,7 @@ def create_job(glue_client, job_args: dict):
     if missing_params:
         raise Exception("Following Mandatory parameters are missing: {missing}".format(missing=missing_params))
     final_args = build_job_args(JOB_PARAMETERS, job_args)
-    try:
-        response = glue_client.create_job(**final_args)
-    except ClientError as cli_err:
-        if cli_err.response['Error']['Code'] == 'ParamValidationError':
-            print("Failed to validate parameters with error {err}".format(err=cli_err))
-        else:
-            raise Exception(cli_err)
-        response = None
+    response = glue_client.create_job(**final_args)
     return response
 
 
@@ -135,43 +128,32 @@ def update_job(glue_client, job_name, job_args: dict):
         final_args = build_job_args(existing_job_args, job_args)
         del final_args['Name']
         del final_args['Tags']
-        try:
-            response = glue_client.update_job(
-                JobName=job_name,
-                JobUpdate=final_args
-            )
-        except ClientError as cli_err:
-            print(cli_err)
-            response = error_response("Failed to update job with name {job}.".format(job=job_name))
+
+        # Updating glue job
+        response = glue_client.update_job(
+            JobName=job_name,
+            JobUpdate=final_args
+        )
+
     else:
         response = error_response("Job with name {job} not found.".format(job=job_name))
     return response
 
 
 def delete_job(glue_client, job_name):
-    try:
-        response = glue_client.delete_job(
-            JobName=job_name
-        )
-    except ClientError as cli_err:
-        if cli_err.response['Error']['Code'] == 'EntityNotFoundException':
-            response = error_response('Job with name {j_name} does not exists.'.format(j_name=job_name))
-        else:
-            raise Exception(cli_err)
+
+    response = glue_client.delete_job(
+        JobName=job_name
+    )
+
     return response
 
 
 def get_job(glue_client, job_name):
 
-    try:
-        response = glue_client.get_job(
-            JobName=job_name
-        )
-    except ClientError as cli_err:
-        if cli_err.response['Error']['Code'] == 'EntityNotFoundException':
-            response = error_response('Job with name {j_name} does not exists.'.format(j_name=job_name))
-        else:
-            raise Exception(cli_err)
+    response = glue_client.get_job(
+        JobName=job_name
+    )
     return response
 
 
@@ -215,7 +197,9 @@ def manage_command(command, job_name=None, config_file=None, configs=None):
         elif cli_err.response['Error']['Code'] == 'EntityNotFoundException':
             response = error_response('Job with name {j_name} does not exists.'.format(j_name=job_name))
         else:
-            response = error_response("Failed to perform operation with error {err}".format(err=cli_err))
+            response = error_response("Failed to perform operation with error {err}.".format(err=cli_err))
+    except Exception as ex:
+        response = error_response("Failed to perform operation with error {err}.".format(err=ex))
 
     return response
 
