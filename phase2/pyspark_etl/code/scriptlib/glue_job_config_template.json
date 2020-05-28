@@ -1,0 +1,19 @@
+{
+  "Name": "TestJob",
+  "ScriptLocation": "s3://aws-glue-scripts-700238584577-eu-west-2/bhavin/ReadRedshiftFromSpark",
+  "Description": "Test job",
+  "Role": "AWSGlueServiceRole-GlueToS3",
+  "PythonVersion": "2",
+  "GlueVersion": "1.0",
+  "ExtraPythonLibsS3Path": "s3://taffazzel-iot-test-bucket/Road_SafetyCode/reverse_geocoder.zip,s3://taffazzel-iot-test-bucket/Road_SafetyCode/GlueContent.py",
+  "DefaultArguments": {
+    "--Key": "Value",
+    "--JobType": "Test",
+    "--extra-py-files": "s3://taffazzel-iot-test-bucket/Road_SafetyCode/reverse_geocoder.zip,s3://taffazzel-iot-test-bucket/Road_SafetyCode/GlueContent.py",
+    "--TempDir": "s3://aws-glue-scripts-700238584577-eu-west-2/bhavin/tmp"
+  },
+  "Tags": {
+    "CreatedBy": "Bhavin.Tandel",
+    "ToBeDeleted": "True"
+  }
+}
