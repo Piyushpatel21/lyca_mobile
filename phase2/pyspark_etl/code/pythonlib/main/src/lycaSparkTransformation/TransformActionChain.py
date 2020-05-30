@@ -188,8 +188,6 @@ class TransformActionChain:
     def writeBatchFileStatus(self, dataframe : DataFrame, batch_id):
         try:
             self.logger.info("Writing batch status metadata")
-            dataframe.printSchema()
-            dataframe.show(20, False)
             self.redshiftprop.writeBatchFileStatus(self.sparkSession, dataframe, batch_id)
             self.logger.info("Writing batch status metadata - completed")
         except Exception as ex:

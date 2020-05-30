@@ -140,7 +140,6 @@ class RedshiftUtils:
         :parameter batch_id - batch id for the batch interval to read files
         :return:
         """
-
         def getMetadataDF() -> DataFrame:
             try:
                 self._logger.info("Updating Log Batch Files RRBS table :")
@@ -156,8 +155,8 @@ class RedshiftUtils:
                     .load()
                 df = redshiftDF.join(metaDF, on='filename', how='inner')
                 return df.select(redshiftDF['batch_id'], redshiftDF['file_source'], redshiftDF['file_id'], redshiftDF['filename'], redshiftDF['batch_from'],
-                                 redshiftDF['batch_to'], metaDF['record_count'],
-                                 metaDF['newrec_dm_count'], metaDF['latecdr_dm_count'], metaDF['latecdr_lm_count'], metaDF['newrec_duplicate_count'],
+                                 redshiftDF['batch_to'], metaDF['record_count'], metaDF['newrec_dm_count'], metaDF['latecdr_dm_count'],
+                                 metaDF['latecdr_lm_count'], metaDF['newrec_duplicate_count'],
                                  metaDF['latecdr_duplicate_count'], redshiftDF['is_valid'],
                                  redshiftDF['batch_createtime'])
 

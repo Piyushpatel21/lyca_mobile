@@ -291,7 +291,7 @@ class DataTransformation:
         try:
             self._logger.info("Identifying late and normal records within source")
             df_normalOrLate = dataFrame.withColumn("normalOrlate",
-                                                   F.when(F.col(integerDateColumn) < int(dateRange),
+                                                   F.when(F.col(integerDateColumn) <= int(dateRange),
                                                                     "Late").otherwise(
                                                        "Normal"))
             return df_normalOrLate
