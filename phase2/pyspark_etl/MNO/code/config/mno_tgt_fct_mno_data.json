@@ -1,0 +1,113 @@
+[
+  {
+    "column_name": "cdr_type"
+  },
+  {
+    "column_name": "cdr_id"
+  },
+  {
+    "column_name": "imsi"
+  },
+  {
+    "column_name": "msisdn"
+  },
+  {
+    "column_name": "imei"
+  },
+  {
+    "column_name": "location"
+  },
+  {
+    "column_name": "apn_ni"
+  },
+  {
+    "column_name": "apn_oi"
+  },
+  {
+    "column_name": "charging_timestamp"
+  },
+  {
+    "column_name": "duration"
+  },
+  {
+    "column_name": "data_volume_download"
+  },
+  {
+    "column_name": "data_volume_upload"
+  },
+  {
+    "column_name": "data_volume_total"
+  },
+  {
+    "column_name": "username"
+  },
+  {
+    "column_name": "network_element_id"
+  },
+  {
+    "column_name": "ggsn_address"
+  },
+  {
+    "column_name": "charging_id"
+  },
+  {
+    "column_name": "fragment_number"
+  },
+  {
+    "column_name": "fragment_indicator"
+  },
+  {
+    "column_name": "recordsequencenumber"
+  },
+  {
+    "column_name": "content_source"
+  },
+  {
+    "column_name": "rate_class"
+  },
+  {
+    "column_name": "charge"
+  },
+  {
+    "column_name": "end_user_charge"
+  },
+  {
+    "column_name": "charging_dt"
+  },
+  {
+    "column_name": "charging_month"
+  },
+  {
+    "column_name": "charging_dt_num"
+  },
+  {
+    "column_name": "charging_dt_hour"
+  },
+  {
+    "column_name": "charging_timestamp_gmt"
+  },
+  {
+    "column_name": "charging_month_gmt"
+  },
+  {
+    "column_name": "charging_dt_num_gmt"
+  },
+  {
+    "column_name": "charging_dt_hour_gmt"
+  },
+  {
+    "column_name": "duration_min"
+  },
+  {
+    "column_name": "filename"
+  },
+  {
+    "column_name": "batch_id"
+  },
+  {
+    "column_name": "created_date"
+  },
+  {
+    "column_name": "rec_checksum"
+  }
+]
