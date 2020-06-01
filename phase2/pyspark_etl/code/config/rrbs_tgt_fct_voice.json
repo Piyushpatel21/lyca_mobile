@@ -1,8 +1,5 @@
 [
   {
-    "column_name": "sk_rrbs_voice"
-  },
-  {
     "column_name": "voice_call_cdr"
   },
   {
@@ -91,12 +88,6 @@
   },
   {
     "column_name": "call_date"
-  },
-  {
-    "column_name": "call_date_dt"
-  },
-  {
-    "column_name": "call_date_num"
   },
   {
     "column_name": "call_termination_time"
@@ -294,6 +285,66 @@
     "column_name": "roaming_partner_id"
   },
   {
+    "column_name": "fct_free_text_1"
+  },
+  {
+    "column_name": "fct_free_text_2"
+  },
+  {
+    "column_name": "fct_free_text_3"
+  },
+  {
+    "column_name": "fct_free_text_4"
+  },
+  {
+    "column_name": "fct_free_text_5"
+  },
+  {
+    "column_name": "fct_free_text_6"
+  },
+  {
+    "column_name": "fct_free_text_7"
+  },
+  {
+    "column_name": "fct_free_text_8"
+  },
+  {
+    "column_name": "fct_free_text_9"
+  },
+  {
+    "column_name": "fct_free_text_10"
+  },
+  {
+    "column_name": "call_DATE_month"
+  },
+  {
+    "column_name": "call_DATE_dt"
+  },
+  {
+    "column_name": "call_DATE_num"
+  },
+  {
+    "column_name": "call_DATE_hour"
+  },
+  {
+    "column_name": "call_date_month_gmt"
+  },
+  {
+    "column_name": "call_DATE_time_gmt"
+  },
+  {
+    "column_name": "call_DATE_num_gmt"
+  },
+  {
+    "column_name": "call_DATE_hour_gmt"
+  },
+  {
+    "column_name": "call_duration_min"
+  },
+  {
+    "column_name": "chargeable_used_time_min"
+  },
+  {
     "column_name": "filename"
   },
   {
@@ -301,5 +352,8 @@
   },
   {
     "column_name": "created_date"
+  },
+  {
+	"column_name": "rec_checksum"
   }
 ]
