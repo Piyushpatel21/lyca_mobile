@@ -52,7 +52,7 @@ class VoiceDataTransformation:
                         .withColumn("charging_month_gmt", F.date_format(F.col("charging_timestamp_gmt"), "yyyyMM").cast(IntegerType())) \
                         .withColumn("charging_dt_num_gmt", F.date_format(F.col("charging_timestamp_gmt"), "yyyyMMdd").cast(IntegerType())) \
                         .withColumn("charging_dt_hour_gmt", F.date_format(F.col("charging_timestamp_gmt"), "yyyyMMddHH").cast(IntegerType())) \
-                        .withColumn("duration_min", F.lit(0)) \
+                        .withColumn("duration_min", (F.col("duration") / 60).cast(DecimalType(21, 6))) \
                         .drop('_temp_datetime_col', '_temp_datetime_col_utc')
             return transdf
         except Exception as ex:
@@ -113,7 +113,7 @@ class GprsDataTransformation:
                         .withColumn("charging_month_gmt", F.date_format(F.col("charging_timestamp_gmt"), "yyyyMM").cast(IntegerType())) \
                         .withColumn("charging_dt_num_gmt", F.date_format(F.col("charging_timestamp_gmt"), "yyyyMMdd").cast(IntegerType())) \
                         .withColumn("charging_dt_hour_gmt", F.date_format(F.col("charging_timestamp_gmt"), "yyyyMMddHH").cast(IntegerType())) \
-                        .withColumn("duration_min", F.lit(0)) \
+                        .withColumn("duration_min", (F.col("duration") / 60).cast(DecimalType(21, 6))) \
                         .withColumn("data_usage", (sum(df[col] for col in self.data_usage_col) / 1048576).cast(DecimalType(21, 6))) \
                         .drop('_temp_datetime_col', '_temp_datetime_col_utc')
             return transdf

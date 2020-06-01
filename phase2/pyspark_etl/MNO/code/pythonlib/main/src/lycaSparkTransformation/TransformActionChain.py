@@ -61,7 +61,7 @@ class TransformActionChain:
     def getSourceData(self, batchid, srcSchema, checkSumColumns) -> Tuple[DataFrame, DataFrame, DataFrame, DataFrame]:
         self.logger.info("***** reading source data from s3 *****")
         # file_list = self.redshiftprop.getFileList(self.sparkSession, batchid)
-        file_list = ['MNO_GPRS_2019110203.cdr']
+        file_list = ['MNO_VOICE_2019110104.cdr']
         path = '/Users/narenk/PycharmProjects/lycamobile-etl-movements/phase2/pyspark_etl/MNO/code/pythonlib/test/resources/'
         # path = self.property.get("sourceFilePath") + "/" + self.module.upper() + "/" + "UK" + "/" +self.subModule.upper() + "/" + self.run_date[:4] + "/" + self.run_date[4:6] + "/" + self.run_date[6:8] + "/"
         try:
