@@ -1,0 +1,6 @@
+{
+  "MaxCapacity": 4,
+  "Arguments": {
+    "--TempDir": "s3://path_to_temp_dir"
+  }
+}
