@@ -199,6 +199,20 @@ def get_job(glue_client, job_name):
     return response
 
 
+def start_job_run(glue_client, job_name, job_args: dict = None):
+    job_run_args = {
+        "JobName", job_name
+    }
+    if 'JobRunId' in job_args:
+        job_run_args['JobRunId'] = job_args['JobRunId']
+    if 'Arguments' in job_args and job_args['Arguments']:
+        job_run_args['Arguments'] = job_args['Arguments']
+
+    response = glue_client.start_job_run(**job_run_args)
+
+    return response
+
+
 def json_to_dict(json_file):
     """
     Convert json file to dictionary
