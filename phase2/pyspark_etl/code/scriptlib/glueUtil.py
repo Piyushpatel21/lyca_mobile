@@ -201,12 +201,13 @@ def get_job(glue_client, job_name):
 
 def start_job_run(glue_client, job_name, job_args: dict = None):
     job_run_args = {
-        "JobName", job_name
+        "JobName": job_name
     }
-    if 'JobRunId' in job_args:
-        job_run_args['JobRunId'] = job_args['JobRunId']
-    if 'Arguments' in job_args and job_args['Arguments']:
-        job_run_args['Arguments'] = job_args['Arguments']
+    if job_args:
+        if 'JobRunId' in job_args:
+            job_run_args['JobRunId'] = job_args['JobRunId']
+        if 'Arguments' in job_args and job_args['Arguments']:
+            job_run_args['Arguments'] = job_args['Arguments']
 
     response = glue_client.start_job_run(**job_run_args)
 
@@ -237,11 +238,11 @@ def manage_command(command, job_name=None, config_file=None, configs=None, regio
     :return:
     """
 
-    if command not in ['get_job', 'create_job', 'update_job', 'delete_job']:
+    if command not in ['get_job', 'create_job', 'update_job', 'delete_job', 'run_job']:
         raise Exception('Command {cmd} is not available, can be one of following: get_job, create_job, '
                         'update_job, delete_job'.format(cmd=command))
 
-    if command in ['get_job', 'delete_job', 'update_job'] and not job_name:
+    if command in ['get_job', 'delete_job', 'update_job', 'run_job'] and not job_name:
         raise Exception("-j <job-name> is mandatory when command is {cmd}".format(cmd=command))
     elif command == 'create_job' and not (config_file or configs):
         raise Exception("-f <config-file> or --configs <configs dict> is mandatory when command is create_job")
@@ -263,6 +264,12 @@ def manage_command(command, job_name=None, config_file=None, configs=None, regio
             response = update_job(glue_client, job_name, configs)
         elif command == 'delete_job':
             response = delete_job(glue_client, job_name)
+        elif command == 'run_job':
+            if config_file:
+                configs = json_to_dict(config_file)
+            else:
+                configs = None
+            response = start_job_run(glue_client, job_name, configs)
         else:
             response = None
     except ClientError as cli_err:
@@ -287,7 +294,7 @@ def parse_arguments():
     ap = argparse.ArgumentParser()
 
     ap.add_argument('-c', '--command', required=True, help='Can be one of following: get_job, create_job, '
-                                                           'update_job, delete_job')
+                                                           'update_job, delete_job, run_job')
     ap.add_argument('-j', '--job_name', help='Name of the job')
     ap.add_argument('-f', '--config_file', help='Config file for glue job')
     ap.add_argument('--configs', help='Configs as dictionary which is compliment to config_file.')

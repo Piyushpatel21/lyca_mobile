@@ -26,6 +26,12 @@ python glueUtil.py -c create_job -f glue_job_config_template.json
 python glueUtil.py -c get_job -j TestJob2
 ```
 
+## Run Glue job
+
+```shell script
+python glueUtil.py -c run_job -j TestJob2
+```
+
 ## Update Glue job
 
 ```shell script
