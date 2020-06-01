@@ -82,17 +82,21 @@ def start_execution(args):
         dfmetadata = recordCount.join(normalcdr_count, on='filename', how='left_outer') \
                                 .join(normalcdr_dupl_count, on='filename', how='left_outer') \
                                 .join(latecdr_count, on='filename', how='left_outer') \
-                                .join(latecdr_dupl_count, on='filename', how='left_outer')
+                                .join(latecdr_dupl_count, on='filename', how='left_outer') \
+                                .na.fill(0)
+        # print("We are processing normalNew={normalNew}, lateNew={lateNew}, lateDuplicate={lateDuplicate}, "
+        #       "duplicateData={duplicateData}, normalDuplicate={normalDuplicate}, lateNew={lateNew}"
+        #       .format(normalNew=normalNew.count(), lateNew=lateNew.count(), lateDuplicate=lateDuplicate.count(),
+        #               duplicateData=duplicateData.count(), normalDuplicate=normalDuplicate.count()))
+        tf.writeBatchFileStatus(dfmetadata, batch_id)
+        tf.writetoDuplicateCDR(duplicateData, propColumns.get("tgtSchema"))
+        tf.writetoDuplicateCDR(lateDuplicate, propColumns.get("tgtSchema"))
+        tf.writetoDuplicateCDR(normalDuplicate, propColumns.get("tgtSchema"))
         tf.writetoDataMart(normalNew, propColumns.get("tgtSchema"))
         tf.writetoLateCDR(lateNew, propColumns.get("tgtSchema"))
-        tf.writetoDuplicateCDR(lateDuplicate, propColumns.get("tgtSchema"))
-        tf.writetoDuplicateCDR(duplicateData, propColumns.get("tgtSchema"))
-        tf.writetoDuplicateCDR(normalDuplicate, propColumns.get("tgtSchema"))
         tf.writetoDataMart(lateNew, propColumns.get("tgtSchema"))
-        tf.writeBatchFileStatus(dfmetadata, batch_id)
         logger.error("ETL processing completed for batch - {batch_id}".format(batch_id=batch_id))
         tf.writeBatchStatus(batch_id, "Complete")
-        tf.writeBatchFileStatus(dfmetadata, batch_id)
     except Exception as ex:
         logger.error("ETL processing failed for batch - {batch_id} : {error}".format(error=ex, batch_id=batch_id))
         tf.writeBatchStatus(batch_id, "Failed")

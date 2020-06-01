@@ -10,11 +10,9 @@
 
 from datetime import datetime
 from functools import reduce
-
-import pyspark.sql.functions as F
 from dateutil.relativedelta import relativedelta
 from pyspark.sql import DataFrame, Window
-from pyspark.sql import functions as py_function
+from pyspark.sql import functions as F
 from pyspark.sql.types import IntegerType, StringType, DoubleType, LongType, FloatType, DateType, TimestampType
 from pyspark.sql.types import StructType, StructField
 
@@ -92,6 +90,73 @@ class SmsDataTransformation:
         return new_df
 
 
+class VoiceDataTransformation:
+    """
+    Class to perform transformations on SMS data
+    """
+
+    def __init__(self):
+        self._logger = Log4j().getLogger()
+        self._call_date_col = "call_date"
+        self._date_cols_format = "dd-MM-yyyy"
+        self._call_date_col_format = "yyyyMMddHHmmss"
+        self.time_zone = "Europe/London"
+
+    def generateDerivedColumnsForSms(self, df):
+        """
+        Module to generate derived columns from dataframe
+
+        :param df:
+        :return:
+        """
+
+        try:
+            self._logger.info("Generating derived columns for SMS data.")
+            transDF = df.withColumn("_temp_datetime_col",
+                                    F.to_timestamp(df[self._call_date_col], self._call_date_col_format)) \
+                .withColumn("call_date_month", F.date_format(F.col("_temp_datetime_col"), "yyyyMM").cast(IntegerType())) \
+                .withColumn("call_date_dt", F.to_date(F.col("_temp_datetime_col"))) \
+                .withColumn("call_date_num", F.date_format(F.col("_temp_datetime_col"), "yyyyMMdd").cast(IntegerType())) \
+                .withColumn("call_date_hour",
+                            F.date_format(F.col("_temp_datetime_col"), "yyyyMMddHH").cast(IntegerType())) \
+                .withColumn("_temp_datetime_col_utc",
+                            F.to_utc_timestamp(F.col("_temp_datetime_col"), F.lit(self.time_zone))) \
+                .withColumn("call_date_time_gmt", F.from_utc_timestamp(F.col("_temp_datetime_col_utc"), "GMT")) \
+                .withColumn("call_date_month_gmt",
+                            F.date_format(F.col("call_date_time_gmt"), "yyyyMM").cast(IntegerType())) \
+                .withColumn("call_date_num_gmt",
+                            F.date_format(F.col("call_date_time_gmt"), "yyyyMMdd").cast(IntegerType())) \
+                .withColumn("call_date_hour_gmt",
+                            F.date_format(F.col("call_date_time_gmt"), "yyyyMMddHH").cast(IntegerType())) \
+                .withColumn("call_duration_min", F.lit(F.col("call_date_time_gmt")).cast(IntegerType())) \
+                .withColumn("chargeable_used_time_min", F.lit(F.col("call_date_time_gmt")).cast(IntegerType())) \
+                .drop('_temp_datetime_col', '_temp_datetime_col_utc')
+            return transDF
+        except Exception as ex:
+            self._logger.error("Failed to generate derived columns with error: {err}".format(err=ex))
+
+    def convertTargetDataType(self, df: DataFrame, schema: StructType):
+        """
+        Module to convert Data Type to required format
+
+        :param df: spark dataframe
+        :param schema: schema as StructType
+        :return:
+        """
+        # Drop whole file if error occur in converting
+        new_df = df
+        self._logger.info("Converting data type to required format")
+
+        files_to_ignore = []
+        for elem in schema:
+            if elem.name == self._call_date_col:
+                new_df = new_df.withColumn(elem.name, F.to_timestamp(new_df[elem.name], self._call_date_col_format))
+            elif elem.name in self._date_cols:
+                new_df = new_df.withColumn(elem.name, F.to_date(new_df[elem.name], self._date_cols_format))
+            else:
+                new_df = new_df.withColumn(elem.name, new_df[elem.name].cast(elem.dataType))
+        return new_df
+
 class DataTransformation:
 
     def __init__(self):
@@ -125,15 +190,15 @@ class DataTransformation:
                 df_cleaned_checksum = self.cleanDataForChecksum(df_trimmed)
                 df_checksum = df_cleaned_checksum. \
                     withColumn("rec_checksum",
-                               py_function.md5(
-                                   py_function.concat_ws(",", *checkSumColumns))).select("unique_id", "rec_checksum")
+                               F.md5(
+                                   F.concat_ws(",", *checkSumColumns))).select("unique_id", "rec_checksum")
 
                 df_with_checksum = df_trimmed.join(df_checksum, on=["unique_id"]).drop("unique_id")
 
                 df_trans = df_with_checksum \
-                    .withColumn("filename", py_function.lit(file_name)) \
-                    .withColumn("batch_id", py_function.lit(batchid).cast(IntegerType())) \
-                    .withColumn("created_date", py_function.current_timestamp())
+                    .withColumn("filename", F.lit(file_name)) \
+                    .withColumn("batch_id", F.lit(batchid).cast(IntegerType())) \
+                    .withColumn("created_date", F.current_timestamp())
                 self._logger.info("Merging all source file using union all")
                 df_list.append(df_trans)
             return reduce(DataFrame.union, df_list)
@@ -176,7 +241,7 @@ class DataTransformation:
             self._logger.info("Identifying duplicate records within source ")
             windowspec = Window.partitionBy(dataFrame[checksumColumn]).orderBy(dataFrame[checksumColumn].desc())
             df_duplicates = dataFrame.withColumn("duplicate",
-                                                 py_function.count(dataFrame[checksumColumn]).over(windowspec).cast(
+                                                 F.count(dataFrame[checksumColumn]).over(windowspec).cast(
                                                      IntegerType())) \
                 .filter('duplicate > 1')
             self._logger.info("Return duplicate records")
@@ -190,7 +255,7 @@ class DataTransformation:
         try:
             self._logger.info("Identifying unique records within source")
             windowspec = Window.partitionBy(dataFrame[checksumColumn]).orderBy(dataFrame[checksumColumn])
-            df_source = dataFrame.withColumn("duplicate", py_function.row_number().over(windowspec).cast(IntegerType()))
+            df_source = dataFrame.withColumn("duplicate", F.row_number().over(windowspec).cast(IntegerType()))
             df_unique_records = df_source.filter(df_source['duplicate'] == 1).drop(df_source['duplicate'])
             self._logger.info("Return unique records")
             return df_unique_records
@@ -226,7 +291,7 @@ class DataTransformation:
         try:
             self._logger.info("Identifying late and normal records within source")
             df_normalOrLate = dataFrame.withColumn("normalOrlate",
-                                                   py_function.when(py_function.col(integerDateColumn) < int(dateRange),
+                                                   F.when(F.col(integerDateColumn) <= int(dateRange),
                                                                     "Late").otherwise(
                                                        "Normal"))
             return df_normalOrLate
@@ -245,7 +310,7 @@ class DataTransformation:
             dfDB = dfRedshift.select(dfRedshift["rec_checksum"])
             dfjoin = dfSource.join(dfDB, dfSource["rec_checksum"] == dfDB["rec_checksum"], "left_outer") \
                 .withColumn("newOrDupl",
-                            py_function.when(dfSource["rec_checksum"] == dfDB["rec_checksum"], "Duplicate").otherwise(
+                            F.when(dfSource["rec_checksum"] == dfDB["rec_checksum"], "Duplicate").otherwise(
                                 "New"))
             dfnormalOrDuplicate = dfjoin.drop(dfDB["rec_checksum"])
             return dfnormalOrDuplicate

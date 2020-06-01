@@ -11,7 +11,7 @@ from typing import Tuple
 from pyspark.sql import SparkSession
 from pyspark.sql.types import IntegerType
 from datetime import datetime
-from lycaSparkTransformation.DataTransformation import DataTransformation, SmsDataTransformation
+from lycaSparkTransformation.DataTransformation import DataTransformation, SmsDataTransformation, VoiceDataTransformation
 from lycaSparkTransformation.SchemaReader import SchemaReader
 from pyspark.sql import DataFrame
 from lycaSparkTransformation.JSONBuilder import JSONBuilder
@@ -68,6 +68,10 @@ class TransformActionChain:
                 smsModuleTransformation = SmsDataTransformation()
                 df_source_with_datatype = smsModuleTransformation.convertTargetDataType(df_source_raw, srcSchema)
                 df_source = smsModuleTransformation.generateDerivedColumnsForSms(df_source_with_datatype)
+            elif self.property.get("subModule") == "voice":
+                voiceModuleTransformation = VoiceDataTransformation()
+                df_source_with_datatype = voiceModuleTransformation.convertTargetDataType(df_source_raw, srcSchema)
+                df_source = voiceModuleTransformation.generateDerivedColumnsForSms(df_source_with_datatype)
             else:
                 df_source = df_source_raw
             s3_batchreadcount = df_source.agg(py_function.count('batch_id').cast(IntegerType()).alias('s3_batchreadcount')).rdd.flatMap(lambda row: row).collect()
@@ -184,8 +188,6 @@ class TransformActionChain:
     def writeBatchFileStatus(self, dataframe : DataFrame, batch_id):
         try:
             self.logger.info("Writing batch status metadata")
-            dataframe.printSchema()
-            dataframe.show(20, False)
             self.redshiftprop.writeBatchFileStatus(self.sparkSession, dataframe, batch_id)
             self.logger.info("Writing batch status metadata - completed")
         except Exception as ex:

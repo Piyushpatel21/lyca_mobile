@@ -132,7 +132,7 @@ class RedshiftUtils:
         except Exception as ex:
             self._logger.error("failed to get batch Id from redshift : {error}".format(error=ex))
 
-    def writeBatchFileStatus(self, sparkSession: SparkSession, dataframe: DataFrame, batchId):
+    def writeBatchFileStatus(self, sparkSession: SparkSession, metaDF: DataFrame, batchId):
         """
         Update log_batch_files_rrbs table in Redshift with file record count and batch status
         :parameter sparkSession - spark session
@@ -140,32 +140,33 @@ class RedshiftUtils:
         :parameter batch_id - batch id for the batch interval to read files
         :return:
         """
-        global joinedDF
-        try:
-            self._logger.info("Updating Log Batch Files RRBS table :")
-            query = "SELECT batch_id, file_source, file_id, filename, batch_from, batch_to, is_valid, batch_createtime FROM uk_rrbs_dm.log_batch_files_rrbs WHERE batch_id ='{batchId}'".format(
-                batchId=batchId)
-            self._logger.info("Query {query}".format(query=query))
-            df = sparkSession.read \
-                .format("com.databricks.spark.redshift") \
-                .option("url", self.jdbcUrl) \
-                .option("query", query) \
-                .option("forward_spark_s3_credentials", "true") \
-                .option("tempdir", self.redshiftTmpDir) \
-                .load()
-            df2 = df.withColumnRenamed("filename", "file_name")
-            joinedDF = df2.join(dataframe, df2.file_name == dataframe.filename, "left_outer")
-        except Exception as ex:
-            self._logger.error("failed to read log_batch_status data from redshift : {error}".format(error=ex))
-        arrangedDF = joinedDF.select("batch_id", "file_source", "file_id", "filename", "batch_from", "batch_to",
-                                     "record_count", "newrec_dm_count", "latecdr_dm_count", "latecdr_lm_count",
-                                     "newrec_duplicate_count",
-                                     "latecdr_duplicate_count", "is_valid", "batch_createtime")
+        def getMetadataDF() -> DataFrame:
+            try:
+                self._logger.info("Updating Log Batch Files RRBS table :")
+                query = "SELECT batch_id, file_source, file_id, filename, batch_from, batch_to, is_valid, batch_createtime FROM uk_rrbs_dm.log_batch_files_rrbs WHERE batch_id ='{batchId}'".format(
+                    batchId=batchId)
+                self._logger.info("Query {query}".format(query=query))
+                redshiftDF = sparkSession.read \
+                    .format("com.databricks.spark.redshift") \
+                    .option("url", self.jdbcUrl) \
+                    .option("query", query) \
+                    .option("forward_spark_s3_credentials", "true") \
+                    .option("tempdir", self.redshiftTmpDir) \
+                    .load()
+                df = redshiftDF.join(metaDF, on='filename', how='inner')
+                return df.select(redshiftDF['batch_id'], redshiftDF['file_source'], redshiftDF['file_id'], redshiftDF['filename'], redshiftDF['batch_from'],
+                                 redshiftDF['batch_to'], metaDF['record_count'], metaDF['newrec_dm_count'], metaDF['latecdr_dm_count'],
+                                 metaDF['latecdr_lm_count'], metaDF['newrec_duplicate_count'],
+                                 metaDF['latecdr_duplicate_count'], redshiftDF['is_valid'],
+                                 redshiftDF['batch_createtime'])
 
+            except Exception as ex:
+                self._logger.error("failed to read log_batch_status data from redshift : {error}".format(error=ex))
+        batchFileDF = getMetadataDF()
         preDelQuery = "DELETE FROM uk_rrbs_dm.log_batch_files_rrbs WHERE batch_id='{batchId}'".format(batchId=batchId)
         table = "uk_rrbs_dm.log_batch_files_rrbs"
         try:
-            arrangedDF.write.format("com.databricks.spark.redshift") \
+            batchFileDF.write.format("com.databricks.spark.redshift") \
                 .option("url", self.jdbcUrl) \
                 .option("dbtable", table) \
                 .option("preactions", preDelQuery) \
