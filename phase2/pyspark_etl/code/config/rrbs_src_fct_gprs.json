@@ -132,35 +132,12 @@
     "check_sum" : true
   },
   {
-    "column_name" : "data_connection_dt",
-    "column_type" : "date",
-    "required" : false,
-    "check_sum" : true
-  },
-  {
-    "column_name" : "data_connection_dt_num",
-    "column_type" : "integer",
-    "required" : false,
-    "check_sum" : true
-  },
-  {
     "column_name" : "data_termination_time",
     "column_type" : "timestamp without time zone",
     "required" : false,
     "check_sum" : true
   },
-  {
-    "column_name" : "data_termination_dt",
-    "column_type" : "date",
-    "required" : false,
-    "check_sum" : true
-  },
-  {
-    "column_name" : "data_termination_dt_num",
-    "column_type" : "integer",
-    "required" : false,
-    "check_sum" : true
-  },
+
   {
     "column_name" : "time_duration",
     "column_type" : "integer",
@@ -330,7 +307,7 @@
     "check_sum" : true
   },
   {
-    "column_name" : "used_units_before_tariff_plan_change",
+    "column_name" : "used_unit_bfr_tariff_plan_change",
     "column_type" : "bigint",
     "required" : false,
     "check_sum" : true
