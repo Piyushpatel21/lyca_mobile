@@ -179,7 +179,7 @@ class TopUpDataTransformation:
         """
 
         try:
-            self._logger.info("Generating derived columns for Voice data.")
+            self._logger.info("Generating derived columns for TopUp data.")
             transDF = df.withColumn("_temp_datetime_col",
                                     F.to_timestamp(df[self._cdr_time_stamp_col], self._cdr_time_stamp_col_format)) \
                 .withColumn("cdr_dt_month", F.date_format(F.col("_temp_datetime_col"), "yyyyMM").cast(IntegerType())) \
