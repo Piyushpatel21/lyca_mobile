@@ -12,7 +12,7 @@ from pyspark.sql import SparkSession
 from pyspark.sql.types import IntegerType
 from datetime import datetime
 from lycaSparkTransformation.DataTransformation import DataTransformation, SmsDataTransformation, \
-    VoiceDataTransformation, TopUpDataTransformation
+    VoiceDataTransformation, TopUpDataTransformation, GprsDataTransformation
 from lycaSparkTransformation.SchemaReader import SchemaReader
 from pyspark.sql import DataFrame
 from lycaSparkTransformation.JSONBuilder import JSONBuilder
@@ -77,6 +77,10 @@ class TransformActionChain:
                 topupModuleTransformation = TopUpDataTransformation()
                 df_source_with_datatype = topupModuleTransformation.convertTargetDataType(df_source_raw, srcSchema)
                 df_source = topupModuleTransformation.generateDerivedColumnsForTopUp(df_source_with_datatype)
+            elif self.property.get("subModule") == "gprs":
+                gprsModuleTransformation = GprsDataTransformation()
+                df_source_with_datatype = gprsModuleTransformation.convertTargetDataType(df_source_raw, srcSchema)
+                df_source = gprsModuleTransformation.generateDerivedColumnsForGprs(df_source_with_datatype)
             else:
                 df_source = df_source_raw
             s3_batchreadcount = df_source.agg(py_function.count('batch_id').cast(IntegerType()).alias('s3_batchreadcount')).rdd.flatMap(lambda row: row).collect()
