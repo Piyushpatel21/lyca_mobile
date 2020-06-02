@@ -13,7 +13,8 @@ from functools import reduce
 from dateutil.relativedelta import relativedelta
 from pyspark.sql import DataFrame, Window
 from pyspark.sql import functions as F
-from pyspark.sql.types import IntegerType, StringType, DoubleType, LongType, FloatType, DateType, TimestampType
+from pyspark.sql.types import IntegerType, StringType, DoubleType, LongType, FloatType, DateType, TimestampType, \
+    DecimalType
 from pyspark.sql.types import StructType, StructField
 
 from commonUtils.JsonProcessor import JsonProcessor
@@ -92,7 +93,7 @@ class SmsDataTransformation:
 
 class VoiceDataTransformation:
     """
-    Class to perform transformations on SMS data
+    Class to perform transformations on Voice data
     """
 
     def __init__(self):
@@ -102,7 +103,7 @@ class VoiceDataTransformation:
         self._call_date_col_format = "yyyyMMddHHmmss"
         self.time_zone = "Europe/London"
 
-    def generateDerivedColumnsForSms(self, df):
+    def generateDerivedColumnsForVoice(self, df):
         """
         Module to generate derived columns from dataframe
 
@@ -111,7 +112,7 @@ class VoiceDataTransformation:
         """
 
         try:
-            self._logger.info("Generating derived columns for SMS data.")
+            self._logger.info("Generating derived columns for Voice data.")
             transDF = df.withColumn("_temp_datetime_col",
                                     F.to_timestamp(df[self._call_date_col], self._call_date_col_format)) \
                 .withColumn("call_date_month", F.date_format(F.col("_temp_datetime_col"), "yyyyMM").cast(IntegerType())) \
@@ -128,8 +129,9 @@ class VoiceDataTransformation:
                             F.date_format(F.col("call_date_time_gmt"), "yyyyMMdd").cast(IntegerType())) \
                 .withColumn("call_date_hour_gmt",
                             F.date_format(F.col("call_date_time_gmt"), "yyyyMMddHH").cast(IntegerType())) \
-                .withColumn("call_duration_min", F.lit(F.col("call_date_time_gmt")).cast(IntegerType())) \
-                .withColumn("chargeable_used_time_min", F.lit(F.col("call_date_time_gmt")).cast(IntegerType())) \
+                .withColumn("call_duration_min", F.lit(F.col("call_duration") / 60).cast(DecimalType(22, 4))) \
+                .withColumn("chargeable_used_time_min",
+                            F.lit(F.col("chargeable_used_time") / 60).cast(DecimalType(22, 4))) \
                 .drop('_temp_datetime_col', '_temp_datetime_col_utc')
             return transDF
         except Exception as ex:
@@ -148,14 +150,106 @@ class VoiceDataTransformation:
         self._logger.info("Converting data type to required format")
 
         files_to_ignore = []
-        for elem in schema:
-            if elem.name == self._call_date_col:
-                new_df = new_df.withColumn(elem.name, F.to_timestamp(new_df[elem.name], self._call_date_col_format))
-            elif elem.name in self._date_cols:
-                new_df = new_df.withColumn(elem.name, F.to_date(new_df[elem.name], self._date_cols_format))
+        for column in schema:
+            if column.name == self._call_date_col:
+                new_df = new_df.withColumn(column.name, F.to_timestamp(new_df[column.name], self._call_date_col_format))
             else:
-                new_df = new_df.withColumn(elem.name, new_df[elem.name].cast(elem.dataType))
+                new_df = new_df.withColumn(column.name, new_df[column.name].cast(column.dataType))
         return new_df
+
+
+class TopUpDataTransformation:
+    """
+    Class to perform transformations on TopUp data
+    """
+
+    def __init__(self):
+        self._logger = Log4j().getLogger()
+        self._cdr_time_stamp_col = "cdr_time_stamp"
+        self._cdr_date_cols_format = "dd-MM-yyyy"
+        self._cdr_time_stamp_col_format = "yyyyMMddHHmmss"
+        self.time_zone = "Europe/London"
+
+    def generateDerivedColumnsForTopUp(self, df):
+        """
+        Module to generate derived columns from dataframe
+
+        :param df:
+        :return:
+        """
+
+        try:
+            self._logger.info("Generating derived columns for Voice data.")
+            transDF = df.withColumn("_temp_datetime_col",
+                                    F.to_timestamp(df[self._cdr_time_stamp_col], self._cdr_time_stamp_col_format)) \
+                .withColumn("cdr_dt_month", F.date_format(F.col("_temp_datetime_col"), "yyyyMM").cast(IntegerType())) \
+                .withColumn("cdr_dt", F.to_date(F.col("_temp_datetime_col"))) \
+                .withColumn("cdr_dt_num", F.date_format(F.col("_temp_datetime_col"), "yyyyMMdd").cast(IntegerType())) \
+                .withColumn("call_date_hour",
+                            F.date_format(F.col("_temp_datetime_col"), "yyyyMMddHH").cast(IntegerType())) \
+                .withColumn("_temp_datetime_col_utc",
+                            F.to_utc_timestamp(F.col("_temp_datetime_col"), F.lit(self.time_zone))) \
+                .withColumn("cdr_dt_gmt", F.from_utc_timestamp(F.col("_temp_datetime_col_utc"), "GMT")) \
+                .withColumn("cdr_dt_month_gmt",
+                            F.date_format(F.col("cdr_dt_gmt"), "yyyyMM").cast(IntegerType())) \
+                .withColumn("cdr_dt_num_gmt",
+                            F.date_format(F.col("cdr_dt_gmt"), "yyyyMMdd").cast(IntegerType())) \
+                .withColumn("cdr_dt_hour_gmt",
+                            F.date_format(F.col("cdr_dt_gmt"), "yyyyMMddHH").cast(IntegerType())) \
+                .drop('_temp_datetime_col', '_temp_datetime_col_utc')
+
+            ex_date_DF = transDF.withColumn("expiry_DATE_derived",
+                                            F.coalesce(transDF['Voucher_Onnet_Mins_ExpDt'],
+                                                       transDF['Voucher_Onnet_Sms_ExpDt'],
+                                                       transDF['Voucher_Offnet_Sms_ExpDt1'],
+                                                       transDF['Voucher_Offnet_Mins_ExpDt2'],
+                                                       transDF['Voucher_Offnet_Sms_ExpDt2'],
+                                                       transDF['Voucher_Offnet_Mins_ExpDt3'],
+                                                       transDF['Voucher_Offnet_Sms_ExpDt3'],
+                                                       transDF['Voucher_Free_DataExp'],
+                                                       transDF['Voucher_Onnet_MT_Expiry_date'],
+                                                       transDF['Voucher_Offnet_MT_Expiry_date'],
+                                                       transDF['Free_minutes_expiry_date'],
+                                                       transDF['Free_SMS_expiry_date'],
+                                                       transDF['Free_Offnet_Minutes_Expiry_Date'],
+                                                       transDF['Free_Offnet_SMS_Expiry_Date'],
+                                                       transDF['Free_OffNet2_Minutes_expiry_date'],
+                                                       transDF['Free_OffNet2_SMS_expiry_date'],
+                                                       transDF['Free_OffNet3_Minutes_expiry_date'],
+                                                       transDF['Free_OffNet3_SMS_expiry_date'],
+                                                       transDF['Free_Data_ExpiryDate']))
+
+            newExDF = ex_date_DF.withColumn("expiry_DATE_derived",
+                                            F.to_date(F.unix_timestamp(F.col('expiry_DATE_derived'), 'dd-MM-yyyy')
+                                                      .cast("timestamp")))
+            ex_date_num_DF = newExDF.withColumn("expiry_DATE_derived_num",
+                                                F.date_format(F.col("expiry_DATE_derived"), "yyyyMMdd")
+                                                .cast(IntegerType()))
+            return ex_date_num_DF
+        except Exception as ex:
+            self._logger.error("Failed to generate derived columns with error: {err}".format(err=ex))
+
+    def convertTargetDataType(self, df: DataFrame, schema: StructType):
+        """
+        Module to convert Data Type to required format
+
+        :param df: spark dataframe
+        :param schema: schema as StructType
+        :return:
+        """
+        # Drop whole file if error occur in converting
+        new_df = df
+        self._logger.info("Converting data type to required format")
+
+        files_to_ignore = []
+        for column in schema:
+            if column.name == self._cdr_time_stamp_col:
+                new_df = new_df.withColumn(column.name,
+                                           F.to_timestamp(new_df[column.name], self._cdr_time_stamp_col_format))
+            else:
+                new_df = new_df.withColumn(column.name, new_df[column.name].cast(column.dataType))
+        return new_df
+
 
 class DataTransformation:
 
@@ -292,7 +386,7 @@ class DataTransformation:
             self._logger.info("Identifying late and normal records within source")
             df_normalOrLate = dataFrame.withColumn("normalOrlate",
                                                    F.when(F.col(integerDateColumn) <= int(dateRange),
-                                                                    "Late").otherwise(
+                                                          "Late").otherwise(
                                                        "Normal"))
             return df_normalOrLate
         except Exception as ex:
