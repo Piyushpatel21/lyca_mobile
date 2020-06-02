@@ -65,7 +65,6 @@ def start_execution(args):
         sys.exit(1)
     logger.info("Running application for : run_date={run_date}, batch_id={batch_id}, prevDate={prevDate}"
                 .format(batch_id=batch_id, run_date=run_date, prevDate=prevDate))
-    propColumns = tf.srcSchema()
     try:
         duplicateData, lateUnique, normalUnique, recordCount = tf.getSourceData(batch_id, propColumns.get("srcSchema"), propColumns.get("checkSumColumns"))
         # normalDB, lateDB,  = tf.getDbDuplicate()

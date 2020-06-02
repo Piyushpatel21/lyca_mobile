@@ -60,8 +60,10 @@ class TransformActionChain:
 
     def getSourceData(self, batchid, srcSchema, checkSumColumns) -> Tuple[DataFrame, DataFrame, DataFrame, DataFrame]:
         self.logger.info("***** reading source data from s3 *****")
-        file_list = self.redshiftprop.getFileList(self.sparkSession, batchid)
-        path = self.property.get("sourceFilePath") + "/" + self.module.upper() + "/" + "UK" + "/" +self.subModule.upper() + "/" + self.run_date[:4] + "/" + self.run_date[4:6] + "/" + self.run_date[6:8] + "/"
+        # file_list = self.redshiftprop.getFileList(self.sparkSession, batchid)
+        file_list = ['SampleFile1Day1Batch1.csv', 'SampleFile1Day1Batch2.csv']
+        path = '/Users/narenk/PycharmProjects/lycamobile-etl-movements/phase2/pyspark_etl/RRBS/code/pythonlib/test/resources/'
+        # path = self.property.get("sourceFilePath") + "/" + self.module.upper() + "/" + "UK" + "/" +self.subModule.upper() + "/" + self.run_date[:4] + "/" + self.run_date[4:6] + "/" + self.run_date[6:8] + "/"
         try:
             df_source_raw = self.trans.readSourceFile(self.sparkSession, path, srcSchema, batchid, checkSumColumns, file_list)
             if self.property.get("subModule") == "sms":
@@ -79,32 +81,32 @@ class TransformActionChain:
             batch_status = 'Started'
             metaQuery = ("INSERT INTO uk_rrbs_dm.log_batch_status_rrbs (batch_id, s3_batchreadcount, s3_filecount, batch_status, batch_start_dt) values({batch_id},{s3_batchreadcount},{s3_filecount},'{batch_status}','{batch_start_dt}')"
                          .format(batch_id=batchid, s3_batchreadcount=''.join(str(e) for e in s3_batchreadcount), s3_filecount=''.join(str(e) for e in s3_filecount), batch_status=batch_status, batch_start_dt=self.batch_start_dt))
-            self.redshiftprop.writeBatchStatus(self.sparkSession, metaQuery)
+            # self.redshiftprop.writeBatchStatus(self.sparkSession, metaQuery)
             date_range = int(self.trans.getPrevRangeDate(self.run_date, self.property.get("normalcdrfrq"), self.property.get("numofdayormnthnormal")))
             lateOrNormalCdr = self.trans.getLateOrNormalCdr(df_source, self.property.get("integerDateColumn"), date_range)
             df_duplicate = self.trans.getDuplicates(lateOrNormalCdr, "rec_checksum")
             batch_status = 'In-Progress'
             intrabatch_dupl_count = df_duplicate.agg(py_function.count('batch_id').cast(IntegerType()).alias('intrabatch_dupl_count')).rdd.flatMap(lambda row: row).collect()
-            intrabatch_dist_dupl_count = df_duplicate.agg(py_function.approx_count_distinct('batch_id').cast(IntegerType()).alias('intrabatch_dist_dupl_count')).rdd.flatMap(lambda row: row).collect()
+            intrabatch_dist_dupl_count = df_duplicate.agg(py_function.approx_count_distinct('rec_checksum').cast(IntegerType()).alias('intrabatch_dist_dupl_count')).rdd.flatMap(lambda row: row).collect()
             metaQuery = ("update uk_rrbs_dm.log_batch_status_rrbs set intrabatch_dupl_count={intrabatch_dupl_count}, batch_status='{batch_status}', intrabatch_dist_dupl_count={intrabatch_dist_dupl_count} where batch_id={batch_id} and batch_end_dt is null"
                 .format(batch_id=batchid, batch_status=batch_status, intrabatch_dupl_count=''.join(str(e) for e in intrabatch_dupl_count), intrabatch_dist_dupl_count=''.join(str(e) for e in intrabatch_dist_dupl_count)))
-            self.redshiftprop.writeBatchStatus(self.sparkSession, metaQuery)
+            # self.redshiftprop.writeBatchStatus(self.sparkSession, metaQuery)
             df_unique_late = self.trans.getUnique(lateOrNormalCdr, "rec_checksum").filter("normalOrlate == 'Late'")
             intrabatch_late_count = df_unique_late.agg(py_function.count('batch_id').cast(IntegerType()).alias('intrabatch_late_count')).rdd.flatMap(lambda row: row).collect()
             metaQuery = ("update uk_rrbs_dm.log_batch_status_rrbs set intrabatch_late_count={intrabatch_late_count} where batch_id={batch_id} and batch_end_dt is null".format(batch_id=batchid, intrabatch_late_count=''.join(str(e) for e in intrabatch_late_count)))
-            self.redshiftprop.writeBatchStatus(self.sparkSession, metaQuery)
+            # self.redshiftprop.writeBatchStatus(self.sparkSession, metaQuery)
             df_unique_normal = self.trans.getUnique(lateOrNormalCdr, "rec_checksum").filter("normalOrlate == 'Normal'")
             intrabatch_new_count = df_unique_normal.agg(py_function.count('batch_id').cast(IntegerType()).alias('intrabatch_new_count')).rdd.flatMap(lambda row: row).collect()
             intrabatch_status = 'Complete'
             metaQuery = ("update uk_rrbs_dm.log_batch_status_rrbs set intrabatch_new_count={intrabatch_new_count}, intrabatch_status='{intrabatch_status}' where batch_id={batch_id} and batch_end_dt is null".format(batch_id=batchid, intrabatch_status=intrabatch_status, intrabatch_new_count=''.join(str(e) for e in intrabatch_new_count)))
-            self.redshiftprop.writeBatchStatus(self.sparkSession, metaQuery)
+            # self.redshiftprop.writeBatchStatus(self.sparkSession, metaQuery)
             self.logger.info("***** source data prepared for transformation *****")
             record_count = df_source.groupBy('filename').agg(py_function.count('batch_id').cast(IntegerType()).alias('record_count'))
             return df_duplicate, df_unique_late, df_unique_normal, record_count
         except Exception as ex:
             metaQuery = ("INSERT INTO uk_rrbs_dm.log_batch_status_rrbs (batch_id,batch_status, batch_start_dt, batch_end_dt) values({batch_id}, '{batch_status}', '{batch_start_dt}', '{batch_end_dt}')".format(batch_id=batchid, batch_status='Failed', batch_start_dt=self.batch_start_dt, batch_end_dt=datetime.now()))
-            self.redshiftprop.writeBatchStatus(self.sparkSession, metaQuery)
-            self.logger.error("Failed to create source data : {error}".format(error=ex))
+            # self.redshiftprop.writeBatchStatus(self.sparkSession, metaQuery)
+            # self.logger.error("Failed to create source data : {error}".format(error=ex))
 
     def getDbDuplicate(self) -> Tuple[DataFrame, DataFrame]:
         try:

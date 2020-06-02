@@ -88,6 +88,7 @@ class TransformActionChain:
             df_duplicate = self.trans.getDuplicates(lateOrNormalCdr, "rec_checksum")
             batch_status = 'In-Progress'
             intrabatch_dupl_count = df_duplicate.agg(py_function.count('batch_id').cast(IntegerType()).alias('intrabatch_dupl_count')).rdd.flatMap(lambda row: row).collect()
+            print(intrabatch_dupl_count)
             intrabatch_dist_dupl_count = df_duplicate.agg(py_function.approx_count_distinct('batch_id').cast(IntegerType()).alias('intrabatch_dist_dupl_count')).rdd.flatMap(lambda row: row).collect()
             metaQuery = ("update uk_rrbs_dm.log_batch_status_rrbs set intrabatch_dupl_count={intrabatch_dupl_count}, batch_status='{batch_status}', intrabatch_dist_dupl_count={intrabatch_dist_dupl_count} where batch_id={batch_id} and batch_end_dt is null"
                 .format(batch_id=batchid, batch_status=batch_status, intrabatch_dupl_count=''.join(str(e) for e in intrabatch_dupl_count), intrabatch_dist_dupl_count=''.join(str(e) for e in intrabatch_dist_dupl_count)))
