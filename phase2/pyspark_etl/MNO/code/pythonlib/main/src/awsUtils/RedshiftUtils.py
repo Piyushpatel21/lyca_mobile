@@ -95,7 +95,7 @@ class RedshiftUtils:
                 .option("url", self.jdbcUrl) \
                 .option("forward_spark_s3_credentials", "true") \
                 .option("query",
-                        "SELECT filename FROM uk_rrbs_dm.log_batch_files_rrbs where batch_id = {batch_id}".format(
+                        "SELECT file_name FROM uk_rrbs_dm.log_batch_files_rrbs where batch_id = {batch_id}".format(
                             batch_id=batchid)) \
                 .option("tempdir", self.redshiftTmpDir) \
                 .load()
@@ -143,7 +143,7 @@ class RedshiftUtils:
         def getMetadataDF() -> DataFrame:
             try:
                 self._logger.info("Updating Log Batch Files RRBS table :")
-                query = "SELECT batch_id, file_source, file_id, filename, batch_from, batch_to, is_valid, batch_createtime FROM uk_rrbs_dm.log_batch_files_rrbs WHERE batch_id ='{batchId}'".format(
+                query = "SELECT batch_id, file_source, file_id, file_name, batch_from, batch_to, is_valid, batch_createtime FROM uk_rrbs_dm.log_batch_files_rrbs WHERE batch_id ='{batchId}'".format(
                     batchId=batchId)
                 self._logger.info("Query {query}".format(query=query))
                 redshiftDF = sparkSession.read \
@@ -153,12 +153,12 @@ class RedshiftUtils:
                     .option("forward_spark_s3_credentials", "true") \
                     .option("tempdir", self.redshiftTmpDir) \
                     .load()
-                df = redshiftDF.join(metaDF, on='filename', how='inner')
-                return df.select(redshiftDF['batch_id'], redshiftDF['file_source'], redshiftDF['file_id'], redshiftDF['filename'], redshiftDF['batch_from'],
-                                 redshiftDF['batch_to'], metaDF['record_count'], metaDF['newrec_dm_count'], metaDF['latecdr_dm_count'],
-                                 metaDF['latecdr_lm_count'], metaDF['newrec_duplicate_count'],
-                                 metaDF['latecdr_duplicate_count'], redshiftDF['is_valid'],
-                                 redshiftDF['batch_createtime'])
+                df = redshiftDF.join(metaDF, on='FILE_NAME', how='inner')
+                return df.select(redshiftDF['BATCH_ID'], redshiftDF['FILE_SOURCE'], redshiftDF['FILE_ID'], redshiftDF['FILE_NAME'], redshiftDF['BATCH_FROM'],
+                                 redshiftDF['BATCH_TO'], metaDF['RECORD_COUNT'], metaDF['DM_NORMAL_COUNT'], metaDF['DM_LATECDR_COUNT'],
+                                 metaDF['LDM_LATECDR_COUNT'], metaDF['DM_NORMAL_DBDUPL_COUNT'],
+                                 metaDF['DM_LATECDR_DBDUPL_COUNT'], redshiftDF['IS_VALID'],
+                                 redshiftDF['BATCH_CREATETIME'])
 
             except Exception as ex:
                 self._logger.error("failed to read log_batch_status data from redshift : {error}".format(error=ex))
@@ -188,23 +188,23 @@ class RedshiftUtils:
         """
 
         schema = StructType(
-            [StructField('batch_id', IntegerType(), True),
-             StructField('s3_batchreadcount', IntegerType(), True),
-             StructField('s3_filecount', IntegerType(), True),
-             StructField('intrabatch_new_count', IntegerType(), True),
-             StructField('intrabatch_late_count', IntegerType(), True),
-             StructField('intrabatch_dupl_count', IntegerType(), True),
-             StructField('intrabatch_dist_dupl_count', IntegerType(), True),
-             StructField('intrabatch_status', StringType(), True),
-             StructField('dm_normal_count', IntegerType(), True),
-             StructField('dm_normal_dupl_count', IntegerType(), True),
-             StructField('dm_normal_status', StringType(), True),
-             StructField('ldm_latecdr_count', IntegerType(), True),
-             StructField('ldm_latecdr_dupl_count', IntegerType(), True),
-             StructField('ldm_latecdr_status', StringType(), True),
-             StructField('batch_start_dt', StringType(), True),
-             StructField('batch_end_dt', StringType(), True),
-             StructField('batch_status', StringType(), True)])
+            [StructField('BATCH_ID', IntegerType(), True),
+             StructField('S3_BATCHREADCOUNT', IntegerType(), True),
+             StructField('S3_FILECOUNT', IntegerType(), True),
+             StructField('INTRABATCH_NEW_NORMAL_COUNT', IntegerType(), True),
+             StructField('INTRABATCH_NEW_LATE_COUNT', IntegerType(), True),
+             StructField('INTRABATCH_DUPL_COUNT', IntegerType(), True),
+             StructField('INTRABATCH_DIST_DUPL_COUNT', IntegerType(), True),
+             StructField('INTRABATCH_DEDUPL_STATUS', StringType(), True),
+             StructField('DM_NORMAL_COUNT', IntegerType(), True),
+             StructField('DM_NORMAL_DBDUPL_COUNT', IntegerType(), True),
+             StructField('DM_NORMAL_STATUS', StringType(), True),
+             StructField('LDM_LATECDR_COUNT', IntegerType(), True),
+             StructField('LDM_LATECDR_DBDUPL_COUNT', IntegerType(), True),
+             StructField('LDM_LATECDR_STATUS', StringType(), True),
+             StructField('BATCH_START_DT', StringType(), True),
+             StructField('BATCH_END_DT', StringType(), True),
+             StructField('BATCH_STATUS', StringType(), True)])
 
         data = [(0, 0, 0, 0, 0, 0, 0, '', 0, 0, '', 0, 0, '', '2020-05-08 07:14:50', '2020-05-08 07:14:50', '')]
         rdd = sparkSession.sparkContext.parallelize(data)

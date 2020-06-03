@@ -11,8 +11,6 @@ def start_execution(args):
     lycaETL = LycaCommonETLLoad(args.get('module'), args.get('submodule'), args.get('configfile'), args.get('connfile'),
                                 args.get('master'), args.get('run_date'), args.get('batchID'))
     args = lycaETL.parseArguments()
-    batch_from = ''
-    batch_to = ''
     prevDate = datetime.now() + timedelta(days=-1)
     if not (args.get('run_date') and args.get('batchID')):
         run_date = prevDate.date().strftime('%Y%m%d')
@@ -24,17 +22,15 @@ def start_execution(args):
     sparkSessionBuild = SparkSessionBuilder(args.get('master'), appname).sparkSessionBuild()
     sparkSession = sparkSessionBuild.get("sparkSession")
     logger = sparkSessionBuild.get("logger")
-    tf = TransformActionChain(sparkSession, logger, args.get('module'), args.get('submodule'), configfile, connfile, run_date, batch_from, batch_to)
+    tf = TransformActionChain(sparkSession, logger, args.get('module'), args.get('submodule'), configfile, connfile, run_date, prevDate)
     if not (args.get('run_date') and args.get('batchID')):
-        batch_id = tf.getBatchID(sparkSession)
+        batch_id = tf.getBatchID()
     else:
         batch_id = args.get('batchID')
     if not batch_id:
-        logger.error("Batch ID not available for current timestamp : batch_from={batch_from}, batch_to={batch_to}".format(batch_from=batch_from, batch_to=batch_to))
+        logger.error("Batch ID not available for current timestamp run_date : ".format(run_date=run_date) )
         sys.exit(1)
-    logger.info("Running application for : run_date={run_date}, batch_id={batch_id}, batch_from={batch_from}, "
-                "batch_to={batch_to} "
-                .format(batch_id=batch_id, run_date=run_date, batch_from=batch_from, batch_to=batch_to))
+    logger.info("Running application for : run_date={run_date}, batch_id={batch_id}".format(batch_id=batch_id, run_date=run_date))
     propColumns = tf.srcSchema()
     print(propColumns.get("tgtSchema"))
     duplicateData, lateUnique, normalUnique, recordCount = tf.getSourceData(batch_id, propColumns.get("srcSchema"), propColumns.get("checkSumColumns"))

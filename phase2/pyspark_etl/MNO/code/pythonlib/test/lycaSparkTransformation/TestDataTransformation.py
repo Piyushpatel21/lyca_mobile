@@ -1,5 +1,9 @@
 from phase2.pyspark_etl.RRBS.code.pythonlib import SparkSessionBuilder
+<<<<<<< HEAD:phase2/pyspark_etl/MNO/code/pythonlib/test/lycaSparkTransformation/TestDataTransformation.py
 from phase2.pyspark_etl.RRBS.code.pythonlib.main.src.lycaSparkTransformation.DataTransformation import DataTransformation, SmsDataTransformation
+=======
+from phase2.pyspark_etl.RRBS.code.pythonlib import DataTransformation, SmsDataTransformation
+>>>>>>> reOrganizing_ss:phase2/pyspark_etl/RRBS/code/pythonlib/test/lycaSparkTransformation/TestDataTransformation.py
 from pyspark.sql.types import *
 from pyspark.sql.functions import col, monotonically_increasing_id, lit
 import datetime

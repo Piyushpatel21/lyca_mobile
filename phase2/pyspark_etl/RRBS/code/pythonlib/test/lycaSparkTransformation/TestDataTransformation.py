@@ -1,5 +1,6 @@
-from phase2.pyspark_etl.RRBS.code.pythonlib import SparkSessionBuilder
+from phase2.pyspark_etl.RRBS.code.pythonlib.main.src.lycaSparkTransformation.SparkSessionBuilder import SparkSessionBuilder
 from phase2.pyspark_etl.RRBS.code.pythonlib.main.src.lycaSparkTransformation.DataTransformation import DataTransformation, SmsDataTransformation
+
 from pyspark.sql.types import *
 from pyspark.sql.functions import col, monotonically_increasing_id, lit
 import datetime

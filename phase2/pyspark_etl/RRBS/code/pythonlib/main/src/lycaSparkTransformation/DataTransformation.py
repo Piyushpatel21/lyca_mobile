@@ -1,7 +1,8 @@
 ########################################################################
-# description     : Spark Transformation, Spark writer                 #                              #
+# description     : Spark Transformation, Spark writer                 #
 # author          : Naren K(narendra.kumar@cloudwick.com),             #
 #                   Tejveer Singh(tejveer.singh@cloudwick.com)         #
+#                   Bhavin Tandel(bhavin.tandel@cloudwick.com          #
 #                   Shubhajit Saha(shubhajit.saha@cloudwick.com)       #
 # contributor     :                                                    #
 # version         : 1.0                                                #
@@ -13,7 +14,8 @@ from functools import reduce
 from dateutil.relativedelta import relativedelta
 from pyspark.sql import DataFrame, Window
 from pyspark.sql import functions as F
-from pyspark.sql.types import IntegerType, StringType, DoubleType, LongType, FloatType, DateType, TimestampType
+from pyspark.sql.types import IntegerType, StringType, DoubleType, LongType, FloatType, DateType, TimestampType, \
+    DecimalType
 from pyspark.sql.types import StructType, StructField
 
 from commonUtils.JsonProcessor import JsonProcessor
@@ -92,7 +94,7 @@ class SmsDataTransformation:
 
 class VoiceDataTransformation:
     """
-    Class to perform transformations on SMS data
+    Class to perform transformations on Voice data
     """
 
     def __init__(self):
@@ -100,9 +102,11 @@ class VoiceDataTransformation:
         self._call_date_col = "call_date"
         self._date_cols_format = "dd-MM-yyyy"
         self._call_date_col_format = "yyyyMMddHHmmss"
+        self._timestamp_cols = ["call_DATE", "call_termination_time"]
+        self._timestamp_cols_format = "yyyyMMddHHmmss"
         self.time_zone = "Europe/London"
 
-    def generateDerivedColumnsForSms(self, df):
+    def generateDerivedColumnsForVoice(self, df):
         """
         Module to generate derived columns from dataframe
 
@@ -111,7 +115,7 @@ class VoiceDataTransformation:
         """
 
         try:
-            self._logger.info("Generating derived columns for SMS data.")
+            self._logger.info("Generating derived columns for Voice data.")
             transDF = df.withColumn("_temp_datetime_col",
                                     F.to_timestamp(df[self._call_date_col], self._call_date_col_format)) \
                 .withColumn("call_date_month", F.date_format(F.col("_temp_datetime_col"), "yyyyMM").cast(IntegerType())) \
@@ -128,8 +132,9 @@ class VoiceDataTransformation:
                             F.date_format(F.col("call_date_time_gmt"), "yyyyMMdd").cast(IntegerType())) \
                 .withColumn("call_date_hour_gmt",
                             F.date_format(F.col("call_date_time_gmt"), "yyyyMMddHH").cast(IntegerType())) \
-                .withColumn("call_duration_min", F.lit(F.col("call_date_time_gmt")).cast(IntegerType())) \
-                .withColumn("chargeable_used_time_min", F.lit(F.col("call_date_time_gmt")).cast(IntegerType())) \
+                .withColumn("call_duration_min", F.lit(F.col("call_duration") / 60).cast(DecimalType(22, 4))) \
+                .withColumn("chargeable_used_time_min",
+                            F.lit(F.col("chargeable_used_time") / 60).cast(DecimalType(22, 4))) \
                 .drop('_temp_datetime_col', '_temp_datetime_col_utc')
             return transDF
         except Exception as ex:
@@ -148,14 +153,225 @@ class VoiceDataTransformation:
         self._logger.info("Converting data type to required format")
 
         files_to_ignore = []
-        for elem in schema:
-            if elem.name == self._call_date_col:
-                new_df = new_df.withColumn(elem.name, F.to_timestamp(new_df[elem.name], self._call_date_col_format))
-            elif elem.name in self._date_cols:
-                new_df = new_df.withColumn(elem.name, F.to_date(new_df[elem.name], self._date_cols_format))
+        for column in schema:
+            if column.name == self._call_date_col:
+                new_df = new_df.withColumn(column.name, F.to_timestamp(new_df[column.name], self._call_date_col_format))
+            elif column.name in self._timestamp_cols:
+                new_df = new_df.withColumn(column.name, F.to_timestamp(new_df[column.name], self._timestamp_cols_format))
             else:
-                new_df = new_df.withColumn(elem.name, new_df[elem.name].cast(elem.dataType))
+                new_df = new_df.withColumn(column.name, new_df[column.name].cast(column.dataType))
         return new_df
+
+
+class TopUpDataTransformation:
+    """
+    Class to perform transformations on TopUp data
+    """
+
+    def __init__(self):
+        self._logger = Log4j().getLogger()
+        self._cdr_time_stamp_col = "cdr_time_stamp"
+        self._cdr_date_cols_format = "dd-MM-yyyy"
+        self._cdr_time_stamp_col_format = "yyyyMMddHHmmss"
+        self._timestamp_cols = ["bundle_start_DATE", "bundle_purchase_DATE"]
+        self._timestamp_cols_format = "yyyyMMddHHmmss"
+        self._date_cols = ["promo_validity_DATE", "free_minutes_expiry_DATE", "free_sms_expiry_DATE",
+                           "free_offnet_minutes_expiry_DATE", "free_offnet_sms_expiry_DATE",
+                           "free_offnet2_minutes_expiry_DATE", "free_offnet2_sms_expiry_DATE",
+                           "free_offnet3_minutes_expiry_DATE", "free_offnet3_sms_expiry_DATE",
+                           "free_data_expiryDATE", "account_validity_DATE", "voucher_onnet_mins_expdt",
+                           "voucher_onnet_sms_expdt", "voucher_offnet_mins_expdt1", "voucher_offnet_sms_expdt1",
+                           "voucher_offnet_mins_expdt2", "voucher_offnet_sms_expdt2", "voucher_offnet_mins_expdt3",
+                           "voucher_offnet_sms_expdt3", "voucher_free_dataexp", "voucher_onnet_mt_expiry_DATE",
+                           "onnet_mt_exp_dt", "offnet_mt_exp_dt", "voucher_offnet_mt_expiry_DATE", "contract_start_DATE"]
+        self._date_cols_format = "dd-MM-yyyy"
+        self.time_zone = "Europe/London"
+
+    def generateDerivedColumnsForTopUp(self, df):
+        """
+        Module to generate derived columns from dataframe
+
+        :param df:
+        :return:
+        """
+
+        try:
+            self._logger.info("Generating derived columns for TopUp data.")
+            transDF = df.withColumn("_temp_datetime_col",
+                                    F.to_timestamp(df[self._cdr_time_stamp_col], self._cdr_time_stamp_col_format)) \
+                .withColumn("cdr_dt_month", F.date_format(F.col("_temp_datetime_col"), "yyyyMM").cast(IntegerType())) \
+                .withColumn("cdr_dt", F.to_date(F.col("_temp_datetime_col"))) \
+                .withColumn("cdr_dt_num", F.date_format(F.col("_temp_datetime_col"), "yyyyMMdd").cast(IntegerType())) \
+                .withColumn("call_date_hour",
+                            F.date_format(F.col("_temp_datetime_col"), "yyyyMMddHH").cast(IntegerType())) \
+                .withColumn("_temp_datetime_col_utc",
+                            F.to_utc_timestamp(F.col("_temp_datetime_col"), F.lit(self.time_zone))) \
+                .withColumn("cdr_dt_gmt", F.from_utc_timestamp(F.col("_temp_datetime_col_utc"), "GMT")) \
+                .withColumn("cdr_dt_month_gmt",
+                            F.date_format(F.col("cdr_dt_gmt"), "yyyyMM").cast(IntegerType())) \
+                .withColumn("cdr_dt_num_gmt",
+                            F.date_format(F.col("cdr_dt_gmt"), "yyyyMMdd").cast(IntegerType())) \
+                .withColumn("cdr_dt_hour_gmt",
+                            F.date_format(F.col("cdr_dt_gmt"), "yyyyMMddHH").cast(IntegerType())) \
+                .drop('_temp_datetime_col', '_temp_datetime_col_utc')
+
+            ex_date_DF = transDF.withColumn("expiry_DATE_derived",
+                                            F.coalesce(transDF['Voucher_Onnet_Mins_ExpDt'],
+                                                       transDF['Voucher_Onnet_Sms_ExpDt'],
+                                                       transDF['Voucher_Offnet_Sms_ExpDt1'],
+                                                       transDF['Voucher_Offnet_Mins_ExpDt2'],
+                                                       transDF['Voucher_Offnet_Sms_ExpDt2'],
+                                                       transDF['Voucher_Offnet_Mins_ExpDt3'],
+                                                       transDF['Voucher_Offnet_Sms_ExpDt3'],
+                                                       transDF['Voucher_Free_DataExp'],
+                                                       transDF['Voucher_Onnet_MT_Expiry_date'],
+                                                       transDF['Voucher_Offnet_MT_Expiry_date'],
+                                                       transDF['Free_minutes_expiry_date'],
+                                                       transDF['Free_SMS_expiry_date'],
+                                                       transDF['Free_Offnet_Minutes_Expiry_Date'],
+                                                       transDF['Free_Offnet_SMS_Expiry_Date'],
+                                                       transDF['Free_OffNet2_Minutes_expiry_date'],
+                                                       transDF['Free_OffNet2_SMS_expiry_date'],
+                                                       transDF['Free_OffNet3_Minutes_expiry_date'],
+                                                       transDF['Free_OffNet3_SMS_expiry_date'],
+                                                       transDF['Free_Data_ExpiryDate']))
+
+            newExDF = ex_date_DF.withColumn("expiry_DATE_derived",
+                                            F.to_date(F.unix_timestamp(F.col('expiry_DATE_derived'), 'dd-MM-yyyy')
+                                                      .cast("timestamp")))
+            ex_date_num_DF = newExDF.withColumn("expiry_DATE_derived_num",
+                                                F.date_format(F.col("expiry_DATE_derived"), "yyyyMMdd")
+                                                .cast(IntegerType()))
+            return ex_date_num_DF
+        except Exception as ex:
+            self._logger.error("Failed to generate derived columns with error: {err}".format(err=ex))
+
+    def convertTargetDataType(self, df: DataFrame, schema: StructType):
+        """
+        Module to convert Data Type to required format
+
+        :param df: spark dataframe
+        :param schema: schema as StructType
+        :return:
+        """
+        # Drop whole file if error occur in converting
+        new_df = df
+        self._logger.info("Converting data type to required format")
+
+        files_to_ignore = []
+        for column in schema:
+            if column.name == self._cdr_time_stamp_col:
+                new_df = new_df.withColumn(column.name,
+                                           F.to_timestamp(new_df[column.name], self._cdr_time_stamp_col_format))
+            elif column.name in self._timestamp_cols:
+                new_df = new_df.withColumn(column.name,
+                                           F.to_timestamp(new_df[column.name], self._timestamp_cols_format))
+            elif column.name in self._date_cols:
+                new_df = new_df.withColumn(column.name,
+                                           F.to_timestamp(new_df[column.name], self._date_cols_format))
+            else:
+                new_df = new_df.withColumn(column.name, new_df[column.name].cast(column.dataType))
+        return new_df
+
+
+class GprsDataTransformation:
+    """
+    Class to perform transformations on GPRS data
+    """
+
+    def __init__(self):
+        self._logger = Log4j().getLogger()
+        self._data_connection_time_col = "data_connection_time"
+        self._data_termination_time_col = "data_termination_time"
+        self._data_connection_time_col_format = "yyyyMMddHHmmss"
+        self._data_termination_time_col_format = "yyyyMMddHHmmss"
+        self._timestamp_cols = ["data_connection_time", "data_termination_time", "cdr_time_stamp"]
+        self._timestamp_cols_format = "yyyyMMddHHmmss"
+        self._date_cols = ["free_data_expiry_DATE"]
+        self._date_cols_format = "dd-MM-yyyy"
+
+        self.time_zone = "Europe/London"
+
+    def generateDerivedColumnsForGprs(self, df):
+        """
+        Module to generate derived columns from dataframe
+
+        :param df:
+        :return:
+        """
+
+        try:
+            self._logger.info("Generating derived columns for GPRS data.")
+            transDF = df.withColumn("_temp_connection_dt_col",
+                                    F.to_timestamp(df[self._data_connection_time_col], self._data_connection_time_col_format)) \
+                .withColumn("_temp_termination_dt_col",
+                            F.to_timestamp(df[self._data_termination_time_col], self._data_termination_time_col_format)) \
+                .withColumn("data_connection_time", F.date_format(F.col("_temp_connection_dt_col"), "yyyyMM").cast(IntegerType())) \
+                .withColumn("data_connection", F.to_date(F.col("_temp_connection_dt_col"))) \
+                .withColumn("data_connection_dt_num", F.date_format(F.col("_temp_connection_dt_col"), "yyyyMMdd").cast(IntegerType())) \
+                .withColumn("data_connection_hour",
+                            F.date_format(F.col("_temp_connection_dt_col"), "yyyyMMddHH").cast(IntegerType())) \
+                .withColumn("data_termination_month",
+                            F.date_format(F.col("_temp_termination_dt_col"), "yyyyMM").cast(IntegerType())) \
+                .withColumn("data_termination_dt", F.to_date(F.col("_temp_termination_dt_col"))) \
+                .withColumn("data_termination_dt_num",
+                            F.date_format(F.col("_temp_termination_dt_col"), "yyyyMMdd").cast(IntegerType())) \
+                .withColumn("data_termination_hour",
+                            F.date_format(F.col("_temp_termination_dt_col"), "yyyyMMddHH").cast(IntegerType())) \
+                .withColumn("_temp_connection_dt_col_utc",
+                            F.to_utc_timestamp(F.col("_temp_connection_dt_col"), F.lit(self.time_zone))) \
+                .withColumn("_temp_termination_dt_col_utc",
+                            F.to_utc_timestamp(F.col("_temp_termination_dt_col"), F.lit(self.time_zone))) \
+                .withColumn("data_connection_time_gmt", F.from_utc_timestamp(F.col("_temp_connection_dt_col_utc"), "GMT")) \
+                .withColumn("data_connection_month_gmt",
+                            F.date_format(F.col("data_connection_time_gmt"), "yyyyMM").cast(IntegerType())) \
+                .withColumn("data_connection_dt_num_gmt",
+                            F.date_format(F.col("data_connection_time_gmt"), "yyyyMMdd").cast(IntegerType())) \
+                .withColumn("data_connection_hour_gmt",
+                            F.date_format(F.col("data_connection_time_gmt"), "yyyyMMddHH").cast(IntegerType())) \
+                .withColumn("data_termination_time_gmt",
+                            F.from_utc_timestamp(F.col("_temp_termination_dt_col_utc"), "GMT")) \
+                .withColumn("data_termination_month_gmt",
+                            F.date_format(F.col("data_termination_time_gmt"), "yyyyMM").cast(IntegerType())) \
+                .withColumn("data_termination_dt_num_gmt",
+                            F.date_format(F.col("data_termination_time_gmt"), "yyyyMMdd").cast(IntegerType())) \
+                .withColumn("data_termination_hour_gmt",
+                            F.date_format(F.col("data_termination_time_gmt"), "yyyyMMddHH").cast(IntegerType())) \
+                .withColumn("total_bytes", F.col("uploaded_bytes").cast(IntegerType()) + F.col("downloaded_bytes").cast(IntegerType())) \
+                .withColumn("total_usage_mb", F.lit(F.lit(F.col("total_bytes")/1024)/1024).cast(DecimalType(22, 6))) \
+                .withColumn("free_data_expiry_DATE_temp",
+                            F.to_date(F.unix_timestamp(F.col("free_data_expiry_DATE"), 'dd-MM-yyyy').cast("timestamp"))) \
+                .withColumn("free_data_expiry_DATE_num",
+                            F.date_format(F.col("free_data_expiry_DATE_temp"), "yyyyMMdd").cast(IntegerType())) \
+                .drop('_temp_connection_dt_col', '_temp_connection_dt_col_utc', '_temp_termination_dt_col',
+                      '_temp_termination_dt_col_utc', 'total_bytes', 'free_data_expiry_DATE_temp')
+
+            return transDF
+        except Exception as ex:
+            self._logger.error("Failed to generate derived columns with error: {err}".format(err=ex))
+
+    def convertTargetDataType(self, df: DataFrame, schema: StructType):
+        """
+        Module to convert Data Type to required format
+
+        :param df: spark dataframe
+        :param schema: schema as StructType
+        :return:
+        """
+        # Drop whole file if error occur in converting
+        new_df = df
+        self._logger.info("Converting data type to required format")
+
+        files_to_ignore = []
+        for column in schema:
+            if column.name in self._timestamp_cols:
+                new_df = new_df.withColumn(column.name, F.to_timestamp(new_df[column.name], self._timestamp_cols_format))
+            elif column.name in self._date_cols:
+                new_df = new_df.withColumn(column.name, F.to_timestamp(new_df[column.name], self._date_cols_format))
+            else:
+                new_df = new_df.withColumn(column.name, new_df[column.name].cast(column.dataType))
+        return new_df
+
 
 class DataTransformation:
 
@@ -292,7 +508,7 @@ class DataTransformation:
             self._logger.info("Identifying late and normal records within source")
             df_normalOrLate = dataFrame.withColumn("normalOrlate",
                                                    F.when(F.col(integerDateColumn) <= int(dateRange),
-                                                                    "Late").otherwise(
+                                                          "Late").otherwise(
                                                        "Normal"))
             return df_normalOrLate
         except Exception as ex:

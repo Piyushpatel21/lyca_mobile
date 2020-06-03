@@ -23,7 +23,7 @@ setup(
     packages=find_packages(where='code/pythonlib/main/src'),
     package_dir={'': 'code/pythonlib/main/src'},
     data_files=['Pipfile',
-                ('config', glob('code/config/*.json'))],
+                ('config', glob('RRBS/code/config/*.json'))],
     include_data_files=True,
     zip_safe=True,
     install_requires=requirements,

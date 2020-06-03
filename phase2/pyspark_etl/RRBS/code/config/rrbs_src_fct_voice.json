@@ -9,7 +9,7 @@
     "column_name" : "network_id",
     "column_type" : "integer",
     "required" : false,
-    "checkSum" : true
+	"checkSum" : true
   },
   {
     "column_name" : "call_type",
@@ -241,7 +241,7 @@
   },
   {
     "column_name" : "bundle_code",
-    "column_type" : "character varying(10)",
+    "column_type" : "character",
     "required" : false,
     "checkSum" : true
   },
@@ -253,31 +253,31 @@
   },
   {
     "column_name" : "ringing_duration",
-    "column_type" : "character varying(3)",
+    "column_type" : "character",
     "required" : false,
     "checkSum" : true
   },
   {
     "column_name" : "ring_indicator",
-    "column_type" : "character varying(1)",
+    "column_type" : "character",
     "required" : false,
     "checkSum" : true
   },
   {
     "column_name" : "national_bundle_code",
-    "column_type" : "character varying(10)",
+    "column_type" : "character",
     "required" : false,
     "checkSum" : true
   },
   {
     "column_name" : "national_used_minutes",
-    "column_type" : "character varying(10)",
+    "column_type" : "character",
     "required" : false,
     "checkSum" : true
   },
   {
     "column_name" : "national_charge",
-    "column_type" : "character varying(10)",
+    "column_type" : "character",
     "required" : false,
     "checkSum" : true
   },
@@ -289,43 +289,43 @@
   },
   {
     "column_name" : "bundle_used_seconds",
-    "column_type" : "character varying(10)",
+    "column_type" : "character",
     "required" : false,
     "checkSum" : true
   },
   {
     "column_name" : "bundle_call_charge",
-    "column_type" : "character varying(10)",
+    "column_type" : "character",
     "required" : false,
     "checkSum" : true
   },
   {
     "column_name" : "bundle_balance",
-    "column_type" : "character varying(10)",
+    "column_type" : "character",
     "required" : false,
     "checkSum" : true
   },
   {
     "column_name" : "bundle_plan_id",
-    "column_type" : "character varying(5)",
+    "column_type" : "character",
     "required" : false,
     "checkSum" : true
   },
   {
     "column_name" : "final_unit_indicator",
-    "column_type" : "character varying(1)",
+    "column_type" : "character",
     "required" : false,
     "checkSum" : true
   },
   {
     "column_name" : "ncall_free_units",
-    "column_type" : "character varying(10)",
+    "column_type" : "character",
     "required" : false,
     "checkSum" : true
   },
   {
     "column_name" : "local_roam_country_code",
-    "column_type" : "character varying(4)",
+    "column_type" : "character",
     "required" : false,
     "checkSum" : true
   },

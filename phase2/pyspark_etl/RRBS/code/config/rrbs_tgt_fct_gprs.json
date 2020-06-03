@@ -1,8 +1,5 @@
 [
   {
-    "column_name": "sk_rrbs_gprs"
-  },
-  {
     "column_name": "cdr_type"
   },
   {
@@ -68,21 +65,11 @@
   {
     "column_name": "data_connection_time"
   },
-  {
-    "column_name": "data_connection_dt"
-  },
-  {
-    "column_name": "data_connection_dt_num"
-  },
+
   {
     "column_name": "data_termination_time"
   },
-  {
-    "column_name": "data_termination_dt"
-  },
-  {
-    "column_name": "data_termination_dt_num"
-  },
+
   {
     "column_name": "time_duration"
   },
@@ -168,7 +155,7 @@
     "column_name": "tariff_plan_change_id"
   },
   {
-    "column_name": "used_units_before_tariff_plan_change"
+    "column_name": "used_unit_bfr_tariff_plan_change"
   },
   {
     "column_name": "family_account_id"
@@ -207,9 +194,6 @@
     "column_name": "roaming_partner_id"
   },
   {
-    "column_name": "roaming_partner_id"
-  },
-  {
     "column_name" : "fct_free_text_1"
   },
   {
@@ -240,9 +224,69 @@
     "column_name" : "fct_free_text_10"
   },
   {
+    "column_name": "data_connection_month"
+  },
+  {
+    "column_name": "data_connection_dt"
+  },
+  {
+    "column_name" : "data_connection_dt_num"
+  },
+  {
+    "column_name" : "data_connection_hour"
+  },
+  {
+    "column_name": "data_termination_month"
+  },
+  {
+    "column_name": "data_termination_dt"
+  },
+  {
+    "column_name": "data_termination_dt_num"
+  },
+  {
+    "column_name": "data_termination_hour"
+  },
+  {
+    "column_name": "data_connection_month_gmt"
+  },
+  {
+    "column_name": "data_connection_dt_num_gmt"
+  },
+  {
+    "column_name" : "data_connection_hour_gmt"
+  },
+  {
+    "column_name" : "data_connection_time_gmt"
+  },
+  {
+    "column_name": "data_termination_month_gmt"
+  },
+  {
+    "column_name": "data_termination_dt_num_gmt"
+  },
+  {
+    "column_name": "data_termination_hour_gmt"
+  },
+  {
+    "column_name": "data_termination_time_gmt"
+  },
+  {
+    "column_name" : "total_bytes_mb"
+  },
+  {
+    "column_name" : "free_data_expiry_DATE_num"
+  },
+  {
     "column_name": "filename"
   },
   {
-    "column_name": "checksum"
+    "column_name": "batch_id"
+  },
+  {
+    "column_name": "created_DATE"
+  },
+  {
+    "column_name": "rec_checksum"
   }
 ]

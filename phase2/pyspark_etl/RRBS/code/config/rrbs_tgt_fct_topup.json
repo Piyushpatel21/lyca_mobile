@@ -1,8 +1,5 @@
 [
   {
-    "column_name": "sk_rrbs_topup"
-  },
-  {
     "column_name": "operation_code"
   },
   {
@@ -261,12 +258,6 @@
     "column_name": "cdr_time_stamp"
   },
   {
-    "column_name": "cdr_dt"
-  },
-  {
-    "column_name": "cdr_dt_num"
-  },
-  {
     "column_name": "reservation"
   },
   {
@@ -492,6 +483,75 @@
     "column_name": "reserved_bundle_cost"
   },
   {
+    "column_name" : "fct_free_text_1"
+  },
+  {
+    "column_name" : "fct_free_text_2"
+  },
+  {
+    "column_name" : "fct_free_text_3"
+  },
+  {
+    "column_name" : "fct_free_text_4"
+  },
+  {
+    "column_name" : "fct_free_text_5"
+  },
+  {
+    "column_name" : "fct_free_text_6"
+  },
+  {
+    "column_name" : "fct_free_text_7"
+  },
+  {
+    "column_name" : "fct_free_text_8"
+  },
+  {
+    "column_name" : "fct_free_text_9"
+  },
+  {
+    "column_name" : "fct_free_text_10"
+  },
+  {
+    "column_name": "cdr_dt"
+  },
+  {
+    "column_name": "cdr_dt_month"
+  },
+  {
+    "column_name" : "cdr_dt_num"
+  },
+  {
+    "column_name" : "is_bundle_loyalty"
+  },
+  {
+    "column_name": "bundle_usage_1"
+  },
+  {
+    "column_name": "bundle_usage_2"
+  },
+  {
+    "column_name": "cdr_dt_gmt"
+  },
+  {
+    "column_name": "cdr_dt_month_gmt"
+  },
+  {
+    "column_name": "cdr_dt_num_gmt"
+  },
+  {
+    "column_name": "cdr_dt_hour_gmt"
+  },
+  {
+    "column_name" : "expiry_date_derived"
+  },
+  {
+    "column_name" : "expiry_date_derived_num"
+  },
+  {
+    "column_name": "expiry_date_month_derived"
+  },
+  {
     "column_name": "filename"
   },
   {
@@ -499,5 +559,9 @@
   },
   {
     "column_name": "created_date"
+  },
+  {
+    "column_name": "rec_checksum"
   }
+
 ]
