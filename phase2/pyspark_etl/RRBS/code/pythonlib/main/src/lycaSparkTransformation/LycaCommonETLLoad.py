@@ -19,7 +19,7 @@ class LycaCommonETLLoad:
        :parameter sub-module
        :parameter application property file path"""
 
-    def __init__(self, module, submodule, configfile, connfile, master, run_date=None, batchID= None):
+    def __init__(self, module, submodule, configfile, connfile, master, code_bucket, run_date=None, batchID= None):
         self.batchID = batchID
         self.module = module
         self.submodule = submodule
@@ -27,6 +27,7 @@ class LycaCommonETLLoad:
         self.connfile = connfile
         self.master = master
         self.run_date = run_date
+        self.code_bucket = code_bucket
 
     def parseArguments(self):
         return {
@@ -36,13 +37,16 @@ class LycaCommonETLLoad:
             "configfile": self.configfile,
             "connfile": self.connfile,
             "master": self.master,
-            "batchID": self.batchID
+            "batchID": self.batchID,
+            "code_bucket": self.code_bucket
         }
 
 
 def start_execution(args):
-    lycaETL = LycaCommonETLLoad(args.get('module'), args.get('submodule'), args.get('configfile'), args.get('connfile'),
-                                args.get('master'), args.get('run_date'), args.get('batchID'))
+    lycaETL = LycaCommonETLLoad(module=args.get('module'), submodule=args.get('submodule'),
+                                configfile=args.get('configfile'), connfile=args.get('connfile'),
+                                master=args.get('master'), code_bucket=args.get('code_bucket'),
+                                run_date=args.get('run_date'), batchID=args.get('batchID'))
     args = lycaETL.parseArguments()
     prevDate = datetime.now() + timedelta(days=-1)
     if not (args.get('run_date') and args.get('batchID')):
@@ -55,7 +59,8 @@ def start_execution(args):
     sparkSessionBuild = SparkSessionBuilder(args.get('master'), appname).sparkSessionBuild()
     sparkSession = sparkSessionBuild.get("sparkSession")
     logger = sparkSessionBuild.get("logger")
-    tf = TransformActionChain(sparkSession, logger, args.get('module'), args.get('submodule'), configfile, connfile, run_date, prevDate)
+    tf = TransformActionChain(sparkSession, logger, args.get('module'), args.get('submodule'),
+                              configfile, connfile, run_date, prevDate, args.get('code_bucket'))
     if not (args.get('run_date') and args.get('batchID')):
         batch_id = tf.getBatchID()
     else:
@@ -94,3 +99,4 @@ def start_execution(args):
     except Exception as ex:
         logger.error("ETL processing failed for batch - {batch_id} : {error}".format(error=ex, batch_id=batch_id))
         tf.writeBatchStatus(batch_id, "Failed")
+        raise Exception(ex)
