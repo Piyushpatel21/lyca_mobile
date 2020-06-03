@@ -12,7 +12,7 @@ with open("README.md", "r+") as f:
     long_description = f.read()
 
 setup(
-    name="lycaetl",
+    name="lycaetl-mno",
     version="1.0.0",
     author="Cloudwick Technologies UK",
     author_email="bhavin.tandel@cloudwick.com",
@@ -23,7 +23,7 @@ setup(
     packages=find_packages(where='code/pythonlib/main/src'),
     package_dir={'': 'code/pythonlib/main/src'},
     data_files=['Pipfile',
-                ('config', glob('RRBS/code/config/*.json'))],
+                ('config', glob('MNO/code/config/*.json'))],
     include_data_files=True,
     zip_safe=True,
     install_requires=requirements,
