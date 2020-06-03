@@ -12,7 +12,7 @@ To add external libs zip and temp directory, json should consist of,
   }
 ```
 
-Template can be found [here](./glue_job_config_template.json)
+Template can be found [here](glue_job_config_template.json)
 
 ## Create Glue job
 
