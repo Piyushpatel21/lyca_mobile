@@ -271,7 +271,7 @@
   },
   {
     "column_name" : "imei",
-    "column_type" : "character varying(25)",
+    "column_type" : "character",
     "required" : false,
     "checkSum" : true
   },
@@ -331,13 +331,13 @@
   },
   {
     "column_name" : "retailer_msisdn",
-    "column_type" : "character varying(21)",
+    "column_type" : "character",
     "required" : false,
     "checkSum" : true
   },
   {
     "column_name" : "staff_msisdn",
-    "column_type" : "character varying(21)",
+    "column_type" : "character",
     "required" : false,
     "checkSum" : true
   },
@@ -451,7 +451,7 @@
   },
   {
     "column_name" : "parent_msisdn",
-    "column_type" : "character varying(25)",
+    "column_type" : "character",
     "required" : false,
     "checkSum" : true
   },
@@ -475,13 +475,13 @@
   },
   {
     "column_name" : "accid",
-    "column_type" : "character varying(10)",
+    "column_type" : "character",
     "required" : false,
     "checkSum" : true
   },
   {
     "column_name" : "deptid",
-    "column_type" : "character varying(10)",
+    "column_type" : "character",
     "required" : false,
     "checkSum" : true
   },
