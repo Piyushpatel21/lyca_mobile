@@ -22,19 +22,21 @@ from pyspark.sql import functions as py_function
 
 
 class TransformActionChain:
-    def __init__(self, sparkSession: SparkSession, logger, module, subModule, configfile, connfile, run_date, prevDate):
+    def __init__(self, sparkSession: SparkSession, logger, module, subModule, configfile, connfile, run_date, prevDate, code_bucket):
         self.sparkSession = sparkSession
         self.logger = logger
         self.module = module
         self.subModule = subModule
-        self.configfile = AwsReader.s3ReadFile('s3', 'aws-glue-temporary-484320814466-eu-west-2', configfile)
-        self.connfile = AwsReader.s3ReadFile('s3', 'aws-glue-temporary-484320814466-eu-west-2', connfile)
+        self.code_bucket = code_bucket
+        self.configfile = AwsReader.s3ReadFile('s3', self.code_bucket, configfile)
+        self.connfile = AwsReader.s3ReadFile('s3', self.code_bucket, connfile)
         self.trans = DataTransformation()
         self.run_date = run_date
         self.prevDate = prevDate
         self.jsonParser = JSONBuilder(self.module, self.subModule, self.configfile, self.connfile)
         self.property = self.jsonParser.getAppPrpperty()
         self.connpropery = self.jsonParser.getConnPrpperty()
+
         self.redshiftprop = RedshiftUtils(self.connpropery.get("host"), self.connpropery.get("port"), self.connpropery.get("domain"),
                                           self.connpropery.get("user"), self.connpropery.get("password"), self.connpropery.get("tmpdir"))
         self.batch_start_dt = datetime.now()
@@ -45,10 +47,10 @@ class TransformActionChain:
     def srcSchema(self):
         try:
             self.logger.info("***** generating src, target and checksum schema *****")
-            srcSchemaFilePath = AwsReader.s3ReadFile('s3', 'aws-glue-temporary-484320814466-eu-west-2', self.property.get("srcSchemaPath"))
+            srcSchemaFilePath = AwsReader.s3ReadFile('s3', self.code_bucket, self.property.get("srcSchemaPath"))
             schema = SchemaReader.structTypemapping(srcSchemaFilePath)
             checkSumColumns = self.trans.getCheckSumColumns(srcSchemaFilePath)
-            tgtSchemaPath = AwsReader.s3ReadFile('s3', 'aws-glue-temporary-484320814466-eu-west-2', self.property.get("tgtSchemaPath"))
+            tgtSchemaPath = AwsReader.s3ReadFile('s3', self.code_bucket, self.property.get("tgtSchemaPath"))
             tgtColumns = self.trans.getTgtColumns(tgtSchemaPath)
             self.logger.info("***** return src, target and checksum schema *****")
             return {
