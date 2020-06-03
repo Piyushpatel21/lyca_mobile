@@ -39,14 +39,6 @@ class LycaCommonETLLoad:
             "batchID": self.batchID
         }
 
-    def hourRounder(self, t):
-        # Rounds to nearest hour by adding a timedelta hour if minute >= 30
-        return (t.replace(second=0, microsecond=0, minute=0, hour=t.hour)
-                + timedelta(hours=t.minute // 30))
-
-    def getTimeInterval(self, now):
-        return now + timedelta(hours=6)
-
 
 def start_execution(args):
     lycaETL = LycaCommonETLLoad(args.get('module'), args.get('submodule'), args.get('configfile'), args.get('connfile'),
@@ -83,11 +75,13 @@ def start_execution(args):
                                 .join(normalcdr_dupl_count, on='filename', how='left_outer') \
                                 .join(latecdr_count, on='filename', how='left_outer') \
                                 .join(latecdr_dupl_count, on='filename', how='left_outer') \
+                                .withColumnRenamed('filename', 'FILE_NAME') \
                                 .na.fill(0)
         # print("We are processing normalNew={normalNew}, lateNew={lateNew}, lateDuplicate={lateDuplicate}, "
         #       "duplicateData={duplicateData}, normalDuplicate={normalDuplicate}, lateNew={lateNew}"
         #       .format(normalNew=normalNew.count(), lateNew=lateNew.count(), lateDuplicate=lateDuplicate.count(),
         #               duplicateData=duplicateData.count(), normalDuplicate=normalDuplicate.count()))
+        # dfmetadata.show(20, False)
         tf.writeBatchFileStatus(dfmetadata, batch_id)
         tf.writetoDuplicateCDR(duplicateData, propColumns.get("tgtSchema"))
         tf.writetoDuplicateCDR(lateDuplicate, propColumns.get("tgtSchema"))
