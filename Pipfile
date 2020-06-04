@@ -4,8 +4,11 @@ url = "https://pypi.org/simple"
 verify_ssl = true
 
 [dev-packages]
+pyspark = "==2.4.3"
+pytest = "==4.6.0"
+pytest-cov = ">=2.8.1"
+mock = "*"
+pipenv = "*"
 
 [packages]
 
-[requires]
-python_version = "3.6"
