@@ -303,12 +303,15 @@ class GprsDataTransformation:
         try:
             self._logger.info("Generating derived columns for GPRS data.")
             transDF = df.withColumn("_temp_connection_dt_col",
-                                    F.to_timestamp(df[self._data_connection_time_col], self._data_connection_time_col_format)) \
+                                    F.to_timestamp(df[self._data_connection_time_col],
+                                                   self._data_connection_time_col_format)) \
                 .withColumn("_temp_termination_dt_col",
                             F.to_timestamp(df[self._data_termination_time_col], self._data_termination_time_col_format)) \
-                .withColumn("data_connection_time", F.date_format(F.col("_temp_connection_dt_col"), "yyyyMM").cast(IntegerType())) \
-                .withColumn("data_connection", F.to_date(F.col("_temp_connection_dt_col"))) \
-                .withColumn("data_connection_dt_num", F.date_format(F.col("_temp_connection_dt_col"), "yyyyMMdd").cast(IntegerType())) \
+                .withColumn("data_connection_month",
+                            F.date_format(F.col("_temp_connection_dt_col"), "yyyyMM").cast(IntegerType())) \
+                .withColumn("data_connection_dt", F.to_date(F.col("_temp_connection_dt_col"))) \
+                .withColumn("data_connection_dt_num",
+                            F.date_format(F.col("_temp_connection_dt_col"), "yyyyMMdd").cast(IntegerType())) \
                 .withColumn("data_connection_hour",
                             F.date_format(F.col("_temp_connection_dt_col"), "yyyyMMddHH").cast(IntegerType())) \
                 .withColumn("data_termination_month",
@@ -322,7 +325,8 @@ class GprsDataTransformation:
                             F.to_utc_timestamp(F.col("_temp_connection_dt_col"), F.lit(self.time_zone))) \
                 .withColumn("_temp_termination_dt_col_utc",
                             F.to_utc_timestamp(F.col("_temp_termination_dt_col"), F.lit(self.time_zone))) \
-                .withColumn("data_connection_time_gmt", F.from_utc_timestamp(F.col("_temp_connection_dt_col_utc"), "GMT")) \
+                .withColumn("data_connection_time_gmt",
+                            F.from_utc_timestamp(F.col("_temp_connection_dt_col_utc"), "GMT")) \
                 .withColumn("data_connection_month_gmt",
                             F.date_format(F.col("data_connection_time_gmt"), "yyyyMM").cast(IntegerType())) \
                 .withColumn("data_connection_dt_num_gmt",
@@ -337,8 +341,9 @@ class GprsDataTransformation:
                             F.date_format(F.col("data_termination_time_gmt"), "yyyyMMdd").cast(IntegerType())) \
                 .withColumn("data_termination_hour_gmt",
                             F.date_format(F.col("data_termination_time_gmt"), "yyyyMMddHH").cast(IntegerType())) \
-                .withColumn("total_bytes", F.col("uploaded_bytes").cast(IntegerType()) + F.col("downloaded_bytes").cast(IntegerType())) \
-                .withColumn("total_usage_mb", F.lit(F.lit(F.col("total_bytes")/1024)/1024).cast(DecimalType(22, 6))) \
+                .withColumn("total_bytes",
+                            F.col("uploaded_bytes").cast(IntegerType()) + F.col("downloaded_bytes").cast(IntegerType())) \
+                .withColumn("total_usage_mb", F.lit(F.lit(F.col("total_bytes") / 1024) / 1024).cast(DecimalType(22, 6))) \
                 .withColumn("free_data_expiry_DATE_temp",
                             F.to_date(F.unix_timestamp(F.col("free_data_expiry_DATE"), 'dd-MM-yyyy').cast("timestamp"))) \
                 .withColumn("free_data_expiry_DATE_num",
