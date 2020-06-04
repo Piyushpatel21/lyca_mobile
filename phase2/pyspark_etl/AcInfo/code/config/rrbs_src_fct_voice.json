@@ -1,0 +1,632 @@
+[
+  {
+    "column_name" : "voice_call_cdr",
+    "column_type" : "integer",
+    "required" : false,
+    "checkSum" : true
+  },
+  {
+    "column_name" : "network_id",
+    "column_type" : "integer",
+    "required" : false,
+	"checkSum" : true
+  },
+  {
+    "column_name" : "call_type",
+    "column_type" : "integer",
+    "required" : false,
+    "checkSum" : true
+  },
+  {
+    "column_name" : "call_feature",
+    "column_type" : "integer",
+    "required" : false,
+    "checkSum" : true
+  },
+  {
+    "column_name" : "tariffplan_id",
+    "column_type" : "integer",
+    "required" : false,
+    "checkSum" : true
+  },
+  {
+    "column_name" : "service_id",
+    "column_type" : "integer",
+    "required" : false,
+    "checkSum" : true
+  },
+  {
+    "column_name" : "cli",
+    "column_type" : "bigint",
+    "required" : false,
+    "checkSum" : true
+  },
+  {
+    "column_name" : "dialed_number",
+    "column_type" : "character",
+    "required" : false,
+    "checkSum" : true
+  },
+  {
+    "column_name" : "charged_party_number",
+    "column_type" : "bigint",
+    "required" : false,
+    "checkSum" : true
+  },
+  {
+    "column_name" : "imsi",
+    "column_type" : "bigint",
+    "required" : false,
+    "checkSum" : true
+  },
+  {
+    "column_name" : "serving_node",
+    "column_type" : "bigint",
+    "required" : false,
+    "checkSum" : true
+  },
+  {
+    "column_name" : "mcc",
+    "column_type" : "integer",
+    "required" : false,
+    "checkSum" : true
+  },
+  {
+    "column_name" : "mnc",
+    "column_type" : "integer",
+    "required" : false,
+    "checkSum" : true
+  },
+  {
+    "column_name" : "lac",
+    "column_type" : "integer",
+    "required" : false,
+    "checkSum" : true
+  },
+  {
+    "column_name" : "calling_cell_id",
+    "column_type" : "integer",
+    "required" : false,
+    "checkSum" : true
+  },
+  {
+    "column_name" : "cellzone_code",
+    "column_type" : "character",
+    "required" : false,
+    "checkSum" : true
+  },
+  {
+    "column_name" : "cellzone_name",
+    "column_type" : "character",
+    "required" : false,
+    "checkSum" : true
+  },
+  {
+    "column_name" : "original_dialed_number",
+    "column_type" : "bigint",
+    "required" : false,
+    "checkSum" : true
+  },
+  {
+    "column_name" : "destination_zone",
+    "column_type" : "integer",
+    "required" : false,
+    "checkSum" : true
+  },
+  {
+    "column_name" : "destination_area_code",
+    "column_type" : "bigint",
+    "required" : false,
+    "checkSum" : true
+  },
+  {
+    "column_name" : "destinationzone_name",
+    "column_type" : "character",
+    "required" : false,
+    "checkSum" : true
+  },
+  {
+    "column_name" : "roaming_area_code",
+    "column_type" : "character",
+    "required" : false,
+    "checkSum" : true
+  },
+  {
+    "column_name" : "roaming_zone_name",
+    "column_type" : "character",
+    "required" : false,
+    "checkSum" : true
+  },
+  {
+    "column_name" : "roam_flag",
+    "column_type" : "smallint",
+    "required" : false,
+    "checkSum" : true
+  },
+  {
+    "column_name" : "roam_area_number",
+    "column_type" : "integer",
+    "required" : false,
+    "checkSum" : true
+  },
+  {
+    "column_name" : "granted_time",
+    "column_type" : "integer",
+    "required" : false,
+    "checkSum" : true
+  },
+  {
+    "column_name" : "granted_money",
+    "column_type" : "numeric",
+    "required" : false,
+    "checkSum" : true
+  },
+  {
+    "column_name" : "call_duration",
+    "column_type" : "integer",
+    "required" : false,
+    "checkSum" : true
+  },
+  {
+    "column_name" : "chargeable_used_time",
+    "column_type" : "integer",
+    "required" : false,
+    "checkSum" : true
+  },
+  {
+    "column_name" : "call_date",
+    "column_type" : "timestamp without time zone",
+    "required" : false,
+    "checkSum" : true
+  },
+  {
+    "column_name" : "call_termination_time",
+    "column_type" : "timestamp without time zone",
+    "required" : false,
+    "checkSum" : true
+  },
+  {
+    "column_name" : "initial_account_balance",
+    "column_type" : "numeric",
+    "required" : false,
+    "checkSum" : true
+  },
+  {
+    "column_name" : "talk_charge",
+    "column_type" : "numeric",
+    "required" : false,
+    "checkSum" : true
+  },
+  {
+    "column_name" : "balance",
+    "column_type" : "numeric",
+    "required" : false,
+    "checkSum" : true
+  },
+  {
+    "column_name" : "free_minutes_account_balance",
+    "column_type" : "numeric",
+    "required" : false,
+    "checkSum" : true
+  },
+  {
+    "column_name" : "account_id",
+    "column_type" : "integer",
+    "required" : false,
+    "checkSum" : true
+  },
+  {
+    "column_name" : "dept_id",
+    "column_type" : "integer",
+    "required" : false,
+    "checkSum" : true
+  },
+  {
+    "column_name" : "free_zone_id",
+    "column_type" : "integer",
+    "required" : false,
+    "checkSum" : true
+  },
+  {
+    "column_name" : "trace_id",
+    "column_type" : "character",
+    "required" : false,
+    "checkSum" : true
+  },
+  {
+    "column_name" : "last_topup_type",
+    "column_type" : "smallint",
+    "required" : false,
+    "checkSum" : true
+  },
+  {
+    "column_name" : "bundle_code",
+    "column_type" : "character",
+    "required" : false,
+    "checkSum" : true
+  },
+  {
+    "column_name" : "free_zone_expiry_date",
+    "column_type" : "character",
+    "required" : false,
+    "checkSum" : true
+  },
+  {
+    "column_name" : "ringing_duration",
+    "column_type" : "character",
+    "required" : false,
+    "checkSum" : true
+  },
+  {
+    "column_name" : "ring_indicator",
+    "column_type" : "character",
+    "required" : false,
+    "checkSum" : true
+  },
+  {
+    "column_name" : "national_bundle_code",
+    "column_type" : "character",
+    "required" : false,
+    "checkSum" : true
+  },
+  {
+    "column_name" : "national_used_minutes",
+    "column_type" : "character",
+    "required" : false,
+    "checkSum" : true
+  },
+  {
+    "column_name" : "national_charge",
+    "column_type" : "character",
+    "required" : false,
+    "checkSum" : true
+  },
+  {
+    "column_name" : "pool_number",
+    "column_type" : "character",
+    "required" : false,
+    "checkSum" : true
+  },
+  {
+    "column_name" : "bundle_used_seconds",
+    "column_type" : "character",
+    "required" : false,
+    "checkSum" : true
+  },
+  {
+    "column_name" : "bundle_call_charge",
+    "column_type" : "character",
+    "required" : false,
+    "checkSum" : true
+  },
+  {
+    "column_name" : "bundle_balance",
+    "column_type" : "character",
+    "required" : false,
+    "checkSum" : true
+  },
+  {
+    "column_name" : "bundle_plan_id",
+    "column_type" : "character",
+    "required" : false,
+    "checkSum" : true
+  },
+  {
+    "column_name" : "final_unit_indicator",
+    "column_type" : "character",
+    "required" : false,
+    "checkSum" : true
+  },
+  {
+    "column_name" : "ncall_free_units",
+    "column_type" : "character",
+    "required" : false,
+    "checkSum" : true
+  },
+  {
+    "column_name" : "local_roam_country_code",
+    "column_type" : "character",
+    "required" : false,
+    "checkSum" : true
+  },
+  {
+    "column_name" : "cdr_time_stamp",
+    "column_type" : "timestamp without time zone",
+    "required" : false,
+    "checkSum" : true
+  },
+  {
+    "column_name" : "bucket_type",
+    "column_type" : "integer",
+    "required" : false,
+    "checkSum" : true
+  },
+  {
+    "column_name" : "conversion_unit",
+    "column_type" : "character",
+    "required" : false,
+    "checkSum" : true
+  },
+  {
+    "column_name" : "intial_free_units",
+    "column_type" : "integer",
+    "required" : false,
+    "checkSum" : true
+  },
+  {
+    "column_name" : "subscriber_type",
+    "column_type" : "integer",
+    "required" : false,
+    "checkSum" : true
+  },
+  {
+    "column_name" : "call_forwarding_indicator",
+    "column_type" : "integer",
+    "required" : false,
+    "checkSum" : true
+  },
+  {
+    "column_name" : "cdr_sequence_number",
+    "column_type" : "integer",
+    "required" : false,
+    "checkSum" : true
+  },
+  {
+    "column_name" : "sub_acct_id",
+    "column_type" : "integer",
+    "required" : false,
+    "checkSum" : true
+  },
+  {
+    "column_name" : "announcement_time",
+    "column_type" : "integer",
+    "required" : false,
+    "checkSum" : true
+  },
+  {
+    "column_name" : "family_id",
+    "column_type" : "integer",
+    "required" : false,
+    "checkSum" : true
+  },
+  {
+    "column_name" : "idp_time",
+    "column_type" : "character",
+    "required" : false,
+    "checkSum" : true
+  },
+  {
+    "column_name" : "cs_free_mins",
+    "column_type" : "character",
+    "required" : false,
+    "checkSum" : true
+  },
+  {
+    "column_name" : "free_units_detected",
+    "column_type" : "integer",
+    "required" : false,
+    "checkSum" : true
+  },
+  {
+    "column_name" : "multileg_charging_flag",
+    "column_type" : "integer",
+    "required" : false,
+    "checkSum" : true
+  },
+  {
+    "column_name" : "extension_record",
+    "column_type" : "integer",
+    "required" : false,
+    "checkSum" : true
+  },
+  {
+    "column_name" : "connect_number",
+    "column_type" : "character",
+    "required" : false,
+    "checkSum" : true
+  },
+  {
+    "column_name" : "dialed_number1",
+    "column_type" : "character",
+    "required" : false,
+    "checkSum" : true
+  },
+  {
+    "column_name" : "service_description",
+    "column_type" : "character",
+    "required" : false,
+    "checkSum" : true
+  },
+  {
+    "column_name" : "alternate_plan_id",
+    "column_type" : "character",
+    "required" : false,
+    "checkSum" : true
+  },
+  {
+    "column_name" : "serving_node_name",
+    "column_type" : "character",
+    "required" : false,
+    "checkSum" : true
+  },
+  {
+    "column_name" : "fixed_charge",
+    "column_type" : "integer",
+    "required" : false,
+    "checkSum" : true
+  },
+  {
+    "column_name" : "fixed_charge_resource_impact",
+    "column_type" : "character",
+    "required" : false,
+    "checkSum" : true
+  },
+  {
+    "column_name" : "bundle_version_name",
+    "column_type" : "character",
+    "required" : false,
+    "checkSum" : true
+  },
+  {
+    "column_name" : "flh_reward_slab_id",
+    "column_type" : "integer",
+    "required" : false,
+    "checkSum" : true
+  },
+  {
+    "column_name" : "bundle_version_id",
+    "column_type" : "integer",
+    "required" : false,
+    "checkSum" : true
+  },
+  {
+    "column_name" : "rate_id",
+    "column_type" : "character",
+    "required" : false,
+    "checkSum" : true
+  },
+  {
+    "column_name" : "pricing_plan_id",
+    "column_type" : "character",
+    "required" : false,
+    "checkSum" : true
+  },
+  {
+    "column_name" : "pocket_id",
+    "column_type" : "character",
+    "required" : false,
+    "checkSum" : true
+  },
+  {
+    "column_name" : "consumed_promo_amount",
+    "column_type" : "character",
+    "required" : false,
+    "checkSum" : true
+  },
+  {
+    "column_name" : "pervious_call_trace_id",
+    "column_type" : "character",
+    "required" : false,
+    "checkSum" : true
+  },
+  {
+    "column_name" : "termination_cause",
+    "column_type" : "integer",
+    "required" : false,
+    "checkSum" : true
+  },
+  {
+    "column_name" : "non_chargeable_unit",
+    "column_type" : "integer",
+    "required" : false,
+    "checkSum" : true
+  },
+  {
+    "column_name" : "call_forward_msisdn",
+    "column_type" : "character",
+    "required" : false,
+    "checkSum" : true
+  },
+  {
+    "column_name" : "service_type",
+    "column_type" : "character",
+    "required" : false,
+    "checkSum" : true
+  },
+  {
+    "column_name" : "used_time_in_previous_grant",
+    "column_type" : "integer",
+    "required" : false,
+    "checkSum" : true
+  },
+  {
+    "column_name" : "rlh_charging_indicator",
+    "column_type" : "integer",
+    "required" : false,
+    "checkSum" : true
+  },
+  {
+    "column_name" : "surcharge_consumed",
+    "column_type" : "integer",
+    "required" : false,
+    "checkSum" : true
+  },
+  {
+    "column_name" : "excess_used_units_received",
+    "column_type" : "integer",
+    "required" : false,
+    "checkSum" : true
+  },
+  {
+    "column_name" : "failcause",
+    "column_type" : "integer",
+    "required" : false,
+    "checkSum" : true
+  },
+  {
+    "column_name" : "roaming_partner_id",
+    "column_type" : "integer",
+    "required" : false,
+    "checkSum" : true
+  },
+  {
+    "column_name" : "fct_free_text_1",
+    "column_type" : "character",
+    "required" : false,
+    "checkSum" : false
+  },
+  {
+    "column_name" : "fct_free_text_2",
+    "column_type" : "character",
+    "required" : false,
+    "checkSum" : false
+  },
+  {
+    "column_name" : "fct_free_text_3",
+    "column_type" : "character",
+    "required" : false,
+    "checkSum" : false
+  },
+  {
+    "column_name" : "fct_free_text_4",
+    "column_type" : "character",
+    "required" : false,
+    "checkSum" : false
+  },
+  {
+    "column_name" : "fct_free_text_5",
+    "column_type" : "character",
+    "required" : false,
+    "checkSum" : false
+  },
+  {
+    "column_name" : "fct_free_text_6",
+    "column_type" : "character",
+    "required" : false,
+    "checkSum" : false
+  },
+  {
+    "column_name" : "fct_free_text_7",
+    "column_type" : "character",
+    "required" : false,
+    "checkSum" : false
+  },
+  {
+    "column_name" : "fct_free_text_8",
+    "column_type" : "character",
+    "required" : false,
+    "checkSum" : false
+  },
+  {
+    "column_name" : "fct_free_text_9",
+    "column_type" : "character",
+    "required" : false,
+    "checkSum" : false
+  },
+  {
+    "column_name" : "fct_free_text_10",
+    "column_type" : "character",
+    "required" : false,
+    "checkSum" : false
+  }
+]

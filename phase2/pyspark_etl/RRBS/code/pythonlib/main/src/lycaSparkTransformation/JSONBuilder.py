@@ -9,6 +9,7 @@
 ########################################################################
 
 from commonUtils.JsonProcessor import JsonProcessor
+from awsUtils.SecretManager import get_secret
 
 
 class JSONBuilder:
@@ -91,11 +92,11 @@ class JSONBuilder:
 
     def getUsername(self):
         """ :return username of db"""
-        return self.servicetype['servicetypeObj']['username']
+        return self.servicetype['servicetypeObj'].get('username')
 
     def getPassword(self):
         """ :return password of db"""
-        return self.servicetype['servicetypeObj']['password']
+        return self.servicetype['servicetypeObj'].get('password')
 
     def getHost(self):
         """ :return host of database"""
@@ -113,6 +114,13 @@ class JSONBuilder:
         """ :return domain name"""
         return self.servicetype['servicetypeObj']['domain']
 
+    def getRedshiftSecrets(self):
+        """ :return redshift secret """
+        return self.servicetype['servicetypeObj'].get('redshiftsecret')
+
+    def getRegion(self):
+        """ :return region name """
+        return self.servicetype['servicetypeObj'].get('region')
 
     def getAppPrpperty(self):
         """ :return return all properties"""
@@ -154,17 +162,31 @@ class JSONBuilder:
         }
 
     def getConnPrpperty(self):
+        return_obj = {}
+
         user = self.getUsername()
         password = self.getPassword()
         host = self.getHost()
         port = self.getPort()
         tmpdir = self.getTmpdir()
         domain = self.getDomain()
-        return {
-            "user": user,
-            "password": password,
+        redshiftsecret = self.getRedshiftSecrets()
+        region = self.getRegion()
+
+        if user and password:
+            return_obj["user"] = user
+            return_obj["password"] = password
+        elif redshiftsecret and region:
+            secrets = get_secret(redshiftsecret, region)
+            return_obj["user"] = secrets["username"]
+            return_obj["password"] = secrets["password"]
+        else:
+            raise Exception("Unable to get the credential for redshift from connecction properties.")
+        return_obj.update({
             "host": host,
             "port": port,
             "tmpdir": tmpdir,
             "domain": domain
-        }
+        })
+
+        return return_obj
