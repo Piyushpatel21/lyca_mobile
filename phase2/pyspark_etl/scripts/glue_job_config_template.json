@@ -1,5 +1,5 @@
 {
-  "Name": "TestJob2",
+  "Name": "TestJob3",
   "ScriptLocation": "s3://path_to_script.py",
   "Description": "Test job",
   "Role": "AWSGlueServiceRole-GlueToS3",

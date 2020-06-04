@@ -6,10 +6,16 @@ import argparse
 import json
 import boto3
 from botocore.exceptions import ClientError
+import logging
+
+_format = '%(asctime)s %(levelname)s [%(module)s] %(funcName)s %(lineno)s - %(message)s'
+logging.basicConfig(format=_format)
+LOGGER = logging.getLogger(__name__)
+LOGGER.setLevel(logging.INFO)
 
 JOB_PARAMETERS = {
     'Name': None,
-    'Description': None,
+    'Description': "Glue ETL job created via glueUtil",
     'Role': None,
     'MaxConcurrentRuns': 1,
     'ETLJobType': "glueetl",
@@ -46,8 +52,9 @@ def build_job_args(default_args, new_job_args):
     :param new_job_args: new arguments
     :return:
     """
-    default_args.update(new_job_args)
 
+    LOGGER.info("Building arguments for job.")
+    default_args.update(new_job_args)
     for k, validation_func in JOB_PARAMETERS_VALIDATIONS.items():
         if not validation_func(default_args[k]):
             raise Exception("Failed to validate value for key: {key}".format(key=k))
@@ -101,7 +108,19 @@ def error_response(msg):
     """
     return {
         "exitcode": 1,
-        "message": msg
+        "message": msg,
+        "data": None
+    }
+
+
+def success_response(msg, data):
+    """
+    Structure success message
+    """
+    return {
+        "exitcode": 0,
+        "messsage": msg,
+        "data": data
     }
 
 
@@ -116,6 +135,7 @@ def create_job(glue_client, job_args: dict):
     missing_params = MANDATORY_JOB_PARAMETERS - job_args.keys()
     if missing_params:
         raise Exception("Following Mandatory parameters are missing: {missing}".format(missing=missing_params))
+    LOGGER.info("Creating glue job with name {name}.".format(name=job_args['Name']))
     final_args = build_job_args(JOB_PARAMETERS, job_args)
     response = glue_client.create_job(**final_args)
     return response
@@ -131,9 +151,8 @@ def update_job(glue_client, job_name, job_args: dict):
     :return:
     """
     job_details = get_job(glue_client, job_name)
-    if 'exitcode' in job_details and job_details['exitcode'] == 1:
-        response = job_details
-    elif job_details:
+    if job_details:
+        LOGGER.info("Updating job {name}.".format(name=job_name))
         existing_job = job_details['Job']
         existing_job_args = {}
         for key in JOB_PARAMETERS.keys():
@@ -164,7 +183,8 @@ def update_job(glue_client, job_name, job_args: dict):
         )
 
     else:
-        response = error_response("Job with name {job} not found.".format(job=job_name))
+        LOGGER.error("Failed to update job {name}.".format(name=job_name))
+        response = error_response("Failed to update job with name {job}.".format(job=job_name))
     return response
 
 
@@ -177,6 +197,7 @@ def delete_job(glue_client, job_name):
     :return:
     """
 
+    LOGGER.warning("Deleting glue job with name {name}".format(name=job_name))
     response = glue_client.delete_job(
         JobName=job_name
     )
@@ -193,13 +214,39 @@ def get_job(glue_client, job_name):
     :return:
     """
 
+    LOGGER.info("Getting glue job details for job name {name}".format(name=job_name))
+
     response = glue_client.get_job(
         JobName=job_name
     )
     return response
 
 
+def update_or_create_job(glue_client, job_args: dict):
+    """
+    Updates or create job if doesn't exists
+
+    :param glue_client: Glue client
+    :param job_args: Job arguments
+    """
+    try:
+        LOGGER.info("In update_or_create_job with job arguments {j_args}.".format(j_args=str(job_args)))
+        if 'Name' in job_args and job_args['Name']:
+            job_name = job_args['Name']
+            response = update_job(glue_client, job_name, job_args)
+        else:
+            raise Exception("'Name' is mandatory field while running update_or_create_job")
+    except ClientError as cli_err:
+        if cli_err.response['Error']['Code'] == 'EntityNotFoundException':
+            response = create_job(glue_client, job_args)
+        else:
+            raise ClientError(cli_err)
+    return response
+
+
 def start_job_run(glue_client, job_name, job_args: dict = None):
+
+    LOGGER.info("Starting glue job with name {name}".format(name=job_name))
     job_run_args = {
         "JobName": job_name
     }
@@ -230,7 +277,8 @@ def manage_command(command, job_name=None, config_file=None, configs=None, regio
     """
     Entry point for util execution.
 
-    :param command: (Required) Type of operation, allowed values: get_job, create_job, update_job, delete_job
+    :param command: (Required) Type of operation, allowed values: get_job, create_job, update_job,
+                    delete_job, update_or_create_job
     :param job_name: Name of the job. Required if command is get_job, update_job, delete_job
     :param config_file: json file containing configs
     :param configs: dictionary with configs
@@ -238,13 +286,13 @@ def manage_command(command, job_name=None, config_file=None, configs=None, regio
     :return:
     """
 
-    if command not in ['get_job', 'create_job', 'update_job', 'delete_job', 'run_job']:
+    if command not in ['get_job', 'create_job', 'update_or_create_job', 'update_job', 'delete_job', 'run_job']:
         raise Exception('Command {cmd} is not available, can be one of following: get_job, create_job, '
                         'update_job, delete_job'.format(cmd=command))
 
     if command in ['get_job', 'delete_job', 'update_job', 'run_job'] and not job_name:
         raise Exception("-j <job-name> is mandatory when command is {cmd}".format(cmd=command))
-    elif command == 'create_job' and not (config_file or configs):
+    elif command in ['create_job', 'update_job', 'update_or_create_job'] and not (config_file or configs):
         raise Exception("-f <config-file> or --configs <configs dict> is mandatory when command is create_job")
 
     try:
@@ -262,6 +310,11 @@ def manage_command(command, job_name=None, config_file=None, configs=None, regio
             if config_file:
                 configs = json_to_dict(config_file)
             response = update_job(glue_client, job_name, configs)
+        elif command == 'update_or_create_job':
+            if config_file:
+                configs = json_to_dict(config_file)
+            print(json.loads(configs))
+            response = update_or_create_job(glue_client, json.loads(configs))
         elif command == 'delete_job':
             response = delete_job(glue_client, job_name)
         elif command == 'run_job':
@@ -294,10 +347,10 @@ def parse_arguments():
     ap = argparse.ArgumentParser()
 
     ap.add_argument('-c', '--command', required=True, help='Can be one of following: get_job, create_job, '
-                                                           'update_job, delete_job, run_job')
+                                                           'update_job, update_or_create_job, delete_job, run_job')
     ap.add_argument('-j', '--job_name', help='Name of the job')
     ap.add_argument('-f', '--config_file', help='Config file for glue job')
-    ap.add_argument('--configs', help='Configs as dictionary which is compliment to config_file.')
+    ap.add_argument('--configs', type=str, help='Configs as dictionary which is compliment to config_file.')
     ap.add_argument('--region', help='Region in which to perform operation')
     known_arguments, unknown_arguments = ap.parse_known_args()
     arguments = vars(known_arguments)
@@ -306,5 +359,6 @@ def parse_arguments():
 
 if __name__ == '__main__':
     args = parse_arguments()
+    print(args)
     response = manage_command(**args)
     print(response)
