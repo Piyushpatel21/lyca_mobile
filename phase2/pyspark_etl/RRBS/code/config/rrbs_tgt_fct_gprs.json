@@ -272,7 +272,7 @@
     "column_name": "data_termination_time_gmt"
   },
   {
-    "column_name" : "total_bytes_mb"
+    "column_name" : "total_usage_mb"
   },
   {
     "column_name" : "free_data_expiry_DATE_num"
