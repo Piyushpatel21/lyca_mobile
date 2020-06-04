@@ -47,10 +47,10 @@ class TransformActionChain:
     def srcSchema(self):
         try:
             self.logger.info("***** generating src, target and checksum schema *****")
-            srcSchemaFilePath = AwsReader.s3ReadFile('s3', 'aws-glue-temporary-484320814466-eu-west-2', self.property.get("srcSchemaPath"))
+            srcSchemaFilePath = AwsReader.s3ReadFile('s3', self.code_bucket, self.property.get("srcSchemaPath"))
             schema = SchemaReader.structTypemapping(srcSchemaFilePath)
             checkSumColumns = self.trans.getCheckSumColumns(srcSchemaFilePath)
-            tgtSchemaPath = AwsReader.s3ReadFile('s3', 'aws-glue-temporary-484320814466-eu-west-2', self.property.get("tgtSchemaPath"))
+            tgtSchemaPath = AwsReader.s3ReadFile('s3', self.code_bucket, self.property.get("tgtSchemaPath"))
             tgtColumns = self.trans.getTgtColumns(tgtSchemaPath)
             self.logger.info("***** return src, target and checksum schema *****")
             return {
