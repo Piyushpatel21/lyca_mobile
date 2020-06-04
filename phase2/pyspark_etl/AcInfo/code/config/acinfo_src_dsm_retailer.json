@@ -1,44 +1,692 @@
 [
   {
     "column_name": "id",
-	"column_type" : "bigint",
-    "required" : false,
-    "check_sum" : true
+    "column_type": "integer ",
+    "required": false,
+    "check_sum": true
   },
   {
-    "column_name": "onocode",
-	"column_type" : "character",
-    "required" : false,
-    "check_sum" : true
+    "column_name": "Retailerid",
+    "column_type": "character",
+    "required": false,
+    "check_sum": true
   },
   {
-    "column_name": "spcode",
-	"column_type" : "character",
-    "required" : false,
-    "check_sum" : true
+    "column_name": "HotSpotid",
+    "column_type": "character",
+    "required": false,
+    "check_sum": true
   },
   {
-    "column_name": "spdesc",
-	"column_type" : "character",
-    "required" : false,
-    "check_sum" : true
+    "column_name": "AccMgrid",
+    "column_type": "character",
+    "required": false,
+    "check_sum": true
   },
   {
-    "column_name": "status",
-	"column_type" : "integer",
-    "required" : false,
-    "check_sum" : true
+    "column_name": "OffMgrid",
+    "column_type": "character",
+    "required": false,
+    "check_sum": true
   },
   {
-    "column_name": "lastmodifiedby",
-	"column_type" : "character",
-    "required" : false,
-    "check_sum" : true
+    "column_name": "Fname",
+    "column_type": "character",
+    "required": false,
+    "check_sum": true
   },
   {
-    "column_name": "lastmodifieddate",
-	"column_type" : "timestamp without time zone",
-    "required" : false,
-    "check_sum" : true
+    "column_name": "Lname",
+    "column_type": "character",
+    "required": false,
+    "check_sum": true
+  },
+  {
+    "column_name": "country",
+    "column_type": "character",
+    "required": false,
+    "check_sum": true
+  },
+  {
+    "column_name": "STATE",
+    "column_type": "character",
+    "required": false,
+    "check_sum": true
+  },
+  {
+    "column_name": "postcode",
+    "column_type": "character",
+    "required": false,
+    "check_sum": true
+  },
+  {
+    "column_name": "houseno",
+    "column_type": "character",
+    "required": false,
+    "check_sum": true
+  },
+  {
+    "column_name": "streetno",
+    "column_type": "character",
+    "required": false,
+    "check_sum": true
+  },
+  {
+    "column_name": "street",
+    "column_type": "character",
+    "required": false,
+    "check_sum": true
+  },
+  {
+    "column_name": "address1",
+    "column_type": "character",
+    "required": false,
+    "check_sum": true
+  },
+  {
+    "column_name": "address2",
+    "column_type": "character",
+    "required": false,
+    "check_sum": true
+  },
+  {
+    "column_name": "cityname",
+    "column_type": "character",
+    "required": false,
+    "check_sum": true
+  },
+  {
+    "column_name": "pin",
+    "column_type": "character",
+    "required": false,
+    "check_sum": true
+  },
+  {
+    "column_name": "landlineno",
+    "column_type": "character",
+    "required": false,
+    "check_sum": true
+  },
+  {
+    "column_name": "mobileno",
+    "column_type": "character",
+    "required": false,
+    "check_sum": true
+  },
+  {
+    "column_name": "email",
+    "column_type": "character",
+    "required": false,
+    "check_sum": true
+  },
+  {
+    "column_name": "username",
+    "column_type": "character",
+    "required": false,
+    "check_sum": true
+  },
+  {
+    "column_name": "contactperson",
+    "column_type": "character",
+    "required": false,
+    "check_sum": true
+  },
+  {
+    "column_name": "STATUS",
+    "column_type": "integer ",
+    "required": false,
+    "check_sum": true
+  },
+  {
+    "column_name": "Invoicetype",
+    "column_type": "character",
+    "required": false,
+    "check_sum": true
+  },
+  {
+    "column_name": "CreatedBy",
+    "column_type": "character",
+    "required": false,
+    "check_sum": true
+  },
+  {
+    "column_name": "CreatedDate",
+    "column_type": "timestamp without time zone ",
+    "required": false,
+    "check_sum": true
+  },
+  {
+    "column_name": "threshold",
+    "column_type": "integer ",
+    "required": false,
+    "check_sum": true
+  },
+  {
+    "column_name": "UpdatedBy",
+    "column_type": "character",
+    "required": false,
+    "check_sum": true
+  },
+  {
+    "column_name": "UpdatedDate",
+    "column_type": "timestamp without time zone ",
+    "required": false,
+    "check_sum": true
+  },
+  {
+    "column_name": "AuthLevel",
+    "column_type": "integer ",
+    "required": false,
+    "check_sum": true
+  },
+  {
+    "column_name": "Comments",
+    "column_type": "character",
+    "required": false,
+    "check_sum": true
+  },
+  {
+    "column_name": "OptionalStatus",
+    "column_type": "smallint ",
+    "required": false,
+    "check_sum": true
+  },
+  {
+    "column_name": "DelAuthLevel",
+    "column_type": "integer ",
+    "required": false,
+    "check_sum": true
+  },
+  {
+    "column_name": "EditAuthLevel",
+    "column_type": "integer ",
+    "required": false,
+    "check_sum": true
+  },
+  {
+    "column_name": "HistoryID",
+    "column_type": "integer ",
+    "required": false,
+    "check_sum": true
+  },
+  {
+    "column_name": "AlternateMobileno",
+    "column_type": "character",
+    "required": false,
+    "check_sum": true
+  },
+  {
+    "column_name": "Bankaddress",
+    "column_type": "character",
+    "required": false,
+    "check_sum": true
+  },
+  {
+    "column_name": "AccountHolderName",
+    "column_type": "character",
+    "required": false,
+    "check_sum": true
+  },
+  {
+    "column_name": "AccountSortcode",
+    "column_type": "character",
+    "required": false,
+    "check_sum": true
+  },
+  {
+    "column_name": "Accountnumber",
+    "column_type": "character",
+    "required": false,
+    "check_sum": true
+  },
+  {
+    "column_name": "Bankname",
+    "column_type": "character",
+    "required": false,
+    "check_sum": true
+  },
+  {
+    "column_name": "sitecode",
+    "column_type": "character",
+    "required": false,
+    "check_sum": true
+  },
+  {
+    "column_name": "Password",
+    "column_type": "character",
+    "required": false,
+    "check_sum": true
+  },
+  {
+    "column_name": "ShopType",
+    "column_type": "character",
+    "required": false,
+    "check_sum": true
+  },
+  {
+    "column_name": "WhiteListMSISDN",
+    "column_type": "character",
+    "required": false,
+    "check_sum": true
+  },
+  {
+    "column_name": "Transfer_Balance",
+    "column_type": "NUMERIC",
+    "required": false,
+    "check_sum": true
+  },
+  {
+    "column_name": "CC_Balance",
+    "column_type": "NUMERIC",
+    "required": false,
+    "check_sum": true
+  },
+  {
+    "column_name": "Accumulated_Discount",
+    "column_type": "NUMERIC",
+    "required": false,
+    "check_sum": true
+  },
+  {
+    "column_name": "GROUPID",
+    "column_type": "integer ",
+    "required": false,
+    "check_sum": true
+  },
+  {
+    "column_name": "RetailerMode",
+    "column_type": "integer ",
+    "required": false,
+    "check_sum": true
+  },
+  {
+    "column_name": "virtual_msisdn",
+    "column_type": "character",
+    "required": false,
+    "check_sum": true
+  },
+  {
+    "column_name": "VirtualtoRealDate",
+    "column_type": "timestamp without time zone ",
+    "required": false,
+    "check_sum": true
+  },
+  {
+    "column_name": "FLOORNO",
+    "column_type": "character",
+    "required": false,
+    "check_sum": true
+  },
+  {
+    "column_name": "PassExpireDate",
+    "column_type": "timestamp without time zone ",
+    "required": false,
+    "check_sum": true
+  },
+  {
+    "column_name": "LastLoginDate",
+    "column_type": "timestamp without time zone ",
+    "required": false,
+    "check_sum": true
+  },
+  {
+    "column_name": "IsThreshold",
+    "column_type": "integer ",
+    "required": false,
+    "check_sum": true
+  },
+  {
+    "column_name": "SecretQuestion",
+    "column_type": "character",
+    "required": false,
+    "check_sum": true
+  },
+  {
+    "column_name": "SecretAnswer",
+    "column_type": "character",
+    "required": false,
+    "check_sum": true
+  },
+  {
+    "column_name": "IsSecQnAlert",
+    "column_type": "integer ",
+    "required": false,
+    "check_sum": true
+  },
+  {
+    "column_name": "unique_urn",
+    "column_type": "character",
+    "required": false,
+    "check_sum": true
+  },
+  {
+    "column_name": "ThresholdExcludedOn",
+    "column_type": "timestamp without time zone ",
+    "required": false,
+    "check_sum": true
+  },
+  {
+    "column_name": "IsCreditHigherLayer",
+    "column_type": "integer ",
+    "required": false,
+    "check_sum": true
+  },
+  {
+    "column_name": "PreferLanguage",
+    "column_type": "character",
+    "required": false,
+    "check_sum": true
+  },
+  {
+    "column_name": "Is_specialretailer",
+    "column_type": "smallint ",
+    "required": false,
+    "check_sum": true
+  },
+  {
+    "column_name": "spl_retupd_date",
+    "column_type": "timestamp without time zone ",
+    "required": false,
+    "check_sum": true
+  },
+  {
+    "column_name": "COMMISION_GROUPID",
+    "column_type": "integer ",
+    "required": false,
+    "check_sum": true
+  },
+  {
+    "column_name": "LoginAttempt",
+    "column_type": "integer ",
+    "required": false,
+    "check_sum": true
+  },
+  {
+    "column_name": "Lockedtimestamp",
+    "column_type": "timestamp without time zone ",
+    "required": false,
+    "check_sum": true
+  },
+  {
+    "column_name": "Area",
+    "column_type": "character",
+    "required": false,
+    "check_sum": true
+  },
+  {
+    "column_name": "District",
+    "column_type": "character",
+    "required": false,
+    "check_sum": true
+  },
+  {
+    "column_name": "VATno",
+    "column_type": "character",
+    "required": false,
+    "check_sum": true
+  },
+  {
+    "column_name": "SimActivationAmount2",
+    "column_type": "NUMERIC",
+    "required": false,
+    "check_sum": true
+  },
+  {
+    "column_name": "CreditLimitAmt",
+    "column_type": "NUMERIC",
+    "required": false,
+    "check_sum": true
+  },
+  {
+    "column_name": "CreditLimitAuthDate",
+    "column_type": "timestamp without time zone ",
+    "required": false,
+    "check_sum": true
+  },
+  {
+    "column_name": "StockOTP",
+    "column_type": "character",
+    "required": false,
+    "check_sum": true
+  },
+  {
+    "column_name": "Stock_modifiedby",
+    "column_type": "character",
+    "required": false,
+    "check_sum": true
+  },
+  {
+    "column_name": "Stock_modifieddate",
+    "column_type": "timestamp without time zone ",
+    "required": false,
+    "check_sum": true
+  },
+  {
+    "column_name": "IsBalanceNegative",
+    "column_type": "smallint ",
+    "required": false,
+    "check_sum": true
+  },
+  {
+    "column_name": "Is_mailSent",
+    "column_type": "smallint ",
+    "required": false,
+    "check_sum": true
+  },
+  {
+    "column_name": "StockNotification",
+    "column_type": "smallint ",
+    "required": false,
+    "check_sum": true
+  },
+  {
+    "column_name": "NotificationOnOffUploadDate",
+    "column_type": "timestamp without time zone ",
+    "required": false,
+    "check_sum": true
+  },
+  {
+    "column_name": "IsReplicate",
+    "column_type": "smallint ",
+    "required": false,
+    "check_sum": true
+  },
+  {
+    "column_name": "SBTRetailerEdit",
+    "column_type": "smallint ",
+    "required": false,
+    "check_sum": true
+  },
+  {
+    "column_name": "StreetNumber",
+    "column_type": "character",
+    "required": false,
+    "check_sum": true
+  },
+  {
+    "column_name": "Estate",
+    "column_type": "character",
+    "required": false,
+    "check_sum": true
+  },
+  {
+    "column_name": "Airtime_Transfer",
+    "column_type": "smallint ",
+    "required": false,
+    "check_sum": true
+  },
+  {
+    "column_name": "IsPwdSent",
+    "column_type": "smallint ",
+    "required": false,
+    "check_sum": true
+  },
+  {
+    "column_name": "Division",
+    "column_type": "character",
+    "required": false,
+    "check_sum": true
+  },
+  {
+    "column_name": "Requested_by",
+    "column_type": "character",
+    "required": false,
+    "check_sum": true
+  },
+  {
+    "column_name": "Requested_date",
+    "column_type": "timestamp without time zone ",
+    "required": false,
+    "check_sum": true
+  },
+  {
+    "column_name": "PreApproved_by",
+    "column_type": "character",
+    "required": false,
+    "check_sum": true
+  },
+  {
+    "column_name": "PreApproved_date",
+    "column_type": "timestamp without time zone ",
+    "required": false,
+    "check_sum": true
+  },
+  {
+    "column_name": "Approved_by",
+    "column_type": "character",
+    "required": false,
+    "check_sum": true
+  },
+  {
+    "column_name": "Approved_date",
+    "column_type": "timestamp without time zone ",
+    "required": false,
+    "check_sum": true
+  },
+  {
+    "column_name": "Freeze_Status",
+    "column_type": "integer ",
+    "required": false,
+    "check_sum": true
+  },
+  {
+    "column_name": "freezereason",
+    "column_type": "character",
+    "required": false,
+    "check_sum": true
+  },
+  {
+    "column_name": "Edit_Reason",
+    "column_type": "character",
+    "required": false,
+    "check_sum": true
+  },
+  {
+    "column_name": "Tran_PIN",
+    "column_type": "character",
+    "required": false,
+    "check_sum": true
+  },
+  {
+    "column_name": "PINRetryAttempts",
+    "column_type": "integer ",
+    "required": false,
+    "check_sum": true
+  },
+  {
+    "column_name": "PINLockedDate",
+    "column_type": "timestamp without time zone ",
+    "required": false,
+    "check_sum": true
+  },
+  {
+    "column_name": "Ret_Auto_BalLimit",
+    "column_type": "NUMERIC",
+    "required": false,
+    "check_sum": true
+  },
+  {
+    "column_name": "Ret_Auto_TopupAmt",
+    "column_type": "NUMERIC",
+    "required": false,
+    "check_sum": true
+  },
+  {
+    "column_name": "Ret_Auto_LmtFreq",
+    "column_type": "integer ",
+    "required": false,
+    "check_sum": true
+  },
+  {
+    "column_name": "Ret_Auto_MaxLmt",
+    "column_type": "integer ",
+    "required": false,
+    "check_sum": true
+  },
+  {
+    "column_name": "Ret_AutoTopup_chk",
+    "column_type": "integer ",
+    "required": false,
+    "check_sum": true
+  },
+  {
+    "column_name": "Ret_Auto_FrmDt",
+    "column_type": "timestamp without time zone ",
+    "required": false,
+    "check_sum": true
+  },
+  {
+    "column_name": "Ret_Auto_ToDt",
+    "column_type": "timestamp without time zone ",
+    "required": false,
+    "check_sum": true
+  },
+  {
+    "column_name": "Ret_Auto_PrsCnt",
+    "column_type": "integer ",
+    "required": false,
+    "check_sum": true
+  },
+  {
+    "column_name": "Ret_UUID",
+    "column_type": "character",
+    "required": false,
+    "check_sum": true
+  },
+  {
+    "column_name": "AgentMSISDN",
+    "column_type": "character",
+    "required": false,
+    "check_sum": true
+  },
+  {
+    "column_name": "AgentPin",
+    "column_type": "character",
+    "required": false,
+    "check_sum": true
+  },
+  {
+    "column_name": "IsAgent",
+    "column_type": "integer ",
+    "required": false,
+    "check_sum": true
+  },
+  {
+    "column_name": "TAXID",
+    "column_type": "character",
+    "required": false,
+    "check_sum": true
+  },
+  {
+    "column_name": "BusinessRegistrationNo",
+    "column_type": "character",
+    "required": false,
+    "check_sum": true
+  },
+  {
+    "column_name": "SocialSecurityNo",
+    "column_type": "character",
+    "required": false,
+    "check_sum": true
   }
 ]

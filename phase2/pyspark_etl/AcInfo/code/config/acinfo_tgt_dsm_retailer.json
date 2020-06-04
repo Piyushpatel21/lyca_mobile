@@ -1,0 +1,356 @@
+[
+  {
+    "column_name": "id"
+  },
+  {
+    "column_name": "Retailerid"
+  },
+  {
+    "column_name": "HotSpotid"
+  },
+  {
+    "column_name": "AccMgrid"
+  },
+  {
+    "column_name": "OffMgrid"
+  },
+  {
+    "column_name": "Fname"
+  },
+  {
+    "column_name": "Lname"
+  },
+  {
+    "column_name": "country"
+  },
+  {
+    "column_name": "STATE"
+  },
+  {
+    "column_name": "postcode"
+  },
+  {
+    "column_name": "houseno"
+  },
+  {
+    "column_name": "streetno"
+  },
+  {
+    "column_name": "street"
+  },
+  {
+    "column_name": "address1"
+  },
+  {
+    "column_name": "address2"
+  },
+  {
+    "column_name": "cityname"
+  },
+  {
+    "column_name": "pin"
+  },
+  {
+    "column_name": "landlineno"
+  },
+  {
+    "column_name": "mobileno"
+  },
+  {
+    "column_name": "email"
+  },
+  {
+    "column_name": "username"
+  },
+  {
+    "column_name": "contactperson"
+  },
+  {
+    "column_name": "STATUS"
+  },
+  {
+    "column_name": "Invoicetype"
+  },
+  {
+    "column_name": "CreatedBy"
+  },
+  {
+    "column_name": "CreatedDate"
+  },
+  {
+    "column_name": "threshold"
+  },
+  {
+    "column_name": "UpdatedBy"
+  },
+  {
+    "column_name": "UpdatedDate"
+  },
+  {
+    "column_name": "AuthLevel"
+  },
+  {
+    "column_name": "Comments"
+  },
+  {
+    "column_name": "OptionalStatus"
+  },
+  {
+    "column_name": "DelAuthLevel"
+  },
+  {
+    "column_name": "EditAuthLevel"
+  },
+  {
+    "column_name": "HistoryID"
+  },
+  {
+    "column_name": "AlternateMobileno"
+  },
+  {
+    "column_name": "Bankaddress"
+  },
+  {
+    "column_name": "AccountHolderName"
+  },
+  {
+    "column_name": "AccountSortcode"
+  },
+  {
+    "column_name": "Accountnumber"
+  },
+  {
+    "column_name": "Bankname"
+  },
+  {
+    "column_name": "sitecode"
+  },
+  {
+    "column_name": "Password"
+  },
+  {
+    "column_name": "ShopType"
+  },
+  {
+    "column_name": "WhiteListMSISDN"
+  },
+  {
+    "column_name": "Transfer_Balance"
+  },
+  {
+    "column_name": "CC_Balance"
+  },
+  {
+    "column_name": "Accumulated_Discount"
+  },
+  {
+    "column_name": "GROUPID"
+  },
+  {
+    "column_name": "RetailerMode"
+  },
+  {
+    "column_name": "virtual_msisdn"
+  },
+  {
+    "column_name": "VirtualtoRealDate"
+  },
+  {
+    "column_name": "FLOORNO"
+  },
+  {
+    "column_name": "PassExpireDate"
+  },
+  {
+    "column_name": "LastLoginDate"
+  },
+  {
+    "column_name": "IsThreshold"
+  },
+  {
+    "column_name": "SecretQuestion"
+  },
+  {
+    "column_name": "SecretAnswer"
+  },
+  {
+    "column_name": "IsSecQnAlert"
+  },
+  {
+    "column_name": "unique_urn"
+  },
+  {
+    "column_name": "ThresholdExcludedOn"
+  },
+  {
+    "column_name": "IsCreditHigherLayer"
+  },
+  {
+    "column_name": "PreferLanguage"
+  },
+  {
+    "column_name": "Is_specialretailer"
+  },
+  {
+    "column_name": "spl_retupd_date"
+  },
+  {
+    "column_name": "COMMISION_GROUPID"
+  },
+  {
+    "column_name": "LoginAttempt"
+  },
+  {
+    "column_name": "Lockedtimestamp"
+  },
+  {
+    "column_name": "Area"
+  },
+  {
+    "column_name": "District"
+  },
+  {
+    "column_name": "VATno"
+  },
+  {
+    "column_name": "SimActivationAmount2"
+  },
+  {
+    "column_name": "CreditLimitAmt"
+  },
+  {
+    "column_name": "CreditLimitAuthDate"
+  },
+  {
+    "column_name": "StockOTP"
+  },
+  {
+    "column_name": "Stock_modifiedby"
+  },
+  {
+    "column_name": "Stock_modifieddate"
+  },
+  {
+    "column_name": "IsBalanceNegative"
+  },
+  {
+    "column_name": "Is_mailSent"
+  },
+  {
+    "column_name": "StockNotification"
+  },
+  {
+    "column_name": "NotificationOnOffUploadDate"
+  },
+  {
+    "column_name": "IsReplicate"
+  },
+  {
+    "column_name": "SBTRetailerEdit"
+  },
+  {
+    "column_name": "StreetNumber"
+  },
+  {
+    "column_name": "Estate"
+  },
+  {
+    "column_name": "Airtime_Transfer"
+  },
+  {
+    "column_name": "IsPwdSent"
+  },
+  {
+    "column_name": "Division"
+  },
+  {
+    "column_name": "Requested_by"
+  },
+  {
+    "column_name": "Requested_date"
+  },
+  {
+    "column_name": "PreApproved_by"
+  },
+  {
+    "column_name": "PreApproved_date"
+  },
+  {
+    "column_name": "Approved_by"
+  },
+  {
+    "column_name": "Approved_date"
+  },
+  {
+    "column_name": "Freeze_Status"
+  },
+  {
+    "column_name": "freezereason"
+  },
+  {
+    "column_name": "Edit_Reason"
+  },
+  {
+    "column_name": "Tran_PIN"
+  },
+  {
+    "column_name": "PINRetryAttempts"
+  },
+  {
+    "column_name": "PINLockedDate"
+  },
+  {
+    "column_name": "Ret_Auto_BalLimit"
+  },
+  {
+    "column_name": "Ret_Auto_TopupAmt"
+  },
+  {
+    "column_name": "Ret_Auto_LmtFreq"
+  },
+  {
+    "column_name": "Ret_Auto_MaxLmt"
+  },
+  {
+    "column_name": "Ret_AutoTopup_chk"
+  },
+  {
+    "column_name": "Ret_Auto_FrmDt"
+  },
+  {
+    "column_name": "Ret_Auto_ToDt"
+  },
+  {
+    "column_name": "Ret_Auto_PrsCnt"
+  },
+  {
+    "column_name": "Ret_UUID"
+  },
+  {
+    "column_name": "AgentMSISDN"
+  },
+  {
+    "column_name": "AgentPin"
+  },
+  {
+    "column_name": "IsAgent"
+  },
+  {
+    "column_name": "TAXID"
+  },
+  {
+    "column_name": "BusinessRegistrationNo"
+  },
+  {
+    "column_name": "SocialSecurityNo"
+  },
+  {
+    "column_name": "batch_id"
+  },
+  {
+    "column_name": "created_DATE"
+  },
+  {
+    "column_name": "rec_checksum"
+  }
+]
