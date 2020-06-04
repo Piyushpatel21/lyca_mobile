@@ -12,6 +12,7 @@ def parseArguments():
     parser.add_argument('--configfile', help='application module level config file path')
     parser.add_argument('--connfile', help='connection config file path')
     parser.add_argument('--master', help='session for glue')
+    parser.add_argument('--code_bucket', help='Name of the code bucket')
     known_arguments, unknown_arguments = parser.parse_known_args()
     arguments = vars(known_arguments)
     if arguments:
@@ -23,4 +24,5 @@ def parseArguments():
 
 if __name__ == '__main__':
     args = parseArguments()
+    print(args)
     start_execution(args)

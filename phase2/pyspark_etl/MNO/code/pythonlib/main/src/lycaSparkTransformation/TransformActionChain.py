@@ -21,22 +21,25 @@ from pyspark.sql import functions as py_function
 
 
 class TransformActionChain:
-    def __init__(self, sparkSession: SparkSession, logger, module, subModule, configfile, connfile, run_date, prevDate):
+    def __init__(self, sparkSession: SparkSession, logger, module, subModule, configfile, connfile, run_date, prevDate, code_bucket):
         self.sparkSession = sparkSession
         self.logger = logger
         self.module = module
         self.subModule = subModule
-        self.configfile = AwsReader.s3ReadFile('s3', 'aws-glue-temporary-484320814466-eu-west-2', configfile)
-        self.connfile = AwsReader.s3ReadFile('s3', 'aws-glue-temporary-484320814466-eu-west-2', connfile)
+        self.code_bucket = code_bucket
+        self.configfile = AwsReader.s3ReadFile('s3', self.code_bucket, configfile)
+        self.connfile = AwsReader.s3ReadFile('s3', self.code_bucket, connfile)
         self.trans = DataTransformation()
         self.run_date = run_date
         self.prevDate = prevDate
         self.jsonParser = JSONBuilder(self.module, self.subModule, self.configfile, self.connfile)
         self.property = self.jsonParser.getAppPrpperty()
         self.connpropery = self.jsonParser.getConnPrpperty()
+
         self.redshiftprop = RedshiftUtils(self.connpropery.get("host"), self.connpropery.get("port"), self.connpropery.get("domain"),
                                           self.connpropery.get("user"), self.connpropery.get("password"), self.connpropery.get("tmpdir"))
         self.batch_start_dt = datetime.now()
+
 
     def getBatchID(self) -> int:
         return self.redshiftprop.getBatchId(self.sparkSession, self.subModule.upper(), self.prevDate)
@@ -85,7 +88,7 @@ class TransformActionChain:
             df_duplicate = self.trans.getDuplicates(lateOrNormalCdr, "rec_checksum")
             batch_status = 'In-Progress'
             intrabatch_dupl_count = df_duplicate.agg(py_function.count('batch_id').cast(IntegerType()).alias('INTRABATCH_DUPL_COUNT')).rdd.flatMap(lambda row: row).collect()
-            intrabatch_dist_dupl_count = df_duplicate.distinct().count()
+
             metaQuery = ("update uk_rrbs_dm.log_batch_status_mno set INTRABATCH_DEDUPL_STATUS='Complete', INTRABATCH_DUPL_COUNT={intrabatch_dupl_count}, BATCH_STATUS='{batch_status}', INTRABATCH_DIST_DUPL_COUNT={intrabatch_dist_dupl_count} where BATCH_ID={batch_id} and BATCH_END_DT is null"
                 .format(batch_id=batchid, batch_status=batch_status, intrabatch_dupl_count=''.join(str(e) for e in intrabatch_dupl_count), intrabatch_dist_dupl_count=intrabatch_dist_dupl_count))
             self.redshiftprop.writeBatchStatus(self.sparkSession, metaQuery)
