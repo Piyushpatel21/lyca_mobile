@@ -6,10 +6,7 @@
     "column_name": "onocode"
   },
   {
-    "column_name": "spcode"
-  },
-  {
-    "column_name": "spdesc"
+    "column_name": "Prefix"
   },
   {
     "column_name": "status"

@@ -6,10 +6,10 @@
     "column_name": "onocode"
   },
   {
-    "column_name": "spcode"
+    "column_name": "Description"
   },
   {
-    "column_name": "spdesc"
+    "column_name": "CCNDC"
   },
   {
     "column_name": "status"
@@ -19,6 +19,9 @@
   },
   {
     "column_name": "lastmodifieddate"
+  },
+  {
+    "column_name": "FTNCode"
   },
   {
     "column_name": "batch_id"
