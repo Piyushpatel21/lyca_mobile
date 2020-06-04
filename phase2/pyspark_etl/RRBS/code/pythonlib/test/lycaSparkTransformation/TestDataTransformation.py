@@ -263,28 +263,6 @@ class TestTransformation:
 
         assert actual_df.select('name', 'id').collect() == expected_df.collect()
 
-    def testSchemaConversion(self):
-        data_tf_instance = DataTransformation()
-        _schema = [StructField("name", StringType()),
-                   StructField("id", IntegerType())]
-        str_schema = []
-        for elem in _schema:
-            str_schema.append(StructField(elem.name, StringType()))
-
-        df1 = self.spark.read.csv('../resources/test_error_file.csv', header=True, schema=StructType(str_schema))
-
-        actual_df = data_tf_instance.convertTargetDataType(df1, StructType(_schema))
-
-        print(actual_df.show())
-
-        expected_df = self.spark.createDataFrame(
-            [("foo", 1),
-             ("bar", None),
-             (None, None)]
-        )
-
-        assert StructType(_schema) == actual_df.schema
-
 
 class TestSmsTransformation:
     sparkSessionBuild = SparkSessionBuilder().sparkSessionBuild()
@@ -318,3 +296,24 @@ class TestSmsTransformation:
         )
 
         assert actual_df.collect() == expected_df.collect()
+
+    def testSchemaConversion(self):
+        _schema = [StructField("name", StringType()),
+                   StructField("id", IntegerType())]
+        str_schema = []
+        for elem in _schema:
+            str_schema.append(StructField(elem.name, StringType()))
+
+        df1 = self.spark.read.csv('../resources/test_error_file.csv', header=True, schema=StructType(str_schema))
+
+        actual_df = self.smsTransformation.convertTargetDataType(df1, StructType(_schema))
+
+        print(actual_df.show())
+
+        expected_df = self.spark.createDataFrame(
+            [("foo", 1),
+             ("bar", None),
+             (None, None)]
+        )
+
+        assert StructType(_schema) == actual_df.schema
