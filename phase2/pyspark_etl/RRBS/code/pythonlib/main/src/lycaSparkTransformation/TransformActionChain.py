@@ -97,7 +97,7 @@ class TransformActionChain:
             batch_status = 'In-Progress'
             intrabatch_dupl_count = df_duplicate.agg(py_function.count('batch_id').cast(IntegerType()).alias('INTRABATCH_DUPL_COUNT')).rdd.flatMap(lambda row: row).collect()
             intrabatch_dist_dupl_count = df_duplicate.select(df_duplicate["rec_checksum"]).distinct().count()
-            metaQuery = ("update uk_rrbs_dm.log_batch_status_mno set INTRABATCH_DEDUPL_STATUS='Complete', INTRABATCH_DUPL_COUNT={intrabatch_dupl_count}, BATCH_STATUS='{batch_status}', INTRABATCH_DIST_DUPL_COUNT={intrabatch_dist_dupl_count} where BATCH_ID={batch_id} and BATCH_END_DT is null"
+            metaQuery = ("update uk_rrbs_dm.log_batch_status_rrbs set INTRABATCH_DEDUPL_STATUS='Complete', INTRABATCH_DUPL_COUNT={intrabatch_dupl_count}, BATCH_STATUS='{batch_status}', INTRABATCH_DIST_DUPL_COUNT={intrabatch_dist_dupl_count} where BATCH_ID={batch_id} and BATCH_END_DT is null"
                 .format(batch_id=batchid, batch_status=batch_status, intrabatch_dupl_count=''.join(str(e) for e in intrabatch_dupl_count), intrabatch_dist_dupl_count=intrabatch_dist_dupl_count))
             self.redshiftprop.writeBatchStatus(self.sparkSession, metaQuery)
             df_unique_late = self.trans.getUnique(lateOrNormalCdr, "rec_checksum").filter("normalOrlate == 'Late'")

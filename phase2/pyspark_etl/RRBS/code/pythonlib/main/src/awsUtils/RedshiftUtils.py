@@ -49,27 +49,6 @@ class RedshiftUtils:
         :return:
         """
         try:
-            df = sparkSession.read \
-                .format("com.databricks.spark.redshift") \
-                .option("url", self.jdbcUrl) \
-                .option("query", "SELECT * FROM uk_rrbs_dm.fact_rrbs_voice") \
-                .option("forward_spark_s3_credentials", "true") \
-                .option("tempdir", self.redshiftTmpDir) \
-                .load()
-            print("--Printing Voice Schema--")
-            df.printSchema()
-            print("--Printing Voice Schema Completed--")
-
-            df2 = sparkSession.read \
-                .format("com.databricks.spark.redshift") \
-                .option("url", self.jdbcUrl) \
-                .option("query", "SELECT * FROM uk_rrbs_dm.fact_rrbs_voice_1") \
-                .option("forward_spark_s3_credentials", "true") \
-                .option("tempdir", self.redshiftTmpDir) \
-                .load()
-            print("--Printing Voice_1 Schema--")
-            df2.printSchema()
-            print("--Printing Voice_1 Schema Completed--")
 
             table = ".".join([db_name, dataset_name])
             return sparkSession.read \
@@ -91,9 +70,6 @@ class RedshiftUtils:
         :parameter dataset_name - table name
         :return:
         """
-        print("--Printing DataFrame Schema--")
-        df.printSchema()
-        print("--Printing DataFrame Schema Completed--")
         cols = str((*tgtSchemaCols,)).replace("'", "")
         table = ".".join([db_name, dataset_name])
         tempTable = ".temp_".join([db_name, dataset_name])

@@ -213,6 +213,13 @@ class TopUpDataTransformation:
                             F.date_format(F.col("cdr_dt_gmt"), "yyyyMMdd").cast(IntegerType())) \
                 .withColumn("cdr_dt_hour_gmt",
                             F.date_format(F.col("cdr_dt_gmt"), "yyyyMMddHH").cast(IntegerType())) \
+                .withColumn("bundle_name_lowercase", F.lower(F.col("bundle_name"))) \
+                .withColumn("bundle_usage_2",
+                            F.col("special_topup_amount").cast(DecimalType(21, 6)) + F.col("face_value").cast(
+                                DecimalType(21, 6))) \
+                .withColumn("face_vale_n", F.col("face_value").cast(DecimalType(10, 4))) \
+                .withColumn("special_topup_amount_n", F.col("special_topup_amount").cast(DecimalType(10, 4))) \
+                .withColumn("actual_bundle_cost_n", F.col("actual_bundle_cost").cast(DecimalType(10, 4))) \
                 .drop('_temp_datetime_col', '_temp_datetime_col_utc')
 
             ex_date_DF = transDF.withColumn("expiry_DATE_derived",
@@ -241,8 +248,26 @@ class TopUpDataTransformation:
                                                       .cast("timestamp")))
             ex_date_num_DF = newExDF.withColumn("expiry_DATE_derived_num",
                                                 F.date_format(F.col("expiry_DATE_derived"), "yyyyMMdd")
+                                                .cast(IntegerType())) \
+                                    .withColumn("expiry_date_month_derived", F.date_format(F.col("expiry_DATE_derived"), "yyyyMM")
                                                 .cast(IntegerType()))
-            return ex_date_num_DF
+
+            fDf = ex_date_num_DF.withColumn("is_bundle_loyalty",
+                                                F.when(ex_date_num_DF.bundle_name_lowercase.contains('loyalty'),
+                                                       1).otherwise(0)) \
+                .drop("bundle_name_lowercase")
+
+            finalDF = fDf.withColumn("bundle_usage_1",
+                            F.when((fDf["face_vale_n"] == 0) & (fDf["special_topup_amount_n"] > 0),
+                                   F.col("special_topup_amount_n").cast(DecimalType(22, 6))) \
+                            .otherwise(F.when((fDf["face_vale_n"] > 0) & (fDf["special_topup_amount_n"] >= 0),
+                                              F.col("face_vale_n").cast(DecimalType(22, 6))) \
+                                       .otherwise(
+                                F.when((fDf["face_vale_n"] == 0) & (fDf["special_topup_amount_n"] == 0),
+                                       F.col("actual_bundle_cost_n").cast(DecimalType(22, 6)))))) \
+                .drop("face_vale_n", "special_topup_amount_n", "actual_bundle_cost_n") \
+
+            return finalDF
         except Exception as ex:
             self._logger.error("Failed to generate derived columns with error: {err}".format(err=ex))
 
