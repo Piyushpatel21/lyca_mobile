@@ -2,8 +2,6 @@
   {
     "module" : "rrbs",
     "subModule" : "sms",
-    "dateColumn" : "msg_date",
-    "formattedDateColumn" : "msg_date_dt",
     "integerDateColumn" : "msg_date_num",
     "normalcdrfrq" : "daily",
     "numofdayormnthnormal" : 1,
@@ -20,8 +18,6 @@
   {
     "module" : "rrbs",
     "subModule" : "voice",
-    "dateColumn" : "call_date",
-    "formattedDateColumn" : "call_date_dt",
     "integerDateColumn" : "call_date_num",
     "normalcdrfrq" : "daily",
     "numofdayormnthnormal" : 1,
@@ -38,8 +34,6 @@
   {
     "module" : "rrbs",
     "subModule" : "topup",
-    "dateColumn" : "cdr_time_stamp",
-    "formattedDateColumn" : "cdr_dt",
     "integerDateColumn" : "cdr_dt_num",
     "normalcdrfrq" : "daily",
     "numofdayormnthnormal" : 1,
@@ -56,8 +50,6 @@
   {
     "module" : "rrbs",
     "subModule" : "gprs",
-    "dateColumn" : "data_termination_time",
-    "formattedDateColumn" : "data_termination_dt",
     "integerDateColumn" : "data_termination_dt_num",
     "normalcdrfrq" : "daily",
     "numofdayormnthnormal" : 1,
