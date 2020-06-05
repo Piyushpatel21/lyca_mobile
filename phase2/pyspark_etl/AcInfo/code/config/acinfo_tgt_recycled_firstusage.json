@@ -1,0 +1,101 @@
+[
+  {
+    "column_name": "ID"
+  },
+  {
+    "column_name": "MONTH"
+  },
+  {
+    "column_name": "NETWORK_ID"
+  },
+  {
+    "column_name": "MSISDN"
+  },
+  {
+    "column_name": "MSISDN_SWAP"
+  },
+  {
+    "column_name": "ICCIDPREFIX"
+  },
+  {
+    "column_name": "ICCID"
+  },
+  {
+    "column_name": "IMSI"
+  },
+  {
+    "column_name": "IMSI2"
+  },
+  {
+    "column_name": "LAST_USAGE_DATE"
+  },
+  {
+    "column_name": "BALANCE"
+  },
+  {
+    "column_name": "PRODUCTION_STATUS"
+  },
+  {
+    "column_name": "ACTIVATIONDATE"
+  },
+  {
+    "column_name": "REGISTRATIONDATE"
+  },
+  {
+    "column_name": "LAST_CALL_DATE"
+  },
+  {
+    "column_name": "LAST_MSG_DATE"
+  },
+  {
+    "column_name": "LAST_TOP_DATE"
+  },
+  {
+    "column_name": "HLRID"
+  },
+  {
+    "column_name": "DeactivationDate"
+  },
+  {
+    "column_name": "INITIALBAL"
+  },
+  {
+    "column_name": "ACC_ID"
+  },
+  {
+    "column_name": "ResellerId"
+  },
+  {
+    "column_name": "Offmgrid"
+  },
+  {
+    "column_name": "Accmgrid"
+  },
+  {
+    "column_name": "Hotspotid"
+  },
+  {
+    "column_name": "Retailerid"
+  },
+  {
+    "column_name": "DISTRIBUTORID"
+  },
+  {
+    "column_name": "FILEDATE"
+  },
+  {
+    "column_name": "FACEVALUE"
+  },
+  {
+    "column_name": "FIRST_ICCID"
+  },
+  {
+    "column_name": "batch_id"
+  },
+  {
+    "column_name": "created_DATE"
+  },
+  {
+    "column_name": "rec_checksum"
+  }
+]

@@ -1,0 +1,181 @@
+[ {
+    "column_name": "ID",
+    "column_type": "integer",
+    "required": false,
+    "check_sum": true
+  },
+  {
+    "column_name": "MONTH",
+    "column_type": "character",
+    "required": false,
+    "check_sum": true
+  },
+  {
+    "column_name": "NETWORK_ID",
+    "column_type": "character",
+    "required": false,
+    "check_sum": true
+  },
+  {
+    "column_name": "MSISDN",
+    "column_type": "character",
+    "required": false,
+    "check_sum": true
+  },
+  {
+    "column_name": "MSISDN_SWAP",
+    "column_type": "character",
+    "required": false,
+    "check_sum": true
+  },
+  {
+    "column_name": "ICCIDPREFIX",
+    "column_type": "character",
+    "required": false,
+    "check_sum": true
+  },
+  {
+    "column_name": "ICCID",
+    "column_type": "character",
+    "required": false,
+    "check_sum": true
+  },
+  {
+    "column_name": "IMSI",
+    "column_type": "character",
+    "required": false,
+    "check_sum": true
+  },
+  {
+    "column_name": "IMSI2",
+    "column_type": "character",
+    "required": false,
+    "check_sum": true
+  },
+  {
+    "column_name": "LAST_USAGE_DATE",
+    "column_type": "timestamp without time zone",
+    "required": false,
+    "check_sum": true
+  },
+  {
+    "column_name": "BALANCE",
+    "column_type": "numeric",
+    "required": false,
+    "check_sum": true
+  },
+  {
+    "column_name": "PRODUCTION_STATUS",
+    "column_type": "character",
+    "required": false,
+    "check_sum": true
+  },
+  {
+    "column_name": "ACTIVATIONDATE",
+    "column_type": "timestamp without time zone",
+    "required": false,
+    "check_sum": true
+  },
+  {
+    "column_name": "REGISTRATIONDATE",
+    "column_type": "timestamp without time zone",
+    "required": false,
+    "check_sum": true
+  },
+  {
+    "column_name": "LAST_CALL_DATE",
+    "column_type": "character",
+    "required": false,
+    "check_sum": true
+  },
+  {
+    "column_name": "LAST_MSG_DATE",
+    "column_type": "character",
+    "required": false,
+    "check_sum": true
+  },
+  {
+    "column_name": "LAST_TOP_DATE",
+    "column_type": "character",
+    "required": false,
+    "check_sum": true
+  },
+  {
+    "column_name": "HLRID",
+    "column_type": "character",
+    "required": false,
+    "check_sum": true
+  },
+  {
+    "column_name": "DeactivationDate",
+    "column_type": "timestamp without time zone",
+    "required": false,
+    "check_sum": true
+  },
+  {
+    "column_name": "INITIALBAL",
+    "column_type": "numeric",
+    "required": false,
+    "check_sum": true
+  },
+  {
+    "column_name": "ACC_ID",
+    "column_type": "character",
+    "required": false,
+    "check_sum": true
+  },
+  {
+    "column_name": "ResellerId",
+    "column_type": "character",
+    "required": false,
+    "check_sum": true
+  },
+  {
+    "column_name": "Offmgrid",
+    "column_type": "character",
+    "required": false,
+    "check_sum": true
+  },
+  {
+    "column_name": "Accmgrid",
+    "column_type": "character",
+    "required": false,
+    "check_sum": true
+  },
+  {
+    "column_name": "Hotspotid",
+    "column_type": "character",
+    "required": false,
+    "check_sum": true
+  },
+  {
+    "column_name": "Retailerid",
+    "column_type": "character",
+    "required": false,
+    "check_sum": true
+  },
+  {
+    "column_name": "DISTRIBUTORID",
+    "column_type": "character",
+    "required": false,
+    "check_sum": true
+  },
+  {
+    "column_name": "FILEDATE",
+    "column_type": "date",
+    "required": false,
+    "check_sum": true
+  },
+  {
+    "column_name": "FACEVALUE",
+    "column_type": "numeric",
+    "required": false,
+    "check_sum": true
+  },
+  {
+    "column_name": "FIRST_ICCID",
+    "column_type": "character",
+    "required": false,
+    "check_sum": true
+  }
+]
