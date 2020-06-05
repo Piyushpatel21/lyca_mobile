@@ -94,7 +94,7 @@ def start_execution(args):
         tf.writetoDataMart(normalNew, propColumns.get("tgtSchema"))
         tf.writetoLateCDR(lateNew, propColumns.get("tgtSchema"))
         tf.writetoDataMart(lateNew, propColumns.get("tgtSchema"))
-        logger.error("ETL processing completed for batch - {batch_id}".format(batch_id=batch_id))
+        logger.info("ETL processing completed for batch - {batch_id}".format(batch_id=batch_id))
         tf.writeBatchStatus(batch_id, "Complete")
     except Exception as ex:
         logger.error("ETL processing failed for batch - {batch_id} : {error}".format(error=ex, batch_id=batch_id))
