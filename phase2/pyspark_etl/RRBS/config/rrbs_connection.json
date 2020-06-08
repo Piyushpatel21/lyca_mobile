@@ -1,0 +1,11 @@
+[
+  {
+    "servicetype" : "redshift",
+    "domain" : "dev",
+    "redshiftsecret": "redshift_etl_user",
+    "region": "eu-west-2",
+    "host" : "redshift-cluster-1.cmoksmaxzbvz.eu-west-2.redshift.amazonaws.com",
+    "port" : "5439",
+    "tmpdir" : "s3://mis-dl-lyca-raw"
+  }
+]

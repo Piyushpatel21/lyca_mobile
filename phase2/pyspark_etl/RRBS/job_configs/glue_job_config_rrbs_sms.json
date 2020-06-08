@@ -1,0 +1,26 @@
+{
+  "Name": "lyca_etl_rrbs_sms",
+  "ScriptLocation": "s3://mis-test-code-pipeline/projects/RRBS/code/main.py",
+  "Description": "ETL job to prcoess submodule sms for rrbs module",
+  "Role": "AWSGlueServiceRole-GlueToS3",
+  "PythonVersion": "3",
+  "GlueVersion": "1.0",
+  "MaxCapacity": 5,
+  "Connections": "ETLRedshiftConnection",
+  "DefaultArguments": {
+    "--module": "rrbs",
+    "--submodule": "sms",
+    "--code_bucket": "mis-test-code-pipeline",
+    "--configfile": "projects/RRBS/configs/rrbs_application_properties.json",
+    "--connfile": "projects/RRBS/configs/rrbs_connection.json",
+    "--enable-spark-ui": "true",
+    "--master": "glue",
+    "--extra-py-files": "s3://mis-test-code-pipeline/projects/RRBS/code/lycaetl_rrbs-pyspark-1.0.0.zip",
+    "--TempDir": "s3://mis-test-code-pipeline/tmp/"
+  },
+  "Tags": {
+    "CreatedBy": "Bhavin.Tandel",
+    "ToBeDeleted": "True",
+    "Project": "Lyca"
+  }
+}
