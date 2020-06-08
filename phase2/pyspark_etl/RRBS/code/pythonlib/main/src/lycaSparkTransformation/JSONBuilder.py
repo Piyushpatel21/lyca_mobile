@@ -46,14 +46,6 @@ class JSONBuilder:
         """ :return JSON tgt schema file path"""
         return self.prop['module_prop']['tgtSchemaPath']
 
-    def getDateColumn(self):
-        """ :return return date column which is used in dataset to compare with Late or Normal CDR"""
-        return self.prop['module_prop']['dateColumn']
-
-    def getFormattedDateColumn(self):
-        """ :return formatted column name for date column"""
-        return self.prop['module_prop']['formattedDateColumn']
-
     def getIntegerDateColumn(self):
         """ :return numeric column name for date column"""
         return self.prop['module_prop']['integerDateColumn']
@@ -130,8 +122,6 @@ class JSONBuilder:
         sourceFilePath = self.getSourceFilePath()
         srcSchemaPath = self.getSrcSchemaPath()
         tgtSchemaPath = self.getTgtSchemaPath()
-        dateColumn = self.getDateColumn()
-        formattedDateColumn = self.getFormattedDateColumn()
         integerDateColumn = self.getIntegerDateColumn()
         normalcdrfrq = self.getNormalCdrFrq()
         numofdayormnthnormal = self.getNumofDayorMnthNormal()
@@ -148,8 +138,6 @@ class JSONBuilder:
             "sourceFilePath": sourceFilePath,
             "srcSchemaPath": srcSchemaPath,
             "tgtSchemaPath": tgtSchemaPath,
-            "dateColumn": dateColumn,
-            "formattedDateColumn": formattedDateColumn,
             "integerDateColumn": integerDateColumn,
             "normalcdrfrq": normalcdrfrq,
             "numofdayormnthnormal": numofdayormnthnormal,

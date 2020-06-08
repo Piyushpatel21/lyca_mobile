@@ -55,13 +55,13 @@
   },
   {
     "column_name" : "status",
-    "column_type" : "character",
+    "column_type" : "integer",
     "required" : false,
     "check_sum" : true
   },
   {
     "column_name" : "smsstate",
-    "column_type" : "character",
+    "column_type" : "integer",
     "required" : false,
     "check_sum" : true
   },

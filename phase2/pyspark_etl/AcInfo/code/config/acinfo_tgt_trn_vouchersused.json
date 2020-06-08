@@ -1,0 +1,89 @@
+[
+  {
+    "column_name": "voucherid"
+  },
+  {
+    "column_name": "card_id"
+  },
+  {
+    "column_name": "batch_id"
+  },
+  {
+    "column_name": "Serial_id"
+  },
+  {
+    "column_name": "CardNumber"
+  },
+  {
+    "column_name": "Card_Pin"
+  },
+  {
+    "column_name": "Face_Value"
+  },
+  {
+    "column_name": "Card_Currency"
+  },
+  {
+    "column_name": "Create_Date"
+  },
+  {
+    "column_name": "Expired_Date"
+  },
+  {
+    "column_name": "Reseller_id"
+  },
+  {
+    "column_name": "SiteCode"
+  },
+  {
+    "column_name": "PrINTed_Price"
+  },
+  {
+    "column_name": "Validity"
+  },
+  {
+    "column_name": "VoucherStatusID"
+  },
+  {
+    "column_name": "UsedDate"
+  },
+  {
+    "column_name": "MSISDN"
+  },
+  {
+    "column_name": "Plan_ID"
+  },
+  {
+    "column_name": "Is_SBTPrINTable"
+  },
+  {
+    "column_name": "Is_Bundle"
+  },
+  {
+    "column_name": "Is_Assigned"
+  },
+  {
+    "column_name": "BUNDLE_CODE"
+  },
+  {
+    "column_name": "transaction_ID"
+  },
+  {
+    "column_name": "serviceID"
+  },
+  {
+    "column_name": "VoucherType"
+  },
+  {
+    "column_name": "BundleCost"
+  },
+  {
+    "column_name": "batch_id"
+  },
+  {
+    "column_name": "created_DATE"
+  },
+  {
+    "column_name": "rec_checksum"
+  }
+]

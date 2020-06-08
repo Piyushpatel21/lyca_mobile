@@ -1,0 +1,658 @@
+[
+  {
+    "column_name" : "customerid",
+    "column_type" : "integer",
+    "required" : false,
+    "check_sum" : true
+  },
+  {
+    "column_name" : "Title",
+    "column_type" : "character",
+    "required" : false,
+    "check_sum" : true
+  },
+  {
+    "column_name" : "firstname",
+    "column_type" : "character",
+    "required" : false,
+    "check_sum" : true
+  },
+  {
+    "column_name" : "lastname",
+    "column_type" : "character",
+    "required" : false,
+    "check_sum" : true
+  },
+  {
+    "column_name" : "postcode",
+    "column_type" : "character",
+    "required" : false,
+    "check_sum" : true
+  },
+  {
+    "column_name" : "houseno",
+    "column_type" : "character",
+    "required" : false,
+    "check_sum" : true
+  },
+  {
+    "column_name" : "street",
+    "column_type" : "character",
+    "required" : false,
+    "check_sum" : true
+  },
+  {
+    "column_name" : "Cityname",
+    "column_type" : "character",
+    "required" : false,
+    "check_sum" : true
+  },
+  {
+    "column_name" : "county",
+    "column_type" : "character",
+    "required" : false,
+    "check_sum" : true
+  },
+  {
+    "column_name" : "country",
+    "column_type" : "character",
+    "required" : false,
+    "check_sum" : true
+  },
+  {
+    "column_name" : "email",
+    "column_type" : "character",
+    "required" : false,
+    "check_sum" : true
+  },
+  {
+    "column_name" : "landlineno",
+    "column_type" : "character",
+    "required" : false,
+    "check_sum" : true
+  },
+  {
+    "column_name" : "numberofsims",
+    "column_type" : "integer",
+    "required" : false,
+    "check_sum" : true
+  },
+  {
+    "column_name" : "dateofcreation",
+    "column_type" : "timestamp without time zone",
+    "required" : false,
+    "check_sum" : true
+  },
+  {
+    "column_name" : "chkEmail",
+    "column_type" : "smallint",
+    "required" : false,
+    "check_sum" : true
+  },
+  {
+    "column_name" : "STATUS",
+    "column_type" : "integer",
+    "required" : false,
+    "check_sum" : true
+  },
+  {
+    "column_name" : "deliverystatus",
+    "column_type" : "integer",
+    "required" : false,
+    "check_sum" : true
+  },
+  {
+    "column_name" : "mailstatus",
+    "column_type" : "integer",
+    "required" : false,
+    "check_sum" : true
+  },
+  {
+    "column_name" : "updateddate",
+    "column_type" : "timestamp without time zone",
+    "required" : false,
+    "check_sum" : true
+  },
+  {
+    "column_name" : "campaign",
+    "column_type" : "integer",
+    "required" : false,
+    "check_sum" : true
+  },
+  {
+    "column_name" : "isTD",
+    "column_type" : "integer",
+    "required" : false,
+    "check_sum" : true
+  },
+  {
+    "column_name" : "orderno",
+    "column_type" : "character",
+    "required" : false,
+    "check_sum" : true
+  },
+  {
+    "column_name" : "paymentamount",
+    "column_type" : "numeric",
+    "required" : false,
+    "check_sum" : true
+  },
+  {
+    "column_name" : "topupamount",
+    "column_type" : "numeric",
+    "required" : false,
+    "check_sum" : true
+  },
+  {
+    "column_name" : "msisdn",
+    "column_type" : "character",
+    "required" : false,
+    "check_sum" : true
+  },
+  {
+    "column_name" : "billingpostcode",
+    "column_type" : "character",
+    "required" : false,
+    "check_sum" : true
+  },
+  {
+    "column_name" : "billinghouseno",
+    "column_type" : "character",
+    "required" : false,
+    "check_sum" : true
+  },
+  {
+    "column_name" : "billingstreet",
+    "column_type" : "character",
+    "required" : false,
+    "check_sum" : true
+  },
+  {
+    "column_name" : "billingcityname",
+    "column_type" : "character",
+    "required" : false,
+    "check_sum" : true
+  },
+  {
+    "column_name" : "billingcounty",
+    "column_type" : "character",
+    "required" : false,
+    "check_sum" : true
+  },
+  {
+    "column_name" : "createdby",
+    "column_type" : "character",
+    "required" : false,
+    "check_sum" : true
+  },
+  {
+    "column_name" : "cardid",
+    "column_type" : "character",
+    "required" : false,
+    "check_sum" : true
+  },
+  {
+    "column_name" : "processstatus",
+    "column_type" : "integer",
+    "required" : false,
+    "check_sum" : true
+  },
+  {
+    "column_name" : "TrackingInfo",
+    "column_type" : "character",
+    "required" : false,
+    "check_sum" : true
+  },
+  {
+    "column_name" : "TransactionID",
+    "column_type" : "character",
+    "required" : false,
+    "check_sum" : true
+  },
+  {
+    "column_name" : "clientid",
+    "column_type" : "integer",
+    "required" : false,
+    "check_sum" : true
+  },
+
+  {
+    "column_name" : "flatNo",
+    "column_type" : "character",
+    "required" : false,
+    "check_sum" : true
+  },
+  {
+    "column_name" : "sideName",
+    "column_type" : "character",
+    "required" : false,
+    "check_sum" : true
+  },
+  {
+    "column_name" : "Preferred_Language",
+    "column_type" : "character",
+    "required" : false,
+    "check_sum" : true
+  },
+  {
+    "column_name" : "Nationality",
+    "column_type" : "character",
+    "required" : false,
+    "check_sum" : true
+  },
+  {
+    "column_name" : "Type_Of_Id",
+    "column_type" : "character",
+    "required" : false,
+    "check_sum" : true
+  },
+  {
+    "column_name" : "Id_Number",
+    "column_type" : "character",
+    "required" : false,
+    "check_sum" : true
+  },
+  {
+    "column_name" : "promocode",
+    "column_type" : "character",
+    "required" : false,
+    "check_sum" : true
+  },
+  {
+    "column_name" : "adlink",
+    "column_type" : "character",
+    "required" : false,
+    "check_sum" : true
+  },
+  {
+    "column_name" : "HeardAboutUs",
+    "column_type" : "character",
+    "required" : false,
+    "check_sum" : true
+  },
+  {
+    "column_name" : "MostCallCountry",
+    "column_type" : "character",
+    "required" : false,
+    "check_sum" : true
+  },
+  {
+    "column_name" : "address",
+    "column_type" : "character",
+    "required" : false,
+    "check_sum" : true
+  },
+  {
+    "column_name" : "billingaddress",
+    "column_type" : "character",
+    "required" : false,
+    "check_sum" : true
+  },
+  {
+    "column_name" : "billingcountry",
+    "column_type" : "character",
+    "required" : false,
+    "check_sum" : true
+  },
+  {
+    "column_name" : "TypeOfSim",
+    "column_type" : "character",
+    "required" : false,
+    "check_sum" : true
+  },
+  {
+    "column_name" : "RealMSISDN",
+    "column_type" : "character",
+    "required" : false,
+    "check_sum" : true
+  },
+  {
+    "column_name" : "CancelBundleMSISDN",
+    "column_type" : "character",
+    "required" : false,
+    "check_sum" : true
+  },
+  {
+    "column_name" : "TopupMSISDN",
+    "column_type" : "character",
+    "required" : false,
+    "check_sum" : true
+  },
+  {
+    "column_name" : "BundleMSISDN",
+    "column_type" : "character",
+    "required" : false,
+    "check_sum" : true
+  },
+  {
+    "column_name" : "ZipCode",
+    "column_type" : "character",
+    "required" : false,
+    "check_sum" : true
+  },
+  {
+    "column_name" : "PaymentStatus",
+    "column_type" : "character",
+    "required" : false,
+    "check_sum" : true
+  },
+  {
+    "column_name" : "ShipmentCharge",
+    "column_type" : "numeric",
+    "required" : false,
+    "check_sum" : true
+  },
+  {
+    "column_name" : "affiliateName",
+    "column_type" : "character",
+    "required" : false,
+    "check_sum" : true
+  },
+  {
+    "column_name" : "IsGafVerified",
+    "column_type" : "smallint",
+    "required" : false,
+    "check_sum" : true
+  },
+  {
+    "column_name" : "TaxAmount",
+    "column_type" : "numeric",
+    "required" : false,
+    "check_sum" : true
+  },
+  {
+    "column_name" : "MODEOFREG",
+    "column_type" : "character",
+    "required" : false,
+    "check_sum" : true
+  },
+  {
+    "column_name" : "BUNDLEAMOUNT",
+    "column_type" : "character",
+    "required" : false,
+    "check_sum" : true
+  },
+  {
+    "column_name" : "BUNDLELIST",
+    "column_type" : "character",
+    "required" : false,
+    "check_sum" : true
+  },
+  {
+    "column_name" : "VATtransid",
+    "column_type" : "character",
+    "required" : false,
+    "check_sum" : true
+  },
+  {
+    "column_name" : "VATamount",
+    "column_type" : "numeric",
+    "required" : false,
+    "check_sum" : true
+  },
+  {
+    "column_name" : "VATPerc",
+    "column_type" : "numeric",
+    "required" : false,
+    "check_sum" : true
+  },
+
+
+
+
+
+
+
+
+
+
+
+
+
+  {
+    "column_name" : "TotalAmount",
+    "column_type" : "numeric",
+    "required" : false,
+    "check_sum" : true
+  },
+  {
+    "column_name" : "Street_number",
+    "column_type" : "character",
+    "required" : false,
+    "check_sum" : true
+  },
+  {
+    "column_name" : "EState",
+    "column_type" : "character",
+    "required" : false,
+    "check_sum" : true
+  },
+  {
+    "column_name" : "building",
+    "column_type" : "character",
+    "required" : false,
+    "check_sum" : true
+  },
+  {
+    "column_name" : "block_holder",
+    "column_type" : "character",
+    "required" : false,
+    "check_sum" : true
+  },
+  {
+    "column_name" : "floor",
+    "column_type" : "character",
+    "required" : false,
+    "check_sum" : true
+  },
+  {
+    "column_name" : "ApartmentNo",
+    "column_type" : "character",
+    "required" : false,
+    "check_sum" : true
+  },
+  {
+    "column_name" : "BillingApartmentNo",
+    "column_type" : "character",
+    "required" : false,
+    "check_sum" : true
+  },
+  {
+    "column_name" : "Division",
+    "column_type" : "character",
+    "required" : false,
+    "check_sum" : true
+  },
+  {
+    "column_name" : "Place",
+    "column_type" : "character",
+    "required" : false,
+    "check_sum" : true
+  },
+  {
+    "column_name" : "Municipality",
+    "column_type" : "character",
+    "required" : false,
+    "check_sum" : true
+  },
+  {
+    "column_name" : "HousenoAddon",
+    "column_type" : "character",
+    "required" : false,
+    "check_sum" : true
+  },
+  {
+    "column_name" : "Billing_HouseNo_AddOn",
+    "column_type" : "character",
+    "required" : false,
+    "check_sum" : true
+  },
+  {
+    "column_name" : "UnitNumber",
+    "column_type" : "character",
+    "required" : false,
+    "check_sum" : true
+  },
+  {
+    "column_name" : "ITGTRansactionID",
+    "column_type" : "character",
+    "required" : false,
+    "check_sum" : true
+  },
+  {
+    "column_name" : "ChannelTransactionID",
+    "column_type" : "character",
+    "required" : false,
+    "check_sum" : true
+  },
+  {
+    "column_name" : "LIFT",
+    "column_type" : "character",
+    "required" : false,
+    "check_sum" : true
+  },
+  {
+    "column_name" : "DOOR",
+    "column_type" : "character",
+    "required" : false,
+    "check_sum" : true
+  },
+  {
+    "column_name" : "billingblock",
+    "column_type" : "character",
+    "required" : false,
+    "check_sum" : true
+  },
+  {
+    "column_name" : "billingfloor",
+    "column_type" : "character",
+    "required" : false,
+    "check_sum" : true
+  },
+  {
+    "column_name" : "billinglift",
+    "column_type" : "character",
+    "required" : false,
+    "check_sum" : true
+  },
+  {
+    "column_name" : "billingdoor",
+    "column_type" : "character",
+    "required" : false,
+    "check_sum" : true
+  },
+  {
+    "column_name" : "Region",
+    "column_type" : "character",
+    "required" : false,
+    "check_sum" : true
+  },
+  {
+    "column_name" : "BillingRegion",
+    "column_type" : "character",
+    "required" : false,
+    "check_sum" : true
+  },
+  {
+    "column_name" : "Neighbourhood",
+    "column_type" : "character",
+    "required" : false,
+    "check_sum" : true
+  },
+  {
+    "column_name" : "AdministrativeArea",
+    "column_type" : "character",
+    "required" : false,
+    "check_sum" : true
+  },
+  {
+    "column_name" : "Billing_Neighborhood",
+    "column_type" : "character",
+    "required" : false,
+    "check_sum" : true
+  },
+  {
+    "column_name" : "Billing_Administrative",
+    "column_type" : "character",
+    "required" : false,
+    "check_sum" : true
+  },
+  {
+    "column_name" : "Date_of_Birth",
+    "column_type" : "character",
+    "required" : false,
+    "check_sum" : true
+  },
+  {
+    "column_name" : "TotalFeeAmount",
+    "column_type" : "numeric",
+    "required" : false,
+    "check_sum" : true
+  },
+  {
+    "column_name" : "Gender",
+    "column_type" : "character",
+    "required" : false,
+    "check_sum" : true
+  },
+  {
+    "column_name" : "Italian_National",
+    "column_type" : "character",
+    "required" : false,
+    "check_sum" : true
+  },
+  {
+    "column_name" : "TaxCode",
+    "column_type" : "character",
+    "required" : false,
+    "check_sum" : true
+  },
+  {
+    "column_name" : "Issuer",
+    "column_type" : "character",
+    "required" : false,
+    "check_sum" : true
+  },
+  {
+    "column_name" : "DateOfIssue",
+    "column_type" : "timestamp without time zone",
+    "required" : false,
+    "check_sum" : true
+  },
+  {
+    "column_name" : "ValidDate",
+    "column_type" : "timestamp without time zone",
+    "required" : false,
+    "check_sum" : true
+  },
+  {
+    "column_name" : "Preferred_DeliveryTime",
+    "column_type" : "character",
+    "required" : false,
+    "check_sum" : true
+  },
+  {
+    "column_name" : "PlaceOfBirth",
+    "column_type" : "character",
+    "required" : false,
+    "check_sum" : true
+  },
+  {
+    "column_name" : "CountryOfBirth",
+    "column_type" : "character",
+    "required" : false,
+    "check_sum" : true
+  },
+  {
+    "column_name" : "Province",
+    "column_type" : "character",
+    "required" : false,
+    "check_sum" : true
+  },
+  {
+    "column_name" : "CommuneCode",
+    "column_type" : "character",
+    "required" : false,
+    "check_sum" : true
+  }
+]

@@ -6,13 +6,22 @@
     "column_name": "onocode"
   },
   {
-    "column_name": "spcode"
+    "column_name": "SPCode"
   },
   {
-    "column_name": "spdesc"
+    "column_name": "SPDesc"
   },
   {
     "column_name": "status"
+  },
+  {
+    "column_name": "URL"
+  },
+  {
+    "column_name": "UID"
+  },
+  {
+    "column_name": "PWD"
   },
   {
     "column_name": "lastmodifiedby"

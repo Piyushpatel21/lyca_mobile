@@ -213,6 +213,13 @@ class TopUpDataTransformation:
                             F.date_format(F.col("cdr_dt_gmt"), "yyyyMMdd").cast(IntegerType())) \
                 .withColumn("cdr_dt_hour_gmt",
                             F.date_format(F.col("cdr_dt_gmt"), "yyyyMMddHH").cast(IntegerType())) \
+                .withColumn("bundle_name_lowercase", F.lower(F.col("bundle_name"))) \
+                .withColumn("bundle_usage_2",
+                            F.col("special_topup_amount").cast(DecimalType(21, 6)) + F.col("face_value").cast(
+                                DecimalType(21, 6))) \
+                .withColumn("face_vale_n", F.col("face_value").cast(DecimalType(10, 4))) \
+                .withColumn("special_topup_amount_n", F.col("special_topup_amount").cast(DecimalType(10, 4))) \
+                .withColumn("actual_bundle_cost_n", F.col("actual_bundle_cost").cast(DecimalType(10, 4))) \
                 .drop('_temp_datetime_col', '_temp_datetime_col_utc')
 
             ex_date_DF = transDF.withColumn("expiry_DATE_derived",
@@ -241,8 +248,26 @@ class TopUpDataTransformation:
                                                       .cast("timestamp")))
             ex_date_num_DF = newExDF.withColumn("expiry_DATE_derived_num",
                                                 F.date_format(F.col("expiry_DATE_derived"), "yyyyMMdd")
+                                                .cast(IntegerType())) \
+                                    .withColumn("expiry_date_month_derived", F.date_format(F.col("expiry_DATE_derived"), "yyyyMM")
                                                 .cast(IntegerType()))
-            return ex_date_num_DF
+
+            fDf = ex_date_num_DF.withColumn("is_bundle_loyalty",
+                                                F.when(ex_date_num_DF.bundle_name_lowercase.contains('loyalty'),
+                                                       1).otherwise(0)) \
+                .drop("bundle_name_lowercase")
+
+            finalDF = fDf.withColumn("bundle_usage_1",
+                            F.when((fDf["face_vale_n"] == 0) & (fDf["special_topup_amount_n"] > 0),
+                                   F.col("special_topup_amount_n").cast(DecimalType(22, 6))) \
+                            .otherwise(F.when((fDf["face_vale_n"] > 0) & (fDf["special_topup_amount_n"] >= 0),
+                                              F.col("face_vale_n").cast(DecimalType(22, 6))) \
+                                       .otherwise(
+                                F.when((fDf["face_vale_n"] == 0) & (fDf["special_topup_amount_n"] == 0),
+                                       F.col("actual_bundle_cost_n").cast(DecimalType(22, 6)))))) \
+                .drop("face_vale_n", "special_topup_amount_n", "actual_bundle_cost_n") \
+
+            return finalDF
         except Exception as ex:
             self._logger.error("Failed to generate derived columns with error: {err}".format(err=ex))
 
@@ -303,12 +328,15 @@ class GprsDataTransformation:
         try:
             self._logger.info("Generating derived columns for GPRS data.")
             transDF = df.withColumn("_temp_connection_dt_col",
-                                    F.to_timestamp(df[self._data_connection_time_col], self._data_connection_time_col_format)) \
+                                    F.to_timestamp(df[self._data_connection_time_col],
+                                                   self._data_connection_time_col_format)) \
                 .withColumn("_temp_termination_dt_col",
                             F.to_timestamp(df[self._data_termination_time_col], self._data_termination_time_col_format)) \
-                .withColumn("data_connection_time", F.date_format(F.col("_temp_connection_dt_col"), "yyyyMM").cast(IntegerType())) \
-                .withColumn("data_connection", F.to_date(F.col("_temp_connection_dt_col"))) \
-                .withColumn("data_connection_dt_num", F.date_format(F.col("_temp_connection_dt_col"), "yyyyMMdd").cast(IntegerType())) \
+                .withColumn("data_connection_month",
+                            F.date_format(F.col("_temp_connection_dt_col"), "yyyyMM").cast(IntegerType())) \
+                .withColumn("data_connection_dt", F.to_date(F.col("_temp_connection_dt_col"))) \
+                .withColumn("data_connection_dt_num",
+                            F.date_format(F.col("_temp_connection_dt_col"), "yyyyMMdd").cast(IntegerType())) \
                 .withColumn("data_connection_hour",
                             F.date_format(F.col("_temp_connection_dt_col"), "yyyyMMddHH").cast(IntegerType())) \
                 .withColumn("data_termination_month",
@@ -322,7 +350,8 @@ class GprsDataTransformation:
                             F.to_utc_timestamp(F.col("_temp_connection_dt_col"), F.lit(self.time_zone))) \
                 .withColumn("_temp_termination_dt_col_utc",
                             F.to_utc_timestamp(F.col("_temp_termination_dt_col"), F.lit(self.time_zone))) \
-                .withColumn("data_connection_time_gmt", F.from_utc_timestamp(F.col("_temp_connection_dt_col_utc"), "GMT")) \
+                .withColumn("data_connection_time_gmt",
+                            F.from_utc_timestamp(F.col("_temp_connection_dt_col_utc"), "GMT")) \
                 .withColumn("data_connection_month_gmt",
                             F.date_format(F.col("data_connection_time_gmt"), "yyyyMM").cast(IntegerType())) \
                 .withColumn("data_connection_dt_num_gmt",
@@ -337,8 +366,9 @@ class GprsDataTransformation:
                             F.date_format(F.col("data_termination_time_gmt"), "yyyyMMdd").cast(IntegerType())) \
                 .withColumn("data_termination_hour_gmt",
                             F.date_format(F.col("data_termination_time_gmt"), "yyyyMMddHH").cast(IntegerType())) \
-                .withColumn("total_bytes", F.col("uploaded_bytes").cast(IntegerType()) + F.col("downloaded_bytes").cast(IntegerType())) \
-                .withColumn("total_usage_mb", F.lit(F.lit(F.col("total_bytes")/1024)/1024).cast(DecimalType(22, 6))) \
+                .withColumn("total_bytes",
+                            F.col("uploaded_bytes").cast(IntegerType()) + F.col("downloaded_bytes").cast(IntegerType())) \
+                .withColumn("total_usage_mb", F.lit(F.lit(F.col("total_bytes") / 1024) / 1024).cast(DecimalType(22, 6))) \
                 .withColumn("free_data_expiry_DATE_temp",
                             F.to_date(F.unix_timestamp(F.col("free_data_expiry_DATE"), 'dd-MM-yyyy').cast("timestamp"))) \
                 .withColumn("free_data_expiry_DATE_num",

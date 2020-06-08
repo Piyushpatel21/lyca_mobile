@@ -396,7 +396,7 @@
     "column_name": "action_flag"
   },
   {
-    "column_name": "timestamp"
+    "column_name": "bundle_topup_timestamp"
   },
   {
     "column_name": "sim_with_bundle_code"

@@ -1,0 +1,332 @@
+[
+  {
+    "column_name": "customerid"
+  },
+  {
+    "column_name": "Title"
+  },
+  {
+    "column_name": "firstname"
+  },
+  {
+    "column_name": "lastname"
+  },
+  {
+    "column_name": "postcode"
+  },
+  {
+    "column_name": "houseno"
+  },
+  {
+    "column_name": "street"
+  },
+  {
+    "column_name": "Cityname"
+  },
+  {
+    "column_name": "county"
+  },
+  {
+    "column_name": "country"
+  },
+  {
+    "column_name": "email"
+  },
+  {
+    "column_name": "landlineno"
+  },
+  {
+    "column_name": "numberofsims"
+  },
+  {
+    "column_name": "dateofcreation"
+  },
+  {
+    "column_name": "chkEmail"
+  },
+  {
+    "column_name": "STATUS"
+  },
+  {
+    "column_name": "deliverystatus"
+  },
+  {
+    "column_name": "mailstatus"
+  },
+  {
+    "column_name": "updateddate"
+  },
+  {
+    "column_name": "campaign"
+  },
+  {
+    "column_name": "isTD"
+  },
+  {
+    "column_name": "orderno"
+  },
+  {
+    "column_name": "paymentamount"
+  },
+  {
+    "column_name": "topupamount"
+  },
+  {
+    "column_name": "msisdn"
+  },
+  {
+    "column_name": "billingpostcode"
+  },
+  {
+    "column_name": "billinghouseno"
+  },
+  {
+    "column_name": "billingstreet"
+  },
+  {
+    "column_name": "billingcityname"
+  },
+  {
+    "column_name": "billingcounty"
+  },
+  {
+    "column_name": "createdby"
+  },
+  {
+    "column_name": "cardid"
+  },
+  {
+    "column_name": "processstatus"
+  },
+  {
+    "column_name": "TrackingInfo"
+  },
+  {
+    "column_name": "TransactionID"
+  },
+  {
+    "column_name": "clientid"
+  },
+  {
+    "column_name": "flatNo"
+  },
+  {
+    "column_name": "sideName"
+  },
+  {
+    "column_name": "Preferred_Language"
+  },
+  {
+    "column_name": "Nationality"
+  },
+  {
+    "column_name": "Type_Of_Id"
+  },
+  {
+    "column_name": "Id_Number"
+  },
+  {
+    "column_name": "promocode"
+  },
+  {
+    "column_name": "adlink"
+  },
+  {
+    "column_name": "HeardAboutUs"
+  },
+  {
+    "column_name": "MostCallCountry"
+  },
+  {
+    "column_name": "address"
+  },
+  {
+    "column_name": "billingaddress"
+  },
+  {
+    "column_name": "billingcountry"
+  },
+  {
+    "column_name": "TypeOfSim"
+  },
+  {
+    "column_name": "RealMSISDN"
+  },
+  {
+    "column_name": "CancelBundleMSISDN"
+  },
+  {
+    "column_name": "TopupMSISDN"
+  },
+  {
+    "column_name": "BundleMSISDN"
+  },
+  {
+    "column_name": "ZipCode"
+  },
+  {
+    "column_name": "PaymentStatus"
+  },
+  {
+    "column_name": "ShipmentCharge"
+  },
+  {
+    "column_name": "affiliateName"
+  },
+  {
+    "column_name": "IsGafVerified"
+  },
+  {
+    "column_name": "TaxAmount"
+  },
+  {
+    "column_name": "MODEOFREG"
+  },
+  {
+    "column_name": "BUNDLEAMOUNT"
+  },
+  {
+    "column_name": "BUNDLELIST"
+  },
+  {
+    "column_name": "VATtransid"
+  },
+  {
+    "column_name": "VATamount"
+  },
+  {
+    "column_name": "VATPerc"
+  },
+  {
+    "column_name": "TotalAmount"
+  },
+  {
+    "column_name": "Street_number"
+  },
+  {
+    "column_name": "EState"
+  },
+  {
+    "column_name": "building"
+  },
+  {
+    "column_name": "block_holder"
+  },
+  {
+    "column_name": "floor"
+  },
+  {
+    "column_name": "ApartmentNo"
+  },
+  {
+    "column_name": "BillingApartmentNo"
+  },
+  {
+    "column_name": "Division"
+  },
+  {
+    "column_name": "Place"
+  },
+  {
+    "column_name": "Municipality"
+  },
+  {
+    "column_name": "HousenoAddon"
+  },
+  {
+    "column_name": "Billing_HouseNo_AddOn"
+  },
+  {
+    "column_name": "UnitNumber"
+  },
+  {
+    "column_name": "ITGTRansactionID"
+  },
+  {
+    "column_name": "ChannelTransactionID"
+  },
+  {
+    "column_name": "LIFT"
+  },
+  {
+    "column_name": "DOOR"
+  },
+  {
+    "column_name": "billingblock"
+  },
+  {
+    "column_name": "billingfloor"
+  },
+  {
+    "column_name": "billinglift"
+  },
+  {
+    "column_name": "billingdoor"
+  },
+  {
+    "column_name": "Region"
+  },
+  {
+    "column_name": "BillingRegion"
+  },
+  {
+    "column_name": "Neighbourhood"
+  },
+  {
+    "column_name": "AdministrativeArea"
+  },
+  {
+    "column_name": "Billing_Neighborhood"
+  },
+  {
+    "column_name": "Billing_Administrative"
+  },
+  {
+    "column_name": "Date_of_Birth"
+  },
+  {
+    "column_name": "TotalFeeAmount"
+  },
+  {
+    "column_name": "Gender"
+  },
+  {
+    "column_name": "Italian_National"
+  },
+  {
+    "column_name": "TaxCode"
+  },
+  {
+    "column_name": "Issuer"
+  },
+  {
+    "column_name": "DateOfIssue"
+  },
+  {
+    "column_name": "ValidDate"
+  },
+  {
+    "column_name": "Preferred_DeliveryTime"
+  },
+  {
+    "column_name": "PlaceOfBirth"
+  },
+  {
+    "column_name": "CountryOfBirth"
+  },
+  {
+    "column_name": "Province"
+  },
+  {
+    "column_name": "CommuneCode"
+  },
+  {
+    "column_name": "batch_id"
+  },
+  {
+    "column_name": "created_DATE"
+  },
+  {
+    "column_name": "rec_checksum"
+  }
+]
