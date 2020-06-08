@@ -7,7 +7,7 @@ phases:
 
   build:
     commands:
-      - make build_all
+      - make build_rrbs
 artifacts:
   files:
     - '**/*'
