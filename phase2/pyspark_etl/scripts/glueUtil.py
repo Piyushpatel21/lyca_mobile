@@ -80,7 +80,7 @@ def build_job_args(default_args, new_job_args):
     if default_args.get('Connections'):
         final_args.update({
             'Connections': {
-                'Connections': list(default_args.get('Connections'))
+                'Connections': default_args.get('Connections')
             }
         })
     if default_args.get('WorkerType') and default_args.get('NumberOfWorkers'):
@@ -313,8 +313,7 @@ def manage_command(command, job_name=None, config_file=None, configs=None, regio
         elif command == 'update_or_create_job':
             if config_file:
                 configs = json_to_dict(config_file)
-            print(json.loads(configs))
-            response = update_or_create_job(glue_client, json.loads(configs))
+            response = update_or_create_job(glue_client, configs)
         elif command == 'delete_job':
             response = delete_job(glue_client, job_name)
         elif command == 'run_job':

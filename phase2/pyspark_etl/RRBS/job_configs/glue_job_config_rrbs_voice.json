@@ -9,7 +9,7 @@
   "Connections": ["ETLRedshiftConnection"],
   "DefaultArguments": {
     "--module": "rrbs",
-    "--submodule": "sms",
+    "--submodule": "voice",
     "--code_bucket": "mis-test-code-pipeline",
     "--configfile": "projects/RRBS/configs/rrbs_application_properties.json",
     "--connfile": "projects/RRBS/configs/rrbs_connection.json",
