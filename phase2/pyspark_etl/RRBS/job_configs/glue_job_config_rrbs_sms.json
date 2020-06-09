@@ -1,8 +1,8 @@
 {
   "Name": "lyca_etl_rrbs_sms",
-  "ScriptLocation": "s3://mis-test-code-pipeline/projects/RRBS/code/main.py",
+  "ScriptLocation": "s3://mis-dl-uk-eu-west-2-869841577715-code-pipeline/projects/RRBS/code/main.py",
   "Description": "ETL job to prcoess submodule sms for rrbs module",
-  "Role": "AWSGlueServiceRole",
+  "Role": "AWSGlueServiceRole_311477489434",
   "PythonVersion": "3",
   "GlueVersion": "1.0",
   "MaxCapacity": 5,
@@ -10,20 +10,21 @@
   "DefaultArguments": {
     "--module": "rrbs",
     "--submodule": "sms",
-    "--code_bucket": "mis-test-code-pipeline",
+    "--code_bucket": "mis-dl-uk-eu-west-2-869841577715-code-pipeline",
     "--configfile": "projects/RRBS/configs/rrbs_application_properties.json",
     "--connfile": "projects/RRBS/configs/rrbs_connection.json",
     "--enable-metrics": "true",
     "--enable-continuous-cloudwatch-log": "true",
     "--enable-spark-ui": "true",
-    "--spark-event-logs-path": "s3://mis-test-code-pipeline/logs",
+    "--spark-event-logs-path": "s3://mis-dl-uk-eu-west-2-311477489434-dev-logs/glue/applogs",
     "--master": "glue",
-    "--extra-py-files": "s3://mis-test-code-pipeline/projects/RRBS/code/lycaetl_rrbs-pyspark-1.0.0.zip",
-    "--TempDir": "s3://mis-test-code-pipeline/tmp/"
+    "--extra-py-files": "s3://mis-dl-uk-eu-west-2-869841577715-code-pipeline/projects/RRBS/code/lycaetl_rrbs-pyspark-1.0.0.zip",
+    "--TempDir": "s3://mis-dl-uk-eu-west-2-311477489434-dev-raw/tmp/redshift"
   },
   "Tags": {
-    "CreatedBy": "Bhavin.Tandel",
-    "ToBeDeleted": "True",
-    "Project": "Lyca"
+    "CreatedBy": "Cloudwick",
+    "Project": "Lyca",
+    "Module": "RRBS",
+    "Submodule": "SMS"
   }
 }

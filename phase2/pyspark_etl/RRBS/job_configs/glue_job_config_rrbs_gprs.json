@@ -1,7 +1,7 @@
 {
-  "Name": "lyca_etl_rrbs_voice",
+  "Name": "lyca_etl_rrbs_gprs",
   "ScriptLocation": "s3://mis-dl-uk-eu-west-2-869841577715-code-pipeline/projects/RRBS/code/main.py",
-  "Description": "ETL job to prcoess submodule sms for rrbs module",
+  "Description": "ETL job to prcoess submodule gprs for rrbs module",
   "Role": "AWSGlueServiceRole_311477489434",
   "PythonVersion": "3",
   "GlueVersion": "1.0",
@@ -9,7 +9,7 @@
   "Connections": ["ETLRedshiftConnection"],
   "DefaultArguments": {
     "--module": "rrbs",
-    "--submodule": "voice",
+    "--submodule": "gprs",
     "--code_bucket": "mis-dl-uk-eu-west-2-869841577715-code-pipeline",
     "--configfile": "projects/RRBS/configs/rrbs_application_properties.json",
     "--connfile": "projects/RRBS/configs/rrbs_connection.json",
@@ -25,6 +25,6 @@
     "CreatedBy": "Cloudwick",
     "Project": "Lyca",
     "Module": "RRBS",
-    "Submodule": "VOICE"
+    "Submodule": "GPRS"
   }
 }
