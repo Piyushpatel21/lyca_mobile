@@ -27,8 +27,8 @@ git remote add code_commit https://git-codecommit.eu-west-2.amazonaws.com/v1/rep
 
 git remote -v
 
-git fetch --unshallow || printf "the repository was not shallow" # gitlab started cloning repositories with shallow clone by default
-
-git fetch && git checkout origin ${CI_COMMIT_REF_NAME} && git pull origin ${CI_COMMIT_REF_NAME}
+git fetch --unshallow || git fetch # gitlab started cloning repositories with shallow clone by default
+# git checkout origin/${CI_COMMIT_REF_NAME}
+git pull origin ${CI_COMMIT_REF_NAME}
 printf "hash: $(git rev-parse HEAD) ci_ref: ${CI_COMMIT_REF_NAME}\n"
 git push code_commit ${CI_COMMIT_REF_NAME}
