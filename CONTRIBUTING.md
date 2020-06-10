@@ -17,7 +17,8 @@ Any deployment steps (until CI/CD is added), must be documented in [DEPLOYMENTS.
 Cloudformation stack-name of the deployments should start with 'platform-'.
 
 ## IAM
-IAM roles and policies have to start with 'mis-dl-' and the roles need the OrganizationAccountServiceBoundariesPolicy as a boundary.
+IAM roles and policies have name to start with 'mis-dl-' . Please use lower case with '_' such as 'mis-dl-dms-s3-target-role'. 
+The roles need the OrganizationAccountServiceBoundariesPolicy as a boundary.
 
 ## Code Review Principles Checklist
 ### Consistency
