@@ -1,0 +1,35 @@
+[
+  {
+    "column_name": "id"
+  },
+  {
+    "column_name": "onocode"
+  },
+  {
+    "column_name": "Description"
+  },
+  {
+    "column_name": "CCNDC"
+  },
+  {
+    "column_name": "status"
+  },
+  {
+    "column_name": "lastmodifiedby"
+  },
+  {
+    "column_name": "lastmodifieddate"
+  },
+  {
+    "column_name": "FTNCode"
+  },
+  {
+    "column_name": "batch_id"
+  },
+  {
+    "column_name": "created_date"
+  },
+  {
+    "column_name": "rec_checksum"
+  }
+]

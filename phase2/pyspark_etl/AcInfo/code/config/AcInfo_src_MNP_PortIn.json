@@ -1,0 +1,243 @@
+[
+  {
+    "column_name" : "id",
+    "column_type" : "bigint",
+    "required" : false,
+    "check_sum" : true
+  },
+  {
+    "column_name" : "requestid",
+    "column_type" : "character",
+    "required" : false,
+    "check_sum" : true
+  },
+  {
+    "column_name" : "msisdn",
+    "column_type" : "character",
+    "required" : false,
+    "check_sum" : true
+  },
+  {
+    "column_name" : "isdn",
+    "column_type" : "character",
+    "required" : false,
+    "check_sum" : true
+  },
+  {
+    "column_name" : "iccid",
+    "column_type" : "character",
+    "required" : false,
+    "check_sum" : true
+  },
+  {
+    "column_name" : "piccid",
+    "column_type" : "character",
+    "required" : false,
+    "check_sum" : true
+  },
+  {
+    "column_name" : "pmsisdn",
+    "column_type" : "character",
+    "required" : false,
+    "check_sum" : true
+  },
+  {
+    "column_name" : "channel",
+    "column_type" : "character",
+    "required" : false,
+    "check_sum" : true
+  },
+  {
+    "column_name" : "requestdate",
+    "column_type" : "timestamp without time zone",
+    "required" : false,
+    "check_sum" : true
+  },
+  {
+    "column_name" : "status",
+    "column_type" : "integer",
+    "required" : false,
+    "check_sum" : true
+  },
+  {
+    "column_name" : "smsstate",
+    "column_type" : "integer",
+    "required" : false,
+    "check_sum" : true
+  },
+  {
+    "column_name" : "errcode",
+    "column_type" : "character",
+    "required" : false,
+    "check_sum" : true
+  },
+  {
+    "column_name" : "recordlock",
+    "column_type" : "integer",
+    "required" : false,
+    "check_sum" : true
+  },
+  {
+    "column_name" : "msgtime",
+    "column_type" : "timestamp without time zone",
+    "required" : false,
+    "check_sum" : true
+  },
+  {
+    "column_name" : "rno",
+    "column_type" : "character",
+    "required" : false,
+    "check_sum" : true
+  },
+  {
+    "column_name" : "dno",
+    "column_type" : "character",
+    "required" : false,
+    "check_sum" : true
+  },
+  {
+    "column_name" : "ono",
+    "column_type" : "character",
+    "required" : false,
+    "check_sum" : true
+  },
+  {
+    "column_name" : "rsp",
+    "column_type" : "character",
+    "required" : false,
+    "check_sum" : true
+  },
+  {
+    "column_name" : "dsp",
+    "column_type" : "character",
+    "required" : false,
+    "check_sum" : true
+  },
+  {
+    "column_name" : "portindate",
+    "column_type" : "timestamp without time zone",
+    "required" : false,
+    "check_sum" : true
+  },
+  {
+    "column_name" : "note",
+    "column_type" : "character",
+    "required" : false,
+    "check_sum" : true
+  },
+  {
+    "column_name" : "balance",
+    "column_type" : "character",
+    "required" : false,
+    "check_sum" : true
+  },
+  {
+    "column_name" : "oldbalance",
+    "column_type" : "character",
+    "required" : false,
+    "check_sum" : true
+  },
+
+  {
+    "column_name" : "newbalance",
+    "column_type" : "character",
+    "required" : false,
+    "check_sum" : true
+  },
+  {
+    "column_name" : "pac",
+    "column_type" : "character",
+    "required" : false,
+    "check_sum" : true
+  },
+  {
+    "column_name" : "pacexpiry",
+    "column_type" : "timestamp without time zone",
+    "required" : false,
+    "check_sum" : true
+  },
+  {
+    "column_name" : "createddate",
+    "column_type" : "timestamp without time zone",
+    "required" : false,
+    "check_sum" : true
+  },
+  {
+    "column_name" : "createdby",
+    "column_type" : "character",
+    "required" : false,
+    "check_sum" : true
+  },
+  {
+    "column_name" : "completeddate",
+    "column_type" : "timestamp without time zone",
+    "required" : false,
+    "check_sum" : true
+  },
+  {
+    "column_name" : "requestfrom",
+    "column_type" : "character",
+    "required" : false,
+    "check_sum" : true
+  },
+  {
+    "column_name" : "firstname",
+    "column_type" : "character",
+    "required" : false,
+    "check_sum" : true
+  },
+  {
+    "column_name" : "lastname",
+    "column_type" : "character",
+    "required" : false,
+    "check_sum" : true
+  },
+  {
+    "column_name" : "email",
+    "column_type" : "character",
+    "required" : false,
+    "check_sum" : true
+  },
+  {
+    "column_name" : "rejectcode",
+    "column_type" : "character",
+    "required" : false,
+    "check_sum" : true
+  },
+  {
+    "column_name" : "attacheddocumentname",
+    "column_type" : "character",
+    "required" : false,
+    "check_sum" : true
+  },
+  {
+    "column_name" : "preferredlanguage",
+    "column_type" : "character",
+    "required" : false,
+    "check_sum" : true
+  },
+  {
+    "column_name" : "smserrstate",
+    "column_type" : "character",
+    "required" : false,
+    "check_sum" : true
+  },
+  {
+    "column_name" : "cip",
+    "column_type" : "character",
+    "required" : false,
+    "check_sum" : true
+  },
+  {
+    "column_name" : "originalmsisdn",
+    "column_type" : "character",
+    "required" : false,
+    "check_sum" : true
+  },
+  {
+    "column_name" : "ntype",
+    "column_type" : "character",
+    "required" : false,
+    "check_sum" : true
+  }
+]

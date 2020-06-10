@@ -1,0 +1,292 @@
+[
+  {
+    "column_name": "cdr_type"
+  },
+  {
+    "column_name": "network_id"
+  },
+  {
+    "column_name": "data_feature"
+  },
+  {
+    "column_name": "tariffplan_id"
+  },
+  {
+    "column_name": "service_id"
+  },
+  {
+    "column_name": "msisdn"
+  },
+  {
+    "column_name": "apn"
+  },
+  {
+    "column_name": "pdp_address"
+  },
+  {
+    "column_name": "cellid"
+  },
+  {
+    "column_name": "imei"
+  },
+  {
+    "column_name": "imsi"
+  },
+  {
+    "column_name": "serving_node"
+  },
+  {
+    "column_name": "ggsn_address"
+  },
+  {
+    "column_name": "roaming_zone_name"
+  },
+  {
+    "column_name": "roam_flag"
+  },
+  {
+    "column_name": "granted_bytes_cumulative"
+  },
+  {
+    "column_name": "granted_money"
+  },
+  {
+    "column_name": "total_used_bytes"
+  },
+  {
+    "column_name": "chargeable_used_bytes"
+  },
+  {
+    "column_name": "uploaded_bytes"
+  },
+  {
+    "column_name": "downloaded_bytes"
+  },
+  {
+    "column_name": "data_connection_time"
+  },
+
+  {
+    "column_name": "data_termination_time"
+  },
+
+  {
+    "column_name": "time_duration"
+  },
+  {
+    "column_name": "initial_account_balance"
+  },
+  {
+    "column_name": "data_charge"
+  },
+  {
+    "column_name": "final_account_balance"
+  },
+  {
+    "column_name": "free_bytes"
+  },
+  {
+    "column_name": "sessionid"
+  },
+  {
+    "column_name": "last_topup_type"
+  },
+  {
+    "column_name": "free_data_expiry_date"
+  },
+  {
+    "column_name": "charge_indicator"
+  },
+  {
+    "column_name": "final_unit_indicator"
+  },
+  {
+    "column_name": "bundle_code"
+  },
+  {
+    "column_name": "accid"
+  },
+  {
+    "column_name": "deptid"
+  },
+  {
+    "column_name": "bundle_used_data"
+  },
+  {
+    "column_name": "bundle_data_charge"
+  },
+  {
+    "column_name": "bundle_balance"
+  },
+  {
+    "column_name": "bundle_plan_id"
+  },
+  {
+    "column_name": "local_roam_country_code"
+  },
+  {
+    "column_name": "sdfid"
+  },
+  {
+    "column_name": "rategroupid"
+  },
+  {
+    "column_name": "serviceid"
+  },
+  {
+    "column_name": "cdr_time_stamp"
+  },
+  {
+    "column_name": "intial_free_units"
+  },
+  {
+    "column_name": "subscriber_type"
+  },
+  {
+    "column_name": "cdr_sequence_number"
+  },
+  {
+    "column_name": "sub_acct_id"
+  },
+  {
+    "column_name": "ggsn_time"
+  },
+  {
+    "column_name": "tariff_plan_change_id"
+  },
+  {
+    "column_name": "used_unit_bfr_tariff_plan_change"
+  },
+  {
+    "column_name": "family_account_id"
+  },
+  {
+    "column_name": "bundle_version_name"
+  },
+  {
+    "column_name": "bundle_versionid"
+  },
+  {
+    "column_name": "reward_slab_id"
+  },
+  {
+    "column_name": "pricing_plan_id"
+  },
+  {
+    "column_name": "rate_id"
+  },
+  {
+    "column_name": "pocket_id"
+  },
+  {
+    "column_name": "consumed_promo_amount"
+  },
+  {
+    "column_name": "consumed_surcharge"
+  },
+  {
+    "column_name": "rlh_charging_indicator"
+  },
+  {
+    "column_name": "granted_bytes_current"
+  },
+  {
+    "column_name": "roaming_partner_id"
+  },
+  {
+    "column_name" : "fct_free_text_1"
+  },
+  {
+    "column_name" : "fct_free_text_2"
+  },
+  {
+    "column_name" : "fct_free_text_3"
+  },
+  {
+    "column_name" : "fct_free_text_4"
+  },
+  {
+    "column_name" : "fct_free_text_5"
+  },
+  {
+    "column_name" : "fct_free_text_6"
+  },
+  {
+    "column_name" : "fct_free_text_7"
+  },
+  {
+    "column_name" : "fct_free_text_8"
+  },
+  {
+    "column_name" : "fct_free_text_9"
+  },
+  {
+    "column_name" : "fct_free_text_10"
+  },
+  {
+    "column_name": "data_connection_month"
+  },
+  {
+    "column_name": "data_connection_dt"
+  },
+  {
+    "column_name" : "data_connection_dt_num"
+  },
+  {
+    "column_name" : "data_connection_hour"
+  },
+  {
+    "column_name": "data_termination_month"
+  },
+  {
+    "column_name": "data_termination_dt"
+  },
+  {
+    "column_name": "data_termination_dt_num"
+  },
+  {
+    "column_name": "data_termination_hour"
+  },
+  {
+    "column_name": "data_connection_month_gmt"
+  },
+  {
+    "column_name": "data_connection_dt_num_gmt"
+  },
+  {
+    "column_name" : "data_connection_hour_gmt"
+  },
+  {
+    "column_name" : "data_connection_time_gmt"
+  },
+  {
+    "column_name": "data_termination_month_gmt"
+  },
+  {
+    "column_name": "data_termination_dt_num_gmt"
+  },
+  {
+    "column_name": "data_termination_hour_gmt"
+  },
+  {
+    "column_name": "data_termination_time_gmt"
+  },
+  {
+    "column_name" : "total_usage_mb"
+  },
+  {
+    "column_name" : "free_data_expiry_DATE_num"
+  },
+  {
+    "column_name": "filename"
+  },
+  {
+    "column_name": "batch_id"
+  },
+  {
+    "column_name": "created_DATE"
+  },
+  {
+    "column_name": "rec_checksum"
+  }
+]

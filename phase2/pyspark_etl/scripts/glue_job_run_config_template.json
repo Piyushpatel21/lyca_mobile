@@ -1,0 +1,7 @@
+{
+  "MaxCapacity": 4,
+  "Arguments": {
+    "--raw_bucket": "not_needed_args",
+    "--new_params": "newParams"
+  }
+}

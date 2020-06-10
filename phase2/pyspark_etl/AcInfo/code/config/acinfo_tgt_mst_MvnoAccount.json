@@ -1,0 +1,176 @@
+[
+  {
+    "column_name": "id"
+  },
+  {
+    "column_name": "MSISDN"
+  },
+  {
+    "column_name": "MSISDN_Swap"
+  },
+  {
+    "column_name": "custcode"
+  },
+  {
+    "column_name": "batchcode"
+  },
+  {
+    "column_name": "serialcode"
+  },
+  {
+    "column_name": "iccidprefix"
+  },
+  {
+    "column_name": "iccid"
+  },
+  {
+    "column_name": "IMSI"
+  },
+  {
+    "column_name": "SwapIMSI"
+  },
+  {
+    "column_name": "IMSI2"
+  },
+  {
+    "column_name": "pin1"
+  },
+  {
+    "column_name": "pin2"
+  },
+  {
+    "column_name": "puk1"
+  },
+  {
+    "column_name": "puk2"
+  },
+  {
+    "column_name": "SCPSubmitState"
+  },
+  {
+    "column_name": "SCPErrCode"
+  },
+  {
+    "column_name": "RecordLock"
+  },
+  {
+    "column_name": "Processid"
+  },
+  {
+    "column_name": "STATUS"
+  },
+  {
+    "column_name": "PIM"
+  },
+  {
+    "column_name": "MSISDN_Flag"
+  },
+  {
+    "column_name": "Tariffclassname"
+  },
+  {
+    "column_name": "Initialbal"
+  },
+  {
+    "column_name": "Initiallang"
+  },
+  {
+    "column_name": "MO_Calls"
+  },
+  {
+    "column_name": "MT_Calls"
+  },
+  {
+    "column_name": "MO_ROAM_Calls"
+  },
+  {
+    "column_name": "MT_ROAM_Calls"
+  },
+  {
+    "column_name": "MO_SMS"
+  },
+  {
+    "column_name": "MT_SMS"
+  },
+  {
+    "column_name": "MO_ROAM_SMS"
+  },
+  {
+    "column_name": "MT_ROAM_SMS"
+  },
+  {
+    "column_name": "IVR"
+  },
+  {
+    "column_name": "USSD"
+  },
+  {
+    "column_name": "VMS"
+  },
+  {
+    "column_name": "SMS_TOPUP"
+  },
+  {
+    "column_name": "MHA"
+  },
+  {
+    "column_name": "MCA"
+  },
+  {
+    "column_name": "GPRS"
+  },
+  {
+    "column_name": "CRBT"
+  },
+  {
+    "column_name": "HLRID"
+  },
+  {
+    "column_name": "MHAAccid"
+  },
+  {
+    "column_name": "MHApin"
+  },
+  {
+    "column_name": "SMSMarketing"
+  },
+  {
+    "column_name": "ActDate"
+  },
+  {
+    "column_name": "iccidcomputed"
+  },
+  {
+    "column_name": "CIP"
+  },
+  {
+    "column_name": "Mask_Mode"
+  },
+  {
+    "column_name": "EATariffChangeStatus"
+  },
+  {
+    "column_name": "EATariffclassname"
+  },
+  {
+    "column_name": "SuspendSIMSwapRequest"
+  },
+  {
+    "column_name": "SuspendMSISDNSwapRequest"
+  },
+  {
+    "column_name": "SuspendPortOutRequest"
+  },
+  {
+    "column_name": "Resellerid"
+  },
+  {
+    "column_name": "batch_id"
+  },
+  {
+    "column_name": "created_DATE"
+  },
+  {
+    "column_name": "rec_checksum"
+  }
+]
