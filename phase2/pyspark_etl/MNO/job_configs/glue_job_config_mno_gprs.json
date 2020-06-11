@@ -8,11 +8,11 @@
   "MaxCapacity": 5,
   "Connections": ["ETLRedshiftConnection"],
   "DefaultArguments": {
-    "--module": "rmo",
+    "--module": "mno",
     "--submodule": "gprs",
     "--code_bucket": "mis-dl-uk-eu-west-2-869841577715-code-pipeline",
     "--configfile": "projects/MNO/configs/rrbs_application_properties.json",
-    "--connfile": "projects/MNO/configs/rrbs_connection.json",
+    "--connfile": "projects/MNO/configs/mno_connection.json",
     "--enable-metrics": "true",
     "--enable-continuous-cloudwatch-log": "true",
     "--enable-spark-ui": "true",
