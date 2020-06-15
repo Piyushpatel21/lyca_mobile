@@ -1,7 +1,7 @@
 {
   "Name": "lyca_etl_rrbs_gprs",
   "ScriptLocation": "s3://mis-dl-uk-eu-west-2-869841577715-code-pipeline/projects/RRBS/code/main.py",
-  "Description": "ETL job to prcoess submodule gprs for rrbs module",
+  "Description": "ETL job to process submodule gprs for rrbs module",
   "Role": "AWSGlueServiceRole_311477489434",
   "PythonVersion": "3",
   "GlueVersion": "1.0",

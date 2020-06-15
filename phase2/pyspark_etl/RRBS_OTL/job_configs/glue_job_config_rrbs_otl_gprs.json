@@ -1,0 +1,32 @@
+{
+  "Name": "lyca_etl_rrbs_otl_gprs",
+  "ScriptLocation": "s3://mis-dl-uk-eu-west-2-869841577715-code-pipeline/projects/RRBS_OTL/code/main.py",
+  "Description": "ETL job to process one time load for submodule gprs under rrbs module",
+  "Role": "AWSGlueServiceRole_311477489434",
+  "PythonVersion": "3",
+  "GlueVersion": "1.0",
+  "MaxCapacity": 5,
+  "Connections": ["ETLRedshiftConnection"],
+  "DefaultArguments": {
+    "--module": "rrbs",
+    "--submodule": "gprs",
+    "--source_file_path": "",
+    "--code_bucket": "mis-dl-uk-eu-west-2-869841577715-code-pipeline",
+    "--configfile": "projects/RRBS_OTL/configs/rrbs_application_properties.json",
+    "--connfile": "projects/RRBS_OTL/configs/rrbs_connection.json",
+    "--enable-metrics": "true",
+    "--enable-continuous-cloudwatch-log": "true",
+    "--enable-spark-ui": "true",
+    "--spark-event-logs-path": "s3://mis-dl-uk-eu-west-2-311477489434-dev-logs/glue/applogs",
+    "--master": "glue",
+    "--extra-py-files": "s3://mis-dl-uk-eu-west-2-869841577715-code-pipeline/projects/RRBS_OTL/code/lycaetl_rrbs_otl-pyspark-1.0.0.zip",
+    "--TempDir": "s3://mis-dl-uk-eu-west-2-311477489434-dev-raw/tmp/redshift"
+  },
+  "Tags": {
+    "CreatedBy": "Cloudwick",
+    "Project": "Lyca",
+    "Module": "RRBS",
+    "Submodule": "GPRS",
+    "Type": "One Time Load"
+  }
+}

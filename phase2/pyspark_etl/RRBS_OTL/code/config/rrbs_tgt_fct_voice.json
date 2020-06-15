@@ -1,0 +1,359 @@
+[
+  {
+    "column_name": "voice_call_cdr"
+  },
+  {
+    "column_name": "network_id"
+  },
+  {
+    "column_name": "call_type"
+  },
+  {
+    "column_name": "call_feature"
+  },
+  {
+    "column_name": "tariffplan_id"
+  },
+  {
+    "column_name": "service_id"
+  },
+  {
+    "column_name": "cli"
+  },
+  {
+    "column_name": "dialed_number"
+  },
+  {
+    "column_name": "charged_party_number"
+  },
+  {
+    "column_name": "imsi"
+  },
+  {
+    "column_name": "serving_node"
+  },
+  {
+    "column_name": "mcc"
+  },
+  {
+    "column_name": "mnc"
+  },
+  {
+    "column_name": "lac"
+  },
+  {
+    "column_name": "calling_cell_id"
+  },
+  {
+    "column_name": "cellzone_code"
+  },
+  {
+    "column_name": "cellzone_name"
+  },
+  {
+    "column_name": "original_dialed_number"
+  },
+  {
+    "column_name": "destination_zone"
+  },
+  {
+    "column_name": "destination_area_code"
+  },
+  {
+    "column_name": "destinationzone_name"
+  },
+  {
+    "column_name": "roaming_area_code"
+  },
+  {
+    "column_name": "roaming_zone_name"
+  },
+  {
+    "column_name": "roam_flag"
+  },
+  {
+    "column_name": "roam_area_number"
+  },
+  {
+    "column_name": "granted_time"
+  },
+  {
+    "column_name": "granted_money"
+  },
+  {
+    "column_name": "call_duration"
+  },
+  {
+    "column_name": "chargeable_used_time"
+  },
+  {
+    "column_name": "call_date"
+  },
+  {
+    "column_name": "call_termination_time"
+  },
+  {
+    "column_name": "initial_account_balance"
+  },
+  {
+    "column_name": "talk_charge"
+  },
+  {
+    "column_name": "balance"
+  },
+  {
+    "column_name": "free_minutes_account_balance"
+  },
+  {
+    "column_name": "account_id"
+  },
+  {
+    "column_name": "dept_id"
+  },
+  {
+    "column_name": "free_zone_id"
+  },
+  {
+    "column_name": "trace_id"
+  },
+  {
+    "column_name": "last_topup_type"
+  },
+  {
+    "column_name": "bundle_code"
+  },
+  {
+    "column_name": "free_zone_expiry_date"
+  },
+  {
+    "column_name": "ringing_duration"
+  },
+  {
+    "column_name": "ring_indicator"
+  },
+  {
+    "column_name": "national_bundle_code"
+  },
+  {
+    "column_name": "national_used_minutes"
+  },
+  {
+    "column_name": "national_charge"
+  },
+  {
+    "column_name": "pool_number"
+  },
+  {
+    "column_name": "bundle_used_seconds"
+  },
+  {
+    "column_name": "bundle_call_charge"
+  },
+  {
+    "column_name": "bundle_balance"
+  },
+  {
+    "column_name": "bundle_plan_id"
+  },
+  {
+    "column_name": "final_unit_indicator"
+  },
+  {
+    "column_name": "ncall_free_units"
+  },
+  {
+    "column_name": "local_roam_country_code"
+  },
+  {
+    "column_name": "cdr_time_stamp"
+  },
+  {
+    "column_name": "bucket_type"
+  },
+  {
+    "column_name": "conversion_unit"
+  },
+  {
+    "column_name": "intial_free_units"
+  },
+  {
+    "column_name": "subscriber_type"
+  },
+  {
+    "column_name": "call_forwarding_indicator"
+  },
+  {
+    "column_name": "cdr_sequence_number"
+  },
+  {
+    "column_name": "sub_acct_id"
+  },
+  {
+    "column_name": "announcement_time"
+  },
+  {
+    "column_name": "family_id"
+  },
+  {
+    "column_name": "idp_time"
+  },
+  {
+    "column_name": "cs_free_mins"
+  },
+  {
+    "column_name": "free_units_detected"
+  },
+  {
+    "column_name": "multileg_charging_flag"
+  },
+  {
+    "column_name": "extension_record"
+  },
+  {
+    "column_name": "connect_number"
+  },
+  {
+    "column_name": "dialed_number1"
+  },
+  {
+    "column_name": "service_description"
+  },
+  {
+    "column_name": "alternate_plan_id"
+  },
+  {
+    "column_name": "serving_node_name"
+  },
+  {
+    "column_name": "fixed_charge"
+  },
+  {
+    "column_name": "fixed_charge_resource_impact"
+  },
+  {
+    "column_name": "bundle_version_name"
+  },
+  {
+    "column_name": "flh_reward_slab_id"
+  },
+  {
+    "column_name": "bundle_version_id"
+  },
+  {
+    "column_name": "rate_id"
+  },
+  {
+    "column_name": "pricing_plan_id"
+  },
+  {
+    "column_name": "pocket_id"
+  },
+  {
+    "column_name": "consumed_promo_amount"
+  },
+  {
+    "column_name": "pervious_call_trace_id"
+  },
+  {
+    "column_name": "termination_cause"
+  },
+  {
+    "column_name": "non_chargeable_unit"
+  },
+  {
+    "column_name": "call_forward_msisdn"
+  },
+  {
+    "column_name": "service_type"
+  },
+  {
+    "column_name": "used_time_in_previous_grant"
+  },
+  {
+    "column_name": "rlh_charging_indicator"
+  },
+  {
+    "column_name": "surcharge_consumed"
+  },
+  {
+    "column_name": "excess_used_units_received"
+  },
+  {
+    "column_name": "failcause"
+  },
+  {
+    "column_name": "roaming_partner_id"
+  },
+  {
+    "column_name": "fct_free_text_1"
+  },
+  {
+    "column_name": "fct_free_text_2"
+  },
+  {
+    "column_name": "fct_free_text_3"
+  },
+  {
+    "column_name": "fct_free_text_4"
+  },
+  {
+    "column_name": "fct_free_text_5"
+  },
+  {
+    "column_name": "fct_free_text_6"
+  },
+  {
+    "column_name": "fct_free_text_7"
+  },
+  {
+    "column_name": "fct_free_text_8"
+  },
+  {
+    "column_name": "fct_free_text_9"
+  },
+  {
+    "column_name": "fct_free_text_10"
+  },
+  {
+    "column_name": "call_DATE_month"
+  },
+  {
+    "column_name": "call_DATE_dt"
+  },
+  {
+    "column_name": "call_DATE_num"
+  },
+  {
+    "column_name": "call_DATE_hour"
+  },
+  {
+    "column_name": "call_date_month_gmt"
+  },
+  {
+    "column_name": "call_DATE_time_gmt"
+  },
+  {
+    "column_name": "call_DATE_num_gmt"
+  },
+  {
+    "column_name": "call_DATE_hour_gmt"
+  },
+  {
+    "column_name": "call_duration_min"
+  },
+  {
+    "column_name": "chargeable_used_time_min"
+  },
+  {
+    "column_name": "filename"
+  },
+  {
+    "column_name": "batch_id"
+  },
+  {
+    "column_name": "created_date"
+  },
+  {
+	"column_name": "rec_checksum"
+  }
+]

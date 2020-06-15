@@ -1,0 +1,92 @@
+[
+  {
+    "column_name": "ReqID"
+  },
+  {
+    "column_name": "OldMSISDN"
+  },
+  {
+    "column_name": "OldICCID"
+  },
+  {
+    "column_name": "OldIMSI"
+  },
+  {
+    "column_name": "NewMSISDN"
+  },
+  {
+    "column_name": "NewICCID"
+  },
+  {
+    "column_name": "NewIMSI"
+  },
+  {
+    "column_name": "TicketID"
+  },
+  {
+    "column_name": "RequestBy"
+  },
+  {
+    "column_name": "RequestDate"
+  },
+  {
+    "column_name": "STATUS"
+  },
+  {
+    "column_name": "AuthorisedBy"
+  },
+  {
+    "column_name": "AuthorisedDate"
+  },
+  {
+    "column_name": "FrequentcalledNumber"
+  },
+  {
+    "column_name": "TopupAmount"
+  },
+  {
+    "column_name": "TopupDate"
+  },
+  {
+    "column_name": "CIP"
+  },
+  {
+    "column_name": "PanNumber"
+  },
+  {
+    "column_name": "Admin_Comments"
+  },
+  {
+    "column_name": "FirstName"
+  },
+  {
+    "column_name": "DOB"
+  },
+  {
+    "column_name": "DocNo"
+  },
+  {
+    "column_name": "DocType"
+  },
+  {
+    "column_name": "DOE"
+  },
+  {
+    "column_name": "ZIPCODE"
+  },
+  {
+    "column_name": "CHANNEL"
+  },
+  {
+    "column_name": "migration"
+  },
+  {
+    "column_name": "batch_id"
+  },
+  {
+    "column_name": "created_DATE"
+  },
+  {
+    "column_name": "rec_checksum"
+  }
+]
