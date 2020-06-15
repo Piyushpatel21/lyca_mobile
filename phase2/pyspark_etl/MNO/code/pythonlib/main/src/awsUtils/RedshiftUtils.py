@@ -116,7 +116,7 @@ class RedshiftUtils:
             self._logger.info(
                 "Batch ID info : source_identifier={source_identifier}, previousDate={prevDate}".format(
                     prevDate=prevDate, source_identifier=source_identifier))
-            query = "SELECT DISTINCT batch_id FROM uk_rrbs_dm.log_batch_files_mno WHERE file_source LIKE '%{source_identifier}%' AND batch_from <= '{prevDate}' AND batch_to => '{prevDate}'".format(
+            query = "SELECT DISTINCT batch_id FROM uk_rrbs_dm.log_batch_files_mno WHERE file_source LIKE '%{source_identifier}%' AND batch_from <= '{prevDate}' AND batch_to >= '{prevDate}'".format(
                 source_identifier=source_identifier, prevDate=prevDate)
             self._logger.info("Query {query}".format(query=query))
             df = sparkSession.read \
