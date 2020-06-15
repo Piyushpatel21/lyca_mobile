@@ -1,0 +1,34 @@
+[
+  {
+    "module" : "mno",
+    "subModule" : "voice",
+    "integerDateColumn" : "charging_dt_num",
+    "normalcdrfrq" : "monthly",
+    "numofdayormnthnormal" : 2,
+    "latecdrfrq" : "monthly",
+    "numofdayormnthlate" : 2,
+    "sourceFilePath" : "s3://mis-dl-uk-eu-west-2-311477489434-dev-raw",
+    "srcSchemaPath" : "projects/MNO/schemas/mno_src_fct_mno_o2.json",
+    "tgtSchemaPath" : "projects/MNO/schemas/mno_tgt_fct_mno_o2.json",
+    "database" : "uk_rrbs_dm",
+    "normalcdrtbl" : "fact_mno_o2",
+    "latecdrtbl" : "fact_mno_o2_latecdr",
+    "duplicatecdrtbl" : "fact_mno_o2_duplcdr"
+  },
+  {
+    "module" : "mno",
+    "subModule" : "gprs",
+    "integerDateColumn" : "charging_dt_num",
+    "normalcdrfrq" : "monthly",
+    "numofdayormnthnormal" : 2,
+    "latecdrfrq" : "monthly",
+    "numofdayormnthlate" : 2,
+    "sourceFilePath" : "s3://mis-dl-uk-eu-west-2-311477489434-dev-raw",
+    "srcSchemaPath" : "projects/MNO/schemas/mno_src_fct_mno_data.json",
+    "tgtSchemaPath" : "projects/MNO/schemas/mno_tgt_fct_mno_data.json",
+    "database" : "uk_rrbs_dm",
+    "normalcdrtbl" : "fact_mno_o2_data",
+    "latecdrtbl" : "fact_mno_o2_data_latecdr",
+    "duplicatecdrtbl" : "fact_mno_o2_data_duplcdr"
+  }
+]

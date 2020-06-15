@@ -1,0 +1,107 @@
+[
+  {
+    "column_name": "Id"
+  },
+  {
+    "column_name": "SubscriberId"
+  },
+  {
+    "column_name": "CardNumber"
+  },
+  {
+    "column_name": "TransactionId"
+  },
+  {
+    "column_name": "TransactionType"
+  },
+  {
+    "column_name": "OrderId"
+  },
+  {
+    "column_name": "OrderDescription"
+  },
+  {
+    "column_name": "OrderDateTime"
+  },
+  {
+    "column_name": "MerchantCode"
+  },
+  {
+    "column_name": "PaymentMethodCode"
+  },
+  {
+    "column_name": "StatusCode"
+  },
+  {
+    "column_name": "ResponseCode"
+  },
+  {
+    "column_name": "ResponseDescription"
+  },
+  {
+    "column_name": "ResponseDateTime"
+  },
+  {
+    "column_name": "SessionId"
+  },
+  {
+    "column_name": "EchoData"
+  },
+  {
+    "column_name": "RiskScore"
+  },
+  {
+    "column_name": "CVCResultCode"
+  },
+  {
+    "column_name": "AVSResultCode"
+  },
+  {
+    "column_name": "AAVAddressResultCode"
+  },
+  {
+    "column_name": "AAVPostcodeResultCode"
+  },
+  {
+    "column_name": "AAVCardholderNameResultCode"
+  },
+  {
+    "column_name": "AAVTelephoneResultCode"
+  },
+  {
+    "column_name": "AAVEmailResultCode"
+  },
+  {
+    "column_name": "CreatedDate"
+  },
+  {
+    "column_name": "APMmac"
+  },
+  {
+    "column_name": "APMReferenceId"
+  },
+  {
+    "column_name": "IssuerURL"
+  },
+  {
+    "column_name": "RGProfileID"
+  },
+  {
+    "column_name": "vatid"
+  },
+  {
+    "column_name": "CapturedRequest"
+  },
+  {
+    "column_name": "CapturedResponse"
+  },
+  {
+    "column_name": "batch_id"
+  },
+  {
+    "column_name": "created_DATE"
+  },
+  {
+    "column_name": "rec_checksum"
+  }
+]

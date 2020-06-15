@@ -1,0 +1,134 @@
+[
+  {
+    "column_name": "id"
+  },
+  {
+    "column_name": "requestid"
+  },
+  {
+    "column_name": "msisdn"
+  },
+  {
+    "column_name": "imsi"
+  },
+  {
+    "column_name": "iccid"
+  },
+  {
+    "column_name": "piccid"
+  },
+  {
+    "column_name": "pmsisdn"
+  },
+  {
+    "column_name": "channel"
+  },
+  {
+    "column_name": "requestdate"
+  },
+  {
+    "column_name": "status"
+  },
+  {
+    "column_name": "smsstate"
+  },
+  {
+    "column_name": "errcode"
+  },
+  {
+    "column_name": "recordlock"
+  },
+  {
+    "column_name": "msgtime"
+  },
+  {
+    "column_name": "rno"
+  },
+  {
+    "column_name": "dno"
+  },
+  {
+    "column_name": "ono"
+  },
+  {
+    "column_name": "rsp"
+  },
+  {
+    "column_name": "dsp"
+  },
+  {
+    "column_name": "portindate"
+  },
+  {
+    "column_name": "note"
+  },
+  {
+    "column_name": "balance"
+  },
+  {
+    "column_name": "oldbalance"
+  },
+  {
+    "column_name": "newbalance"
+  },
+  {
+    "column_name": "pac"
+  },
+  {
+    "column_name": "pacexpiry"
+  },
+  {
+    "column_name": "createddate"
+  },
+  {
+    "column_name": "createdby"
+  },
+  {
+    "column_name": "completeddate"
+  },
+  {
+    "column_name": "requestfrom"
+  },
+  {
+    "column_name": "firstname"
+  },
+  {
+    "column_name": "lastname"
+  },
+  {
+    "column_name": "email"
+  },
+  {
+    "column_name": "rejectcode"
+  },
+  {
+    "column_name": "attacheddocumentname"
+  },
+  {
+    "column_name": "preferredlanguage"
+  },
+  {
+    "column_name": "smserrstate"
+  },
+  {
+    "column_name": "cip"
+  },
+  {
+    "column_name": "originalmsisdn"
+  },
+  {
+    "column_name": "ntype"
+  },
+  {
+    "column_name": "completeddate_month"
+  },
+  {
+    "column_name": "batch_id"
+  },
+  {
+    "column_name": "created_date"
+  },
+  {
+    "column_name": "rec_checksum"
+  }
+]

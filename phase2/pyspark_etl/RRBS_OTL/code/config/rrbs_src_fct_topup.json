@@ -1,0 +1,1028 @@
+[
+  {
+    "column_name" : "operation_code",
+    "column_type" : "smallint",
+    "required" : false,
+    "check_sum": true
+  },
+  {
+    "column_name" : "network_id",
+    "column_type" : "smallint",
+    "required" : false,
+    "check_sum": true
+  },
+  {
+    "column_name" : "recharge_type",
+    "column_type" : "smallint",
+    "required" : false,
+    "check_sum": true
+  },
+  {
+    "column_name" : "msisdn",
+    "column_type" : "bigint",
+    "required" : false,
+    "check_sum": true
+  },
+  {
+    "column_name" : "imsi",
+    "column_type" : "bigint",
+    "required" : false,
+    "check_sum": true
+  },
+  {
+    "column_name" : "account_pin_number",
+    "column_type" : "character",
+    "required" : false,
+    "check_sum": true
+  },
+  {
+    "column_name" : "voucher_card_id",
+    "column_type" : "integer",
+    "required" : false,
+    "check_sum": true
+  },
+  {
+    "column_name" : "special_topup_amount",
+    "column_type" : "numeric",
+    "required" : false,
+    "check_sum": true
+  },
+  {
+    "column_name" : "transaction_id",
+    "column_type" : "character",
+    "required" : false,
+    "check_sum": true
+  },
+  {
+    "column_name" : "new_balance",
+    "column_type" : "numeric",
+    "required" : false,
+    "check_sum": true
+  },
+  {
+    "column_name" : "face_value",
+    "column_type" : "numeric",
+    "required" : false,
+    "check_sum": true
+  },
+  {
+    "column_name" : "recharge_amount",
+    "column_type" : "numeric",
+    "required" : false,
+    "check_sum": true
+  },
+  {
+    "column_name" : "promo_validity_date",
+    "column_type" : "date",
+    "required" : false,
+    "check_sum": true
+  },
+  {
+    "column_name" : "free_minutes",
+    "column_type" : "integer",
+    "required" : false,
+    "check_sum": true
+  },
+  {
+    "column_name" : "free_voucher_onnet_minutes",
+    "column_type" : "integer",
+    "required" : false,
+    "check_sum": true
+  },
+  {
+    "column_name" : "free_minutes_expiry_date",
+    "column_type" : "date",
+    "required" : false,
+    "check_sum": true
+  },
+  {
+    "column_name" : "free_sms",
+    "column_type" : "integer",
+    "required" : false,
+    "check_sum": true
+  },
+  {
+    "column_name" : "free_voucher_onnet_sms",
+    "column_type" : "integer",
+    "required" : false,
+    "check_sum": true
+  },
+  {
+    "column_name" : "free_sms_expiry_date",
+    "column_type" : "date",
+    "required" : false,
+    "check_sum": true
+  },
+  {
+    "column_name" : "free_offnet_minutes",
+    "column_type" : "integer",
+    "required" : false,
+    "check_sum": true
+  },
+  {
+    "column_name" : "free_voucher_offnet_minutes",
+    "column_type" : "integer",
+    "required" : false,
+    "check_sum": true
+  },
+  {
+    "column_name" : "free_offnet_minutes_expiry_date",
+    "column_type" : "date",
+    "required" : false,
+    "check_sum": true
+  },
+  {
+    "column_name" : "free_offnet_sms",
+    "column_type" : "integer",
+    "required" : false,
+    "check_sum": true
+  },
+  {
+    "column_name" : "free_voucher_offnet_sms",
+    "column_type" : "integer",
+    "required" : false,
+    "check_sum": true
+  },
+  {
+    "column_name" : "free_offnet_sms_expiry_date",
+    "column_type" : "date",
+    "required" : false,
+    "check_sum": true
+  },
+  {
+    "column_name" : "free_offnet2_minutes",
+    "column_type" : "integer",
+    "required" : false,
+    "check_sum": true
+  },
+  {
+    "column_name" : "free_vouchercard_offnet2_minutes",
+    "column_type" : "integer",
+    "required" : false,
+    "check_sum": true
+  },
+  {
+    "column_name" : "free_offnet2_minutes_expiry_date",
+    "column_type" : "date",
+    "required" : false,
+    "check_sum": true
+  },
+  {
+    "column_name" : "free_offnet2_sms",
+    "column_type" : "integer",
+    "required" : false,
+    "check_sum": true
+  },
+  {
+    "column_name" : "free_vouchercard_offnet2_sms",
+    "column_type" : "integer",
+    "required" : false,
+    "check_sum": true
+  },
+  {
+    "column_name" : "free_offnet2_sms_expiry_date",
+    "column_type" : "date",
+    "required" : false,
+    "check_sum": true
+  },
+  {
+    "column_name" : "free_offnet3_minutes",
+    "column_type" : "integer",
+    "required" : false,
+    "check_sum": true
+  },
+  {
+    "column_name" : "free_vouchercard_offnet3_minutes",
+    "column_type" : "integer",
+    "required" : false,
+    "check_sum": true
+  },
+  {
+    "column_name" : "free_offnet3_minutes_expiry_date",
+    "column_type" : "date",
+    "required" : false,
+    "check_sum": true
+  },
+  {
+    "column_name" : "free_offnet3_sms",
+    "column_type" : "integer",
+    "required" : false,
+    "check_sum": true
+  },
+  {
+    "column_name" : "free_vouchercard_offnet3_sms",
+    "column_type" : "integer",
+    "required" : false,
+    "check_sum": true
+  },
+  {
+    "column_name" : "free_offnet3_sms_expiry_date",
+    "column_type" : "date",
+    "required" : false,
+    "check_sum": true
+  },
+  {
+    "column_name" : "free_data",
+    "column_type" : "bigint",
+    "required" : false,
+    "check_sum": true
+  },
+  {
+    "column_name" : "free_voucher_data",
+    "column_type" : "bigint",
+    "required" : false,
+    "check_sum": true
+  },
+  {
+    "column_name" : "free_data_expirydate",
+    "column_type" : "date",
+    "required" : false,
+    "check_sum": true
+  },
+  {
+    "column_name" : "account_validity_date",
+    "column_type" : "date",
+    "required" : false,
+    "check_sum": true
+  },
+  {
+    "column_name" : "lyca_voucher_card_id",
+    "column_type" : "character",
+    "required" : false,
+    "check_sum": true
+  },
+  {
+    "column_name" : "planid",
+    "column_type" : "smallint",
+    "required" : false,
+    "check_sum": true
+  },
+  {
+    "column_name" : "topup_counter",
+    "column_type" : "smallint",
+    "required" : false,
+    "check_sum": true
+  },
+  {
+    "column_name" : "bundle_code",
+    "column_type" : "integer",
+    "required" : false,
+    "check_sum": true
+  },
+  {
+    "column_name" : "imei",
+    "column_type" : "character",
+    "required" : false,
+    "check_sum": true
+  },
+  {
+    "column_name" : "voucher_onnet_mins_expdt",
+    "column_type" : "date",
+    "required" : false,
+    "check_sum": true
+  },
+  {
+    "column_name" : "voucher_onnet_sms_expdt",
+    "column_type" : "date",
+    "required" : false,
+    "check_sum": true
+  },
+  {
+    "column_name" : "voucher_offnet_mins_expdt1",
+    "column_type" : "date",
+    "required" : false,
+    "check_sum": true
+  },
+  {
+    "column_name" : "voucher_offnet_sms_expdt1",
+    "column_type" : "date",
+    "required" : false,
+    "check_sum": true
+  },
+  {
+    "column_name" : "voucher_offnet_mins_expdt2",
+    "column_type" : "date",
+    "required" : false,
+    "check_sum": true
+  },
+  {
+    "column_name" : "voucher_offnet_sms_expdt2",
+    "column_type" : "date",
+    "required" : false,
+    "check_sum": true
+  },
+  {
+    "column_name" : "voucher_offnet_mins_expdt3",
+    "column_type" : "date",
+    "required" : false,
+    "check_sum": true
+  },
+  {
+    "column_name" : "voucher_offnet_sms_expdt3",
+    "column_type" : "date",
+    "required" : false,
+    "check_sum": true
+  },
+  {
+    "column_name" : "voucher_free_dataexp",
+    "column_type" : "date",
+    "required" : false,
+    "check_sum": true
+  },
+  {
+    "column_name" : "retailer_msisdn",
+    "column_type" : "character",
+    "required" : false,
+    "check_sum": true
+  },
+  {
+    "column_name" : "staff_msisdn",
+    "column_type" : "character",
+    "required" : false,
+    "check_sum": true
+  },
+  {
+    "column_name" : "wlm_topupmode",
+    "column_type" : "character",
+    "required" : false,
+    "check_sum": true
+  },
+  {
+    "column_name" : "face_value_1",
+    "column_type" : "numeric",
+    "required" : false,
+    "check_sum": true
+  },
+  {
+    "column_name" : "promo_validity_days",
+    "column_type" : "integer",
+    "required" : false,
+    "check_sum": true
+  },
+  {
+    "column_name" : "oldplanid",
+    "column_type" : "integer",
+    "required" : false,
+    "check_sum": true
+  },
+  {
+    "column_name" : "onnet_mt_mins",
+    "column_type" : "integer",
+    "required" : false,
+    "check_sum": true
+  },
+  {
+    "column_name" : "voucher_onnet_mt_mins",
+    "column_type" : "integer",
+    "required" : false,
+    "check_sum": true
+  },
+  {
+    "column_name" : "onnet_mt_sms",
+    "column_type" : "integer",
+    "required" : false,
+    "check_sum": true
+  },
+  {
+    "column_name" : "voucher_onnet_mt_sms",
+    "column_type" : "integer",
+    "required" : false,
+    "check_sum": true
+  },
+  {
+    "column_name" : "onnet_mt_exp_dt",
+    "column_type" : "date",
+    "required" : false,
+    "check_sum": true
+  },
+  {
+    "column_name" : "voucher_onnet_mt_expiry_date",
+    "column_type" : "date",
+    "required" : false,
+    "check_sum": true
+  },
+  {
+    "column_name" : "offnet_mt_mins",
+    "column_type" : "integer",
+    "required" : false,
+    "check_sum": true
+  },
+  {
+    "column_name" : "voucher_offnet_mt_mins",
+    "column_type" : "integer",
+    "required" : false,
+    "check_sum": true
+  },
+  {
+    "column_name" : "offnet_mt_sms",
+    "column_type" : "integer",
+    "required" : false,
+    "check_sum": true
+  },
+  {
+    "column_name" : "voucher_offnet_mt_sms",
+    "column_type" : "integer",
+    "required" : false,
+    "check_sum": true
+  },
+  {
+    "column_name" : "offnet_mt_exp_dt",
+    "column_type" : "date",
+    "required" : false,
+    "check_sum": true
+  },
+  {
+    "column_name" : "voucher_offnet_mt_expiry_date",
+    "column_type" : "date",
+    "required" : false,
+    "check_sum": true
+  },
+  {
+    "column_name" : "bundle_name",
+    "column_type" : "character",
+    "required" : false,
+    "check_sum": true
+  },
+  {
+    "column_name" : "old_account_balance",
+    "column_type" : "numeric",
+    "required" : false,
+    "check_sum": true
+  },
+  {
+    "column_name" : "parent_msisdn",
+    "column_type" : "character",
+    "required" : false,
+    "check_sum": true
+  },
+  {
+    "column_name" : "rrbs_transaction_id",
+    "column_type" : "character",
+    "required" : false,
+    "check_sum": true
+  },
+  {
+    "column_name" : "override_bundle",
+    "column_type" : "integer",
+    "required" : false,
+    "check_sum": true
+  },
+  {
+    "column_name" : "vouchernetworkid",
+    "column_type" : "smallint",
+    "required" : false,
+    "check_sum": true
+  },
+  {
+    "column_name" : "accid",
+    "column_type" : "character",
+    "required" : false,
+    "check_sum": true
+  },
+  {
+    "column_name" : "deptid",
+    "column_type" : "character",
+    "required" : false,
+    "check_sum": true
+  },
+  {
+    "column_name" : "bundle_catery",
+    "column_type" : "smallint",
+    "required" : false,
+    "check_sum": true
+  },
+  {
+    "column_name" : "plan_validity_days",
+    "column_type" : "smallint",
+    "required" : false,
+    "check_sum": true
+  },
+  {
+    "column_name" : "account_id",
+    "column_type" : "bigint",
+    "required" : false,
+    "check_sum": true
+  },
+  {
+    "column_name" : "sim_number",
+    "column_type" : "bigint",
+    "required" : false,
+    "check_sum": true
+  },
+  {
+    "column_name" : "cdr_time_stamp",
+    "column_type" : "timestamp without time zone",
+    "required" : false,
+    "check_sum": true
+  },
+  {
+    "column_name" : "reservation",
+    "column_type" : "smallint",
+    "required" : false,
+    "check_sum": true
+  },
+  {
+    "column_name" : "discount_promo_code",
+    "column_type" : "character",
+    "required" : false,
+    "check_sum": true
+  },
+  {
+    "column_name" : "discount_promo_amount",
+    "column_type" : "numeric",
+    "required" : false,
+    "check_sum": true
+  },
+  {
+    "column_name" : "primary_bundle_code",
+    "column_type" : "integer",
+    "required" : false,
+    "check_sum": true
+  },
+  {
+    "column_name" : "family_account_id",
+    "column_type" : "character",
+    "required" : false,
+    "check_sum": true
+  },
+  {
+    "column_name" : "tax",
+    "column_type" : "numeric",
+    "required" : false,
+    "check_sum": true
+  },
+  {
+    "column_name" : "number_of_installments",
+    "column_type" : "integer",
+    "required" : false,
+    "check_sum": true
+  },
+  {
+    "column_name" : "oba_bundle_flag",
+    "column_type" : "smallint",
+    "required" : false,
+    "check_sum": true
+  },
+  {
+    "column_name" : "oba_due_amount",
+    "column_type" : "numeric",
+    "required" : false,
+    "check_sum": true
+  },
+  {
+    "column_name" : "parent_bundle_code",
+    "column_type" : "integer",
+    "required" : false,
+    "check_sum": true
+  },
+  {
+    "column_name" : "bundle_unit_type",
+    "column_type" : "smallint",
+    "required" : false,
+    "check_sum": true
+  },
+  {
+    "column_name" : "contract_start_date",
+    "column_type" : "date",
+    "required" : false,
+    "check_sum": true
+  },
+  {
+    "column_name" : "contract_end_date",
+    "column_type" : "character",
+    "required" : false,
+    "check_sum": true
+  },
+  {
+    "column_name" : "flh_flag",
+    "column_type" : "smallint",
+    "required" : false,
+    "check_sum": true
+  },
+  {
+    "column_name" : "exibs_retailer_transaction_id",
+    "column_type" : "character",
+    "required" : false,
+    "check_sum": true
+  },
+  {
+    "column_name" : "operation_flag",
+    "column_type" : "smallint",
+    "required" : false,
+    "check_sum": true
+  },
+  {
+    "column_name" : "vat_amount",
+    "column_type" : "numeric",
+    "required" : false,
+    "check_sum": true
+  },
+  {
+    "column_name" : "special_discount_code",
+    "column_type" : "character",
+    "required" : false,
+    "check_sum": true
+  },
+  {
+    "column_name" : "special_discount_amount",
+    "column_type" : "numeric",
+    "required" : false,
+    "check_sum": true
+  },
+  {
+    "column_name" : "number_of_installments_discounts_applied",
+    "column_type" : "character",
+    "required" : false,
+    "check_sum": true
+  },
+  {
+    "column_name" : "actual_bundle_cost",
+    "column_type" : "numeric",
+    "required" : false,
+    "check_sum": true
+  },
+  {
+    "column_name" : "reservation_reference_transaction_id",
+    "column_type" : "character",
+    "required" : false,
+    "check_sum": true
+  },
+  {
+    "column_name" : "bundle_expiry_type",
+    "column_type" : "smallint",
+    "required" : false,
+    "check_sum": true
+  },
+  {
+    "column_name" : "bundle_balance",
+    "column_type" : "numeric",
+    "required" : false,
+    "check_sum": true
+  },
+  {
+    "column_name" : "muv_indicator",
+    "column_type" : "smallint",
+    "required" : false,
+    "check_sum": true
+  },
+  {
+    "column_name" : "bundle_group_type",
+    "column_type" : "smallint",
+    "required" : false,
+    "check_sum": true
+  },
+  {
+    "column_name" : "sequence_number",
+    "column_type" : "smallint",
+    "required" : false,
+    "check_sum": true
+  },
+  {
+    "column_name" : "amount_refunded",
+    "column_type" : "numeric",
+    "required" : false,
+    "check_sum": true
+  },
+  {
+    "column_name" : "forcible_cancellation",
+    "column_type" : "character",
+    "required" : false,
+    "check_sum": true
+  },
+  {
+    "column_name" : "payment_mode_indicator",
+    "column_type" : "character",
+    "required" : false,
+    "check_sum": true
+  },
+  {
+    "column_name" : "amount",
+    "column_type" : "numeric",
+    "required" : false,
+    "check_sum": true
+  },
+  {
+    "column_name" : "version_id",
+    "column_type" : "smallint",
+    "required" : false,
+    "check_sum": true
+  },
+  {
+    "column_name" : "refund_entity_type",
+    "column_type" : "smallint",
+    "required" : false,
+    "check_sum": true
+  },
+  {
+    "column_name" : "refund_provided_to",
+    "column_type" : "character",
+    "required" : false,
+    "check_sum": true
+  },
+  {
+    "column_name" : "topup_validity_days",
+    "column_type" : "integer",
+    "required" : false,
+    "check_sum": true
+  },
+  {
+    "column_name" : "reserve_amount",
+    "column_type" : "numeric",
+    "required" : false,
+    "check_sum": true
+  },
+  {
+    "column_name" : "preloaded_bundle_flag",
+    "column_type" : "smallint",
+    "required" : false,
+    "check_sum": true
+  },
+  {
+    "column_name" : "staff_indicator",
+    "column_type" : "smallint",
+    "required" : false,
+    "check_sum": true
+  },
+  {
+    "column_name" : "child_addition_discount",
+    "column_type" : "numeric",
+    "required" : false,
+    "check_sum": true
+  },
+  {
+    "column_name" : "payg_family_indicator",
+    "column_type" : "smallint",
+    "required" : false,
+    "check_sum": true
+  },
+  {
+    "column_name" : "payg_prorate_flag",
+    "column_type" : "smallint",
+    "required" : false,
+    "check_sum": true
+  },
+  {
+    "column_name" : "payg_child_index",
+    "column_type" : "smallint",
+    "required" : false,
+    "check_sum": true
+  },
+  {
+    "column_name" : "parent_msisdn1",
+    "column_type" : "character",
+    "required" : false,
+    "check_sum": true
+  },
+  {
+    "column_name" : "payg_member_count",
+    "column_type" : "integer",
+    "required" : false,
+    "check_sum": true
+  },
+  {
+    "column_name" : "direct_addon_flag",
+    "column_type" : "smallint",
+    "required" : false,
+    "check_sum": true
+  },
+  {
+    "column_name" : "action_flag",
+    "column_type" : "smallint",
+    "required" : false,
+    "check_sum": true
+  },
+  {
+    "column_name" : "bundle_topup_timestamp",
+    "column_type" : "character",
+    "required" : false,
+    "check_sum": true
+  },
+  {
+    "column_name" : "sim_with_bundle_code",
+    "column_type" : "integer",
+    "required" : false,
+    "check_sum": true
+  },
+  {
+    "column_name" : "taxation_details",
+    "column_type" : "character",
+    "required" : false,
+    "check_sum": true
+  },
+  {
+    "column_name" : "reserved",
+    "column_type" : "character",
+    "required" : false,
+    "check_sum": true
+  },
+  {
+    "column_name" : "bundle_purchase_date",
+    "column_type" : "timestamp without time zone",
+    "required" : false,
+    "check_sum": true
+  },
+  {
+    "column_name" : "bundle_start_date",
+    "column_type" : "timestamp without time zone",
+    "required" : false,
+    "check_sum": true
+  },
+  {
+    "column_name" : "renewal_payment_mode",
+    "column_type" : "smallint",
+    "required" : false,
+    "check_sum": true
+  },
+  {
+    "column_name" : "iot_bundle_flag",
+    "column_type" : "smallint",
+    "required" : false,
+    "check_sum": true
+  },
+  {
+    "column_name" : "veekbundleflag",
+    "column_type" : "smallint",
+    "required" : false,
+    "check_sum": true
+  },
+  {
+    "column_name" : "validity_overridden",
+    "column_type" : "smallint",
+    "required" : false,
+    "check_sum": true
+  },
+  {
+    "column_name" : "link_type",
+    "column_type" : "smallint",
+    "required" : false,
+    "check_sum": true
+  },
+  {
+    "column_name" : "overwrite_bundle_cost_flag",
+    "column_type" : "smallint",
+    "required" : false,
+    "check_sum": true
+  },
+  {
+    "column_name" : "order_id",
+    "column_type" : "character",
+    "required" : false,
+    "check_sum": true
+  },
+  {
+    "column_name" : "pocket_id",
+    "column_type" : "character",
+    "required" : false,
+    "check_sum": true
+  },
+  {
+    "column_name" : "da_track",
+    "column_type" : "numeric",
+    "required" : false,
+    "check_sum": true
+  },
+  {
+    "column_name" : "da_principal_amount",
+    "column_type" : "numeric",
+    "required" : false,
+    "check_sum": true
+  },
+  {
+    "column_name" : "is_loan_request",
+    "column_type" : "smallint",
+    "required" : false,
+    "check_sum": true
+  },
+  {
+    "column_name" : "migrated_ortel_subscriber_flag",
+    "column_type" : "smallint",
+    "required" : false,
+    "check_sum": true
+  },
+  {
+    "column_name" : "reward_purchased",
+    "column_type" : "smallint",
+    "required" : false,
+    "check_sum": true
+  },
+  {
+    "column_name" : "feebuffer",
+    "column_type" : "character",
+    "required" : false,
+    "check_sum": true
+  },
+  {
+    "column_name" : "tax_buffer",
+    "column_type" : "character",
+    "required" : false,
+    "check_sum": true
+  },
+  {
+    "column_name" : "paymentgateway",
+    "column_type" : "character",
+    "required" : false,
+    "check_sum": true
+  },
+  {
+    "column_name" : "zipcode",
+    "column_type" : "character",
+    "required" : false,
+    "check_sum": true
+  },
+  {
+    "column_name" : "professional_channel_name",
+    "column_type" : "character",
+    "required" : false,
+    "check_sum": true
+  },
+  {
+    "column_name" : "topupcriteriaflag",
+    "column_type" : "smallint",
+    "required" : false,
+    "check_sum": true
+  },
+  {
+    "column_name" : "nus_id",
+    "column_type" : "character",
+    "required" : false,
+    "check_sum": true
+  },
+  {
+    "column_name" : "nus_applied",
+    "column_type" : "smallint",
+    "required" : false,
+    "check_sum": true
+  },
+  {
+    "column_name" : "slotid",
+    "column_type" : "character",
+    "required" : false,
+    "check_sum": true
+  },
+  {
+    "column_name" : "reserved_bundle_cost",
+    "column_type" : "character",
+    "required" : false,
+    "check_sum": true
+  },
+  {
+    "column_name" : "fct_free_text_1",
+    "column_type" : "character",
+    "required" : false,
+    "check_sum": false
+  },
+  {
+    "column_name" : "fct_free_text_2",
+    "column_type" : "character",
+    "required" : false,
+    "check_sum": false
+  },
+  {
+    "column_name" : "fct_free_text_3",
+    "column_type" : "character",
+    "required" : false,
+    "check_sum": false
+  },
+  {
+    "column_name" : "fct_free_text_4",
+    "column_type" : "character",
+    "required" : false,
+    "check_sum": false
+  },
+  {
+    "column_name" : "fct_free_text_5",
+    "column_type" : "character",
+    "required" : false,
+    "check_sum": false
+  },
+  {
+    "column_name" : "fct_free_text_6",
+    "column_type" : "character",
+    "required" : false,
+    "check_sum": false
+  },
+  {
+    "column_name" : "fct_free_text_7",
+    "column_type" : "character",
+    "required" : false,
+    "check_sum": false
+  },
+  {
+    "column_name" : "fct_free_text_8",
+    "column_type" : "character",
+    "required" : false,
+    "check_sum": false
+  },
+  {
+    "column_name" : "fct_free_text_9",
+    "column_type" : "character",
+    "required" : false,
+    "check_sum": false
+  },
+  {
+    "column_name" : "fct_free_text_10",
+    "column_type" : "character",
+    "required" : false,
+    "check_sum": false
+  }
+]

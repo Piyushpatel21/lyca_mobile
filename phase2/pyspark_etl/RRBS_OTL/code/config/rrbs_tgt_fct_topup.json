@@ -1,0 +1,567 @@
+[
+  {
+    "column_name": "operation_code"
+  },
+  {
+    "column_name": "network_id"
+  },
+  {
+    "column_name": "recharge_type"
+  },
+  {
+    "column_name": "msisdn"
+  },
+  {
+    "column_name": "imsi"
+  },
+  {
+    "column_name": "account_pin_number"
+  },
+  {
+    "column_name": "voucher_card_id"
+  },
+  {
+    "column_name": "special_topup_amount"
+  },
+  {
+    "column_name": "transaction_id"
+  },
+  {
+    "column_name": "new_balance"
+  },
+  {
+    "column_name": "face_value"
+  },
+  {
+    "column_name": "recharge_amount"
+  },
+  {
+    "column_name": "promo_validity_date"
+  },
+  {
+    "column_name": "free_minutes"
+  },
+  {
+    "column_name": "free_voucher_onnet_minutes"
+  },
+  {
+    "column_name": "free_minutes_expiry_date"
+  },
+  {
+    "column_name": "free_sms"
+  },
+  {
+    "column_name": "free_voucher_onnet_sms"
+  },
+  {
+    "column_name": "free_sms_expiry_date"
+  },
+  {
+    "column_name": "free_offnet_minutes"
+  },
+  {
+    "column_name": "free_voucher_offnet_minutes"
+  },
+  {
+    "column_name": "free_offnet_minutes_expiry_date"
+  },
+  {
+    "column_name": "free_offnet_sms"
+  },
+  {
+    "column_name": "free_voucher_offnet_sms"
+  },
+  {
+    "column_name": "free_offnet_sms_expiry_date"
+  },
+  {
+    "column_name": "free_offnet2_minutes"
+  },
+  {
+    "column_name": "free_vouchercard_offnet2_minutes"
+  },
+  {
+    "column_name": "free_offnet2_minutes_expiry_date"
+  },
+  {
+    "column_name": "free_offnet2_sms"
+  },
+  {
+    "column_name": "free_vouchercard_offnet2_sms"
+  },
+  {
+    "column_name": "free_offnet2_sms_expiry_date"
+  },
+  {
+    "column_name": "free_offnet3_minutes"
+  },
+  {
+    "column_name": "free_vouchercard_offnet3_minutes"
+  },
+  {
+    "column_name": "free_offnet3_minutes_expiry_date"
+  },
+  {
+    "column_name": "free_offnet3_sms"
+  },
+  {
+    "column_name": "free_vouchercard_offnet3_sms"
+  },
+  {
+    "column_name": "free_offnet3_sms_expiry_date"
+  },
+  {
+    "column_name": "free_data"
+  },
+  {
+    "column_name": "free_voucher_data"
+  },
+  {
+    "column_name": "free_data_expirydate"
+  },
+  {
+    "column_name": "account_validity_date"
+  },
+  {
+    "column_name": "lyca_voucher_card_id"
+  },
+  {
+    "column_name": "planid"
+  },
+  {
+    "column_name": "topup_counter"
+  },
+  {
+    "column_name": "bundle_code"
+  },
+  {
+    "column_name": "imei"
+  },
+  {
+    "column_name": "voucher_onnet_mins_expdt"
+  },
+  {
+    "column_name": "voucher_onnet_sms_expdt"
+  },
+  {
+    "column_name": "voucher_offnet_mins_expdt1"
+  },
+  {
+    "column_name": "voucher_offnet_sms_expdt1"
+  },
+  {
+    "column_name": "voucher_offnet_mins_expdt2"
+  },
+  {
+    "column_name": "voucher_offnet_sms_expdt2"
+  },
+  {
+    "column_name": "voucher_offnet_mins_expdt3"
+  },
+  {
+    "column_name": "voucher_offnet_sms_expdt3"
+  },
+  {
+    "column_name": "voucher_free_dataexp"
+  },
+  {
+    "column_name": "retailer_msisdn"
+  },
+  {
+    "column_name": "staff_msisdn"
+  },
+  {
+    "column_name": "wlm_topupmode"
+  },
+  {
+    "column_name": "face_value_1"
+  },
+  {
+    "column_name": "promo_validity_days"
+  },
+  {
+    "column_name": "oldplanid"
+  },
+  {
+    "column_name": "onnet_mt_mins"
+  },
+  {
+    "column_name": "voucher_onnet_mt_mins"
+  },
+  {
+    "column_name": "onnet_mt_sms"
+  },
+  {
+    "column_name": "voucher_onnet_mt_sms"
+  },
+  {
+    "column_name": "onnet_mt_exp_dt"
+  },
+  {
+    "column_name": "voucher_onnet_mt_expiry_date"
+  },
+  {
+    "column_name": "offnet_mt_mins"
+  },
+  {
+    "column_name": "voucher_offnet_mt_mins"
+  },
+  {
+    "column_name": "offnet_mt_sms"
+  },
+  {
+    "column_name": "voucher_offnet_mt_sms"
+  },
+  {
+    "column_name": "offnet_mt_exp_dt"
+  },
+  {
+    "column_name": "voucher_offnet_mt_expiry_date"
+  },
+  {
+    "column_name": "bundle_name"
+  },
+  {
+    "column_name": "old_account_balance"
+  },
+  {
+    "column_name": "parent_msisdn"
+  },
+  {
+    "column_name": "rrbs_transaction_id"
+  },
+  {
+    "column_name": "override_bundle"
+  },
+  {
+    "column_name": "vouchernetworkid"
+  },
+  {
+    "column_name": "accid"
+  },
+  {
+    "column_name": "deptid"
+  },
+  {
+    "column_name": "bundle_catery"
+  },
+  {
+    "column_name": "plan_validity_days"
+  },
+  {
+    "column_name": "account_id"
+  },
+  {
+    "column_name": "sim_number"
+  },
+  {
+    "column_name": "cdr_time_stamp"
+  },
+  {
+    "column_name": "reservation"
+  },
+  {
+    "column_name": "discount_promo_code"
+  },
+  {
+    "column_name": "discount_promo_amount"
+  },
+  {
+    "column_name": "primary_bundle_code"
+  },
+  {
+    "column_name": "family_account_id"
+  },
+  {
+    "column_name": "tax"
+  },
+  {
+    "column_name": "number_of_installments"
+  },
+  {
+    "column_name": "oba_bundle_flag"
+  },
+  {
+    "column_name": "oba_due_amount"
+  },
+  {
+    "column_name": "parent_bundle_code"
+  },
+  {
+    "column_name": "bundle_unit_type"
+  },
+  {
+    "column_name": "contract_start_date"
+  },
+  {
+    "column_name": "contract_end_date"
+  },
+  {
+    "column_name": "flh_flag"
+  },
+  {
+    "column_name": "exibs_retailer_transaction_id"
+  },
+  {
+    "column_name": "operation_flag"
+  },
+  {
+    "column_name": "vat_amount"
+  },
+  {
+    "column_name": "special_discount_code"
+  },
+  {
+    "column_name": "special_discount_amount"
+  },
+  {
+    "column_name": "number_of_installments_discounts_applied"
+  },
+  {
+    "column_name": "actual_bundle_cost"
+  },
+  {
+    "column_name": "reservation_reference_transaction_id"
+  },
+  {
+    "column_name": "bundle_expiry_type"
+  },
+  {
+    "column_name": "bundle_balance"
+  },
+  {
+    "column_name": "muv_indicator"
+  },
+  {
+    "column_name": "bundle_group_type"
+  },
+  {
+    "column_name": "sequence_number"
+  },
+  {
+    "column_name": "amount_refunded"
+  },
+  {
+    "column_name": "forcible_cancellation"
+  },
+  {
+    "column_name": "payment_mode_indicator"
+  },
+  {
+    "column_name": "amount"
+  },
+  {
+    "column_name": "version_id"
+  },
+  {
+    "column_name": "refund_entity_type"
+  },
+  {
+    "column_name": "refund_provided_to"
+  },
+  {
+    "column_name": "topup_validity_days"
+  },
+  {
+    "column_name": "reserve_amount"
+  },
+  {
+    "column_name": "preloaded_bundle_flag"
+  },
+  {
+    "column_name": "staff_indicator"
+  },
+  {
+    "column_name": "child_addition_discount"
+  },
+  {
+    "column_name": "payg_family_indicator"
+  },
+  {
+    "column_name": "payg_prorate_flag"
+  },
+  {
+    "column_name": "payg_child_index"
+  },
+  {
+    "column_name": "parent_msisdn1"
+  },
+  {
+    "column_name": "payg_member_count"
+  },
+  {
+    "column_name": "direct_addon_flag"
+  },
+  {
+    "column_name": "action_flag"
+  },
+  {
+    "column_name": "bundle_topup_timestamp"
+  },
+  {
+    "column_name": "sim_with_bundle_code"
+  },
+  {
+    "column_name": "taxation_details"
+  },
+  {
+    "column_name": "reserved"
+  },
+  {
+    "column_name": "bundle_purchase_date"
+  },
+  {
+    "column_name": "bundle_start_date"
+  },
+  {
+    "column_name": "renewal_payment_mode"
+  },
+  {
+    "column_name": "iot_bundle_flag"
+  },
+  {
+    "column_name": "veekbundleflag"
+  },
+  {
+    "column_name": "validity_overridden"
+  },
+  {
+    "column_name": "link_type"
+  },
+  {
+    "column_name": "overwrite_bundle_cost_flag"
+  },
+  {
+    "column_name": "order_id"
+  },
+  {
+    "column_name": "pocket_id"
+  },
+  {
+    "column_name": "da_track"
+  },
+  {
+    "column_name": "da_principal_amount"
+  },
+  {
+    "column_name": "is_loan_request"
+  },
+  {
+    "column_name": "migrated_ortel_subscriber_flag"
+  },
+  {
+    "column_name": "reward_purchased"
+  },
+  {
+    "column_name": "feebuffer"
+  },
+  {
+    "column_name": "tax_buffer"
+  },
+  {
+    "column_name": "paymentgateway"
+  },
+  {
+    "column_name": "zipcode"
+  },
+  {
+    "column_name": "professional_channel_name"
+  },
+  {
+    "column_name": "topupcriteriaflag"
+  },
+  {
+    "column_name": "nus_id"
+  },
+  {
+    "column_name": "nus_applied"
+  },
+  {
+    "column_name": "slotid"
+  },
+  {
+    "column_name": "reserved_bundle_cost"
+  },
+  {
+    "column_name" : "fct_free_text_1"
+  },
+  {
+    "column_name" : "fct_free_text_2"
+  },
+  {
+    "column_name" : "fct_free_text_3"
+  },
+  {
+    "column_name" : "fct_free_text_4"
+  },
+  {
+    "column_name" : "fct_free_text_5"
+  },
+  {
+    "column_name" : "fct_free_text_6"
+  },
+  {
+    "column_name" : "fct_free_text_7"
+  },
+  {
+    "column_name" : "fct_free_text_8"
+  },
+  {
+    "column_name" : "fct_free_text_9"
+  },
+  {
+    "column_name" : "fct_free_text_10"
+  },
+  {
+    "column_name": "cdr_dt"
+  },
+  {
+    "column_name": "cdr_dt_month"
+  },
+  {
+    "column_name" : "cdr_dt_num"
+  },
+  {
+    "column_name" : "is_bundle_loyalty"
+  },
+  {
+    "column_name": "bundle_usage_1"
+  },
+  {
+    "column_name": "bundle_usage_2"
+  },
+  {
+    "column_name": "cdr_dt_gmt"
+  },
+  {
+    "column_name": "cdr_dt_month_gmt"
+  },
+  {
+    "column_name": "cdr_dt_num_gmt"
+  },
+  {
+    "column_name": "cdr_dt_hour_gmt"
+  },
+  {
+    "column_name" : "expiry_date_derived"
+  },
+  {
+    "column_name" : "expiry_date_derived_num"
+  },
+  {
+    "column_name": "expiry_date_month_derived"
+  },
+  {
+    "column_name": "filename"
+  },
+  {
+    "column_name": "batch_id"
+  },
+  {
+    "column_name": "created_date"
+  },
+  {
+    "column_name": "rec_checksum"
+  }
+
+]
