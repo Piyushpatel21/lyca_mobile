@@ -157,7 +157,8 @@ class VoiceDataTransformation:
             if column.name == self._call_date_col:
                 new_df = new_df.withColumn(column.name, F.to_timestamp(new_df[column.name], self._call_date_col_format))
             elif column.name in self._timestamp_cols:
-                new_df = new_df.withColumn(column.name, F.to_timestamp(new_df[column.name], self._timestamp_cols_format))
+                new_df = new_df.withColumn(column.name,
+                                           F.to_timestamp(new_df[column.name], self._timestamp_cols_format))
             else:
                 new_df = new_df.withColumn(column.name, new_df[column.name].cast(column.dataType))
         return new_df
@@ -183,7 +184,8 @@ class TopUpDataTransformation:
                            "voucher_onnet_sms_expdt", "voucher_offnet_mins_expdt1", "voucher_offnet_sms_expdt1",
                            "voucher_offnet_mins_expdt2", "voucher_offnet_sms_expdt2", "voucher_offnet_mins_expdt3",
                            "voucher_offnet_sms_expdt3", "voucher_free_dataexp", "voucher_onnet_mt_expiry_DATE",
-                           "onnet_mt_exp_dt", "offnet_mt_exp_dt", "voucher_offnet_mt_expiry_DATE", "contract_start_DATE"]
+                           "onnet_mt_exp_dt", "offnet_mt_exp_dt", "voucher_offnet_mt_expiry_DATE",
+                           "contract_start_DATE"]
         self._date_cols_format = "dd-MM-yyyy"
         self.time_zone = "Europe/London"
 
@@ -249,23 +251,22 @@ class TopUpDataTransformation:
             ex_date_num_DF = newExDF.withColumn("expiry_DATE_derived_num",
                                                 F.date_format(F.col("expiry_DATE_derived"), "yyyyMMdd")
                                                 .cast(IntegerType())) \
-                                    .withColumn("expiry_date_month_derived", F.date_format(F.col("expiry_DATE_derived"), "yyyyMM")
-                                                .cast(IntegerType()))
+                .withColumn("expiry_date_month_derived", F.date_format(F.col("expiry_DATE_derived"), "yyyyMM")
+                            .cast(IntegerType()))
 
             fDf = ex_date_num_DF.withColumn("is_bundle_loyalty",
-                                                F.when(ex_date_num_DF.bundle_name_lowercase.contains('loyalty'),
-                                                       1).otherwise(0)) \
-                .drop("bundle_name_lowercase")
+                                            F.when(ex_date_num_DF.bundle_name_lowercase.contains('loyalty'),
+                                                   1).otherwise(0)).drop("bundle_name_lowercase")
 
             finalDF = fDf.withColumn("bundle_usage_1",
-                            F.when((fDf["face_vale_n"] == 0) & (fDf["special_topup_amount_n"] > 0),
-                                   F.col("special_topup_amount_n").cast(DecimalType(22, 6))) \
-                            .otherwise(F.when((fDf["face_vale_n"] > 0) & (fDf["special_topup_amount_n"] >= 0),
-                                              F.col("face_vale_n").cast(DecimalType(22, 6))) \
-                                       .otherwise(
-                                F.when((fDf["face_vale_n"] == 0) & (fDf["special_topup_amount_n"] == 0),
-                                       F.col("actual_bundle_cost_n").cast(DecimalType(22, 6)))))) \
-                .drop("face_vale_n", "special_topup_amount_n", "actual_bundle_cost_n") \
+                                     F.when((fDf["face_vale_n"] == 0) & (fDf["special_topup_amount_n"] > 0),
+                                            F.col("special_topup_amount_n").cast(DecimalType(22, 6))) \
+                                     .otherwise(F.when((fDf["face_vale_n"] > 0) & (fDf["special_topup_amount_n"] >= 0),
+                                                       F.col("face_vale_n").cast(DecimalType(22, 6))) \
+                                         .otherwise(
+                                         F.when((fDf["face_vale_n"] == 0) & (fDf["special_topup_amount_n"] == 0),
+                                                F.col("actual_bundle_cost_n").cast(DecimalType(22, 6)))))) \
+                .drop("face_vale_n", "special_topup_amount_n", "actual_bundle_cost_n")
 
             return finalDF
         except Exception as ex:
@@ -395,7 +396,8 @@ class GprsDataTransformation:
         files_to_ignore = []
         for column in schema:
             if column.name in self._timestamp_cols:
-                new_df = new_df.withColumn(column.name, F.to_timestamp(new_df[column.name], self._timestamp_cols_format))
+                new_df = new_df.withColumn(column.name,
+                                           F.to_timestamp(new_df[column.name], self._timestamp_cols_format))
             elif column.name in self._date_cols:
                 new_df = new_df.withColumn(column.name, F.to_timestamp(new_df[column.name], self._date_cols_format))
             else:
@@ -642,3 +644,14 @@ class DataTransformation:
         no_blanks_df = self.fillBlanks(new_df, "0")
         no_null_df = self.fillNull(no_blanks_df)
         return no_null_df
+
+    def markAllNormal(self, dataframe):
+        """
+        Mark all rows as 'Normal' for normalOrlate column
+
+        :param dataframe:
+        :return:
+        """
+        self._logger.info("***** Return All Rows 'Normal' *****")
+        df = dataframe.withColumn("normalOrlate", F.lit("Normal"))
+        return df
