@@ -326,6 +326,7 @@ class GprsDataTransformation:
         :return:
         """
 
+
         try:
             self._logger.info("Generating derived columns for GPRS data.")
             transDF = df.withColumn("_temp_connection_dt_col",
