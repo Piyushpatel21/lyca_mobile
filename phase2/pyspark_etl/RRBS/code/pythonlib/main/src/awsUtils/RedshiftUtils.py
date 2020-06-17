@@ -17,7 +17,7 @@ from commonUtils.Log4j import Log4j
 
 class RedshiftUtils:
 
-    def __init__(self, dwh_host, dwh_port, dwh_db, dwh_user, dwh_pass, tmp_dir):
+    def __init__(self, dwh_host, dwh_port, dwh_db, dwh_user, dwh_pass, tmp_dir, region):
         """
             Initialize class with required parameters for connecting to data warehouse.
             :param dwh_type: Is it "redshift" or "aurora"
@@ -35,6 +35,7 @@ class RedshiftUtils:
         self.jdbcPort = dwh_port
         self.jdbcDatabase = dwh_db
         self.redshiftTmpDir = tmp_dir
+        self.region = region
         self.jdbcUrl = "jdbc:redshift://{jdbcHostname}:{jdbcPort}/{jdbcDatabase}?user={jdbcUsername}&password={jdbcPassword}" \
             .format(jdbcHostname=self.jdbcHostname, jdbcPort=self.jdbcPort, jdbcDatabase=self.jdbcDatabase,
                     jdbcUsername=self.jdbcUsername,
@@ -57,6 +58,7 @@ class RedshiftUtils:
                 .option("dbtable", table) \
                 .option("forward_spark_s3_credentials", "true") \
                 .option("tempdir", self.redshiftTmpDir) \
+                .option("awsregion", self.region) \
                 .load()
 
         except Exception as ex:
@@ -83,6 +85,7 @@ class RedshiftUtils:
                 .option("postactions", postQuery) \
                 .option("forward_spark_s3_credentials", "true") \
                 .option("tempdir", self.redshiftTmpDir) \
+                .option("awsregion", self.region) \
                 .mode("overwrite") \
                 .save()
         except Exception as ex:
@@ -98,6 +101,7 @@ class RedshiftUtils:
                         "SELECT file_name FROM uk_test.log_batch_files_rrbs where batch_id = {batch_id}".format(
                             batch_id=batchid)) \
                 .option("tempdir", self.redshiftTmpDir) \
+                .option("awsregion", self.region) \
                 .load()
             filename = files.rdd.flatMap(lambda file: file).collect()
             return filename
@@ -125,6 +129,7 @@ class RedshiftUtils:
                 .option("query", query) \
                 .option("forward_spark_s3_credentials", "true") \
                 .option("tempdir", self.redshiftTmpDir) \
+                .option("awsregion", self.region) \
                 .load()
             batchIDList = df.rdd.flatMap(lambda batch: batch).collect()
             batchID = batchIDList[0]
@@ -152,6 +157,7 @@ class RedshiftUtils:
                     .option("query", query) \
                     .option("forward_spark_s3_credentials", "true") \
                     .option("tempdir", self.redshiftTmpDir) \
+                    .option("awsregion", self.region) \
                     .load()
                 df = redshiftDF.join(metaDF, on='FILE_NAME', how='inner')
                 return df.select(redshiftDF['BATCH_ID'], redshiftDF['FILE_SOURCE'], redshiftDF['FILE_ID'], redshiftDF['FILE_NAME'], redshiftDF['BATCH_FROM'],
@@ -172,6 +178,7 @@ class RedshiftUtils:
                 .option("preactions", preDelQuery) \
                 .option("forward_spark_s3_credentials", "true") \
                 .option("tempdir", self.redshiftTmpDir) \
+                .option("awsregion", self.region) \
                 .mode("append") \
                 .save()
             self._logger.info("Successfully Updated Log Batch Files table :")
@@ -220,6 +227,7 @@ class RedshiftUtils:
                 .option("postactions", postQuery) \
                 .option("forward_spark_s3_credentials", "true") \
                 .option("tempdir", self.redshiftTmpDir) \
+                .option("awsregion", self.region) \
                 .mode("append") \
                 .save()
             self._logger.info("Successfully Updated Log Batch Status table :")

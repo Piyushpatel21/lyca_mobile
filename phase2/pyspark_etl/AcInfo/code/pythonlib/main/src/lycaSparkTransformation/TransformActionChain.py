@@ -36,7 +36,8 @@ class TransformActionChain:
         self.property = self.jsonParser.getAppPrpperty()
         self.connpropery = self.jsonParser.getConnPrpperty()
         self.redshiftprop = RedshiftUtils(self.connpropery.get("host"), self.connpropery.get("port"), self.connpropery.get("domain"),
-                                          self.connpropery.get("user"), self.connpropery.get("password"), self.connpropery.get("tmpdir"))
+                                          self.connpropery.get("user"), self.connpropery.get("password"), self.connpropery.get("tmpdir"),
+                                          self.connpropery.get("region"))
         self.batch_start_dt = datetime.now()
 
     def getBatchID(self) -> int:
