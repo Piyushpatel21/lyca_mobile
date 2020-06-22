@@ -1,7 +1,8 @@
 ########################################################################
-# description     : Spark Transformation, Spark writer                 #                              #
+# description     : Spark Transformation, Spark writer                 #
 # author          : Naren K(narendra.kumar@cloudwick.com),             #
 #                   Tejveer Singh(tejveer.singh@cloudwick.com)         #
+#                   Bhavin Tandel(bhavin.tandel@cloudwick.com          #
 #                   Shubhajit Saha(shubhajit.saha@cloudwick.com)       #
 # contributor     :                                                    #
 # version         : 1.0                                                #
@@ -13,48 +14,53 @@ from functools import reduce
 from dateutil.relativedelta import relativedelta
 from pyspark.sql import DataFrame, Window
 from pyspark.sql import functions as F
-from pyspark.sql.types import IntegerType, StringType, DoubleType, LongType, FloatType, DateType, TimestampType, DecimalType
+from pyspark.sql.types import IntegerType, StringType, DoubleType, LongType, FloatType, DateType, TimestampType, \
+    DecimalType
 from pyspark.sql.types import StructType, StructField
 
 from commonUtils.JsonProcessor import JsonProcessor
 from commonUtils.Log4j import Log4j
 
 
-class VoiceDataTransformation:
+class GGSNDataTransformation:
     """
-    Class to perform transformations on SMS data
-    """
+        Class to perform transformations on SMS data
+        """
 
     def __init__(self):
         self._logger = Log4j().getLogger()
-        self._charging_date_col = "charging_timestamp"
+        self._record_opening_time = "recordopeningtime"
+        self._start_time = "starttime"
+        self._stop_time = "stoptime"
         self._date_cols_format = "dd-MM-yyyy"
-        self._charging_date_col_format = "yyyyMMddHHmmss"
+        self._timestamp_col_format = "yyyy-MM-dd HH:mm:ss"
         self.time_zone = "Europe/London"
+        self.MB = (1024 * 1024)
 
-    def generateDerivedColumnsForVoice(self, df: DataFrame):
+    def generateDerivedColumnsForSms(self, df):
         """
         Module to generate derived columns from dataframe
+
         :param df:
         :return:
         """
 
         try:
-            self._logger.info("Generating derived columns for SMS data.")
-            transdf = df.withColumn("lyca_number", F.lit(1)) \
-                        .withColumn("_temp_datetime_col", F.to_timestamp(df[self._charging_date_col], self._charging_date_col_format)) \
-                        .withColumn("charging_dt", F.to_date(F.col("_temp_datetime_col"))) \
-                        .withColumn("charging_month", F.date_format(F.col("_temp_datetime_col"), "yyyyMM").cast(IntegerType())) \
-                        .withColumn("charging_dt_num", F.date_format(F.col("_temp_datetime_col"), "yyyyMMdd").cast(IntegerType())) \
-                        .withColumn("charging_dt_hour", F.date_format(F.col("_temp_datetime_col"), "yyyyMMddHH").cast(IntegerType())) \
-                        .withColumn("_temp_datetime_col_utc", F.to_utc_timestamp(F.col("_temp_datetime_col"), F.lit(self.time_zone))) \
-                        .withColumn("charging_timestamp_gmt", F.from_utc_timestamp(F.col("_temp_datetime_col_utc"), "GMT")) \
-                        .withColumn("charging_month_gmt", F.date_format(F.col("charging_timestamp_gmt"), "yyyyMM").cast(IntegerType())) \
-                        .withColumn("charging_dt_num_gmt", F.date_format(F.col("charging_timestamp_gmt"), "yyyyMMdd").cast(IntegerType())) \
-                        .withColumn("charging_dt_hour_gmt", F.date_format(F.col("charging_timestamp_gmt"), "yyyyMMddHH").cast(IntegerType())) \
-                        .withColumn("duration_min", (F.col("duration") / 60).cast(DecimalType(21, 6))) \
-                        .drop('_temp_datetime_col', '_temp_datetime_col_utc')
-            return transdf
+            self._logger.info("Generating derived columns for GGSN data.")
+            new_df = df.withColumn("_temp_datetime_col", F.to_timestamp(df[self._record_opening_time], self._timestamp_col_format)) \
+                .withColumn("recordopening_month", F.date_format(F.col("_temp_datetime_col"), "yyyyMM").cast(IntegerType())) \
+                .withColumn("recordopening_date", F.to_date(F.col("_temp_datetime_col"))) \
+                .withColumn("recordopening_date_num", F.date_format(F.col("_temp_datetime_col"), "yyyyMMdd").cast(IntegerType())) \
+                .withColumn("_temp_datetime_col_utc", F.to_utc_timestamp(F.col("_temp_datetime_col"), F.lit(self.time_zone))) \
+                .withColumn("recordopening_time_gmt", F.from_utc_timestamp(F.col("_temp_datetime_col_utc"), "GMT")) \
+                .withColumn("recordopening_dt_month_gmt", F.date_format(F.col("recordopening_time_gmt"), "yyyyMM").cast(IntegerType())) \
+                .withColumn("recordopening_dt_num_gmt", F.date_format(F.col("recordopening_time_gmt"), "yyyyMMdd").cast(IntegerType())) \
+                .withColumn("recordopening_dt_hour_gmt", F.date_format(F.col("recordopening_time_gmt"), "yyyyMMddHH").cast(IntegerType())) \
+                .withColumn("total_uplink_mb", (F.col("total_uplink") / self.MB).cast(DecimalType(22, 6))) \
+                .withColumn("total_downlink_mb", (F.col("total_downlink") / self.MB).cast(DecimalType(22, 6))) \
+                .withColumn("accesspointnameni_code", F.substring(F.col("accesspointnameni"), -2, 2)) \
+                .drop('_temp_datetime_col', '_temp_datetime_col_utc')
+            return new_df
         except Exception as ex:
             self._logger.error("Failed to generate derived columns with error: {err}".format(err=ex))
 
@@ -69,71 +75,11 @@ class VoiceDataTransformation:
         # Drop whole file if error occur in converting
         new_df = df
         self._logger.info("Converting data type to required format")
+
+        files_to_ignore = []
         for elem in schema:
-            if elem.name == self._charging_date_col:
-                new_df = new_df.withColumn(elem.name, F.to_timestamp(new_df[elem.name], self._charging_date_col_format))
-            else:
-                new_df = new_df.withColumn(elem.name, new_df[elem.name].cast(elem.dataType))
-        return new_df
-
-
-class GprsDataTransformation:
-    """
-    Class to perform transformations on SMS data
-    """
-
-    def __init__(self):
-        self._logger = Log4j().getLogger()
-        self._charging_date_col = "charging_timestamp"
-        self._date_cols_format = "dd-MM-yyyy"
-        self._charging_date_col_format = "yyyyMMddHHmmss"
-        self.time_zone = "Europe/London"
-        self.data_usage_col = ['data_volume_upload', 'data_volume_download']
-        # self.data_volume_upload = "data_volume_upload"
-        # self.data_volume_download = "data_volume_download"
-
-
-    def generateDerivedColumnsForGprs(self, df: DataFrame):
-        """
-        Module to generate derived columns from dataframe
-        :param df:
-        :return:
-        """
-
-        try:
-            self._logger.info("Generating derived columns for SMS data.")
-            transdf = df.withColumn("lyca_number", F.lit(1)) \
-                        .withColumn("_temp_datetime_col", F.to_timestamp(df[self._charging_date_col], self._charging_date_col_format)) \
-                        .withColumn("charging_dt", F.to_date(F.col("_temp_datetime_col"))) \
-                        .withColumn("charging_month", F.date_format(F.col("_temp_datetime_col"), "yyyyMM").cast(IntegerType())) \
-                        .withColumn("charging_dt_num", F.date_format(F.col("_temp_datetime_col"), "yyyyMMdd").cast(IntegerType())) \
-                        .withColumn("charging_dt_hour", F.date_format(F.col("_temp_datetime_col"), "yyyyMMddHH").cast(IntegerType())) \
-                        .withColumn("_temp_datetime_col_utc", F.to_utc_timestamp(F.col("_temp_datetime_col"), F.lit(self.time_zone))) \
-                        .withColumn("charging_timestamp_gmt", F.from_utc_timestamp(F.col("_temp_datetime_col_utc"), "GMT")) \
-                        .withColumn("charging_month_gmt", F.date_format(F.col("charging_timestamp_gmt"), "yyyyMM").cast(IntegerType())) \
-                        .withColumn("charging_dt_num_gmt", F.date_format(F.col("charging_timestamp_gmt"), "yyyyMMdd").cast(IntegerType())) \
-                        .withColumn("charging_dt_hour_gmt", F.date_format(F.col("charging_timestamp_gmt"), "yyyyMMddHH").cast(IntegerType())) \
-                        .withColumn("duration_min", (F.col("duration") / 60).cast(DecimalType(21, 6))) \
-                        .withColumn("data_usage", (sum(df[col] for col in self.data_usage_col) / 1048576).cast(DecimalType(21, 6))) \
-                        .drop('_temp_datetime_col', '_temp_datetime_col_utc')
-            return transdf
-        except Exception as ex:
-            self._logger.error("Failed to generate derived columns with error: {err}".format(err=ex))
-
-    def convertTargetDataType(self, df: DataFrame, schema: StructType):
-        """
-        Module to convert Data Type to required format
-
-        :param df: spark dataframe
-        :param schema: schema as StructType
-        :return:
-        """
-        # Drop whole file if error occur in converting
-        new_df = df
-        self._logger.info("Converting data type to required format")
-        for elem in schema:
-            if elem.name == self._charging_date_col:
-                new_df = new_df.withColumn(elem.name, F.to_timestamp(new_df[elem.name], self._charging_date_col_format))
+            if elem.name in (self._record_opening_time, self._start_time, self._stop_time):
+                new_df = new_df.withColumn(elem.name, F.to_timestamp(new_df[elem.name], self._timestamp_col_format))
             else:
                 new_df = new_df.withColumn(elem.name, new_df[elem.name].cast(elem.dataType))
         return new_df
@@ -162,7 +108,7 @@ class DataTransformation:
                 self._logger.info("Reading source file : {file}".format(file=file))
                 file_name = file
                 file = path + file
-                print("reading source file : {file}".format(file=file))
+                print(file)
                 src_schema_string = []
                 for elem in structtype:
                     src_schema_string.append(StructField(elem.name, StringType()))
@@ -274,7 +220,7 @@ class DataTransformation:
             self._logger.info("Identifying late and normal records within source")
             df_normalOrLate = dataFrame.withColumn("normalOrlate",
                                                    F.when(F.col(integerDateColumn) <= int(dateRange),
-                                                                    "Late").otherwise(
+                                                          "Late").otherwise(
                                                        "Normal"))
             return df_normalOrLate
         except Exception as ex:
