@@ -17,7 +17,7 @@ from commonUtils.Log4j import Log4j
 
 class RedshiftUtils:
 
-    def __init__(self, dwh_host, dwh_port, dwh_db, dwh_user, dwh_pass, tmp_dir, region):
+    def __init__(self, dwh_host, dwh_port, dwh_db, dwh_user, dwh_pass, tmp_dir):
         """
             Initialize class with required parameters for connecting to data warehouse.
             :param dwh_type: Is it "redshift" or "aurora"
@@ -35,7 +35,6 @@ class RedshiftUtils:
         self.jdbcPort = dwh_port
         self.jdbcDatabase = dwh_db
         self.redshiftTmpDir = tmp_dir
-        self.region = region
         self.jdbcUrl = "jdbc:redshift://{jdbcHostname}:{jdbcPort}/{jdbcDatabase}?user={jdbcUsername}&password={jdbcPassword}" \
             .format(jdbcHostname=self.jdbcHostname, jdbcPort=self.jdbcPort, jdbcDatabase=self.jdbcDatabase,
                     jdbcUsername=self.jdbcUsername,
@@ -58,7 +57,6 @@ class RedshiftUtils:
                 .option("dbtable", table) \
                 .option("forward_spark_s3_credentials", "true") \
                 .option("tempdir", self.redshiftTmpDir) \
-                .option("awsregion", self.region) \
                 .load()
 
         except Exception as ex:
@@ -85,7 +83,6 @@ class RedshiftUtils:
                 .option("postactions", postQuery) \
                 .option("forward_spark_s3_credentials", "true") \
                 .option("tempdir", self.redshiftTmpDir) \
-                .option("awsregion", self.region) \
                 .mode("overwrite") \
                 .save()
         except Exception as ex:
@@ -98,10 +95,9 @@ class RedshiftUtils:
                 .option("url", self.jdbcUrl) \
                 .option("forward_spark_s3_credentials", "true") \
                 .option("query",
-                        "SELECT file_name FROM uk_test.log_batch_files_mno where batch_id = {batch_id}".format(
+                        "SELECT file_name FROM uk_rrbs_dm.log_batch_files_mno where batch_id = {batch_id}".format(
                             batch_id=batchid)) \
                 .option("tempdir", self.redshiftTmpDir) \
-                .option("awsregion", self.region) \
                 .load()
             filename = files.rdd.flatMap(lambda file: file).collect()
             return filename
@@ -120,7 +116,7 @@ class RedshiftUtils:
             self._logger.info(
                 "Batch ID info : source_identifier={source_identifier}, previousDate={prevDate}".format(
                     prevDate=prevDate, source_identifier=source_identifier))
-            query = "SELECT DISTINCT batch_id FROM uk_test.log_batch_files_mno WHERE file_source LIKE '%{source_identifier}%' AND batch_from <= '{prevDate}' AND batch_to >= '{prevDate}'".format(
+            query = "SELECT DISTINCT batch_id FROM uk_rrbs_dm.log_batch_files_mno WHERE file_source LIKE '%{source_identifier}%' AND batch_from <= '{prevDate}' AND batch_to >= '{prevDate}'".format(
                 source_identifier=source_identifier, prevDate=prevDate)
             self._logger.info("Query {query}".format(query=query))
             df = sparkSession.read \
@@ -129,7 +125,6 @@ class RedshiftUtils:
                 .option("query", query) \
                 .option("forward_spark_s3_credentials", "true") \
                 .option("tempdir", self.redshiftTmpDir) \
-                .option("awsregion", self.region) \
                 .load()
             batchIDList = df.rdd.flatMap(lambda batch: batch).collect()
             batchID = batchIDList[0]
@@ -148,7 +143,7 @@ class RedshiftUtils:
         def getMetadataDF() -> DataFrame:
             try:
                 self._logger.info("Updating Log Batch Files RRBS table :")
-                query = "SELECT batch_id, file_source, file_id, file_name, batch_from, batch_to, is_valid, batch_createtime FROM uk_test.log_batch_files_mno WHERE batch_id ='{batchId}'".format(
+                query = "SELECT batch_id, file_source, file_id, file_name, batch_from, batch_to, is_valid, batch_createtime FROM uk_rrbs_dm.log_batch_files_mno WHERE batch_id ='{batchId}'".format(
                     batchId=batchId)
                 self._logger.info("Query {query}".format(query=query))
                 redshiftDF = sparkSession.read \
@@ -157,7 +152,6 @@ class RedshiftUtils:
                     .option("query", query) \
                     .option("forward_spark_s3_credentials", "true") \
                     .option("tempdir", self.redshiftTmpDir) \
-                    .option("awsregion", self.region) \
                     .load()
                 df = redshiftDF.join(metaDF, on='FILE_NAME', how='inner')
                 return df.select(redshiftDF['BATCH_ID'], redshiftDF['FILE_SOURCE'], redshiftDF['FILE_ID'], redshiftDF['FILE_NAME'], redshiftDF['BATCH_FROM'],
@@ -169,8 +163,8 @@ class RedshiftUtils:
             except Exception as ex:
                 self._logger.error("failed to read log_batch_status data from redshift : {error}".format(error=ex))
         batchFileDF = getMetadataDF()
-        preDelQuery = "DELETE FROM uk_test.log_batch_files_mno WHERE batch_id='{batchId}'".format(batchId=batchId)
-        table = "uk_test.log_batch_files_mno"
+        preDelQuery = "DELETE FROM uk_rrbs_dm.log_batch_files_mno WHERE batch_id='{batchId}'".format(batchId=batchId)
+        table = "uk_rrbs_dm.log_batch_files_mno"
         try:
             batchFileDF.write.format("com.databricks.spark.redshift") \
                 .option("url", self.jdbcUrl) \
@@ -178,7 +172,6 @@ class RedshiftUtils:
                 .option("preactions", preDelQuery) \
                 .option("forward_spark_s3_credentials", "true") \
                 .option("tempdir", self.redshiftTmpDir) \
-                .option("awsregion", self.region) \
                 .mode("append") \
                 .save()
             self._logger.info("Successfully Updated Log Batch Files table :")
@@ -217,8 +210,8 @@ class RedshiftUtils:
         rdd = sparkSession.sparkContext.parallelize(data)
         df = sparkSession.createDataFrame(rdd, schema)
         preQuery = query
-        postQuery = "DELETE FROM uk_test.log_batch_status_mno WHERE batch_id = 0"
-        table = "uk_test.log_batch_status_mno"
+        postQuery = "DELETE FROM uk_rrbs_dm.log_batch_status_mno WHERE batch_id = 0"
+        table = "uk_rrbs_dm.log_batch_status_mno"
         try:
             df.write.format("com.databricks.spark.redshift") \
                 .option("url", self.jdbcUrl) \
@@ -227,7 +220,6 @@ class RedshiftUtils:
                 .option("postactions", postQuery) \
                 .option("forward_spark_s3_credentials", "true") \
                 .option("tempdir", self.redshiftTmpDir) \
-                .option("awsregion", self.region) \
                 .mode("append") \
                 .save()
             self._logger.info("Successfully Updated Log Batch Status table :")
