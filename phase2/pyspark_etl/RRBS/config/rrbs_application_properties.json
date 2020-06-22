@@ -13,7 +13,10 @@
     "database" : "uk_rrbs_dm",
     "normalcdrtbl" : "fact_rrbs_sms",
     "latecdrtbl" : "fact_rrbs_sms_latecdr",
-    "duplicatecdrtbl" : "fact_rrbs_sms_duplcdr"
+    "duplicatecdrtbl" : "fact_rrbs_sms_duplcdr",
+    "logdb" : "uk_rrbs_dm",
+    "batchfiletbl" : "log_batch_files_rrbs",
+    "batchstatustbl" : "log_batch_status_rrbs"
   },
   {
     "module" : "rrbs",
@@ -29,7 +32,10 @@
     "database" : "uk_test",
     "normalcdrtbl" : "fact_rrbs_voice",
     "latecdrtbl" : "fact_rrbs_voice_latecdr",
-    "duplicatecdrtbl" : "fact_rrbs_voice_duplcdr"
+    "duplicatecdrtbl" : "fact_rrbs_voice_duplcdr",
+    "logdb" : "uk_rrbs_dm",
+    "batchfiletbl" : "log_batch_files_rrbs",
+    "batchstatustbl" : "log_batch_status_rrbs"
   },
   {
     "module" : "rrbs",
@@ -39,13 +45,16 @@
     "numofdayormnthnormal" : 1,
     "latecdrfrq" : "monthly",
     "numofdayormnthlate" : 2,
-    "sourceFilePath" : "../../../../pythonlib/test/resources",
+    "sourceFilePath" : "s3://mis-dl-lyca-raw",
     "srcSchemaPath" : "../../../../config/rrbs_src_fct_topup.json",
     "tgtSchemaPath" : "../../../../config/rrbs_tgt_fct_topup.json",
     "database" : "uk_test",
     "normalcdrtbl" : "fact_rrbs_topup",
     "latecdrtbl" : "fact_rrbs_topup_latecdr",
-    "duplicatecdrtbl" : "fact_rrbs_topup_duplcdr"
+    "duplicatecdrtbl" : "fact_rrbs_topup_duplcdr",
+    "logdb" : "uk_rrbs_dm",
+    "batchfiletbl" : "log_batch_files_rrbs",
+    "batchstatustbl" : "log_batch_status_rrbs"
   },
   {
     "module" : "rrbs",
@@ -55,12 +64,34 @@
     "numofdayormnthnormal" : 1,
     "latecdrfrq" : "monthly",
     "numofdayormnthlate" : 2,
-    "sourceFilePath" : "../../../../pythonlib/test/resources",
+    "sourceFilePath" : "s3://mis-dl-lyca-raw",
     "srcSchemaPath" : "../../../../config/rrbs_src_fct_gprs.json",
     "tgtSchemaPath" : "../../../../config/rrbs_tgt_fct_gprs.json",
     "database" : "uk_test",
     "normalcdrtbl" : "fact_rrbs_topup",
     "latecdrtbl" : "fact_rrbs_topup_latecdr",
-    "duplicatecdrtbl" : "fact_rrbs_topup_duplcdr"
+    "duplicatecdrtbl" : "fact_rrbs_topup_duplcdr",
+    "logdb" : "uk_rrbs_dm",
+    "batchfiletbl" : "log_batch_files_rrbs",
+    "batchstatustbl" : "log_batch_status_rrbs"
+  },
+  {
+    "module" : "rrbs",
+    "subModule" : "balance_transfer",
+    "integerDateColumn" : "cdr_dt_num",
+    "normalcdrfrq" : "daily",
+    "numofdayormnthnormal" : 1,
+    "latecdrfrq" : "monthly",
+    "numofdayormnthlate" : 2,
+    "sourceFilePath" : "s3://mis-dl-lyca-raw",
+    "srcSchemaPath" : "rrbs_src_fct_rrbs_balance_transfer.json",
+    "tgtSchemaPath" : "rrbs_tgt_fct_rrbs_balance_transfer.json",
+    "database" : "uk_rrbs_dm",
+    "normalcdrtbl" : "fact_rrbs_balance_transfer",
+    "latecdrtbl" : "fact_rrbs_balance_transfer_latecdr",
+    "duplicatecdrtbl" : "fact_rrbs_balance_transfer_duplcdr",
+    "logdb" : "uk_rrbs_dm",
+    "batchfiletbl" : "log_batch_files_rrbs",
+    "batchstatustbl" : "log_batch_status_rrbs"
   }
 ]

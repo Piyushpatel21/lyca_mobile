@@ -11,8 +11,7 @@ from typing import Tuple
 from pyspark.sql import SparkSession
 from pyspark.sql.types import IntegerType
 from datetime import datetime
-from lycaSparkTransformation.DataTransformation import DataTransformation, SmsDataTransformation, \
-    VoiceDataTransformation, TopUpDataTransformation, GprsDataTransformation, BalanceTransferTransformation
+from lycaSparkTransformation.DataTransformation import DataTransformation, GGSNDataTransformation
 from lycaSparkTransformation.SchemaReader import SchemaReader
 from pyspark.sql import DataFrame
 from lycaSparkTransformation.JSONBuilder import JSONBuilder
@@ -42,7 +41,7 @@ class TransformActionChain:
         self.logBatchFileTbl = ".".join([self.property.get("logdb"), self.property.get("batchfiletbl")])
         self.logBatchStatusTbl = ".".join([self.property.get("logdb"), self.property.get("batchstatustbl")])
 
-    def getBatchID(self) -> int:
+    def getBatchID(self, ) -> int:
         return self.redshiftprop.getBatchId(self.sparkSession, self.logBatchFileTbl, self.subModule.upper(), self.prevDate)
 
     def srcSchema(self):
@@ -68,26 +67,10 @@ class TransformActionChain:
         path = self.property.get("sourceFilePath") + "/" + self.module.upper() + "/" + "UK" + "/" +self.subModule.upper() + "/" + self.run_date[:4] + "/" + self.run_date[4:6] + "/" + self.run_date[6:8] + "/"
         try:
             df_source_raw = self.trans.readSourceFile(self.sparkSession, path, srcSchema, batchid, checkSumColumns, file_list)
-            if self.property.get("subModule") == "sms":
-                smsModuleTransformation = SmsDataTransformation()
-                df_source_with_datatype = smsModuleTransformation.convertTargetDataType(df_source_raw, srcSchema)
-                df_source = smsModuleTransformation.generateDerivedColumnsForSms(df_source_with_datatype)
-            elif self.property.get("subModule") == "voice":
-                voiceModuleTransformation = VoiceDataTransformation()
-                df_source_with_datatype = voiceModuleTransformation.convertTargetDataType(df_source_raw, srcSchema)
-                df_source = voiceModuleTransformation.generateDerivedColumnsForVoice(df_source_with_datatype)
-            elif self.property.get("subModule") == "topup":
-                topupModuleTransformation = TopUpDataTransformation()
-                df_source_with_datatype = topupModuleTransformation.convertTargetDataType(df_source_raw, srcSchema)
-                df_source = topupModuleTransformation.generateDerivedColumnsForTopUp(df_source_with_datatype)
-            elif self.property.get("subModule") == "gprs":
-                gprsModuleTransformation = GprsDataTransformation()
-                df_source_with_datatype = gprsModuleTransformation.convertTargetDataType(df_source_raw, srcSchema)
-                df_source = gprsModuleTransformation.generateDerivedColumnsForGprs(df_source_with_datatype)
-            elif self.property.get("subModule") == "balance_transfer":
-                btModuleTransformation = BalanceTransferTransformation()
-                df_source_with_datatype = btModuleTransformation.convertTargetDataType(df_source_raw, srcSchema)
-                df_source = btModuleTransformation.generateDerivedColumnsForBT(df_source_with_datatype)
+            if self.property.get("subModule") == "fact_ggsn":
+                transformation = GGSNDataTransformation()
+                df_source_with_datatype = transformation.convertTargetDataType(df_source_raw, srcSchema)
+                df_source = transformation.generateDerivedColumnsForSms(df_source_with_datatype)
             else:
                 df_source = df_source_raw
             s3_batchreadcount = df_source.agg(py_function.count('batch_id').cast(IntegerType()).alias('s3_batchreadcount')).rdd.flatMap(lambda row: row).collect()
@@ -103,7 +86,7 @@ class TransformActionChain:
             intrabatch_dupl_count = df_duplicate.agg(py_function.count('batch_id').cast(IntegerType()).alias('INTRABATCH_DUPL_COUNT')).rdd.flatMap(lambda row: row).collect()
             intrabatch_dist_dupl_count = df_duplicate.select(df_duplicate["rec_checksum"]).distinct().count()
             metaQuery = ("update {log_batch_status} set INTRABATCH_DEDUPL_STATUS='Complete', INTRABATCH_DUPL_COUNT={intrabatch_dupl_count}, BATCH_STATUS='{batch_status}', INTRABATCH_DIST_DUPL_COUNT={intrabatch_dist_dupl_count} where BATCH_ID={batch_id} and BATCH_END_DT is null"
-                .format(log_batch_status=self.logBatchStatusTbl, batch_id=batchid, batch_status=batch_status, intrabatch_dupl_count=''.join(str(e) for e in intrabatch_dupl_count), intrabatch_dist_dupl_count=intrabatch_dist_dupl_count))
+                        .format(log_batch_status=self.logBatchStatusTbl, batch_id=batchid, batch_status=batch_status, intrabatch_dupl_count=''.join(str(e) for e in intrabatch_dupl_count), intrabatch_dist_dupl_count=intrabatch_dist_dupl_count))
             self.redshiftprop.writeBatchStatus(self.sparkSession, self.logBatchStatusTbl, metaQuery)
             df_unique_late = self.trans.getUnique(lateOrNormalCdr, "rec_checksum").filter("normalOrlate == 'Late'")
             intrabatch_late_count = df_unique_late.agg(py_function.count('batch_id').cast(IntegerType()).alias('INTRABATCH_NEW_LATE_COUNT')).rdd.flatMap(lambda row: row).collect()
