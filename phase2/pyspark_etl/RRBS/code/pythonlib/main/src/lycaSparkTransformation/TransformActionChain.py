@@ -67,6 +67,7 @@ class TransformActionChain:
         path = self.property.get("sourceFilePath") + "/" + self.module.upper() + "/" + "UK" + "/" +self.subModule.upper() + "/" + self.run_date[:4] + "/" + self.run_date[4:6] + "/" + self.run_date[6:8] + "/"
         try:
             df_source_raw = self.trans.readSourceFile(self.sparkSession, path, srcSchema, batchid, checkSumColumns, file_list)
+            df_source_raw.persist()
             if self.property.get("subModule") == "sms":
                 smsModuleTransformation = SmsDataTransformation()
                 df_source_with_datatype = smsModuleTransformation.convertTargetDataType(df_source_raw, srcSchema)
