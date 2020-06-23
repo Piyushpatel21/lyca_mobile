@@ -143,7 +143,7 @@ class RedshiftUtils:
         def getMetadataDF() -> DataFrame:
             try:
                 self._logger.info("Updating Log Batch Files RRBS table :")
-                query = "SELECT batch_id, file_source, file_id, file_name, batch_from, batch_to, is_valid, batch_createtime FROM uk_test.log_batch_files_rrbs WHERE batch_id ='{batchId}'".format(
+                query = "SELECT batch_id, file_source, file_id, file_name, batch_from, batch_to, is_valid, batch_createtime, target_system FROM uk_test.log_batch_files_rrbs WHERE batch_id ='{batchId}'".format(
                     batchId=batchId)
                 self._logger.info("Query {query}".format(query=query))
                 redshiftDF = sparkSession.read \
@@ -158,7 +158,7 @@ class RedshiftUtils:
                                  redshiftDF['BATCH_TO'], metaDF['RECORD_COUNT'], metaDF['DM_NORMAL_COUNT'], metaDF['DM_LATECDR_COUNT'],
                                  metaDF['LDM_LATECDR_COUNT'], metaDF['DM_NORMAL_DBDUPL_COUNT'],
                                  metaDF['DM_LATECDR_DBDUPL_COUNT'], redshiftDF['IS_VALID'],
-                                 redshiftDF['BATCH_CREATETIME'])
+                                 redshiftDF['BATCH_CREATETIME'], redshiftDF['target_system'])
 
             except Exception as ex:
                 self._logger.error("failed to read log_batch_status data from redshift : {error}".format(error=ex))
