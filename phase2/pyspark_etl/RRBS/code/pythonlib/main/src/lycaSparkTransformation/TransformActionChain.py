@@ -64,7 +64,15 @@ class TransformActionChain:
     def getSourceData(self, batchid, srcSchema, checkSumColumns) -> Tuple[DataFrame, DataFrame, DataFrame, DataFrame]:
         self.logger.info("***** reading source data from s3 *****")
         file_list = self.redshiftprop.getFileList(self.sparkSession, batchid)
+
         path = self.property.get("sourceFilePath") + "/" + self.module.upper() + "/" + "UK" + "/" +self.subModule.upper() + "/" + self.run_date[:4] + "/" + self.run_date[4:6] + "/" + self.run_date[6:8] + "/"
+
+        fList = []
+        s3 = self.property.get("sourceFilePath")
+        for t in file_list:
+            fList.append(s3 + "/" + t)
+        file_list = fList
+
         try:
             df_source_raw = self.trans.readSourceFile(self.sparkSession, path, srcSchema, batchid, checkSumColumns, file_list)
             df_source_raw.persist()
@@ -199,9 +207,9 @@ class TransformActionChain:
 
     def writeBatchFileStatus(self, dataframe : DataFrame, batch_id):
         try:
-            self.logger.info("Writing batch status metadata")
+            self.logger.info("Writing batch file status metadata")
             self.redshiftprop.writeBatchFileStatus(self.sparkSession, dataframe, batch_id)
-            self.logger.info("Writing batch status metadata - completed")
+            self.logger.info("Writing batch file status metadata - completed")
         except Exception as ex:
             self.logger.error("Failed to write batch status metadata: {error}".format(error=ex))
 
