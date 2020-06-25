@@ -697,7 +697,7 @@
   },
   {
     "column_name" : "amount",
-    "column_type" : "numeric(20,4)",
+    "column_type" : "numeric",
     "required" : false,
     "check_sum": true
   },
@@ -792,7 +792,7 @@
     "check_sum": true
   },
   {
-    "column_name" : "timestamp",
+    "column_name" : "bundle_topup_timestamp",
     "column_type" : "character",
     "required" : false,
     "check_sum": true

@@ -12,7 +12,7 @@ with open("README.md", "r+") as f:
     long_description = f.read()
 
 setup(
-    name="lycaetl-rrbs",
+    name="lycaetl_rrbs",
     version="1.0.0",
     author="Cloudwick Technologies UK",
     author_email="bhavin.tandel@cloudwick.com",
