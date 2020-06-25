@@ -345,6 +345,9 @@
     "column_name": "chargeable_used_time_min"
   },
   {
+    "column_name": "roaming_partner_name"
+  },
+  {
     "column_name": "filename"
   },
   {

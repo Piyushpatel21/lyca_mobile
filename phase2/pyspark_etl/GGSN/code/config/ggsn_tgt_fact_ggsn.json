@@ -1,0 +1,200 @@
+[
+  {
+    "column_name": "recordtype"
+  },
+  {
+    "column_name": "servedimsi"
+  },
+  {
+    "column_name": "p_gwaddress"
+  },
+  {
+    "column_name": "chargingid"
+  },
+  {
+    "column_name": "servingnodeaddress"
+  },
+  {
+    "column_name": "accesspointnameni"
+  },
+  {
+    "column_name": "pdppdntype"
+  },
+  {
+    "column_name": "servedpdppdnaddress"
+  },
+  {
+    "column_name": "dynamicaddressflag"
+  },
+  {
+    "column_name": "recordopeningtime"
+  },
+  {
+    "column_name": "duration"
+  },
+  {
+    "column_name": "causeforrecclosing"
+  },
+  {
+    "column_name": "diagnostics"
+  },
+  {
+    "column_name": "recordsequencenumber"
+  },
+  {
+    "column_name": "nodeid"
+  },
+  {
+    "column_name": "localsequencenumber"
+  },
+  {
+    "column_name": "apnselectionmode"
+  },
+  {
+    "column_name": "servedmsisdn"
+  },
+  {
+    "column_name": "chargingcharacteristics"
+  },
+  {
+    "column_name": "chchselectionmode"
+  },
+  {
+    "column_name": "imssignalingcontext"
+  },
+  {
+    "column_name": "externalchargingid"
+  },
+  {
+    "column_name": "servingnodeplmnidentifier"
+  },
+  {
+    "column_name": "psfreeformatdata"
+  },
+  {
+    "column_name": "psffdappendindicator"
+  },
+  {
+    "column_name": "servedimeisv"
+  },
+  {
+    "column_name": "rattype"
+  },
+  {
+    "column_name": "mstimezone"
+  },
+  {
+    "column_name": "userlocationinformation"
+  },
+  {
+    "column_name": "camelcharginginformation"
+  },
+  {
+    "column_name": "servingnodetype"
+  },
+  {
+    "column_name": "servedmnnai"
+  },
+  {
+    "column_name": "p_gwplmnidentifier"
+  },
+  {
+    "column_name": "starttime"
+  },
+  {
+    "column_name": "stoptime"
+  },
+  {
+    "column_name": "served3gpp2meid"
+  },
+  {
+    "column_name": "pdnconnectionchargingid"
+  },
+  {
+    "column_name": "threegpp2userlocationinformation"
+  },
+  {
+    "column_name": "servedpdppdnaddressext"
+  },
+  {
+    "column_name": "dynamicaddressflagext"
+  },
+  {
+    "column_name": "dummy"
+  },
+  {
+    "column_name": "total_uplink"
+  },
+  {
+    "column_name": "total_downlink"
+  },
+  {
+    "column_name": "change_date"
+  },
+  {
+    "column_name": "url"
+  },
+  {
+    "column_name": "ratinggroup"
+  },
+  {
+    "column_name": "failurehand"
+  },
+  {
+    "column_name": "rulebasename"
+  },
+  {
+    "column_name": "timeoffirstusage"
+  },
+  {
+    "column_name": "timeoflastusage"
+  },
+  {
+    "column_name": "timeusage"
+  },
+  {
+    "column_name": "timeofreport"
+  },
+  {
+    "column_name": "recordopening_date"
+  },
+  {
+    "column_name": "recordopening_date_num"
+  },
+  {
+    "column_name": "recordopening_month"
+  },
+  {
+    "column_name": "total_uplink_mb"
+  },
+  {
+    "column_name": "total_downlink_mb"
+  },
+  {
+    "column_name": "accesspointnameni_code"
+  },
+  {
+    "column_name": "recordopening_time_gmt"
+  },
+  {
+    "column_name": "recordopening_dt_month_gmt"
+  },
+  {
+    "column_name": "recordopening_dt_num_gmt"
+  },
+  {
+    "column_name": "recordopening_dt_hour_gmt"
+  },
+  {
+    "column_name": "filename"
+  },
+  {
+    "column_name": "batch_id"
+  },
+  {
+    "column_name": "created_date"
+  },
+  {
+    "column_name": "rec_checksum"
+  }
+]

@@ -7,20 +7,19 @@
 # version         : 1.0                                                #
 # notes           :                                                    #
 ########################################################################
-from datetime import datetime
+
 from typing import Tuple
-
-from pyspark.sql import DataFrame
 from pyspark.sql import SparkSession
-from pyspark.sql import functions as py_function
 from pyspark.sql.types import IntegerType
-
-from awsUtils.AwsReader import AwsReader
-from awsUtils.RedshiftUtils import RedshiftUtils
+from datetime import datetime
 from lycaSparkTransformation.DataTransformation import DataTransformation, SmsDataTransformation, \
-    VoiceDataTransformation, TopUpDataTransformation, GprsDataTransformation
-from lycaSparkTransformation.JSONBuilder import JSONBuilder
+    VoiceDataTransformation, TopUpDataTransformation, GprsDataTransformation, BalanceTransferTransformation
 from lycaSparkTransformation.SchemaReader import SchemaReader
+from pyspark.sql import DataFrame
+from lycaSparkTransformation.JSONBuilder import JSONBuilder
+from awsUtils.RedshiftUtils import RedshiftUtils
+from awsUtils.AwsReader import AwsReader
+from pyspark.sql import functions as py_function
 
 
 class TransformActionChain:
@@ -42,6 +41,8 @@ class TransformActionChain:
         self.redshiftprop = RedshiftUtils(self.connpropery.get("host"), self.connpropery.get("port"), self.connpropery.get("domain"),
                                           self.connpropery.get("user"), self.connpropery.get("password"), self.connpropery.get("tmpdir"))
         self.batch_start_dt = datetime.now()
+        self.logBatchFileTbl = ".".join([self.property.get("logdb"), self.property.get("batchfiletbl")])
+        self.logBatchStatusTbl = ".".join([self.property.get("logdb"), self.property.get("batchstatustbl")])
         self.source_file_path = source_file_path
         if self.source_file_path is not None:
             self.one_time_load = 'YES'
@@ -49,7 +50,7 @@ class TransformActionChain:
             self.one_time_load = 'NO'
 
     def getBatchID(self) -> int:
-        return self.redshiftprop.getBatchId(self.sparkSession, self.subModule.upper(), self.prevDate)
+        return self.redshiftprop.getBatchId(self.sparkSession, self.logBatchFileTbl, self.subModule.upper(), self.prevDate)
 
     def srcSchema(self):
         try:
@@ -70,14 +71,14 @@ class TransformActionChain:
 
     def getSourceData(self, batchid, srcSchema, checkSumColumns) -> Tuple[DataFrame, DataFrame, DataFrame, DataFrame]:
         self.logger.info("***** reading source data from s3 *****")
-        file_list = self.redshiftprop.getFileList(self.sparkSession, batchid)
 
+        file_list = self.redshiftprop.getFileList(self.sparkSession, self.logBatchFileTbl, batchid)
         if self.one_time_load == 'YES':
-            if not self.source_file_path.endswith('/'): self.source_file_path = self.source_file_path+'/'
+            if not self.source_file_path.endswith('/'): self.source_file_path = self.source_file_path + '/'
             path = self.source_file_path
             self.logger.info("***** One Time Load: Reading from {path} *****".format(path=path))
         else:
-            path = self.property.get("sourceFilePath") + "/" + self.module.upper() + "/" + "UK" + "/" +self.subModule.upper() + "/" + self.run_date[:4] + "/" + self.run_date[4:6] + "/" + self.run_date[6:8] + "/"
+            path = self.property.get("sourceFilePath") + "/" + self.module.upper() + "/" + "UK" + "/" + self.subModule.upper() + "/" + self.run_date[:4] + "/" + self.run_date[4:6] + "/" + self.run_date[6:8] + "/"
             self.logger.info("***** Daily Load: Reading from {path} *****".format(path=path))
         try:
             df_source_raw = self.trans.readSourceFile(self.sparkSession, path, srcSchema, batchid, checkSumColumns, file_list)
@@ -97,16 +98,35 @@ class TransformActionChain:
                 gprsModuleTransformation = GprsDataTransformation()
                 df_source_with_datatype = gprsModuleTransformation.convertTargetDataType(df_source_raw, srcSchema)
                 df_source = gprsModuleTransformation.generateDerivedColumnsForGprs(df_source_with_datatype)
+            elif self.property.get("subModule") == "balance_transfer90-":
+                btModuleTransformation = BalanceTransferTransformation()
+                df_source_with_datatype = btModuleTransformation.convertTargetDataType(df_source_raw, srcSchema)
+                df_source = btModuleTransformation.generateDerivedColumnsForBT(df_source_with_datatype)
             else:
                 df_source = df_source_raw
-            s3_batchreadcount = df_source.agg(py_function.count('batch_id').cast(IntegerType()).alias('s3_batchreadcount')).rdd.flatMap(lambda row: row).collect()
-            s3_filecount = df_source.agg(py_function.countDistinct('filename').cast(IntegerType()).alias('s3_filecount')).rdd.flatMap(lambda row: row).collect()
+            if self.property.get("subModule") != "balance_transfer":
+                df_imsi_prefix = self.redshiftprop.readFromRedshift(self.sparkSession, self.property.get("database"), 'ref_imsi_prefix_list')
+                df_roaming_partner = self.redshiftprop.readFromRedshift(self.sparkSession, self.property.get("database"), 'ref_rrbs_roaming_partner_imsi') \
+                                                                        .withColumnRenamed('imsi_prefix', 'roaming_imsi_prefix').filter(py_function.col('is_valid') == '1')
+                if self.property.get("subModule") == "topup":
+                    df_source_with_rm_partner = df_source.join(df_imsi_prefix, py_function.expr("imsi rlike imsi_prefix"), "left_outer") \
+                                  .withColumn("imsi_prefix", py_function.when(df_imsi_prefix['imsi_prefix'].isNull(), py_function.lit(1)).otherwise(df_imsi_prefix['imsi_prefix'])) \
+                                  .join(df_roaming_partner, (py_function.expr("imsi_prefix rlike roaming_imsi_prefix")), 'left_outer')
+                else:
+                    df_source_with_rm_partner = df_source.join(df_imsi_prefix, py_function.expr("imsi rlike imsi_prefix"),  "left_outer") \
+                                  .withColumn("imsi_prefix", py_function.when(df_imsi_prefix['imsi_prefix'].isNull(), py_function.lit(-1)).otherwise(df_imsi_prefix['imsi_prefix'])) \
+                                  .join(df_roaming_partner, (df_source['roam_flag'] == df_roaming_partner['roam_flag'].cast(IntegerType()))
+                                        & (py_function.expr("imsi_prefix rlike roaming_imsi_prefix")), 'left_outer')
+                df_source_trans = self.trans.dropDupeDfCols(df_source_with_rm_partner)
+            else:
+                df_source_trans = df_source
+            s3_batchreadcount = df_source_trans.agg(py_function.count('batch_id').cast(IntegerType()).alias('s3_batchreadcount')).rdd.flatMap(lambda row: row).collect()
+            s3_filecount = df_source_trans.agg(py_function.countDistinct('filename').cast(IntegerType()).alias('s3_filecount')).rdd.flatMap(lambda row: row).collect()
             batch_status = 'Started'
-            metaQuery = ("INSERT INTO uk_rrbs_dm.log_batch_status_rrbs (BATCH_ID, S3_BATCHREADCOUNT, S3_FILECOUNT, BATCH_STATUS, BATCH_START_DT) values({batch_id},{s3_batchreadcount},{s3_filecount},'{batch_status}','{batch_start_dt}')"
-                         .format(batch_id=batchid, s3_batchreadcount=''.join(str(e) for e in s3_batchreadcount), s3_filecount=''.join(str(e) for e in s3_filecount), batch_status=batch_status, batch_start_dt=self.batch_start_dt))
-            self.redshiftprop.writeBatchStatus(self.sparkSession, metaQuery)
+            metaQuery = ("INSERT INTO {log_batch_status} (BATCH_ID, S3_BATCHREADCOUNT, S3_FILECOUNT, BATCH_STATUS, BATCH_START_DT) values({batch_id},{s3_batchreadcount},{s3_filecount},'{batch_status}','{batch_start_dt}')"
+                         .format(log_batch_status=self.logBatchStatusTbl, batch_id=batchid, s3_batchreadcount=''.join(str(e) for e in s3_batchreadcount), s3_filecount=''.join(str(e) for e in s3_filecount), batch_status=batch_status, batch_start_dt=self.batch_start_dt))
+            self.redshiftprop.writeBatchStatus(self.sparkSession, self.logBatchStatusTbl, metaQuery)
             date_range = int(self.trans.getPrevRangeDate(self.run_date, self.property.get("normalcdrfrq"), self.property.get("numofdayormnthnormal")))
-
             if self.one_time_load == "YES":
                 lateOrNormalCdr = df_source.withColumn("normalOrlate", py_function.lit("Normal"))
                 self.logger.info("***** One Time Load: Marked All Rows Normal *****")
@@ -117,24 +137,25 @@ class TransformActionChain:
             batch_status = 'In-Progress'
             intrabatch_dupl_count = df_duplicate.agg(py_function.count('batch_id').cast(IntegerType()).alias('INTRABATCH_DUPL_COUNT')).rdd.flatMap(lambda row: row).collect()
             intrabatch_dist_dupl_count = df_duplicate.select(df_duplicate["rec_checksum"]).distinct().count()
-            metaQuery = ("update uk_rrbs_dm.log_batch_status_rrbs set INTRABATCH_DEDUPL_STATUS='Complete', INTRABATCH_DUPL_COUNT={intrabatch_dupl_count}, BATCH_STATUS='{batch_status}', INTRABATCH_DIST_DUPL_COUNT={intrabatch_dist_dupl_count} where BATCH_ID={batch_id} and BATCH_END_DT is null"
-                .format(batch_id=batchid, batch_status=batch_status, intrabatch_dupl_count=''.join(str(e) for e in intrabatch_dupl_count), intrabatch_dist_dupl_count=intrabatch_dist_dupl_count))
-            self.redshiftprop.writeBatchStatus(self.sparkSession, metaQuery)
+
+            metaQuery = ("update {log_batch_status} set INTRABATCH_DEDUPL_STATUS='Complete', INTRABATCH_DUPL_COUNT={intrabatch_dupl_count}, BATCH_STATUS='{batch_status}', INTRABATCH_DIST_DUPL_COUNT={intrabatch_dist_dupl_count} where BATCH_ID={batch_id} and BATCH_END_DT is null"
+                .format(log_batch_status=self.logBatchStatusTbl, batch_id=batchid, batch_status=batch_status, intrabatch_dupl_count=''.join(str(e) for e in intrabatch_dupl_count), intrabatch_dist_dupl_count=intrabatch_dist_dupl_count))
+            self.redshiftprop.writeBatchStatus(self.sparkSession, self.logBatchStatusTbl, metaQuery)
             df_unique_late = self.trans.getUnique(lateOrNormalCdr, "rec_checksum").filter("normalOrlate == 'Late'")
             intrabatch_late_count = df_unique_late.agg(py_function.count('batch_id').cast(IntegerType()).alias('INTRABATCH_NEW_LATE_COUNT')).rdd.flatMap(lambda row: row).collect()
-            metaQuery = ("update uk_rrbs_dm.log_batch_status_rrbs set INTRABATCH_NEW_LATE_COUNT={intrabatch_late_count} where batch_id={batch_id} and batch_end_dt is null".format(batch_id=batchid, intrabatch_late_count=''.join(str(e) for e in intrabatch_late_count)))
-            self.redshiftprop.writeBatchStatus(self.sparkSession, metaQuery)
+            metaQuery = ("update {log_batch_status} set INTRABATCH_NEW_LATE_COUNT={intrabatch_late_count} where batch_id={batch_id} and batch_end_dt is null".format(log_batch_status=self.logBatchStatusTbl, batch_id=batchid, intrabatch_late_count=''.join(str(e) for e in intrabatch_late_count)))
+            self.redshiftprop.writeBatchStatus(self.sparkSession, self.logBatchStatusTbl, metaQuery)
             df_unique_normal = self.trans.getUnique(lateOrNormalCdr, "rec_checksum").filter("normalOrlate == 'Normal'")
             intrabatch_new_count = df_unique_normal.agg(py_function.count('batch_id').cast(IntegerType()).alias('INTRABATCH_NEW_NORMAL_COUNT')).rdd.flatMap(lambda row: row).collect()
             intrabatch_status = 'Complete'
-            metaQuery = ("update uk_rrbs_dm.log_batch_status_rrbs set INTRABATCH_NEW_NORMAL_COUNT={intrabatch_new_count}, INTRABATCH_DEDUPL_STATUS='{intrabatch_status}' where BATCH_ID={batch_id} and BATCH_END_DT is null".format(batch_id=batchid, intrabatch_status=intrabatch_status, intrabatch_new_count=''.join(str(e) for e in intrabatch_new_count)))
-            self.redshiftprop.writeBatchStatus(self.sparkSession, metaQuery)
+            metaQuery = ("update {log_batch_status} set INTRABATCH_NEW_NORMAL_COUNT={intrabatch_new_count}, INTRABATCH_DEDUPL_STATUS='{intrabatch_status}' where BATCH_ID={batch_id} and BATCH_END_DT is null".format(log_batch_status=self.logBatchStatusTbl, batch_id=batchid, intrabatch_status=intrabatch_status, intrabatch_new_count=''.join(str(e) for e in intrabatch_new_count)))
+            self.redshiftprop.writeBatchStatus(self.sparkSession, self.logBatchStatusTbl, metaQuery)
             self.logger.info("***** source data prepared for transformation *****")
-            record_count = df_source.groupBy('filename').agg(py_function.count('batch_id').cast(IntegerType()).alias('RECORD_COUNT'))
+            record_count = df_source_trans.groupBy('filename').agg(py_function.count('batch_id').cast(IntegerType()).alias('RECORD_COUNT'))
             return df_duplicate, df_unique_late, df_unique_normal, record_count
         except Exception as ex:
-            metaQuery = ("INSERT INTO uk_rrbs_dm.log_batch_status_rrbs (batch_id,batch_status, batch_start_dt, batch_end_dt) values({batch_id}, '{batch_status}', '{batch_start_dt}', '{batch_end_dt}')".format(batch_id=batchid, batch_status='Failed', batch_start_dt=self.batch_start_dt, batch_end_dt=datetime.now()))
-            self.redshiftprop.writeBatchStatus(self.sparkSession, metaQuery)
+            metaQuery = ("INSERT INTO {log_batch_status} (batch_id,batch_status, batch_start_dt, batch_end_dt) values({batch_id}, '{batch_status}', '{batch_start_dt}', '{batch_end_dt}')".format(log_batch_status=self.logBatchStatusTbl, batch_id=batchid, batch_status='Failed', batch_start_dt=self.batch_start_dt, batch_end_dt=datetime.now()))
+            self.redshiftprop.writeBatchStatus(self.sparkSession, self.logBatchStatusTbl, metaQuery)
             self.logger.error("Failed to create source data : {error}".format(error=ex))
 
     def getDbDuplicate(self) -> Tuple[DataFrame, DataFrame]:
@@ -163,9 +184,9 @@ class TransformActionChain:
             ldm_latecdr_count = dfLateCDRNewRecord.agg(py_function.count('batch_id').cast(IntegerType()).alias('LDM_LATECDR_COUNT')).rdd.flatMap(lambda row: row).collect()
             ldm_latecdr_dupl_count = dfLateCDRDuplicate.agg(py_function.count('batch_id').cast(IntegerType()).alias('LDM_LATECDR_DBDUPL_COUNT')).rdd.flatMap(lambda row: row).collect()
             ldm_latecdr_status = 'Complete'
-            metaQuery = ("update uk_rrbs_dm.log_batch_status_rrbs set LDM_LATECDR_STATUS='{ldm_latecdr_status}', LDM_LATECDR_COUNT={ldm_latecdr_count}, LDM_LATECDR_DBDUPL_COUNT={ldm_latecdr_dupl_count} where BATCH_ID={batch_id} and BATCH_END_DT is null"
-                        .format(batch_id=batchid, ldm_latecdr_status=ldm_latecdr_status, ldm_latecdr_count=''.join(str(e) for e in ldm_latecdr_count), ldm_latecdr_dupl_count=''.join(str(e) for e in ldm_latecdr_dupl_count)))
-            self.redshiftprop.writeBatchStatus(self.sparkSession, metaQuery)
+            metaQuery = ("update {log_batch_status} set LDM_LATECDR_STATUS='{ldm_latecdr_status}', LDM_LATECDR_COUNT={ldm_latecdr_count}, LDM_LATECDR_DBDUPL_COUNT={ldm_latecdr_dupl_count} where BATCH_ID={batch_id} and BATCH_END_DT is null"
+                        .format(log_batch_status=self.logBatchStatusTbl, batch_id=batchid, ldm_latecdr_status=ldm_latecdr_status, ldm_latecdr_count=''.join(str(e) for e in ldm_latecdr_count), ldm_latecdr_dupl_count=''.join(str(e) for e in ldm_latecdr_dupl_count)))
+            self.redshiftprop.writeBatchStatus(self.sparkSession, self.logBatchStatusTbl, metaQuery)
             return dfLateCDRNewRecord, dfLateCDRDuplicate, latecdr_count, latecdr_dupl_count
         except Exception as ex:
             self.logger.error("Failed to compute Late CDR data : {error}".format(error=ex))
@@ -182,9 +203,9 @@ class TransformActionChain:
             dm_normal_count = dfNormalCDRNewRecord.agg(py_function.count('batch_id').cast(IntegerType()).alias('DM_NORMAL_count')).rdd.flatMap(lambda row: row).collect()
             dm_normal_dupl_count = dfNormalCDRDuplicate.agg(py_function.count('batch_id').cast(IntegerType()).alias('DM_NORMAL_DBDUPL_COUNT')).rdd.flatMap(lambda row: row).collect()
             dm_normal_status = 'Complete'
-            metaQuery = ("update uk_rrbs_dm.log_batch_status_rrbs set DM_NORMAL_STATUS='{dm_normal_status}', DM_NORMAL_COUNT={dm_normal_count}, DM_NORMAL_DBDUPL_COUNT={dm_normal_dupl_count} where BATCH_ID={batch_id} and BATCH_END_DT is null"
-                .format(batch_id=batchid, dm_normal_status=dm_normal_status, dm_normal_count=''.join(str(e) for e in dm_normal_count),dm_normal_dupl_count=''.join(str(e) for e in dm_normal_dupl_count)))
-            self.redshiftprop.writeBatchStatus(self.sparkSession, metaQuery)
+            metaQuery = ("update {log_batch_status} set DM_NORMAL_STATUS='{dm_normal_status}', DM_NORMAL_COUNT={dm_normal_count}, DM_NORMAL_DBDUPL_COUNT={dm_normal_dupl_count} where BATCH_ID={batch_id} and BATCH_END_DT is null"
+                .format(log_batch_status=self.logBatchStatusTbl, batch_id=batchid, dm_normal_status=dm_normal_status, dm_normal_count=''.join(str(e) for e in dm_normal_count),dm_normal_dupl_count=''.join(str(e) for e in dm_normal_dupl_count)))
+            self.redshiftprop.writeBatchStatus(self.sparkSession, self.logBatchStatusTbl, metaQuery)
             return dfNormalCDRNewRecord, dfNormalCDRDuplicate, normalcdr_count, normalcdr_dupl_count
         except Exception as ex:
             self.logger.error("Failed to compute Normal CDR data : {error}".format(error=ex))
@@ -219,7 +240,7 @@ class TransformActionChain:
     def writeBatchFileStatus(self, dataframe : DataFrame, batch_id):
         try:
             self.logger.info("Writing batch status metadata")
-            self.redshiftprop.writeBatchFileStatus(self.sparkSession, dataframe, batch_id)
+            self.redshiftprop.writeBatchFileStatus(self.sparkSession, self.logBatchFileTbl, dataframe, batch_id)
             self.logger.info("Writing batch status metadata - completed")
         except Exception as ex:
             self.logger.error("Failed to write batch status metadata: {error}".format(error=ex))
@@ -227,7 +248,7 @@ class TransformActionChain:
     def writeBatchStatus(self, batch_id, status):
         batch_end_dt = datetime.now()
         batch_status = status
-        metaQuery = ("update uk_rrbs_dm.log_batch_status_rrbs set BATCH_STATUS='{batch_status}', BATCH_END_DT='{batch_end_dt}' where BATCH_ID = {batch_id} and BATCH_END_DT is null"
-            .format(batch_status=batch_status, batch_end_dt=batch_end_dt, batch_id=batch_id))
-        self.redshiftprop.writeBatchStatus(self.sparkSession, metaQuery)
+        metaQuery = ("update {log_batch_status} set BATCH_STATUS='{batch_status}', BATCH_END_DT='{batch_end_dt}' where BATCH_ID = {batch_id} and BATCH_END_DT is null"
+            .format(log_batch_status=self.logBatchStatusTbl, batch_status=batch_status, batch_end_dt=batch_end_dt, batch_id=batch_id))
+        self.redshiftprop.writeBatchStatus(self.sparkSession, self.logBatchStatusTbl, metaQuery)
 

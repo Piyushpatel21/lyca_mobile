@@ -1,0 +1,107 @@
+[
+  {
+    "column_name": "id"
+  },
+  {
+    "column_name": "subscriberid"
+  },
+  {
+    "column_name": "cardnumber"
+  },
+  {
+    "column_name": "transactionid"
+  },
+  {
+    "column_name": "transactiontype"
+  },
+  {
+    "column_name": "orderid"
+  },
+  {
+    "column_name": "orderdescription"
+  },
+  {
+    "column_name": "orderdatetime"
+  },
+  {
+    "column_name": "merchantcode"
+  },
+  {
+    "column_name": "paymentmethodcode"
+  },
+  {
+    "column_name": "statuscode"
+  },
+  {
+    "column_name": "responsecode"
+  },
+  {
+    "column_name": "responsedescription"
+  },
+  {
+    "column_name": "responsedatetime"
+  },
+  {
+    "column_name": "sessionid"
+  },
+  {
+    "column_name": "echodata"
+  },
+  {
+    "column_name": "riskscore"
+  },
+  {
+    "column_name": "cvcresultcode"
+  },
+  {
+    "column_name": "avsresultcode"
+  },
+  {
+    "column_name": "aavaddressresultcode"
+  },
+  {
+    "column_name": "aavpostcoderesultcode"
+  },
+  {
+    "column_name": "aavcardholdernameresultcode"
+  },
+  {
+    "column_name": "aavtelephoneresultcode"
+  },
+  {
+    "column_name": "aavemailresultcode"
+  },
+  {
+    "column_name": "createddate"
+  },
+  {
+    "column_name": "apmmac"
+  },
+  {
+    "column_name": "apmreferenceid"
+  },
+  {
+    "column_name": "issuerurl"
+  },
+  {
+    "column_name": "rgprofileid"
+  },
+  {
+    "column_name": "vatid"
+  },
+  {
+    "column_name": "capturedrequest"
+  },
+  {
+    "column_name": "capturedresponse"
+  },
+  {
+    "column_name": "batch_id"
+  },
+  {
+    "column_name": "created_date"
+  },
+  {
+    "column_name": "rec_checksum"
+  }
+]
