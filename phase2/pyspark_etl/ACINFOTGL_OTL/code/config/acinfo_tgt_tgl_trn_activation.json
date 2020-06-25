@@ -1,0 +1,113 @@
+[
+  {
+    "column_name": "facevalue"
+  },
+  {
+    "column_name": "sellprice"
+  },
+  {
+    "column_name": "vat"
+  },
+  {
+    "column_name": "discount"
+  },
+  {
+    "column_name": "netprice"
+  },
+  {
+    "column_name": "validity"
+  },
+  {
+    "column_name": "invoicenumber"
+  },
+  {
+    "column_name": "submitby"
+  },
+  {
+    "column_name": "submitdate"
+  },
+  {
+    "column_name": "crcheckby"
+  },
+  {
+    "column_name": "crcheckdate"
+  },
+  {
+    "column_name": "preactby"
+  },
+  {
+    "column_name": "preactdate"
+  },
+  {
+    "column_name": "authby"
+  },
+  {
+    "column_name": "authdate"
+  },
+  {
+    "column_name": "blockby"
+  },
+  {
+    "column_name": "blockdate"
+  },
+  {
+    "column_name": "blockreason"
+  },
+  {
+    "column_name": "huaweisubmitstate"
+  },
+  {
+    "column_name": "huaweierrcode"
+  },
+  {
+    "column_name": "recordlock"
+  },
+  {
+    "column_name": "processid"
+  },
+  {
+    "column_name": "freemin"
+  },
+  {
+    "column_name": "ponumber"
+  },
+  {
+    "column_name": "bundlecode"
+  },
+  {
+    "column_name": "planid"
+  },
+  {
+    "column_name": "description"
+  },
+  {
+    "column_name": "bundlecost"
+  },
+  {
+    "column_name": "bundletext"
+  },
+  {
+    "column_name": "total_fee_amt"
+  },
+  {
+    "column_name": "fee_breakup"
+  },
+  {
+    "column_name": "isfamily"
+  },
+  {
+    "column_name": "sim_expirydate"
+  },
+  {
+    "column_name": "authdate_month"
+  },
+  {
+    "column_name": "batch_id"
+  },
+  {
+    "column_name": "created_date"
+  },
+  {
+    "column_name": "rec_checksum"
+  }
+]

@@ -1,0 +1,218 @@
+[
+  {
+    "column_name": "id",
+    "column_type": "integer",
+    "required": false,
+    "check_sum": true
+  },
+  {
+    "column_name": "subscriberid",
+    "column_type": "character",
+    "required": false,
+    "check_sum": true
+  },
+  {
+    "column_name": "cardnumber",
+    "column_type": "character",
+    "required": false,
+    "check_sum": true
+  },
+  {
+    "column_name": "transactionid",
+    "column_type": "character",
+    "required": false,
+    "check_sum": true
+  },
+  {
+    "column_name": "transactiontype",
+    "column_type": "character",
+    "required": false,
+    "check_sum": true
+  },
+  {
+    "column_name": "redorderid",
+    "column_type": "character",
+    "required": false,
+    "check_sum": true
+  },
+  {
+    "column_name": "divisionnumber",
+    "column_type": "character",
+    "required": false,
+    "check_sum": true
+  },
+  {
+    "column_name": "redkeyid",
+    "column_type": "integer",
+    "required": false,
+    "check_sum": true
+  },
+  {
+    "column_name": "requestid",
+    "column_type": "character",
+    "required": false,
+    "check_sum": true
+  },
+  {
+    "column_name": "requesttypecode",
+    "column_type": "character",
+    "required": false,
+    "check_sum": true
+  },
+  {
+    "column_name": "statuscode",
+    "column_type": "character",
+    "required": false,
+    "check_sum": true
+  },
+  {
+    "column_name": "responsecode",
+    "column_type": "character",
+    "required": false,
+    "check_sum": true
+  },
+  {
+    "column_name": "responsedate",
+    "column_type": "timestamp without time zone",
+    "required": false,
+    "check_sum": true
+  },
+  {
+    "column_name": "fraudstatuscode",
+    "column_type": "character",
+    "required": false,
+    "check_sum": true
+  },
+  {
+    "column_name": "redtdsstatuscode",
+    "column_type": "character",
+    "required": false,
+    "check_sum": true
+  },
+  {
+    "column_name": "reddtssig",
+    "column_type": "character",
+    "required": false,
+    "check_sum": true
+  },
+  {
+    "column_name": "redtdseci",
+    "column_type": "character",
+    "required": false,
+    "check_sum": true
+  },
+  {
+    "column_name": "redorderdatetime",
+    "column_type": "timestamp without time zone",
+    "required": false,
+    "check_sum": true
+  },
+  {
+    "column_name": "redauthnumber",
+    "column_type": "character",
+    "required": false,
+    "check_sum": true
+  },
+  {
+    "column_name": "redresponsemessage",
+    "column_type": "character",
+    "required": false,
+    "check_sum": true
+  },
+  {
+    "column_name": "redavscode",
+    "column_type": "character",
+    "required": false,
+    "check_sum": true
+  },
+  {
+    "column_name": "redseccode",
+    "column_type": "character",
+    "required": false,
+    "check_sum": true
+  },
+  {
+    "column_name": "fraudresponsecode",
+    "column_type": "character",
+    "required": false,
+    "check_sum": true
+  },
+  {
+    "column_name": "fraudusecode",
+    "column_type": "character",
+    "required": false,
+    "check_sum": true
+  },
+  {
+    "column_name": "fraudrcf",
+    "column_type": "character",
+    "required": false,
+    "check_sum": true
+  },
+  {
+    "column_name": "createddate",
+    "column_type": "timestamp without time zone",
+    "required": false,
+    "check_sum": true
+  },
+  {
+    "column_name": "tdsacsurl",
+    "column_type": "character",
+    "required": false,
+    "check_sum": true
+  },
+  {
+    "column_name": "ebt_name",
+    "column_type": "character",
+    "required": false,
+    "check_sum": true
+  },
+  {
+    "column_name": "ebt_service",
+    "column_type": "character",
+    "required": false,
+    "check_sum": true
+  },
+  {
+    "column_name": "vatid",
+    "column_type": "character",
+    "required": false,
+    "check_sum": true
+  },
+  {
+    "column_name": "connectortxnid",
+    "column_type": "character",
+    "required": false,
+    "check_sum": true
+  },
+  {
+    "column_name": "bankname",
+    "column_type": "character",
+    "required": false,
+    "check_sum": true
+  },
+  {
+    "column_name": "bankcountry",
+    "column_type": "character",
+    "required": false,
+    "check_sum": true
+  },
+  {
+    "column_name": "buildnumber",
+    "column_type": "character",
+    "required": false,
+    "check_sum": true
+  },
+  {
+    "column_name": "ndc",
+    "column_type": "character",
+    "required": false,
+    "check_sum": true
+  },
+  {
+    "column_name": "riskscore",
+    "column_type": "character",
+    "required": false,
+    "check_sum": true
+  }
+]

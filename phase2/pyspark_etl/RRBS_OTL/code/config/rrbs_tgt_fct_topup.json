@@ -552,6 +552,9 @@
     "column_name": "expiry_date_month_derived"
   },
   {
+    "column_name": "roaming_partner_name"
+  },
+  {
     "column_name": "filename"
   },
   {

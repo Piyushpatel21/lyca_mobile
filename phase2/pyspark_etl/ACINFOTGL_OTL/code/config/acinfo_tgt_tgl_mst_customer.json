@@ -1,0 +1,23 @@
+[
+  {
+    "column_name": "doc_expiry_date"
+  },
+  {
+    "column_name": "is_reregn"
+  },
+  {
+    "column_name": "reregn_cnt"
+  },
+  {
+    "column_name": "simregtype"
+  },
+  {
+    "column_name": "batch_id"
+  },
+  {
+    "column_name": "created_date"
+  },
+  {
+    "column_name": "rec_checksum"
+  }
+]

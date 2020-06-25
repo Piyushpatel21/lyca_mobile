@@ -23,7 +23,11 @@ setup(
     packages=find_packages(where='code/pythonlib/main/src'),
     package_dir={'': 'code/pythonlib/main/src'},
     data_files=['Pipfile',
+<<<<<<< HEAD
                 ('config', glob('MNO_OTL/code/config/*.json'))],
+=======
+                ('config', glob('MNO/code/config/*.json'))],
+>>>>>>> reOrganizing_ss
     include_data_files=True,
     zip_safe=True,
     install_requires=requirements,

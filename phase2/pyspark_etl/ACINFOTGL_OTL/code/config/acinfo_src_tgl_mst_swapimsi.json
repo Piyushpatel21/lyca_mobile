@@ -1,0 +1,164 @@
+[
+  {
+    "column_name": "reqid",
+    "column_type": "integer",
+    "required": false,
+    "check_sum": true
+  },
+  {
+    "column_name": "oldmsisdn",
+    "column_type": "character",
+    "required": false,
+    "check_sum": true
+  },
+  {
+    "column_name": "oldiccid",
+    "column_type": "character",
+    "required": false,
+    "check_sum": true
+  },
+  {
+    "column_name": "oldimsi",
+    "column_type": "character",
+    "required": false,
+    "check_sum": true
+  },
+  {
+    "column_name": "newmsisdn",
+    "column_type": "character",
+    "required": false,
+    "check_sum": true
+  },
+  {
+    "column_name": "newiccid",
+    "column_type": "character",
+    "required": false,
+    "check_sum": true
+  },
+  {
+    "column_name": "newimsi",
+    "column_type": "character",
+    "required": false,
+    "check_sum": true
+  },
+  {
+    "column_name": "ticketid",
+    "column_type": "integer",
+    "required": false,
+    "check_sum": true
+  },
+  {
+    "column_name": "requestby",
+    "column_type": "character",
+    "required": false,
+    "check_sum": true
+  },
+  {
+    "column_name": "requestdate",
+    "column_type": "timestamp without time zone",
+    "required": false,
+    "check_sum": true
+  },
+  {
+    "column_name": "status",
+    "column_type": "character",
+    "required": false,
+    "check_sum": true
+  },
+  {
+    "column_name": "authorisedby",
+    "column_type": "character",
+    "required": false,
+    "check_sum": true
+  },
+  {
+    "column_name": "authoriseddate",
+    "column_type": "timestamp without time zone",
+    "required": false,
+    "check_sum": true
+  },
+  {
+    "column_name": "frequentcallednumber",
+    "column_type": "character",
+    "required": false,
+    "check_sum": true
+  },
+  {
+    "column_name": "topupamount",
+    "column_type": "numeric",
+    "required": false,
+    "check_sum": true
+  },
+  {
+    "column_name": "topupdate",
+    "column_type": "timestamp without time zone",
+    "required": false,
+    "check_sum": true
+  },
+  {
+    "column_name": "cip",
+    "column_type": "character",
+    "required": false,
+    "check_sum": true
+  },
+  {
+    "column_name": "pannumber",
+    "column_type": "character",
+    "required": false,
+    "check_sum": true
+  },
+  {
+    "column_name": "admin_comments",
+    "column_type": "character",
+    "required": false,
+    "check_sum": true
+  },
+  {
+    "column_name": "firstname",
+    "column_type": "character",
+    "required": false,
+    "check_sum": true
+  },
+  {
+    "column_name": "dob",
+    "column_type": "timestamp without time zone",
+    "required": false,
+    "check_sum": true
+  },
+  {
+    "column_name": "docno",
+    "column_type": "character",
+    "required": false,
+    "check_sum": true
+  },
+  {
+    "column_name": "doctype",
+    "column_type": "character",
+    "required": false,
+    "check_sum": true
+  },
+  {
+    "column_name": "doe",
+    "column_type": "timestamp without time zone",
+    "required": false,
+    "check_sum": true
+  },
+  {
+    "column_name": "zipcode",
+    "column_type": "character",
+    "required": false,
+    "check_sum": true
+  },
+  {
+    "column_name": "channel",
+    "column_type": "character",
+    "required": false,
+    "check_sum": true
+  },
+  {
+    "column_name": "migration",
+    "column_type": "character",
+    "required": false,
+    "check_sum": true
+  }
+]

@@ -1,0 +1,92 @@
+[
+  {
+    "column_name": "reqid"
+  },
+  {
+    "column_name": "oldmsisdn"
+  },
+  {
+    "column_name": "oldiccid"
+  },
+  {
+    "column_name": "oldimsi"
+  },
+  {
+    "column_name": "newmsisdn"
+  },
+  {
+    "column_name": "newiccid"
+  },
+  {
+    "column_name": "newimsi"
+  },
+  {
+    "column_name": "ticketid"
+  },
+  {
+    "column_name": "requestby"
+  },
+  {
+    "column_name": "requestdate"
+  },
+  {
+    "column_name": "status"
+  },
+  {
+    "column_name": "authorisedby"
+  },
+  {
+    "column_name": "authoriseddate"
+  },
+  {
+    "column_name": "frequentcallednumber"
+  },
+  {
+    "column_name": "topupamount"
+  },
+  {
+    "column_name": "topupdate"
+  },
+  {
+    "column_name": "cip"
+  },
+  {
+    "column_name": "pannumber"
+  },
+  {
+    "column_name": "admin_comments"
+  },
+  {
+    "column_name": "firstname"
+  },
+  {
+    "column_name": "dob"
+  },
+  {
+    "column_name": "docno"
+  },
+  {
+    "column_name": "doctype"
+  },
+  {
+    "column_name": "doe"
+  },
+  {
+    "column_name": "zipcode"
+  },
+  {
+    "column_name": "channel"
+  },
+  {
+    "column_name": "migration"
+  },
+  {
+    "column_name": "batch_id"
+  },
+  {
+    "column_name": "created_date"
+  },
+  {
+    "column_name": "rec_checksum"
+  }
+]

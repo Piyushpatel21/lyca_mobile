@@ -2,9 +2,10 @@ import argparse
 import sys
 from datetime import datetime, timedelta
 
-from lycaSparkTransformation.LycaCommonETLLoad import LycaCommonETLLoad
-from lycaSparkTransformation.SparkSessionBuilder import SparkSessionBuilder
+import pyspark.sql.functions as F
 from lycaSparkTransformation.TransformActionChain import TransformActionChain
+from lycaSparkTransformation.SparkSessionBuilder import SparkSessionBuilder
+from lycaSparkTransformation.LycaCommonETLLoad import LycaCommonETLLoad
 
 
 def start_execution(args):

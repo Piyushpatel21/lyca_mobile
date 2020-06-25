@@ -1,0 +1,143 @@
+[
+  {
+    "column_name": "voucherid"
+  },
+  {
+    "column_name": "sitecode"
+  },
+  {
+    "column_name": "card_id"
+  },
+  {
+    "column_name": "source_batch_id"
+  },
+  {
+    "column_name": "serial_fr"
+  },
+  {
+    "column_name": "serial_to"
+  },
+  {
+    "column_name": "totalcards"
+  },
+  {
+    "column_name": "resellerid"
+  },
+  {
+    "column_name": "actstate"
+  },
+  {
+    "column_name": "expiryyy"
+  },
+  {
+    "column_name": "expirymm"
+  },
+  {
+    "column_name": "expirydd"
+  },
+  {
+    "column_name": "facevalue"
+  },
+  {
+    "column_name": "sellprice"
+  },
+  {
+    "column_name": "vat"
+  },
+  {
+    "column_name": "discount"
+  },
+  {
+    "column_name": "netprice"
+  },
+  {
+    "column_name": "validity"
+  },
+  {
+    "column_name": "invoicenumber"
+  },
+  {
+    "column_name": "submitby"
+  },
+  {
+    "column_name": "submitdate"
+  },
+  {
+    "column_name": "crcheckby"
+  },
+  {
+    "column_name": "crcheckdate"
+  },
+  {
+    "column_name": "preactby"
+  },
+  {
+    "column_name": "preactdate"
+  },
+  {
+    "column_name": "authby"
+  },
+  {
+    "column_name": "authdate"
+  },
+  {
+    "column_name": "blockby"
+  },
+  {
+    "column_name": "blockdate"
+  },
+  {
+    "column_name": "blockreason"
+  },
+  {
+    "column_name": "huaweisubmitstate"
+  },
+  {
+    "column_name": "huaweierrcode"
+  },
+  {
+    "column_name": "recordlock"
+  },
+  {
+    "column_name": "processid"
+  },
+  {
+    "column_name": "ponumber"
+  },
+  {
+    "column_name": "activated_vouchers"
+  },
+  {
+    "column_name": "record_processed_time"
+  },
+  {
+    "column_name": "vouchertype"
+  },
+  {
+    "column_name": "card_currency"
+  },
+  {
+    "column_name": "description"
+  },
+  {
+    "column_name": "bundlecode"
+  },
+  {
+    "column_name": "bundlecost"
+  },
+  {
+    "column_name": "total_fee_amt"
+  },
+  {
+    "column_name": "fee_breakup"
+  },
+  {
+    "column_name": "batch_id"
+  },
+  {
+    "column_name": "created_date"
+  },
+  {
+    "column_name": "rec_checksum"
+  }
+]

@@ -88,7 +88,7 @@ class RedshiftUtils:
         except Exception as ex:
             self._logger.error("failed to write data in redshift : {error}".format(error=ex))
 
-    def getFileList(self, sparkSession: SparkSession, batchid) -> []:
+    def getFileList(self, sparkSession: SparkSession, logBatchFileTbl, batchid) -> []:
         try:
             _abs_path = []
             files = sparkSession.read \
@@ -96,13 +96,10 @@ class RedshiftUtils:
                 .option("url", self.jdbcUrl) \
                 .option("forward_spark_s3_credentials", "true") \
                 .option("query",
-                        "SELECT file_name, target_system FROM uk_test.log_batch_files_rrbs where batch_id = {batch_id}".format(
-                            batch_id=batchid)) \
+                        "SELECT file_name, target_system FROM {log_batch_files} where batch_id = {batch_id}"
+                        .format(log_batch_files=logBatchFileTbl, batch_id=batchid)) \
                 .option("tempdir", self.redshiftTmpDir) \
                 .load()
-
-            # filename = files.rdd.flatMap(lambda file: file).collect()
-            # return filename
 
             for col_files in files.rdd.collect():
                 _path = str(col_files.target_system) + '/' + str(col_files.file_name)
@@ -112,7 +109,7 @@ class RedshiftUtils:
         except Exception as ex:
             self._logger.error("failed to get file list from redshift : {error}".format(error=ex))
 
-    def getBatchId(self, sparkSession: SparkSession, source_identifier, prevDate) -> int:
+    def getBatchId(self, sparkSession: SparkSession, logBatchFileTbl, source_identifier, prevDate) -> int:
         """
         Return response with batchId from Redshift
         :parameter sparkSession - spark session
@@ -124,8 +121,8 @@ class RedshiftUtils:
             self._logger.info(
                 "Batch ID info : source_identifier={source_identifier}, previousDate={prevDate}".format(
                     prevDate=prevDate, source_identifier=source_identifier))
-            query = "SELECT DISTINCT batch_id FROM uk_test.log_batch_files_rrbs WHERE file_source LIKE '%{source_identifier}%' AND batch_from <= '{prevDate}' AND batch_to >= '{prevDate}'".format(
-                source_identifier=source_identifier, prevDate=prevDate)
+            query = "SELECT DISTINCT batch_id FROM {log_batch_files} WHERE file_source LIKE '%{source_identifier}%' AND batch_from <= '{prevDate}' AND batch_to >= '{prevDate}'"\
+                .format(log_batch_files=logBatchFileTbl, source_identifier=source_identifier, prevDate=prevDate)
             self._logger.info("Query {query}".format(query=query))
             df = sparkSession.read \
                 .format("com.databricks.spark.redshift") \
@@ -140,9 +137,9 @@ class RedshiftUtils:
         except Exception as ex:
             self._logger.error("failed to get batch Id from redshift : {error}".format(error=ex))
 
-    def writeBatchFileStatus(self, sparkSession: SparkSession, metaDF: DataFrame, batchId):
+    def writeBatchFileStatus(self, sparkSession: SparkSession, logBatchFileTbl, metaDF: DataFrame, batchId):
         """
-        Update log_batch_files_rrbs table in Redshift with file record count and batch status
+        Update log_batch_files table in Redshift with file record count and batch status
         :parameter sparkSession - spark session
         :parameter dataframe - dataframe with filename, record_count and batch_status
         :parameter batch_id - batch id for the batch interval to read files
@@ -151,12 +148,8 @@ class RedshiftUtils:
         def getMetadataDF() -> DataFrame:
             try:
                 self._logger.info("Updating Log Batch Files RRBS table :")
-<<<<<<< HEAD
-                query = "SELECT batch_id, file_source, target_system, file_id, file_name, batch_from, batch_to, is_valid, batch_createtime FROM uk_test.log_batch_files_rrbs WHERE batch_id ='{batchId}'".format(
-=======
-                query = "SELECT batch_id, file_source, file_id, file_name, batch_from, batch_to, is_valid, batch_createtime, target_system FROM uk_test.log_batch_files_rrbs WHERE batch_id ='{batchId}'".format(
->>>>>>> lycadev
-                    batchId=batchId)
+                query = "SELECT * FROM {log_batch_files} WHERE batch_id ='{batchId}'"\
+                    .format(log_batch_files=logBatchFileTbl, batchId=batchId)
                 self._logger.info("Query {query}".format(query=query))
                 redshiftDF = sparkSession.read \
                     .format("com.databricks.spark.redshift") \
@@ -170,17 +163,12 @@ class RedshiftUtils:
                                  redshiftDF['BATCH_TO'], metaDF['RECORD_COUNT'], metaDF['DM_NORMAL_COUNT'], metaDF['DM_LATECDR_COUNT'],
                                  metaDF['LDM_LATECDR_COUNT'], metaDF['DM_NORMAL_DBDUPL_COUNT'],
                                  metaDF['DM_LATECDR_DBDUPL_COUNT'], redshiftDF['IS_VALID'],
-<<<<<<< HEAD
                                  redshiftDF['BATCH_CREATETIME'])
-=======
-                                 redshiftDF['BATCH_CREATETIME'], redshiftDF['target_system'])
-
->>>>>>> lycadev
             except Exception as ex:
                 self._logger.error("failed to read log_batch_status data from redshift : {error}".format(error=ex))
         batchFileDF = getMetadataDF()
-        preDelQuery = "DELETE FROM uk_test.log_batch_files_rrbs WHERE batch_id={batchId}".format(batchId=int(batchId))
-        table = "uk_test.log_batch_files_rrbs"
+        preDelQuery = "DELETE FROM {log_batch_files} WHERE batch_id='{batchId}'".format(log_batch_files=logBatchFileTbl,batchId=batchId)
+        table = logBatchFileTbl
         try:
             batchFileDF.write.format("com.databricks.spark.redshift") \
                 .option("url", self.jdbcUrl) \
@@ -194,9 +182,9 @@ class RedshiftUtils:
         except Exception as ex:
             self._logger.error("failed to write log_batch_status data to redshift : {error}".format(error=ex))
 
-    def writeBatchStatus(self, sparkSession: SparkSession, query):
+    def writeBatchStatus(self, sparkSession: SparkSession, logBatchStatusTbl, query):
         """
-        Update log_batch_status_rrbs table in Redshift with file record count and batch status
+        Update log_batch_status table in Redshift with file record count and batch status
         :parameter sparkSession - spark session
         :parameter dataframe - dataframe with filename, record_count and batch_status
         :parameter batch_id - batch id for the batch interval to read files
@@ -226,8 +214,8 @@ class RedshiftUtils:
         rdd = sparkSession.sparkContext.parallelize(data)
         df = sparkSession.createDataFrame(rdd, schema)
         preQuery = query
-        postQuery = "DELETE FROM uk_test.log_batch_status_rrbs WHERE batch_id = 0"
-        table = "uk_test.log_batch_status_rrbs"
+        postQuery = "DELETE FROM {log_batch_status} WHERE batch_id = 0".format(log_batch_status=logBatchStatusTbl)
+        table = logBatchStatusTbl
         try:
             df.write.format("com.databricks.spark.redshift") \
                 .option("url", self.jdbcUrl) \

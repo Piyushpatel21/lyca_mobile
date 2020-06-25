@@ -162,7 +162,11 @@ class DataTransformation:
                 self._logger.info("Reading source file : {file}".format(file=file))
                 file_name = file
                 file = path + file
+<<<<<<< HEAD
                 print(file)
+=======
+                print("reading source file : {file}".format(file=file))
+>>>>>>> reOrganizing_ss
                 src_schema_string = []
                 for elem in structtype:
                     src_schema_string.append(StructField(elem.name, StringType()))
