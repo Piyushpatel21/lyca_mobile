@@ -1,0 +1,356 @@
+[
+  {
+    "column_name": "id"
+  },
+  {
+    "column_name": "retailerid"
+  },
+  {
+    "column_name": "hotspotid"
+  },
+  {
+    "column_name": "accmgrid"
+  },
+  {
+    "column_name": "offmgrid"
+  },
+  {
+    "column_name": "fname"
+  },
+  {
+    "column_name": "lname"
+  },
+  {
+    "column_name": "country"
+  },
+  {
+    "column_name": "state"
+  },
+  {
+    "column_name": "postcode"
+  },
+  {
+    "column_name": "houseno"
+  },
+  {
+    "column_name": "streetno"
+  },
+  {
+    "column_name": "street"
+  },
+  {
+    "column_name": "address1"
+  },
+  {
+    "column_name": "address2"
+  },
+  {
+    "column_name": "cityname"
+  },
+  {
+    "column_name": "pin"
+  },
+  {
+    "column_name": "landlineno"
+  },
+  {
+    "column_name": "mobileno"
+  },
+  {
+    "column_name": "email"
+  },
+  {
+    "column_name": "username"
+  },
+  {
+    "column_name": "contactperson"
+  },
+  {
+    "column_name": "status"
+  },
+  {
+    "column_name": "invoicetype"
+  },
+  {
+    "column_name": "createdby"
+  },
+  {
+    "column_name": "createddate"
+  },
+  {
+    "column_name": "threshold"
+  },
+  {
+    "column_name": "updatedby"
+  },
+  {
+    "column_name": "updateddate"
+  },
+  {
+    "column_name": "authlevel"
+  },
+  {
+    "column_name": "comments"
+  },
+  {
+    "column_name": "optionalstatus"
+  },
+  {
+    "column_name": "delauthlevel"
+  },
+  {
+    "column_name": "editauthlevel"
+  },
+  {
+    "column_name": "historyid"
+  },
+  {
+    "column_name": "alternatemobileno"
+  },
+  {
+    "column_name": "bankaddress"
+  },
+  {
+    "column_name": "accountholdername"
+  },
+  {
+    "column_name": "accountsortcode"
+  },
+  {
+    "column_name": "accountnumber"
+  },
+  {
+    "column_name": "bankname"
+  },
+  {
+    "column_name": "sitecode"
+  },
+  {
+    "column_name": "password"
+  },
+  {
+    "column_name": "shoptype"
+  },
+  {
+    "column_name": "whitelistmsisdn"
+  },
+  {
+    "column_name": "transfer_balance"
+  },
+  {
+    "column_name": "cc_balance"
+  },
+  {
+    "column_name": "accumulated_discount"
+  },
+  {
+    "column_name": "groupid"
+  },
+  {
+    "column_name": "retailermode"
+  },
+  {
+    "column_name": "virtual_msisdn"
+  },
+  {
+    "column_name": "virtualtorealdate"
+  },
+  {
+    "column_name": "floorno"
+  },
+  {
+    "column_name": "passexpiredate"
+  },
+  {
+    "column_name": "lastlogindate"
+  },
+  {
+    "column_name": "isthreshold"
+  },
+  {
+    "column_name": "secretquestion"
+  },
+  {
+    "column_name": "secretanswer"
+  },
+  {
+    "column_name": "issecqnalert"
+  },
+  {
+    "column_name": "unique_urn"
+  },
+  {
+    "column_name": "thresholdexcludedon"
+  },
+  {
+    "column_name": "iscredithigherlayer"
+  },
+  {
+    "column_name": "preferlanguage"
+  },
+  {
+    "column_name": "is_specialretailer"
+  },
+  {
+    "column_name": "spl_retupd_date"
+  },
+  {
+    "column_name": "commision_groupid"
+  },
+  {
+    "column_name": "loginattempt"
+  },
+  {
+    "column_name": "lockeddatetime"
+  },
+  {
+    "column_name": "area"
+  },
+  {
+    "column_name": "district"
+  },
+  {
+    "column_name": "vatno"
+  },
+  {
+    "column_name": "simactivationamount2"
+  },
+  {
+    "column_name": "creditlimitamt"
+  },
+  {
+    "column_name": "creditlimitauthdate"
+  },
+  {
+    "column_name": "stockotp"
+  },
+  {
+    "column_name": "stock_modifiedby"
+  },
+  {
+    "column_name": "stock_modifieddate"
+  },
+  {
+    "column_name": "isbalancenegative"
+  },
+  {
+    "column_name": "is_mailsent"
+  },
+  {
+    "column_name": "stocknotification"
+  },
+  {
+    "column_name": "notificationonoffuploaddate"
+  },
+  {
+    "column_name": "isreplicate"
+  },
+  {
+    "column_name": "sbtretaileredit"
+  },
+  {
+    "column_name": "streetnumber"
+  },
+  {
+    "column_name": "estate"
+  },
+  {
+    "column_name": "airtime_transfer"
+  },
+  {
+    "column_name": "ispwdsent"
+  },
+  {
+    "column_name": "division"
+  },
+  {
+    "column_name": "requested_by"
+  },
+  {
+    "column_name": "requested_date"
+  },
+  {
+    "column_name": "preapproved_by"
+  },
+  {
+    "column_name": "preapproved_date"
+  },
+  {
+    "column_name": "approved_by"
+  },
+  {
+    "column_name": "approved_date"
+  },
+  {
+    "column_name": "freeze_status"
+  },
+  {
+    "column_name": "freezereason"
+  },
+  {
+    "column_name": "edit_reason"
+  },
+  {
+    "column_name": "tran_pin"
+  },
+  {
+    "column_name": "pinretryattempts"
+  },
+  {
+    "column_name": "pinlockeddate"
+  },
+  {
+    "column_name": "ret_auto_ballimit"
+  },
+  {
+    "column_name": "ret_auto_topupamt"
+  },
+  {
+    "column_name": "ret_auto_lmtfreq"
+  },
+  {
+    "column_name": "ret_auto_maxlmt"
+  },
+  {
+    "column_name": "ret_autotopup_chk"
+  },
+  {
+    "column_name": "ret_auto_frmdt"
+  },
+  {
+    "column_name": "ret_auto_todt"
+  },
+  {
+    "column_name": "ret_auto_prscnt"
+  },
+  {
+    "column_name": "ret_uuid"
+  },
+  {
+    "column_name": "agentmsisdn"
+  },
+  {
+    "column_name": "agentpin"
+  },
+  {
+    "column_name": "isagent"
+  },
+  {
+    "column_name": "taxid"
+  },
+  {
+    "column_name": "businessregistrationno"
+  },
+  {
+    "column_name": "socialsecurityno"
+  },
+  {
+    "column_name": "batch_id"
+  },
+  {
+    "column_name": "created_date"
+  },
+  {
+    "column_name": "rec_checksum"
+  }
+]

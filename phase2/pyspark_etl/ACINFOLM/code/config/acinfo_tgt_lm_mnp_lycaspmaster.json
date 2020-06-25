@@ -1,0 +1,41 @@
+[
+  {
+    "column_name": "id"
+  },
+  {
+    "column_name": "onocode"
+  },
+  {
+    "column_name": "spcode"
+  },
+  {
+    "column_name": "spdesc"
+  },
+  {
+    "column_name": "status"
+  },
+  {
+    "column_name": "url"
+  },
+  {
+    "column_name": "uid"
+  },
+  {
+    "column_name": "pwd"
+  },
+  {
+    "column_name": "lastmodifiedby"
+  },
+  {
+    "column_name": "lastmodifieddate"
+  },
+  {
+    "column_name": "batch_id"
+  },
+  {
+    "column_name": "created_date"
+  },
+  {
+    "column_name": "rec_checksum"
+  }
+]

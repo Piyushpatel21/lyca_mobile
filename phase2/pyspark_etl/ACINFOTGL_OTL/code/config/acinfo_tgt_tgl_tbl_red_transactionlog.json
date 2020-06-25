@@ -1,0 +1,119 @@
+[
+  {
+    "column_name": "id"
+  },
+  {
+    "column_name": "subscriberid"
+  },
+  {
+    "column_name": "cardnumber"
+  },
+  {
+    "column_name": "transactionid"
+  },
+  {
+    "column_name": "transactiontype"
+  },
+  {
+    "column_name": "redorderid"
+  },
+  {
+    "column_name": "divisionnumber"
+  },
+  {
+    "column_name": "redkeyid"
+  },
+  {
+    "column_name": "requestid"
+  },
+  {
+    "column_name": "requesttypecode"
+  },
+  {
+    "column_name": "statuscode"
+  },
+  {
+    "column_name": "responsecode"
+  },
+  {
+    "column_name": "responsedate"
+  },
+  {
+    "column_name": "fraudstatuscode"
+  },
+  {
+    "column_name": "redtdsstatuscode"
+  },
+  {
+    "column_name": "reddtssig"
+  },
+  {
+    "column_name": "redtdseci"
+  },
+  {
+    "column_name": "redorderdatetime"
+  },
+  {
+    "column_name": "redauthnumber"
+  },
+  {
+    "column_name": "redresponsemessage"
+  },
+  {
+    "column_name": "redavscode"
+  },
+  {
+    "column_name": "redseccode"
+  },
+  {
+    "column_name": "fraudresponsecode"
+  },
+  {
+    "column_name": "fraudusecode"
+  },
+  {
+    "column_name": "fraudrcf"
+  },
+  {
+    "column_name": "createddate"
+  },
+  {
+    "column_name": "tdsacsurl"
+  },
+  {
+    "column_name": "ebt_name"
+  },
+  {
+    "column_name": "ebt_service"
+  },
+  {
+    "column_name": "vatid"
+  },
+  {
+    "column_name": "connectortxnid"
+  },
+  {
+    "column_name": "bankname"
+  },
+  {
+    "column_name": "bankcountry"
+  },
+  {
+    "column_name": "buildnumber"
+  },
+  {
+    "column_name": "ndc"
+  },
+  {
+    "column_name": "riskscore"
+  },
+  {
+    "column_name": "batch_id"
+  },
+  {
+    "column_name": "created_date"
+  },
+  {
+    "column_name": "rec_checksum"
+  }
+]

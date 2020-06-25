@@ -1,0 +1,92 @@
+[
+  {
+    "column_name": "id"
+  },
+  {
+    "column_name": "msisdn"
+  },
+  {
+    "column_name": "imsi"
+  },
+  {
+    "column_name": "iccidprefix"
+  },
+  {
+    "column_name": "iccid"
+  },
+  {
+    "column_name": "activationdate"
+  },
+  {
+    "column_name": "resellerid"
+  },
+  {
+    "column_name": "lastusagedate"
+  },
+  {
+    "column_name": "retailerid"
+  },
+  {
+    "column_name": "distributorid"
+  },
+  {
+    "column_name": "facevalue"
+  },
+  {
+    "column_name": "processed_flag"
+  },
+  {
+    "column_name": "hotspotid"
+  },
+  {
+    "column_name": "accmgrid"
+  },
+  {
+    "column_name": "offmgrid"
+  },
+  {
+    "column_name": "swap_status"
+  },
+  {
+    "column_name": "old_msisdn"
+  },
+  {
+    "column_name": "old_activationdate"
+  },
+  {
+    "column_name": "cip_processedflag"
+  },
+  {
+    "column_name": "fcabundle_processedflag"
+  },
+  {
+    "column_name": "firsttopupdate"
+  },
+  {
+    "column_name": "topupdate"
+  },
+  {
+    "column_name": "retailerid_indirect"
+  },
+  {
+    "column_name": "brand"
+  },
+  {
+    "column_name": "first_iccid"
+  },
+  {
+    "column_name": "iccidcomputed"
+  },
+  {
+    "column_name": "fcatype"
+  },
+  {
+    "column_name": "batch_id"
+  },
+  {
+    "column_name": "created_date"
+  },
+  {
+    "column_name": "rec_checksum"
+  }
+]
