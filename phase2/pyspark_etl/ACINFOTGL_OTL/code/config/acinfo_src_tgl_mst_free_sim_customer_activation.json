@@ -1,0 +1,464 @@
+[
+  {
+    "column_name": "id",
+    "column_type": "integer",
+    "required": false,
+    "check_sum": true
+  },
+  {
+    "column_name": "transactionid",
+    "column_type": "character",
+    "required": false,
+    "check_sum": true
+  },
+  {
+    "column_name": "redorderid",
+    "column_type": "character",
+    "required": false,
+    "check_sum": true
+  },
+  {
+    "column_name": "pinnumber",
+    "column_type": "character",
+    "required": false,
+    "check_sum": true
+  },
+  {
+    "column_name": "status",
+    "column_type": "character",
+    "required": false,
+    "check_sum": true
+  },
+  {
+    "column_name": "postcode",
+    "column_type": "character",
+    "required": false,
+    "check_sum": true
+  },
+  {
+    "column_name": "typeofsim",
+    "column_type": "character",
+    "required": false,
+    "check_sum": true
+  },
+  {
+    "column_name": "topupamount",
+    "column_type": "numeric",
+    "required": false,
+    "check_sum": true
+  },
+  {
+    "column_name": "cardid",
+    "column_type": "character",
+    "required": false,
+    "check_sum": true
+  },
+  {
+    "column_name": "nabundleamount",
+    "column_type": "numeric",
+    "required": false,
+    "check_sum": true
+  },
+  {
+    "column_name": "inabundleamount",
+    "column_type": "numeric",
+    "required": false,
+    "check_sum": true
+  },
+  {
+    "column_name": "nabundlecode",
+    "column_type": "integer",
+    "required": false,
+    "check_sum": true
+  },
+  {
+    "column_name": "inabundlecode",
+    "column_type": "integer",
+    "required": false,
+    "check_sum": true
+  },
+  {
+    "column_name": "imsi",
+    "column_type": "character",
+    "required": false,
+    "check_sum": true
+  },
+  {
+    "column_name": "msisdn_real",
+    "column_type": "character",
+    "required": false,
+    "check_sum": true
+  },
+  {
+    "column_name": "msisdn_dummy",
+    "column_type": "character",
+    "required": false,
+    "check_sum": true
+  },
+  {
+    "column_name": "activateddate",
+    "column_type": "timestamp without time zone",
+    "required": false,
+    "check_sum": true
+  },
+  {
+    "column_name": "activatedchannel",
+    "column_type": "character",
+    "required": false,
+    "check_sum": true
+  },
+  {
+    "column_name": "errordesc",
+    "column_type": "character",
+    "required": false,
+    "check_sum": true
+  },
+  {
+    "column_name": "requestdate",
+    "column_type": "timestamp without time zone",
+    "required": false,
+    "check_sum": true
+  },
+  {
+    "column_name": "processeddate",
+    "column_type": "timestamp without time zone",
+    "required": false,
+    "check_sum": true
+  },
+  {
+    "column_name": "modeofpayment",
+    "column_type": "character",
+    "required": false,
+    "check_sum": true
+  },
+  {
+    "column_name": "autorenewal",
+    "column_type": "character",
+    "required": false,
+    "check_sum": true
+  },
+  {
+    "column_name": "planid",
+    "column_type": "integer",
+    "required": false,
+    "check_sum": true
+  },
+  {
+    "column_name": "promocode",
+    "column_type": "character",
+    "required": false,
+    "check_sum": true
+  },
+  {
+    "column_name": "promoofferid",
+    "column_type": "integer",
+    "required": false,
+    "check_sum": true
+  },
+  {
+    "column_name": "promotype",
+    "column_type": "character",
+    "required": false,
+    "check_sum": true
+  },
+  {
+    "column_name": "promodiscounttype",
+    "column_type": "character",
+    "required": false,
+    "check_sum": true
+  },
+  {
+    "column_name": "promodiscountvalue",
+    "column_type": "numeric",
+    "required": false,
+    "check_sum": true
+  },
+  {
+    "column_name": "shippingamount",
+    "column_type": "numeric",
+    "required": false,
+    "check_sum": true
+  },
+  {
+    "column_name": "shippingpromocode",
+    "column_type": "character",
+    "required": false,
+    "check_sum": true
+  },
+  {
+    "column_name": "shippingdiscounttype",
+    "column_type": "character",
+    "required": false,
+    "check_sum": true
+  },
+  {
+    "column_name": "shippingdiscountvalue",
+    "column_type": "numeric",
+    "required": false,
+    "check_sum": true
+  },
+  {
+    "column_name": "shippromodiscountstatus",
+    "column_type": "character",
+    "required": false,
+    "check_sum": true
+  },
+  {
+    "column_name": "totaltax",
+    "column_type": "numeric",
+    "required": false,
+    "check_sum": true
+  },
+  {
+    "column_name": "tax",
+    "column_type": "numeric",
+    "required": false,
+    "check_sum": true
+  },
+  {
+    "column_name": "obacreditdue",
+    "column_type": "numeric",
+    "required": false,
+    "check_sum": true
+  },
+  {
+    "column_name": "subtransactionid",
+    "column_type": "character",
+    "required": false,
+    "check_sum": true
+  },
+  {
+    "column_name": "vattransid",
+    "column_type": "character",
+    "required": false,
+    "check_sum": true
+  },
+  {
+    "column_name": "vatamount",
+    "column_type": "numeric",
+    "required": false,
+    "check_sum": true
+  },
+  {
+    "column_name": "vatperc",
+    "column_type": "numeric",
+    "required": false,
+    "check_sum": true
+  },
+  {
+    "column_name": "bundlemonths",
+    "column_type": "integer",
+    "required": false,
+    "check_sum": true
+  },
+  {
+    "column_name": "appliedmonths",
+    "column_type": "integer",
+    "required": false,
+    "check_sum": true
+  },
+  {
+    "column_name": "firstinstalment",
+    "column_type": "numeric",
+    "required": false,
+    "check_sum": true
+  },
+  {
+    "column_name": "remaininginstalment",
+    "column_type": "numeric",
+    "required": false,
+    "check_sum": true
+  },
+  {
+    "column_name": "amountperterm",
+    "column_type": "numeric",
+    "required": false,
+    "check_sum": true
+  },
+  {
+    "column_name": "issubsidized",
+    "column_type": "character",
+    "required": false,
+    "check_sum": true
+  },
+  {
+    "column_name": "isobarenewal",
+    "column_type": "integer",
+    "required": false,
+    "check_sum": true
+  },
+  {
+    "column_name": "orderid",
+    "column_type": "character",
+    "required": false,
+    "check_sum": true
+  },
+  {
+    "column_name": "tax_amt_breakup",
+    "column_type": "character",
+    "required": false,
+    "check_sum": true
+  },
+  {
+    "column_name": "tax_amt_breakup_desc",
+    "column_type": "character",
+    "required": false,
+    "check_sum": true
+  },
+  {
+    "column_name": "parentcustomer",
+    "column_type": "character",
+    "required": false,
+    "check_sum": true
+  },
+  {
+    "column_name": "medium",
+    "column_type": "character",
+    "required": false,
+    "check_sum": true
+  },
+  {
+    "column_name": "source_name",
+    "column_type": "character",
+    "required": false,
+    "check_sum": true
+  },
+  {
+    "column_name": "campaign",
+    "column_type": "character",
+    "required": false,
+    "check_sum": true
+  },
+  {
+    "column_name": "sim_flag",
+    "column_type": "smallint",
+    "required": false,
+    "check_sum": true
+  },
+  {
+    "column_name": "reason",
+    "column_type": "character",
+    "required": false,
+    "check_sum": true
+  },
+  {
+    "column_name": "blockedby",
+    "column_type": "character",
+    "required": false,
+    "check_sum": true
+  },
+  {
+    "column_name": "blockeddate",
+    "column_type": "timestamp without time zone",
+    "required": false,
+    "check_sum": true
+  },
+  {
+    "column_name": "fee_breakupdesc",
+    "column_type": "character",
+    "required": false,
+    "check_sum": true
+  },
+  {
+    "column_name": "fee_breakupamt",
+    "column_type": "character",
+    "required": false,
+    "check_sum": true
+  },
+  {
+    "column_name": "totalfeeamount",
+    "column_type": "numeric",
+    "required": false,
+    "check_sum": true
+  },
+  {
+    "column_name": "feerefundflag",
+    "column_type": "character",
+    "required": false,
+    "check_sum": true
+  },
+  {
+    "column_name": "taxrefundflag",
+    "column_type": "character",
+    "required": false,
+    "check_sum": true
+  },
+  {
+    "column_name": "payment_mode",
+    "column_type": "character",
+    "required": false,
+    "check_sum": true
+  },
+  {
+    "column_name": "pricesplitup",
+    "column_type": "xml",
+    "required": false,
+    "check_sum": true
+  },
+  {
+    "column_name": "calcon",
+    "column_type": "character",
+    "required": false,
+    "check_sum": true
+  },
+  {
+    "column_name": "nus_id",
+    "column_type": "character",
+    "required": false,
+    "check_sum": true
+  },
+  {
+    "column_name": "nus_expiredate",
+    "column_type": "timestamp without time zone",
+    "required": false,
+    "check_sum": true
+  },
+  {
+    "column_name": "nus_flag",
+    "column_type": "smallint",
+    "required": false,
+    "check_sum": true
+  },
+  {
+    "column_name": "nus_applied",
+    "column_type": "smallint",
+    "required": false,
+    "check_sum": true
+  },
+  {
+    "column_name": "installment_info",
+    "column_type": "character",
+    "required": false,
+    "check_sum": true
+  },
+  {
+    "column_name": "frequency",
+    "column_type": "integer",
+    "required": false,
+    "check_sum": true
+  },
+  {
+    "column_name": "gateway",
+    "column_type": "character",
+    "required": false,
+    "check_sum": true
+  },
+  {
+    "column_name": "merchant_id",
+    "column_type": "character",
+    "required": false,
+    "check_sum": true
+  },
+  {
+    "column_name": "pin_expire_date",
+    "column_type": "timestamp without time zone",
+    "required": false,
+    "check_sum": true
+  },
+  {
+    "column_name": "reactivate_count",
+    "column_type": "integer",
+    "required": false,
+    "check_sum": true
+  }
+]

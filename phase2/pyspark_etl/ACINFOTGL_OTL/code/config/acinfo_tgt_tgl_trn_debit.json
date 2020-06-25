@@ -1,0 +1,56 @@
+[
+  {
+    "column_name": "id"
+  },
+  {
+    "column_name": "msisdn"
+  },
+  {
+    "column_name": "debitamt"
+  },
+  {
+    "column_name": "ticketid"
+  },
+  {
+    "column_name": "reason"
+  },
+  {
+    "column_name": "comments"
+  },
+  {
+    "column_name": "requestdate"
+  },
+  {
+    "column_name": "submitedby"
+  },
+  {
+    "column_name": "status"
+  },
+  {
+    "column_name": "authorisedby"
+  },
+  {
+    "column_name": "authoriseddate"
+  },
+  {
+    "column_name": "oldbal"
+  },
+  {
+    "column_name": "newbal"
+  },
+  {
+    "column_name": "channel"
+  },
+  {
+    "column_name": "authcomments"
+  },
+  {
+    "column_name": "batch_id"
+  },
+  {
+    "column_name": "created_date"
+  },
+  {
+    "column_name": "rec_checksum"
+  }
+]

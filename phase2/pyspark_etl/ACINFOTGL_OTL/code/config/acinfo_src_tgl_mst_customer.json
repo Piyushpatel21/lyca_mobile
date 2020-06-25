@@ -1,0 +1,26 @@
+[
+  {
+    "column_name": "doc_expiry_date",
+	"column_type" : "timestamp without time zone",
+    "required" : false,
+    "check_sum" : true
+  },
+  {
+    "column_name": "is_reregn",
+	"column_type" : "integer",
+    "required" : false,
+    "check_sum" : true
+  },
+  {
+    "column_name": "reregn_cnt",
+	"column_type" : "integer",
+    "required" : false,
+    "check_sum" : true
+  },
+  {
+    "column_name": "simregtype",
+	"column_type" : "smallint",
+    "required" : false,
+    "check_sum" : true
+  }
+]

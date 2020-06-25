@@ -1,0 +1,89 @@
+[
+    {
+    "column_name": "id"
+  },
+  {
+    "column_name": "transactionid"
+  },
+  {
+    "column_name": "subscriberid"
+  },
+  {
+    "column_name": "cardnumber"
+  },
+  {
+    "column_name": "customeripaddress"
+  },
+  {
+    "column_name": "orderid"
+  },
+  {
+    "column_name": "countryid"
+  },
+  {
+    "column_name": "brandid"
+  },
+  {
+    "column_name": "channelid"
+  },
+  {
+    "column_name": "gatewayid"
+  },
+  {
+    "column_name": "featureid"
+  },
+  {
+    "column_name": "amount"
+  },
+  {
+    "column_name": "currencysign"
+  },
+  {
+    "column_name": "currencycode"
+  },
+  {
+    "column_name": "transactionstatus"
+  },
+  {
+    "column_name": "transactiondate"
+  },
+  {
+    "column_name": "timeonfile"
+  },
+  {
+    "column_name": "email"
+  },
+  {
+    "column_name": "maskedcardnumber"
+  },
+  {
+    "column_name": "parenttransid"
+  },
+  {
+    "column_name": "totalamount"
+  },
+  {
+    "column_name": "refundamount"
+  },
+  {
+    "column_name": "refundstatus"
+  },
+  {
+    "column_name": "failedorderid"
+  },
+  {
+    "column_name": "failedmerchantcode"
+  },
+  {
+    "column_name": "refundreason"
+  },
+  {
+    "column_name": "batch_id"
+  },
+  {
+    "column_name": "created_date"
+  },
+  {
+    "column_name": "rec_checksum"
+  }
+]
