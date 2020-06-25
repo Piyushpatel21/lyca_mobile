@@ -102,7 +102,7 @@ Resources:
         Statement:
           - Effect: Allow
             Principal:
-              AWS: "*"
+              AWS: !Sub "${AWS::AccountId}*"
             Action: sns:Publish
             Resource:
                - !Ref FileUploadsSnsTopic
@@ -117,7 +117,7 @@ Resources:
         Statement:
           - Effect: Allow
             Principal:
-              AWS: "*"
+              AWS: !Sub "${AWS::AccountId}*"
             Action: sns:Publish
             Resource:  
               - !Ref LambdaAlarmSNSTopic
