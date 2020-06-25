@@ -1,6 +1,8 @@
 import argparse
-
+import json
 # from commonUtils.Log4j import Log4j
+
+import sys
 
 moduleTag = (
             'rrbs',

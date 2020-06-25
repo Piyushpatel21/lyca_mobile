@@ -1,0 +1,104 @@
+[
+  {
+    "column_name": "id"
+  },
+  {
+    "column_name": "requestid"
+  },
+  {
+    "column_name": "msisdn"
+  },
+  {
+    "column_name": "iccid"
+  },
+  {
+    "column_name": "paccode"
+  },
+  {
+    "column_name": "paccreateddate"
+  },
+  {
+    "column_name": "pacexpireddate"
+  },
+  {
+    "column_name": "portoutdate"
+  },
+  {
+    "column_name": "ono"
+  },
+  {
+    "column_name": "rno"
+  },
+  {
+    "column_name": "dno"
+  },
+  {
+    "column_name": "rsp"
+  },
+  {
+    "column_name": "dsp"
+  },
+  {
+    "column_name": "status"
+  },
+  {
+    "column_name": "smsstate"
+  },
+  {
+    "column_name": "errcode"
+  },
+  {
+    "column_name": "recordlock"
+  },
+  {
+    "column_name": "numbertype"
+  },
+  {
+    "column_name": "channel"
+  },
+  {
+    "column_name": "note"
+  },
+  {
+    "column_name": "blockcode"
+  },
+  {
+    "column_name": "blockreason"
+  },
+  {
+    "column_name": "portid"
+  },
+  {
+    "column_name": "createddate"
+  },
+  {
+    "column_name": "createdby"
+  },
+  {
+    "column_name": "completeddate"
+  },
+  {
+    "column_name": "poutfilename"
+  },
+  {
+    "column_name": "requestfrom"
+  },
+  {
+    "column_name": "preferredlanguage"
+  },
+  {
+    "column_name": "smserrstate"
+  },
+  {
+    "column_name": "completeddate_month"
+  },
+  {
+    "column_name": "batch_id"
+  },
+  {
+    "column_name": "created_date"
+  },
+  {
+    "column_name": "rec_checksum"
+  }
+]

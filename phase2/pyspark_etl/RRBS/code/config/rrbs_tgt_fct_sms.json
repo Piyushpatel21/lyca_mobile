@@ -237,6 +237,9 @@
     "column_name": "free_zone_expiry_date_num"
   },
   {
+    "column_name": "roaming_partner_name"
+  },
+  {
     "column_name": "filename"
   },
   {

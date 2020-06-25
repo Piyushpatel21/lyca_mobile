@@ -7,11 +7,12 @@
 # version         : 1.0                                                #
 # notes           :                                                    #
 ########################################################################
+
+import argparse
 import sys
 from datetime import datetime, timedelta
-
-from lycaSparkTransformation.SparkSessionBuilder import SparkSessionBuilder
 from lycaSparkTransformation.TransformActionChain import TransformActionChain
+from lycaSparkTransformation.SparkSessionBuilder import SparkSessionBuilder
 
 
 class LycaCommonETLLoad:
@@ -65,6 +66,7 @@ def start_execution(args):
     tf = TransformActionChain(sparkSession, logger, args.get('module'), args.get('submodule'),
                               configfile, connfile, run_date, prevDate, args.get('code_bucket'),
                               args.get('source_file_path'))
+
     if not (args.get('run_date') and args.get('batchID')):
         batch_id = tf.getBatchID()
     else:

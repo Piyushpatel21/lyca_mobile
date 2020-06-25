@@ -1,0 +1,119 @@
+[
+    {
+      "column_name": "id"
+    },
+    {
+      "column_name": "transactionid"
+    },
+    {
+      "column_name": "subscriberid"
+    },
+    {
+      "column_name": "cardnumber"
+    },
+    {
+      "column_name": "cardexpirydate"
+    },
+    {
+      "column_name": "transactiontype"
+    },
+    {
+      "column_name": "orderid"
+    },
+    {
+      "column_name": "merchantcode"
+    },
+    {
+      "column_name": "paymentmethodcode"
+    },
+    {
+      "column_name": "statuscode"
+    },
+    {
+      "column_name": "responsecode"
+    },
+    {
+      "column_name": "responsedescription"
+    },
+    {
+      "column_name": "cvcresultcode"
+    },
+    {
+      "column_name": "avsresultcode"
+    },
+    {
+      "column_name": "paymentid"
+    },
+    {
+      "column_name": "paymentrefernce"
+    },
+    {
+      "column_name": "merchantreference"
+    },
+    {
+      "column_name": "paymentmethod"
+    },
+    {
+      "column_name": "paymentproductid"
+    },
+    {
+      "column_name": "authorizationcode"
+    },
+    {
+      "column_name": "fraudserviceresult"
+    },
+    {
+      "column_name": "iscancelable"
+    },
+    {
+      "column_name": "isauthorized"
+    },
+    {
+      "column_name": "statuscodechangedatetime"
+    },
+    {
+      "column_name": "additionalreference"
+    },
+    {
+      "column_name": "externalreference"
+    },
+    {
+      "column_name": "cavv"
+    },
+    {
+      "column_name": "cavvalgorithm"
+    },
+    {
+      "column_name": "eci"
+    },
+    {
+      "column_name": "validationresult"
+    },
+    {
+      "column_name": "xid"
+    },
+    {
+      "column_name": "isrecurring"
+    },
+    {
+      "column_name": "returnurl"
+    },
+    {
+      "column_name": "tokenid"
+    },
+    {
+      "column_name": "isnewtoken"
+    },
+    {
+      "column_name": "createddate"
+    },
+    {
+      "column_name": "batch_id"
+    },
+    {
+      "column_name": "created_date"
+    },
+    {
+      "column_name": "rec_checksum"
+    }
+]

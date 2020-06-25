@@ -1,8 +1,8 @@
-from glob import glob
 
+from setuptools import setup, find_packages
 from pipenv.project import Project
 from pipenv.utils import convert_deps_to_pip
-from setuptools import setup, find_packages
+from glob import glob
 
 pr = Project(chdir=False)
 pFile = pr.parsed_pipfile

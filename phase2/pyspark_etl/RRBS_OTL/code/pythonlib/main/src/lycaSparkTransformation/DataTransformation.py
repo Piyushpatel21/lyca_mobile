@@ -11,7 +11,6 @@
 
 from datetime import datetime
 from functools import reduce
-
 from dateutil.relativedelta import relativedelta
 from pyspark.sql import DataFrame, Window
 from pyspark.sql import functions as F
@@ -21,6 +20,63 @@ from pyspark.sql.types import StructType, StructField
 
 from commonUtils.JsonProcessor import JsonProcessor
 from commonUtils.Log4j import Log4j
+
+
+class BalanceTransferTransformation:
+    """
+    Class to perform transformations on SMS data
+    """
+
+    def __init__(self):
+        self._logger = Log4j().getLogger()
+        self._cdr_time_stamp = "cdr_time_stamp"
+        self._date_cols_format = "dd-MM-yyyy"
+        self._timestamp_col_format = "yyyyMMddHHmmss"
+        self.time_zone = "Europe/London"
+
+    def generateDerivedColumnsForBT(self, df):
+        """
+        Module to generate derived columns from dataframe
+
+        :param df:
+        :return:
+        """
+
+        try:
+            self._logger.info("Generating derived columns for Balance transfer data.")
+            new_df = df.withColumn("_temp_datetime_col", F.to_timestamp(df[self._cdr_time_stamp], self._timestamp_col_format)) \
+                .withColumn("cdr_dt_month", F.date_format(F.col("_temp_datetime_col"), "yyyyMM").cast(IntegerType())) \
+                .withColumn("cdr_dt", F.to_date(F.col("_temp_datetime_col"))) \
+                .withColumn("cdr_dt_num", F.date_format(F.col("_temp_datetime_col"), "yyyyMMdd").cast(IntegerType())) \
+                .withColumn("_temp_datetime_col_utc", F.to_utc_timestamp(F.col("_temp_datetime_col"), F.lit(self.time_zone))) \
+                .withColumn("cdr_time_stamp_gmt", F.from_utc_timestamp(F.col("_temp_datetime_col_utc"), "GMT")) \
+                .withColumn("cdr_dt_month_gmt", F.date_format(F.col("cdr_time_stamp_gmt"), "yyyyMM").cast(IntegerType())) \
+                .withColumn("cdr_dt_num_gmt", F.date_format(F.col("cdr_time_stamp_gmt"), "yyyyMMdd").cast(IntegerType())) \
+                .withColumn("cdr_dt_hour_gmt", F.date_format(F.col("cdr_time_stamp_gmt"), "yyyyMMddHH").cast(IntegerType())) \
+                .drop('_temp_datetime_col', '_temp_datetime_col_utc')
+            return new_df
+        except Exception as ex:
+            self._logger.error("Failed to generate derived columns with error: {err}".format(err=ex))
+
+    def convertTargetDataType(self, df: DataFrame, schema: StructType):
+        """
+        Module to convert Data Type to required format
+
+        :param df: spark dataframe
+        :param schema: schema as StructType
+        :return:
+        """
+        # Drop whole file if error occur in converting
+        new_df = df
+        self._logger.info("Converting data type to required format")
+
+        files_to_ignore = []
+        for elem in schema:
+            if elem.name == self._cdr_time_stamp:
+                new_df = new_df.withColumn(elem.name, F.to_timestamp(new_df[elem.name], self._timestamp_col_format))
+            else:
+                new_df = new_df.withColumn(elem.name, new_df[elem.name].cast(elem.dataType))
+        return new_df
 
 
 class SmsDataTransformation:
@@ -103,7 +159,7 @@ class VoiceDataTransformation:
         self._call_date_col = "call_date"
         self._date_cols_format = "dd-MM-yyyy"
         self._call_date_col_format = "yyyyMMddHHmmss"
-        self._timestamp_cols = ["call_DATE", "call_termination_time"]
+        self._timestamp_cols = ["call_date", "call_termination_time"]
         self._timestamp_cols_format = "yyyyMMddHHmmss"
         self.time_zone = "Europe/London"
 
@@ -174,7 +230,7 @@ class TopUpDataTransformation:
         self._cdr_time_stamp_col = "cdr_time_stamp"
         self._cdr_date_cols_format = "dd-MM-yyyy"
         self._cdr_time_stamp_col_format = "yyyyMMddHHmmss"
-        self._timestamp_cols = ["bundle_start_DATE", "bundle_purchase_DATE"]
+        self._timestamp_cols = ["bundle_start_date", "bundle_purchase_date"]
         self._timestamp_cols_format = "yyyyMMddHHmmss"
         self._date_cols = ["promo_validity_DATE", "free_minutes_expiry_DATE", "free_sms_expiry_DATE",
                            "free_offnet_minutes_expiry_DATE", "free_offnet_sms_expiry_DATE",
@@ -325,7 +381,6 @@ class GprsDataTransformation:
         :param df:
         :return:
         """
-
 
         try:
             self._logger.info("Generating derived columns for GPRS data.")
@@ -644,3 +699,22 @@ class DataTransformation:
         no_blanks_df = self.fillBlanks(new_df, "0")
         no_null_df = self.fillNull(no_blanks_df)
         return no_null_df
+
+    def dropDupeDfCols(self, df: DataFrame) -> DataFrame:
+        """
+        Remove duplicate column from df
+        :param df:
+        :return:
+        """
+
+        newcols = []
+        dupcols = []
+        for i in range(len(df.columns)):
+            if df.columns[i] not in newcols:
+                newcols.append(df.columns[i])
+            else:
+                dupcols.append(i)
+        df = df.toDF(*[str(i) for i in range(len(df.columns))])
+        for dupcol in dupcols:
+            df = df.drop(str(dupcol))
+        return df.toDF(*newcols)

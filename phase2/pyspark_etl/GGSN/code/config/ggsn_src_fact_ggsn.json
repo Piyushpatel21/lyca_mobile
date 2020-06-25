@@ -1,0 +1,314 @@
+[
+  {
+    "column_name": "recordtype",
+    "column_type" : "character",
+    "required" : false,
+    "check_sum" : true
+  },
+  {
+    "column_name": "servedimsi",
+    "column_type" : "bigint",
+    "required" : false,
+    "check_sum" : true
+  },
+  {
+    "column_name": "p_gwaddress",
+    "column_type" : "character",
+    "required" : false,
+    "check_sum" : true
+  },
+  {
+    "column_name": "chargingid",
+    "column_type" : "character",
+    "required" : false,
+    "check_sum" : true
+  },
+  {
+    "column_name": "servingnodeaddress",
+    "column_type" : "character",
+    "required" : false,
+    "check_sum" : true
+  },
+  {
+    "column_name": "accesspointnameni",
+    "column_type" : "character",
+    "required" : false,
+    "check_sum" : true
+  },
+  {
+    "column_name": "pdppdntype",
+    "column_type" : "character",
+    "required" : false,
+    "check_sum" : true
+  },
+  {
+    "column_name": "servedpdppdnaddress",
+    "column_type" : "character",
+    "required" : false,
+    "check_sum" : true
+  },
+  {
+    "column_name": "dynamicaddressflag",
+    "column_type" : "character",
+    "required" : false,
+    "check_sum" : true
+  },
+  {
+    "column_name": "recordopeningtime",
+    "column_type" : "timestamp",
+    "required" : false,
+    "check_sum" : true
+  },
+  {
+    "column_name": "duration",
+    "column_type" : "integer",
+    "required" : false,
+    "check_sum" : true
+  },
+  {
+    "column_name": "causeforrecclosing",
+    "column_type" : "character",
+    "required" : false,
+    "check_sum" : true
+  },
+  {
+    "column_name": "diagnostics",
+    "column_type" : "character",
+    "required" : false,
+    "check_sum" : true
+  },
+  {
+    "column_name": "recordsequencenumber",
+    "column_type" : "character",
+    "required" : false,
+    "check_sum" : true
+  },
+  {
+    "column_name": "nodeid",
+    "column_type" : "character",
+    "required" : false,
+    "check_sum" : true
+  },
+  {
+    "column_name": "localsequencenumber",
+    "column_type" : "character",
+    "required" : false,
+    "check_sum" : true
+  },
+  {
+    "column_name": "apnselectionmode",
+    "column_type" : "character",
+    "required" : false,
+    "check_sum" : true
+  },
+  {
+    "column_name": "servedmsisdn",
+    "column_type" : "bigint",
+    "required" : false,
+    "check_sum" : true
+  },
+  {
+    "column_name": "chargingcharacteristics",
+    "column_type" : "character",
+    "required" : false,
+    "check_sum" : true
+  },
+  {
+    "column_name": "chchselectionmode",
+    "column_type" : "character",
+    "required" : false,
+    "check_sum" : true
+  },
+  {
+    "column_name": "imssignalingcontext",
+    "column_type" : "character",
+    "required" : false,
+    "check_sum" : true
+  },
+  {
+    "column_name": "externalchargingid",
+    "column_type" : "character",
+    "required" : false,
+    "check_sum" : true
+  },
+  {
+    "column_name": "servingnodeplmnidentifier",
+    "column_type" : "character",
+    "required" : false,
+    "check_sum" : true
+  },
+  {
+    "column_name": "psfreeformatdata",
+    "column_type" : "character",
+    "required" : false,
+    "check_sum" : true
+  },
+  {
+    "column_name": "psffdappendindicator",
+    "column_type" : "character",
+    "required" : false,
+    "check_sum" : true
+  },
+  {
+    "column_name": "servedimeisv",
+    "column_type" : "character",
+    "required" : false,
+    "check_sum" : true
+  },
+  {
+    "column_name": "rattype",
+    "column_type" : "character",
+    "required" : false,
+    "check_sum" : true
+  },
+  {
+    "column_name": "mstimezone",
+    "column_type" : "character",
+    "required" : false,
+    "check_sum" : true
+  },
+  {
+    "column_name": "userlocationinformation",
+    "column_type" : "character",
+    "required" : false,
+    "check_sum" : true
+  },
+  {
+    "column_name": "camelcharginginformation",
+    "column_type" : "character",
+    "required" : false,
+    "check_sum" : true
+  },
+  {
+    "column_name": "servingnodetype",
+    "column_type" : "character",
+    "required" : false,
+    "check_sum" : true
+  },
+  {
+    "column_name": "servedmnnai",
+    "column_type" : "character",
+    "required" : false,
+    "check_sum" : true
+  },
+  {
+    "column_name": "p_gwplmnidentifier",
+    "column_type" : "character",
+    "required" : false,
+    "check_sum" : true
+  },
+  {
+    "column_name": "starttime",
+    "column_type" : "timestamp",
+    "required" : false,
+    "check_sum" : true
+  },
+  {
+    "column_name": "stoptime",
+    "column_type" : "character",
+    "required" : false,
+    "check_sum" : true
+  },
+  {
+    "column_name": "served3gpp2meid",
+    "column_type" : "character",
+    "required" : false,
+    "check_sum" : true
+  },
+  {
+    "column_name": "pdnconnectionchargingid",
+    "column_type" : "character",
+    "required" : false,
+    "check_sum" : true
+  },
+  {
+    "column_name": "threegpp2userlocationinformation",
+    "column_type" : "character",
+    "required" : false,
+    "check_sum" : true
+  },
+  {
+    "column_name": "servedpdppdnaddressext",
+    "column_type" : "character",
+    "required" : false,
+    "check_sum" : true
+  },
+  {
+    "column_name": "dynamicaddressflagext",
+    "column_type" : "character",
+    "required" : false,
+    "check_sum" : true
+  },
+  {
+    "column_name": "dummy",
+    "column_type" : "character",
+    "required" : false,
+    "check_sum" : true
+  },
+  {
+    "column_name": "total_uplink",
+    "column_type" : "bigint",
+    "required" : false,
+    "check_sum" : true
+  },
+  {
+    "column_name": "total_downlink",
+    "column_type" : "bigint",
+    "required" : false,
+    "check_sum" : true
+  },
+  {
+    "column_name": "change_date",
+    "column_type" : "character",
+    "required" : false,
+    "check_sum" : true
+  },
+  {
+    "column_name": "url",
+    "column_type" : "character",
+    "required" : false,
+    "check_sum" : true
+  },
+  {
+    "column_name": "ratinggroup",
+    "column_type" : "character",
+    "required" : false,
+    "check_sum" : true
+  },
+  {
+    "column_name": "failurehand",
+    "column_type" : "character",
+    "required" : false,
+    "check_sum" : true
+  },
+  {
+    "column_name": "rulebasename",
+    "column_type" : "character",
+    "required" : false,
+    "check_sum" : true
+  },
+  {
+    "column_name": "timeoffirstusage",
+    "column_type" : "character",
+    "required" : false,
+    "check_sum" : true
+  },
+  {
+    "column_name": "timeoflastusage",
+    "column_type" : "character",
+    "required" : false,
+    "check_sum" : true
+  },
+  {
+    "column_name": "timeusage",
+    "column_type" : "character",
+    "required" : false,
+    "check_sum" : true
+  },
+  {
+    "column_name": "timeofreport",
+    "column_type" : "character",
+    "required" : false,
+    "check_sum" : true
+  }
+]

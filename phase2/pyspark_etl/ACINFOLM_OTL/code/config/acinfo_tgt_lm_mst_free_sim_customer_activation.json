@@ -1,0 +1,242 @@
+[
+  {
+    "column_name": "id"
+  },
+  {
+    "column_name": "transactionid"
+  },
+  {
+    "column_name": "redorderid"
+  },
+  {
+    "column_name": "pinnumber"
+  },
+  {
+    "column_name": "status"
+  },
+  {
+    "column_name": "postcode"
+  },
+  {
+    "column_name": "typeofsim"
+  },
+  {
+    "column_name": "topupamount"
+  },
+  {
+    "column_name": "cardid"
+  },
+  {
+    "column_name": "nabundleamount"
+  },
+  {
+    "column_name": "inabundleamount"
+  },
+  {
+    "column_name": "nabundlecode"
+  },
+  {
+    "column_name": "inabundlecode"
+  },
+  {
+    "column_name": "imsi"
+  },
+  {
+    "column_name": "msisdn_real"
+  },
+  {
+    "column_name": "msisdn_dummy"
+  },
+  {
+    "column_name": "activateddate"
+  },
+  {
+    "column_name": "activatedchannel"
+  },
+  {
+    "column_name": "errordesc"
+  },
+  {
+    "column_name": "requestdate"
+  },
+  {
+    "column_name": "processeddate"
+  },
+  {
+    "column_name": "modeofpayment"
+  },
+  {
+    "column_name": "autorenewal"
+  },
+  {
+    "column_name": "planid"
+  },
+  {
+    "column_name": "promocode"
+  },
+  {
+    "column_name": "promoofferid"
+  },
+  {
+    "column_name": "promotype"
+  },
+  {
+    "column_name": "promodiscounttype"
+  },
+  {
+    "column_name": "promodiscountvalue"
+  },
+  {
+    "column_name": "shippingamount"
+  },
+  {
+    "column_name": "shippingpromocode"
+  },
+  {
+    "column_name": "shippingdiscounttype"
+  },
+  {
+    "column_name": "shippingdiscountvalue"
+  },
+  {
+    "column_name": "shippromodiscountstatus"
+  },
+  {
+    "column_name": "totaltax"
+  },
+  {
+    "column_name": "tax"
+  },
+  {
+    "column_name": "obacreditdue"
+  },
+  {
+    "column_name": "subtransactionid"
+  },
+  {
+    "column_name": "vattransid"
+  },
+  {
+    "column_name": "vatamount"
+  },
+  {
+    "column_name": "vatperc"
+  },
+  {
+    "column_name": "bundlemonths"
+  },
+  {
+    "column_name": "appliedmonths"
+  },
+  {
+    "column_name": "firstinstalment"
+  },
+  {
+    "column_name": "remaininginstalment"
+  },
+  {
+    "column_name": "amountperterm"
+  },
+  {
+    "column_name": "issubsidized"
+  },
+  {
+    "column_name": "isobarenewal"
+  },
+  {
+    "column_name": "orderid"
+  },
+  {
+    "column_name": "tax_amt_breakup"
+  },
+  {
+    "column_name": "tax_amt_breakup_desc"
+  },
+  {
+    "column_name": "parentcustomer"
+  },
+  {
+    "column_name": "medium"
+  },
+  {
+    "column_name": "source_name"
+  },
+  {
+    "column_name": "campaign"
+  },
+  {
+    "column_name": "sim_flag"
+  },
+  {
+    "column_name": "reason"
+  },
+  {
+    "column_name": "blockedby"
+  },
+  {
+    "column_name": "blockeddate"
+  },
+  {
+    "column_name": "fee_breakupdesc"
+  },
+  {
+    "column_name": "fee_breakupamt"
+  },
+  {
+    "column_name": "totalfeeamount"
+  },
+  {
+    "column_name": "feerefundflag"
+  },
+  {
+    "column_name": "taxrefundflag"
+  },
+  {
+    "column_name": "payment_mode"
+  },
+  {
+    "column_name": "pricesplitup"
+  },
+  {
+    "column_name": "calcon"
+  },
+  {
+    "column_name": "nus_id"
+  },
+  {
+    "column_name": "nus_expiredate"
+  },
+  {
+    "column_name": "nus_flag"
+  },
+  {
+    "column_name": "nus_applied"
+  },
+  {
+    "column_name": "installment_info"
+  },
+  {
+    "column_name": "frequency"
+  },
+  {
+    "column_name": "gateway"
+  },
+  {
+    "column_name": "merchant_id"
+  },
+  {
+    "column_name": "pin_expire_date"
+  },
+  {
+    "column_name": "reactivate_count"
+  },
+  {
+    "column_name": "batch_id"
+  },
+  {
+    "column_name": "created_date"
+  },
+  {
+    "column_name": "rec_checksum"
+  }
+]
