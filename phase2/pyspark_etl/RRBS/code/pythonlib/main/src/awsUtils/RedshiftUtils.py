@@ -96,13 +96,10 @@ class RedshiftUtils:
                 .option("url", self.jdbcUrl) \
                 .option("forward_spark_s3_credentials", "true") \
                 .option("query",
-                        "SELECT file_name FROM {log_batch_files} where batch_id = {batch_id}"
+                        "SELECT file_name, target_system FROM {log_batch_files} where batch_id = {batch_id}"
                         .format(log_batch_files=logBatchFileTbl, batch_id=batchid)) \
                 .option("tempdir", self.redshiftTmpDir) \
                 .load()
-
-            # filename = files.rdd.flatMap(lambda file: file).collect()
-            # return filename
 
             for col_files in files.rdd.collect():
                 _path = str(col_files.target_system) + '/' + str(col_files.file_name)
@@ -167,7 +164,6 @@ class RedshiftUtils:
                                  metaDF['LDM_LATECDR_COUNT'], metaDF['DM_NORMAL_DBDUPL_COUNT'],
                                  metaDF['DM_LATECDR_DBDUPL_COUNT'], redshiftDF['IS_VALID'],
                                  redshiftDF['BATCH_CREATETIME'])
-
             except Exception as ex:
                 self._logger.error("failed to read log_batch_status data from redshift : {error}".format(error=ex))
         batchFileDF = getMetadataDF()
