@@ -1,0 +1,332 @@
+[
+  {
+    "column_name": "id",
+    "column_type": "bigint",
+    "required": false,
+    "check_sum": true
+  },
+  {
+    "column_name": "msisdn",
+    "column_type": "character",
+    "required": false,
+    "check_sum": true
+  },
+  {
+    "column_name": "msisdn_swap",
+    "column_type": "character",
+    "required": false,
+    "check_sum": true
+  },
+  {
+    "column_name": "custcode",
+    "column_type": "character",
+    "required": false,
+    "check_sum": true
+  },
+  {
+    "column_name": "batchcode",
+    "column_type": "integer",
+    "required": false,
+    "check_sum": true
+  },
+  {
+    "column_name": "serialcode",
+    "column_type": "integer",
+    "required": false,
+    "check_sum": true
+  },
+  {
+    "column_name": "iccidprefix",
+    "column_type": "character",
+    "required": false,
+    "check_sum": true
+  },
+  {
+    "column_name": "iccid",
+    "column_type": "character",
+    "required": false,
+    "check_sum": true
+  },
+  {
+    "column_name": "imsi",
+    "column_type": "character",
+    "required": false,
+    "check_sum": true
+  },
+  {
+    "column_name": "swapimsi",
+    "column_type": "character",
+    "required": false,
+    "check_sum": true
+  },
+  {
+    "column_name": "imsi2",
+    "column_type": "character",
+    "required": false,
+    "check_sum": true
+  },
+  {
+    "column_name": "pin1",
+    "column_type": "character",
+    "required": false,
+    "check_sum": true
+  },
+  {
+    "column_name": "pin2",
+    "column_type": "character",
+    "required": false,
+    "check_sum": true
+  },
+  {
+    "column_name": "puk1",
+    "column_type": "character",
+    "required": false,
+    "check_sum": true
+  },
+  {
+    "column_name": "puk2",
+    "column_type": "character",
+    "required": false,
+    "check_sum": true
+  },
+  {
+    "column_name": "scpsubmitstate",
+    "column_type": "character",
+    "required": false,
+    "check_sum": true
+  },
+  {
+    "column_name": "scperrcode",
+    "column_type": "character",
+    "required": false,
+    "check_sum": true
+  },
+  {
+    "column_name": "recordlock",
+    "column_type": "character",
+    "required": false,
+    "check_sum": true
+  },
+  {
+    "column_name": "processid",
+    "column_type": "integer",
+    "required": false,
+    "check_sum": true
+  },
+  {
+    "column_name": "status",
+    "column_type": "integer",
+    "required": false,
+    "check_sum": true
+  },
+  {
+    "column_name": "pim",
+    "column_type": "integer",
+    "required": false,
+    "check_sum": true
+  },
+  {
+    "column_name": "msisdn_flag",
+    "column_type": "smallint",
+    "required": false,
+    "check_sum": true
+  },
+  {
+    "column_name": "tariffclassname",
+    "column_type": "character",
+    "required": false,
+    "check_sum": true
+  },
+  {
+    "column_name": "initialbal",
+    "column_type": "character",
+    "required": false,
+    "check_sum": true
+  },
+  {
+    "column_name": "initiallang",
+    "column_type": "character",
+    "required": false,
+    "check_sum": true
+  },
+  {
+    "column_name": "mo_calls",
+    "column_type": "integer",
+    "required": false,
+    "check_sum": true
+  },
+  {
+    "column_name": "mt_calls",
+    "column_type": "integer",
+    "required": false,
+    "check_sum": true
+  },
+  {
+    "column_name": "mo_roam_calls",
+    "column_type": "integer",
+    "required": false,
+    "check_sum": true
+  },
+  {
+    "column_name": "mt_roam_calls",
+    "column_type": "integer",
+    "required": false,
+    "check_sum": true
+  },
+  {
+    "column_name": "mo_sms",
+    "column_type": "integer",
+    "required": false,
+    "check_sum": true
+  },
+  {
+    "column_name": "mt_sms",
+    "column_type": "integer",
+    "required": false,
+    "check_sum": true
+  },
+  {
+    "column_name": "mo_roam_sms",
+    "column_type": "integer",
+    "required": false,
+    "check_sum": true
+  },
+  {
+    "column_name": "mt_roam_sms",
+    "column_type": "integer",
+    "required": false,
+    "check_sum": true
+  },
+  {
+    "column_name": "ivr",
+    "column_type": "integer",
+    "required": false,
+    "check_sum": true
+  },
+  {
+    "column_name": "ussd",
+    "column_type": "integer",
+    "required": false,
+    "check_sum": true
+  },
+  {
+    "column_name": "vms",
+    "column_type": "integer",
+    "required": false,
+    "check_sum": true
+  },
+  {
+    "column_name": "sms_topup",
+    "column_type": "integer",
+    "required": false,
+    "check_sum": true
+  },
+  {
+    "column_name": "mha",
+    "column_type": "integer",
+    "required": false,
+    "check_sum": true
+  },
+  {
+    "column_name": "mca",
+    "column_type": "integer",
+    "required": false,
+    "check_sum": true
+  },
+  {
+    "column_name": "gprs",
+    "column_type": "integer",
+    "required": false,
+    "check_sum": true
+  },
+  {
+    "column_name": "crbt",
+    "column_type": "integer",
+    "required": false,
+    "check_sum": true
+  },
+  {
+    "column_name": "hlrid",
+    "column_type": "character",
+    "required": false,
+    "check_sum": true
+  },
+  {
+    "column_name": "mhaaccid",
+    "column_type": "character",
+    "required": false,
+    "check_sum": true
+  },
+  {
+    "column_name": "mhapin",
+    "column_type": "character",
+    "required": false,
+    "check_sum": true
+  },
+  {
+    "column_name": "smsmarketing",
+    "column_type": "integer",
+    "required": false,
+    "check_sum": true
+  },
+  {
+    "column_name": "actdate",
+    "column_type": "timestamp without time zone",
+    "required": false,
+    "check_sum": true
+  },
+  {
+    "column_name": "iccidcomputed",
+    "column_type": "character",
+    "required": false,
+    "check_sum": true
+  },
+  {
+    "column_name": "cip",
+    "column_type": "character",
+    "required": false,
+    "check_sum": true
+  },
+  {
+    "column_name": "mask_mode",
+    "column_type": "smallint",
+    "required": false,
+    "check_sum": true
+  },
+  {
+    "column_name": "eatariffchangestatus",
+    "column_type": "integer",
+    "required": false,
+    "check_sum": true
+  },
+  {
+    "column_name": "eatariffclassname",
+    "column_type": "character",
+    "required": false,
+    "check_sum": true
+  },
+  {
+    "column_name": "suspendsimswaprequest",
+    "column_type": "smallint",
+    "required": false,
+    "check_sum": true
+  },
+  {
+    "column_name": "suspendmsisdnswaprequest",
+    "column_type": "smallint",
+    "required": false,
+    "check_sum": true
+  },
+  {
+    "column_name": "suspendportoutrequest",
+    "column_type": "smallint",
+    "required": false,
+    "check_sum": true
+  },
+  {
+    "column_name": "resellerid",
+    "column_type": "character",
+    "required": false,
+    "check_sum": true
+  }
+]

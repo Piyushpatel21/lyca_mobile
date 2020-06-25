@@ -1,0 +1,47 @@
+[
+  {
+    "column_name": "activateid"
+  },
+  {
+    "column_name": "bundlecost"
+  },
+  {
+    "column_name": "createddate"
+  },
+  {
+    "column_name": "bundlecode"
+  },
+  {
+    "column_name": "planid"
+  },
+  {
+    "column_name": "noofmonths"
+  },
+  {
+    "column_name": "priority"
+  },
+  {
+    "column_name": "isprocess"
+  },
+  {
+    "column_name": "bundletext"
+  },
+  {
+    "column_name": "total_fee_amt"
+  },
+  {
+    "column_name": "fee_breakup"
+  },
+  {
+    "column_name": "family_bundle_type"
+  },
+  {
+    "column_name": "batch_id"
+  },
+  {
+    "column_name": "created_date"
+  },
+  {
+    "column_name": "rec_checksum"
+  }
+]

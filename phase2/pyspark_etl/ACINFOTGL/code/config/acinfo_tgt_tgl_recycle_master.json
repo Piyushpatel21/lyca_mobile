@@ -1,0 +1,95 @@
+[
+  {
+    "column_name": "id"
+  },
+  {
+    "column_name": "month"
+  },
+  {
+    "column_name": "network_id"
+  },
+  {
+    "column_name": "msisdn"
+  },
+  {
+    "column_name": "msisdn_swap"
+  },
+  {
+    "column_name": "iccid_prefix"
+  },
+  {
+    "column_name": "iccid"
+  },
+  {
+    "column_name": "imsi"
+  },
+  {
+    "column_name": "imsi2"
+  },
+  {
+    "column_name": "last_usage_date"
+  },
+  {
+    "column_name": "balance"
+  },
+  {
+    "column_name": "production_status"
+  },
+  {
+    "column_name": "activation_date"
+  },
+  {
+    "column_name": "last_call_date"
+  },
+  {
+    "column_name": "last_msg_date"
+  },
+  {
+    "column_name": "last_top_date"
+  },
+  {
+    "column_name": "hlrid"
+  },
+  {
+    "column_name": "deactivation_date"
+  },
+  {
+    "column_name": "initialbal"
+  },
+  {
+    "column_name": "acc_id"
+  },
+  {
+    "column_name": "resellerid"
+  },
+  {
+    "column_name": "offmgrid"
+  },
+  {
+    "column_name": "accmgrid"
+  },
+  {
+    "column_name": "hotspotid"
+  },
+  {
+    "column_name": "retailerid"
+  },
+  {
+    "column_name": "distributorid"
+  },
+  {
+    "column_name": "valid_month"
+  },
+  {
+    "column_name": "valid_date"
+  },
+  {
+    "column_name": "batch_id"
+  },
+  {
+    "column_name": "created_date"
+  },
+  {
+    "column_name": "rec_checksum"
+  }
+]

@@ -1,0 +1,140 @@
+[
+  {
+    "column_name": "customerid"
+  },
+  {
+    "column_name": "postcode"
+  },
+  {
+    "column_name": "houseno"
+  },
+  {
+    "column_name": "street"
+  },
+  {
+    "column_name": "cityname"
+  },
+  {
+    "column_name": "county"
+  },
+  {
+    "column_name": "country"
+  },
+  {
+    "column_name": "landlineno"
+  },
+  {
+    "column_name": "status"
+  },
+  {
+    "column_name": "msisdn"
+  },
+  {
+    "column_name": "billingpostcode"
+  },
+  {
+    "column_name": "billinghouseno"
+  },
+  {
+    "column_name": "billingstreet"
+  },
+  {
+    "column_name": "billingcityname"
+  },
+  {
+    "column_name": "billingcounty"
+  },
+  {
+    "column_name": "flatno"
+  },
+  {
+    "column_name": "nationality"
+  },
+  {
+    "column_name": "type_of_id"
+  },
+  {
+    "column_name": "id_number"
+  },
+  {
+    "column_name": "address"
+  },
+  {
+    "column_name": "billingaddress"
+  },
+  {
+    "column_name": "billingcountry"
+  },
+  {
+    "column_name": "zipcode"
+  },
+  {
+    "column_name": "street_number"
+  },
+  {
+    "column_name": "building"
+  },
+  {
+    "column_name": "floor"
+  },
+  {
+    "column_name": "apartmentno"
+  },
+  {
+    "column_name": "billingapartmentno"
+  },
+  {
+    "column_name": "division"
+  },
+  {
+    "column_name": "place"
+  },
+  {
+    "column_name": "municipality"
+  },
+  {
+    "column_name": "housenoaddon"
+  },
+  {
+    "column_name": "billing_houseno_addon"
+  },
+  {
+    "column_name": "unitnumber"
+  },
+  {
+    "column_name": "lift"
+  },
+  {
+    "column_name": "door"
+  },
+  {
+    "column_name": "billingblock"
+  },
+  {
+    "column_name": "billingfloor"
+  },
+  {
+    "column_name": "billinglift"
+  },
+  {
+    "column_name": "billingdoor"
+  },
+  {
+    "column_name": "care_off"
+  },
+  {
+    "column_name": "billing_street_number"
+  },
+  {
+    "column_name": "billing_care_off"
+  },
+  {
+    "column_name": "batch_id"
+  },
+  {
+    "column_name": "created_date"
+  },
+  {
+    "column_name": "rec_checksum"
+  }
+]

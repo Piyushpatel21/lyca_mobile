@@ -1,0 +1,92 @@
+[
+  {
+    "column_name": "id",
+    "column_type": "integer",
+    "required": false,
+    "check_sum": true
+  },
+  {
+    "column_name": "msisdn",
+    "column_type": "character",
+    "required": false,
+    "check_sum": true
+  },
+  {
+    "column_name": "debitamt",
+    "column_type": "numeric",
+    "required": false,
+    "check_sum": true
+  },
+  {
+    "column_name": "ticketid",
+    "column_type": "bigint",
+    "required": false,
+    "check_sum": true
+  },
+  {
+    "column_name": "reason",
+    "column_type": "character",
+    "required": false,
+    "check_sum": true
+  },
+  {
+    "column_name": "comments",
+    "column_type": "character",
+    "required": false,
+    "check_sum": true
+  },
+  {
+    "column_name": "requestdate",
+    "column_type": "timestamp without time zone",
+    "required": false,
+    "check_sum": true
+  },
+  {
+    "column_name": "submitedby",
+    "column_type": "character",
+    "required": false,
+    "check_sum": true
+  },
+  {
+    "column_name": "status",
+    "column_type": "character",
+    "required": false,
+    "check_sum": true
+  },
+  {
+    "column_name": "authorisedby",
+    "column_type": "character",
+    "required": false,
+    "check_sum": true
+  },
+  {
+    "column_name": "authoriseddate",
+    "column_type": "timestamp without time zone",
+    "required": false,
+    "check_sum": true
+  },
+  {
+    "column_name": "oldbal",
+    "column_type": "numeric",
+    "required": false,
+    "check_sum": true
+  },
+  {
+    "column_name": "newbal",
+    "column_type": "numeric",
+    "required": false,
+    "check_sum": true
+  },
+  {
+    "column_name": "channel",
+    "column_type": "character",
+    "required": false,
+    "check_sum": true
+  },
+  {
+    "column_name": "authcomments",
+    "column_type": "character",
+    "required": false,
+    "check_sum": true
+  }
+]
