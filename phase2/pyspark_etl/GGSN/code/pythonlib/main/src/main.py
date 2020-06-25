@@ -6,7 +6,7 @@ from lycaSparkTransformation.LycaCommonETLLoad import start_execution
 def parseArguments():
     parser = argparse.ArgumentParser()
     parser.add_argument('--run_date', help='run date required for trigger pipeline')
-    parser.add_argument('--batchID', help='run date required for trigger pipeline')
+    parser.add_argument('--batchID', help='batch ID for failure or back date load ')
     parser.add_argument('--module', help='module name required to process data')
     parser.add_argument('--submodule', help='submodule name required to process data')
     parser.add_argument('--configfile', help='application module level config file path')

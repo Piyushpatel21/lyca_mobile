@@ -16,8 +16,8 @@ from lycaSparkTransformation.DataTransformation import DataTransformation, SmsDa
 from lycaSparkTransformation.SchemaReader import SchemaReader
 from pyspark.sql import DataFrame
 from lycaSparkTransformation.JSONBuilder import JSONBuilder
-from awsUtils.RedshiftUtils import RedshiftUtils
-from awsUtils.AwsReader import AwsReader
+from awsUtils import RedshiftUtils
+from awsUtils import AwsReader
 from pyspark.sql import functions as py_function
 
 
@@ -84,20 +84,36 @@ class TransformActionChain:
                 gprsModuleTransformation = GprsDataTransformation()
                 df_source_with_datatype = gprsModuleTransformation.convertTargetDataType(df_source_raw, srcSchema)
                 df_source = gprsModuleTransformation.generateDerivedColumnsForGprs(df_source_with_datatype)
-            elif self.property.get("subModule") == "balance_transfer":
+            elif self.property.get("subModule") == "balance_transfer90-":
                 btModuleTransformation = BalanceTransferTransformation()
                 df_source_with_datatype = btModuleTransformation.convertTargetDataType(df_source_raw, srcSchema)
                 df_source = btModuleTransformation.generateDerivedColumnsForBT(df_source_with_datatype)
             else:
                 df_source = df_source_raw
-            s3_batchreadcount = df_source.agg(py_function.count('batch_id').cast(IntegerType()).alias('s3_batchreadcount')).rdd.flatMap(lambda row: row).collect()
-            s3_filecount = df_source.agg(py_function.countDistinct('filename').cast(IntegerType()).alias('s3_filecount')).rdd.flatMap(lambda row: row).collect()
+            if self.property.get("subModule") != "balance_transfer":
+                df_imsi_prefix = self.redshiftprop.readFromRedshift(self.sparkSession, self.property.get("database"), 'ref_imsi_prefix_list')
+                df_roaming_partner = self.redshiftprop.readFromRedshift(self.sparkSession, self.property.get("database"), 'ref_rrbs_roaming_partner_imsi') \
+                                                                        .withColumnRenamed('imsi_prefix', 'roaming_imsi_prefix').filter(py_function.col('is_valid') == '1')
+                if self.property.get("subModule") == "topup":
+                    df_source_with_rm_partner = df_source.join(df_imsi_prefix, py_function.expr("imsi rlike imsi_prefix"), "left_outer") \
+                                  .withColumn("imsi_prefix", py_function.when(df_imsi_prefix['imsi_prefix'].isNull(), py_function.lit(1)).otherwise(df_imsi_prefix['imsi_prefix'])) \
+                                  .join(df_roaming_partner, (py_function.expr("imsi_prefix rlike roaming_imsi_prefix")), 'left_outer')
+                else:
+                    df_source_with_rm_partner = df_source.join(df_imsi_prefix, py_function.expr("imsi rlike imsi_prefix"),  "left_outer") \
+                                  .withColumn("imsi_prefix", py_function.when(df_imsi_prefix['imsi_prefix'].isNull(), py_function.lit(-1)).otherwise(df_imsi_prefix['imsi_prefix'])) \
+                                  .join(df_roaming_partner, (df_source['roam_flag'] == df_roaming_partner['roam_flag'].cast(IntegerType()))
+                                        & (py_function.expr("imsi_prefix rlike roaming_imsi_prefix")), 'left_outer')
+                df_source_trans = self.trans.dropDupeDfCols(df_source_with_rm_partner)
+            else:
+                df_source_trans = df_source
+            s3_batchreadcount = df_source_trans.agg(py_function.count('batch_id').cast(IntegerType()).alias('s3_batchreadcount')).rdd.flatMap(lambda row: row).collect()
+            s3_filecount = df_source_trans.agg(py_function.countDistinct('filename').cast(IntegerType()).alias('s3_filecount')).rdd.flatMap(lambda row: row).collect()
             batch_status = 'Started'
             metaQuery = ("INSERT INTO {log_batch_status} (BATCH_ID, S3_BATCHREADCOUNT, S3_FILECOUNT, BATCH_STATUS, BATCH_START_DT) values({batch_id},{s3_batchreadcount},{s3_filecount},'{batch_status}','{batch_start_dt}')"
                          .format(log_batch_status=self.logBatchStatusTbl, batch_id=batchid, s3_batchreadcount=''.join(str(e) for e in s3_batchreadcount), s3_filecount=''.join(str(e) for e in s3_filecount), batch_status=batch_status, batch_start_dt=self.batch_start_dt))
             self.redshiftprop.writeBatchStatus(self.sparkSession, self.logBatchStatusTbl, metaQuery)
             date_range = int(self.trans.getPrevRangeDate(self.run_date, self.property.get("normalcdrfrq"), self.property.get("numofdayormnthnormal")))
-            lateOrNormalCdr = self.trans.getLateOrNormalCdr(df_source, self.property.get("integerDateColumn"), date_range)
+            lateOrNormalCdr = self.trans.getLateOrNormalCdr(df_source_trans, self.property.get("integerDateColumn"), date_range)
             df_duplicate = self.trans.getDuplicates(lateOrNormalCdr, "rec_checksum")
             batch_status = 'In-Progress'
             intrabatch_dupl_count = df_duplicate.agg(py_function.count('batch_id').cast(IntegerType()).alias('INTRABATCH_DUPL_COUNT')).rdd.flatMap(lambda row: row).collect()
@@ -115,7 +131,7 @@ class TransformActionChain:
             metaQuery = ("update {log_batch_status} set INTRABATCH_NEW_NORMAL_COUNT={intrabatch_new_count}, INTRABATCH_DEDUPL_STATUS='{intrabatch_status}' where BATCH_ID={batch_id} and BATCH_END_DT is null".format(log_batch_status=self.logBatchStatusTbl, batch_id=batchid, intrabatch_status=intrabatch_status, intrabatch_new_count=''.join(str(e) for e in intrabatch_new_count)))
             self.redshiftprop.writeBatchStatus(self.sparkSession, self.logBatchStatusTbl, metaQuery)
             self.logger.info("***** source data prepared for transformation *****")
-            record_count = df_source.groupBy('filename').agg(py_function.count('batch_id').cast(IntegerType()).alias('RECORD_COUNT'))
+            record_count = df_source_trans.groupBy('filename').agg(py_function.count('batch_id').cast(IntegerType()).alias('RECORD_COUNT'))
             return df_duplicate, df_unique_late, df_unique_normal, record_count
         except Exception as ex:
             metaQuery = ("INSERT INTO {log_batch_status} (batch_id,batch_status, batch_start_dt, batch_end_dt) values({batch_id}, '{batch_status}', '{batch_start_dt}', '{batch_end_dt}')".format(log_batch_status=self.logBatchStatusTbl, batch_id=batchid, batch_status='Failed', batch_start_dt=self.batch_start_dt, batch_end_dt=datetime.now()))
