@@ -35,11 +35,12 @@ export AWS_MIS_NETWORKING=454290209215
 export AWS_MIS_SHARED_SERVICES=869841577715
 export AWS_MIS_CONTROL_PLANE=217830175691
 export AWS_MIS_UK_DEV=311477489434
+export AWS_MIS_UK_PROD=255804926358
 export AWS_REGION="eu-west-2" # London
 country_code="uk"
 ```
 
-### Datalake
+### Datalake uk dev
 
 ```sh
 # Default configuration required
@@ -56,7 +57,7 @@ This is a simple Lambda function and accompanying resources to catch files in th
 ```
 export SFTP_BUCKET="mis-dl-${country_code}-${aws_region}-${aws_account}-${environment}-raw"
 export CFN_BUCKET="mis-dl-${country_code}-${aws_region}-${aws_account}-${environment}-cloudform"
-export NOTIFICATION_EMAIL="example@example.com"
+export NOTIFICATION_EMAIL="sakshi.agarwal@cloudwick.com"
 
 aws cloudformation package --template-file s3_scripts/file_mover/file_mover.yaml --s3-bucket $CFN_BUCKET \
 --output-template-file s3_scripts/file_mover/file_mover_out.yaml \
@@ -64,7 +65,37 @@ aws cloudformation package --template-file s3_scripts/file_mover/file_mover.yaml
 
 aws cloudformation deploy --template-file s3_scripts/file_mover/file_mover_out.yaml \
 --stack-name mis-dl-lambda-file-mover-uk-dev \
---parameter-overrides LandingBucket=$SFTP_BUCKET,NotificationEmailId=$NOTIFICATION_EMAIL \
+--parameter-overrides LandingBucket=$SFTP_BUCKET NotificationEmailId=$NOTIFICATION_EMAIL \
+--profile $aws_profile --region $aws_region --capabilities CAPABILITY_NAMED_IAM
+
+```
+
+### Datalake uk prod
+
+```sh
+# Default configuration required
+aws_region="${AWS_REGION}"
+aws_profile="mis_lycamobile_prod"
+country_code="uk"
+aws_account="${AWS_MIS_UK_PROD}"
+environment="prod"
+```
+# File mover
+
+This is a simple Lambda function and accompanying resources to catch files in the landing zone and move them to another directory as defined in the DynamoDB table (mapping with `SourceDir` and `OutputDir` as keys) and suffixed with `yyyy/mm/dd/`.
+
+```
+export SFTP_BUCKET="mis-dl-${country_code}-${aws_region}-${aws_account}-${environment}-raw"
+export CFN_BUCKET="mis-dl-${country_code}-${aws_region}-${aws_account}-${environment}-cloudform"
+export NOTIFICATION_EMAIL="sakshi.agarwal@cloudwick.com"
+
+aws cloudformation package --template-file s3_scripts/file_mover/file_mover.yaml --s3-bucket $CFN_BUCKET \
+--output-template-file s3_scripts/file_mover/file_mover_out.yaml \
+--profile $aws_profile --region $aws_region
+
+aws cloudformation deploy --template-file s3_scripts/file_mover/file_mover_out.yaml \
+--stack-name mis-dl-lambda-file-mover-uk-prod \
+--parameter-overrides LandingBucket=$SFTP_BUCKET NotificationEmailId=$NOTIFICATION_EMAIL \
 --profile $aws_profile --region $aws_region --capabilities CAPABILITY_NAMED_IAM
 
 ```
