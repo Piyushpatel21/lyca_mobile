@@ -102,16 +102,18 @@ class TransformActionChain:
             if self.property.get("subModule") != "balance_transfer":
                 df_imsi_prefix = self.redshiftprop.readFromRedshift(self.sparkSession, self.property.get("database"), 'ref_imsi_prefix_list')
                 df_roaming_partner = self.redshiftprop.readFromRedshift(self.sparkSession, self.property.get("database"), 'ref_rrbs_roaming_partner_imsi') \
-                                                                        .withColumnRenamed('imsi_prefix', 'roaming_imsi_prefix').filter(py_function.col('is_valid') == '1')
+                                                                        .filter(py_function.col('is_valid') == '1')
                 if self.property.get("subModule") == "topup":
-                    df_source_with_rm_partner = df_source.join(df_imsi_prefix, py_function.expr("imsi rlike imsi_prefix"), "left_outer") \
-                                  .withColumn("imsi_prefix", py_function.when(df_imsi_prefix['imsi_prefix'].isNull(), py_function.lit(1)).otherwise(df_imsi_prefix['imsi_prefix'])) \
-                                  .join(df_roaming_partner, (py_function.expr("imsi_prefix rlike roaming_imsi_prefix")), 'left_outer')
+                    df_source_with_rm_partner = df_source\
+                        .join(df_imsi_prefix,
+                              py_function.substring(df_source['imsi'], 1, 6) == df_imsi_prefix['imsi_prefix'], 'left_outer') \
+                        .join(df_roaming_partner,
+                              (py_function.coalesce(df_imsi_prefix['imsi_prefix'], py_function.lit(-1)) == df_roaming_partner['imsi_prefix']), 'left_outer')
+
                 else:
-                    df_source_with_rm_partner = df_source.join(df_imsi_prefix, py_function.expr("imsi rlike imsi_prefix"),  "left_outer") \
-                                  .withColumn("imsi_prefix", py_function.when(df_imsi_prefix['imsi_prefix'].isNull(), py_function.lit(-1)).otherwise(df_imsi_prefix['imsi_prefix'])) \
-                                  .join(df_roaming_partner, (df_source['roam_flag'] == df_roaming_partner['roam_flag'].cast(IntegerType()))
-                                        & (py_function.expr("imsi_prefix rlike roaming_imsi_prefix")), 'left_outer')
+                    df_source_with_rm_partner = df_source.join(df_imsi_prefix, py_function.substring(df_source['imsi'], 1, 6) == df_imsi_prefix['imsi_prefix'], 'left_outer') \
+                                    .join(df_roaming_partner, (df_source['roam_flag'] == df_roaming_partner['roam_flag'].cast(IntegerType()))
+                                        & (py_function.coalesce(df_imsi_prefix['imsi_prefix'], py_function.lit(-1)) == df_roaming_partner['imsi_prefix']), 'left_outer')
                 df_source_trans = self.trans.dropDupeDfCols(df_source_with_rm_partner)
             else:
                 df_source_trans = df_source
