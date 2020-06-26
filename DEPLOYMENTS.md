@@ -65,7 +65,7 @@ aws cloudformation package --template-file s3_scripts/file_mover/file_mover.yaml
 
 aws cloudformation deploy --template-file s3_scripts/file_mover/file_mover_out.yaml \
 --stack-name mis-dl-lambda-file-mover-uk-dev \
---parameter-overrides LandingBucket=$SFTP_BUCKET,NotificationEmailId=$NOTIFICATION_EMAIL \
+--parameter-overrides LandingBucket=$SFTP_BUCKET NotificationEmailId=$NOTIFICATION_EMAIL \
 --profile $aws_profile --region $aws_region --capabilities CAPABILITY_NAMED_IAM
 
 ```
@@ -95,7 +95,7 @@ aws cloudformation package --template-file s3_scripts/file_mover/file_mover.yaml
 
 aws cloudformation deploy --template-file s3_scripts/file_mover/file_mover_out.yaml \
 --stack-name mis-dl-lambda-file-mover-uk-prod \
---parameter-overrides LandingBucket=$SFTP_BUCKET,NotificationEmailId=$NOTIFICATION_EMAIL \
+--parameter-overrides LandingBucket=$SFTP_BUCKET NotificationEmailId=$NOTIFICATION_EMAIL \
 --profile $aws_profile --region $aws_region --capabilities CAPABILITY_NAMED_IAM
 
 ```
