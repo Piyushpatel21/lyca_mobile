@@ -14,7 +14,7 @@
     "normalcdrtbl": "fact_rrbs_sms",
     "latecdrtbl": "fact_rrbs_sms_latecdr",
     "duplicatecdrtbl": "fact_rrbs_sms_duplcdr",
-    "logdb" : "uk_rrbs_dm",
+    "logdb" : "uk_logs",
     "batchfiletbl" : "log_batch_files_rrbs",
     "batchstatustbl" : "log_batch_status_rrbs"
   },
@@ -33,7 +33,7 @@
     "normalcdrtbl": "fact_rrbs_voice",
     "latecdrtbl": "fact_rrbs_voice_latecdr",
     "duplicatecdrtbl": "fact_rrbs_voice_duplcdr",
-    "logdb" : "uk_rrbs_dm",
+    "logdb" : "uk_logs",
     "batchfiletbl" : "log_batch_files_rrbs",
     "batchstatustbl" : "log_batch_status_rrbs"
   },
@@ -52,7 +52,7 @@
     "normalcdrtbl": "fact_rrbs_topup",
     "latecdrtbl": "fact_rrbs_topup_latecdr",
     "duplicatecdrtbl": "fact_rrbs_topup_duplcdr",
-    "logdb" : "uk_rrbs_dm",
+    "logdb" : "uk_logs",
     "batchfiletbl" : "log_batch_files_rrbs",
     "batchstatustbl" : "log_batch_status_rrbs"
   },
@@ -71,7 +71,7 @@
     "normalcdrtbl": "fact_rrbs_gprs",
     "latecdrtbl": "fact_rrbs_gprs_latecdr",
     "duplicatecdrtbl": "fact_rrbs_gprs_duplcdr",
-    "logdb" : "uk_rrbs_dm",
+    "logdb" : "uk_logs",
     "batchfiletbl" : "log_batch_files_rrbs",
     "batchstatustbl" : "log_batch_status_rrbs"
   },
@@ -90,7 +90,7 @@
     "normalcdrtbl" : "fact_rrbs_balance_transfer",
     "latecdrtbl" : "fact_rrbs_balance_transfer_latecdr",
     "duplicatecdrtbl" : "fact_rrbs_balance_transfer_duplcdr",
-    "logdb" : "uk_rrbs_dm",
+    "logdb" : "uk_logs",
     "batchfiletbl" : "log_batch_files_rrbs",
     "batchstatustbl" : "log_batch_status_rrbs"
   }
