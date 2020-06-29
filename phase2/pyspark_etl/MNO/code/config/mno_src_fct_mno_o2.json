@@ -142,5 +142,131 @@
     "column_type" : "smallint",
     "required" : false,
     "check_sum" : true
+  },
+  {
+    "column_name": "lyca_number",
+    "column_type" : "character",
+    "required" : false,
+    "check_sum" : false
+  },
+  {
+    "column_name": "fct_free_text_1",
+    "column_type": "character",
+    "required": false,
+    "check_sum": false
+  },
+  {
+    "column_name": "fct_free_text_2",
+    "column_type": "character",
+    "required": false,
+    "check_sum": false
+  },
+  {
+    "column_name": "fct_free_text_3",
+    "column_type": "character",
+    "required": false,
+    "check_sum": false
+  },
+  {
+    "column_name": "fct_free_text_4",
+    "column_type": "character",
+    "required": false,
+    "check_sum": false
+  },
+  {
+    "column_name": "fct_free_text_5",
+    "column_type": "character",
+    "required": false,
+    "check_sum": false
+  },
+  {
+    "column_name": "fct_free_text_6",
+    "column_type": "character",
+    "required": false,
+    "check_sum": false
+  },
+  {
+    "column_name": "fct_free_text_7",
+    "column_type": "character",
+    "required": false,
+    "check_sum": false
+  },
+  {
+    "column_name": "fct_free_text_8",
+    "column_type": "character",
+    "required": false,
+    "check_sum": false
+  },
+  {
+    "column_name": "fct_free_text_9",
+    "column_type": "character",
+    "required": false,
+    "check_sum": false
+  },
+  {
+    "column_name": "fct_free_text_10",
+    "column_type": "character",
+    "required": false,
+    "check_sum": false
+  },
+  {
+    "column_name": "fct_free_text_11",
+    "column_type": "character",
+    "required": false,
+    "check_sum": false
+  },
+  {
+    "column_name": "fct_free_text_12",
+    "column_type": "character",
+    "required": false,
+    "check_sum": false
+  },
+  {
+    "column_name": "fct_free_text_13",
+    "column_type": "character",
+    "required": false,
+    "check_sum": false
+  },
+  {
+    "column_name": "fct_free_text_14",
+    "column_type": "character",
+    "required": false,
+    "check_sum": false
+  },
+  {
+    "column_name": "fct_free_text_15",
+    "column_type": "character",
+    "required": false,
+    "check_sum": false
+  },
+  {
+    "column_name": "fct_free_text_16",
+    "column_type": "character",
+    "required": false,
+    "check_sum": false
+  },
+  {
+    "column_name": "fct_free_text_17",
+    "column_type": "character",
+    "required": false,
+    "check_sum": false
+  },
+  {
+    "column_name": "fct_free_text_18",
+    "column_type": "character",
+    "required": false,
+    "check_sum": false
+  },
+  {
+    "column_name": "fct_free_text_19",
+    "column_type": "character",
+    "required": false,
+    "check_sum": false
+  },
+  {
+    "column_name": "fct_free_text_20",
+    "column_type": "character",
+    "required": false,
+    "check_sum": false
   }
 ]

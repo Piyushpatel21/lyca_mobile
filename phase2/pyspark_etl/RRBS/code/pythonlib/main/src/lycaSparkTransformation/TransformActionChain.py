@@ -93,7 +93,7 @@ class TransformActionChain:
                 gprsModuleTransformation = GprsDataTransformation()
                 df_source_with_datatype = gprsModuleTransformation.convertTargetDataType(df_source_raw, srcSchema)
                 df_source = gprsModuleTransformation.generateDerivedColumnsForGprs(df_source_with_datatype)
-            elif self.property.get("subModule") == "balance_transfer90-":
+            elif self.property.get("subModule") == "balance_transfer":
                 btModuleTransformation = BalanceTransferTransformation()
                 df_source_with_datatype = btModuleTransformation.convertTargetDataType(df_source_raw, srcSchema)
                 df_source = btModuleTransformation.generateDerivedColumnsForBT(df_source_with_datatype)
