@@ -73,8 +73,15 @@ class TransformActionChain:
         self.logger.info("***** reading source data from s3 *****")
         file_list = self.redshiftprop.getFileList(self.sparkSession, self.logBatchFileTbl, batchid)
         path = self.property.get("sourceFilePath") + "/" + self.module.upper() + "/" + "UK" + "/" +self.subModule.upper() + "/" + self.run_date[:4] + "/" + self.run_date[4:6] + "/" + self.run_date[6:8] + "/"
+        fList = []
+        s3 = self.property.get("sourceFilePath")
+        for file in file_list:
+            fList.append(s3 + "/" + file)
+        file_list = fList
+
         try:
             df_source_raw = self.trans.readSourceFile(self.sparkSession, path, srcSchema, batchid, checkSumColumns, file_list)
+            df_source_raw.persist()
             if self.property.get("subModule") in ("lm_mnp_portin_request", "lm_mnp_portout_request"):
                 transformation = MnpPortTransformation()
                 df_source_with_datatype = transformation.convertTargetDataType(df_source_raw, srcSchema)

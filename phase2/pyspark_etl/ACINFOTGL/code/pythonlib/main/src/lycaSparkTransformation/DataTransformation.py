@@ -1235,35 +1235,34 @@ class DataTransformation:
             :return union of all source files"""
         try:
             self._logger.info("Started reading source files")
-            df_list = []
-            for file in fList:
-                file_identifier = str(file).lower().replace(".cdr", "")
-                df_source = "df_" + file_identifier
-                self._logger.info("Reading source file : {file}".format(file=file))
-                file_name = file
-                file = path + file
-                print(file)
-                src_schema_string = []
-                for elem in structtype:
-                    src_schema_string.append(StructField(elem.name, StringType()))
-                df_source = spark.read.option("header", "false").option("dateFormat", 'dd-MM-yyyy') \
-                    .schema(StructType(src_schema_string)).csv(file)
-                df_trimmed = self.trimAllCols(df_source).withColumn("unique_id", F.monotonically_increasing_id())
-                df_cleaned_checksum = self.cleanDataForChecksum(df_trimmed)
-                df_checksum = df_cleaned_checksum. \
-                    withColumn("rec_checksum",
-                               F.md5(
-                                   F.concat_ws(",", *checkSumColumns))).select("unique_id", "rec_checksum")
+            src_schema_string = []
+            for elem in structtype:
+                src_schema_string.append(StructField(elem.name, StringType()))
 
-                df_with_checksum = df_trimmed.join(df_checksum, on=["unique_id"]).drop("unique_id")
+            # full_path_list = [path + file for file in fList]
+            full_path_list = fList
 
-                df_trans = df_with_checksum \
-                    .withColumn("filename", F.lit(file_name)) \
-                    .withColumn("batch_id", F.lit(batchid).cast(IntegerType())) \
-                    .withColumn("created_date", F.current_timestamp())
-                self._logger.info("Merging all source file using union all")
-                df_list.append(df_trans)
-            return reduce(DataFrame.union, df_list)
+            self._logger.info("Reading from file list: {list}".format(list=full_path_list))
+
+            df_source_all = spark.read.option("header", "false") \
+                .schema(StructType(src_schema_string)).csv(full_path_list)
+
+            df_source = df_source_all.withColumn("filename", F.input_file_name()) \
+                .withColumn("filename", F.reverse(F.split('filename', '/'))[0])
+
+            df_trimmed = self.trimAllCols(df_source).withColumn("unique_id", F.monotonically_increasing_id())
+            df_cleaned_checksum = self.cleanDataForChecksum(df_trimmed)
+            df_checksum = df_cleaned_checksum. \
+                withColumn("rec_checksum",
+                           F.md5(
+                               F.concat_ws(",", *checkSumColumns))).select("unique_id", "rec_checksum")
+
+            df_with_checksum = df_trimmed.join(df_checksum, on=["unique_id"]).drop("unique_id")
+            df_trans = df_with_checksum \
+                .withColumn("batch_id", F.lit(batchid).cast(IntegerType())) \
+                .withColumn("created_date", F.current_timestamp())
+
+            return df_trans
         except Exception as ex:
             self._logger.error("Failed to merge all source files with error: {error}".format(error=ex))
 
