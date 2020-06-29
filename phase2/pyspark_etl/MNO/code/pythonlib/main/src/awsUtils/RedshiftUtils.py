@@ -90,17 +90,20 @@ class RedshiftUtils:
 
     def getFileList(self, sparkSession: SparkSession, batchid) -> []:
         try:
+            _abs_path =[]
             files = sparkSession.read \
                 .format("com.databricks.spark.redshift") \
                 .option("url", self.jdbcUrl) \
                 .option("forward_spark_s3_credentials", "true") \
                 .option("query",
-                        "SELECT file_name FROM uk_rrbs_dm.log_batch_files_mno where batch_id = {batch_id}".format(
+                        "SELECT file_name, target_system FROM uk_rrbs_dm.log_batch_files_mno where batch_id = {batch_id}".format(
                             batch_id=batchid)) \
                 .option("tempdir", self.redshiftTmpDir) \
                 .load()
-            filename = files.rdd.flatMap(lambda file: file).collect()
-            return filename
+            for col_files in files.rdd.collect():
+                _path = str(col_files.target_system) + '/' + str(col_files.file_name)
+                _abs_path.append(_path)
+            return _abs_path
         except Exception as ex:
             self._logger.error("failed to get file list from redshift : {error}".format(error=ex))
 
