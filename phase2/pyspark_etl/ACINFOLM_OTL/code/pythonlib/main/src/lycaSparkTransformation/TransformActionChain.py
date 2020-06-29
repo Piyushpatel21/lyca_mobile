@@ -86,6 +86,7 @@ class TransformActionChain:
             self.logger.info("***** Daily Load: Reading from {path} *****".format(path=path))
         try:
             df_source_raw = self.trans.readSourceFile(self.sparkSession, path, srcSchema, batchid, checkSumColumns, file_list)
+            df_source_raw.persist()
             if self.property.get("subModule") in ("lm_mnp_portin_request", "lm_mnp_portout_request"):
                 transformation = MnpPortTransformation()
                 df_source_with_datatype = transformation.convertTargetDataType(df_source_raw, srcSchema)

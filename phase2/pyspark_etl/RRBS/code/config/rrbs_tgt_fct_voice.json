@@ -285,6 +285,9 @@
     "column_name": "roaming_partner_id"
   },
   {
+    "column_name": "bundle_units_used_in_overage_plan"
+  },
+  {
     "column_name": "fct_free_text_1"
   },
   {
@@ -313,6 +316,36 @@
   },
   {
     "column_name": "fct_free_text_10"
+  },
+  {
+    "column_name": "fct_free_text_11"
+  },
+  {
+    "column_name": "fct_free_text_12"
+  },
+  {
+    "column_name": "fct_free_text_13"
+  },
+  {
+    "column_name": "fct_free_text_14"
+  },
+  {
+    "column_name": "fct_free_text_15"
+  },
+  {
+    "column_name": "fct_free_text_16"
+  },
+  {
+    "column_name": "fct_free_text_17"
+  },
+  {
+    "column_name": "fct_free_text_18"
+  },
+  {
+    "column_name": "fct_free_text_19"
+  },
+  {
+    "column_name": "fct_free_text_20"
   },
   {
     "column_name": "call_DATE_month"
@@ -357,6 +390,6 @@
     "column_name": "created_date"
   },
   {
-	"column_name": "rec_checksum"
+    "column_name": "rec_checksum"
   }
 ]
