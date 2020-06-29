@@ -154,7 +154,7 @@ class RedshiftUtils:
                     .option("tempdir", self.redshiftTmpDir) \
                     .load()
                 df = redshiftDF.join(metaDF, on='FILE_NAME', how='inner')
-                return df.select(redshiftDF['BATCH_ID'], redshiftDF['FILE_SOURCE'], redshiftDF['FILE_ID'], redshiftDF['FILE_NAME'], redshiftDF['BATCH_FROM'],
+                return df.select(redshiftDF['BATCH_ID'], redshiftDF['FILE_SOURCE'], redshiftDF['TARGET_SYSTEM'], redshiftDF['FILE_ID'], redshiftDF['FILE_NAME'], redshiftDF['BATCH_FROM'],
                                  redshiftDF['BATCH_TO'], metaDF['RECORD_COUNT'], metaDF['DM_NORMAL_COUNT'], metaDF['DM_LATECDR_COUNT'],
                                  metaDF['LDM_LATECDR_COUNT'], metaDF['DM_NORMAL_DBDUPL_COUNT'],
                                  metaDF['DM_LATECDR_DBDUPL_COUNT'], redshiftDF['IS_VALID'],
