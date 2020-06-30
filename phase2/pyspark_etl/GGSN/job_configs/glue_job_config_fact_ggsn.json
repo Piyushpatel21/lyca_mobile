@@ -1,0 +1,31 @@
+{
+  "Name": "lyca_etl_ggsn_fact_ggsn",
+  "ScriptLocation": "s3://mis-dl-uk-eu-west-2-869841577715-code-pipeline/projects/GGSN/code/main.py",
+  "Description": "ETL job to prcoess submodule fact_ggsn for GGSN module",
+  "Role": "AWSGlueServiceRole_311477489434",
+  "PythonVersion": "3",
+  "MaxRetries": 0,
+  "GlueVersion": "1.0",
+  "MaxCapacity": 5,
+  "Connections": ["ETLRedshiftConnection"],
+  "DefaultArguments": {
+    "--module": "ggsn",
+    "--submodule": "fact_ggsn",
+    "--code_bucket": "mis-dl-uk-eu-west-2-869841577715-code-pipeline",
+    "--configfile": "projects/GGSN/configs/ggsn_application_properties.json",
+    "--connfile": "projects/GGSN/configs/ggsn_connection.json",
+    "--enable-metrics": "true",
+    "--enable-continuous-cloudwatch-log": "true",
+    "--enable-spark-ui": "true",
+    "--spark-event-logs-path": "s3://mis-dl-uk-eu-west-2-311477489434-dev-logs/glue/applogs",
+    "--master": "glue",
+    "--extra-py-files": "s3://mis-dl-uk-eu-west-2-869841577715-code-pipeline/projects/GGSN/code/lycaetl_ggsn-pyspark-1.0.0.zip",
+    "--TempDir": "s3://mis-dl-uk-eu-west-2-311477489434-dev-raw/tmp/redshift"
+  },
+  "Tags": {
+    "CreatedBy": "Cloudwick",
+    "Project": "Lyca",
+    "Module": "GGSN",
+    "Submodule": "FACT_GGSN"
+  }
+}
