@@ -76,7 +76,7 @@ Resources:
         Statement:
           - Effect: Allow
             Principal:
-              AWS: "*"
+              Service: "s3.amazonaws.com"
             Action: sns:Publish
             Resource:
                - !Ref FileUploadsSnsTopic
