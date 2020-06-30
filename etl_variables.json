@@ -1,7 +1,0 @@
-{
-  "codepipeline_bucket_name": "mis-test-code-pipeline",
-  "etl_glue_role_name": "AWSGlueLycaRole",
-  "glue_redshift_connections_list": ["ETLRedshiftConnection"],
-  "log_bucket_name": "mis-test-code-pipeline",
-  "tmp_location_bucket_name": "mis-test-code-pipeline"
-}

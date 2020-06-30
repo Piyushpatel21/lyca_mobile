@@ -10,6 +10,7 @@ pytest-cov = ">=2.8.1"
 mock = "*"
 pipenv = "*"
 boto3 = "*"
+j2cli = "*"
 
 [packages]
 

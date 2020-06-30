@@ -1,0 +1,30 @@
+{
+  "Name": "lyca_etl_acinfolm_lm_mnp_portout_request",
+  "ScriptLocation": "s3://mis-dl-uk-eu-west-2-869841577715-code-pipeline/projects/ACINFOLM/code/main.py",
+  "Description": "ETL job to process submodule lm_mnp_portout_request for acinfolm module",
+  "Role": "AWSGlueServiceRole_311477489434",
+  "PythonVersion": "3",
+  "GlueVersion": "1.0",
+  "MaxCapacity": 5,
+  "Connections": ["ETLRedshiftConnection"],
+  "DefaultArguments": {
+    "--module": "acinfolm",
+    "--submodule": "lm_mnp_portout_request",
+    "--code_bucket": "mis-dl-uk-eu-west-2-869841577715-code-pipeline",
+    "--configfile": "projects/ACINFOLM/configs/acinfolm_application_properties.json",
+    "--connfile": "projects/ACINFOLM/configs/acinfo_connection.json",
+    "--enable-metrics": "true",
+    "--enable-continuous-cloudwatch-log": "true",
+    "--enable-spark-ui": "true",
+    "--spark-event-logs-path": "s3://mis-dl-uk-eu-west-2-311477489434-dev-logs/glue/applogs",
+    "--master": "glue",
+    "--extra-py-files": "s3://mis-dl-uk-eu-west-2-869841577715-code-pipeline/projects/ACINFOLM/code/lycaetl_acinfo_lm-pyspark-1.0.0.zip",
+    "--TempDir": "s3://mis-dl-uk-eu-west-2-311477489434-dev-raw/tmp/redshift"
+  },
+  "Tags": {
+    "CreatedBy": "Cloudwick",
+    "Project": "Lyca",
+    "Module": "ACINFOLM",
+    "Submodule": "LM_MNP_PORTOUT_REQUEST"
+  }
+}
