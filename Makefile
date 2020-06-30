@@ -8,6 +8,8 @@ ACINFOLM_DIR := phase2/pyspark_etl/ACINFOLM
 ACINFOLM_OTL_DIR := phase2/pyspark_etl/ACINFOLM_OTL
 ACINFOTGL_DIR := phase2/pyspark_etl/ACINFOTGL
 ACINFOTGL_OTL_DIR := phase2/pyspark_etl/ACINFOTGL_OTL
+GGSN_DIR := phase2/pyspark_etl/GGSN
+GGSN_OTL_DIR := phase2/pyspark_etl/GGSN_OTL
 
 PROJECTS := $(RRBS_DIR) $(MNO_DIR)
 ENV := dev
@@ -90,3 +92,21 @@ build_acinfotgl_otl:
 	cp $(ACINFOTGL_DIR)/code/config/*.json dist/ACINFOTGL_OTL/schemas
 	cp $(ACINFOTGL_DIR)/config/*.json dist/ACINFOTGL_OTL/configs/
 	cp $(ACINFOTGL_DIR)/job_configs/*.json dist/ACINFOTGL_OTL/job_configs/
+
+build_ggsn:
+	$(MAKE) --directory=$(GGSN_DIR) build
+	mkdir -p dist/GGSN/code dist/GGSN/configs/ dist/GGSN/schemas dist/GGSN/job_configs
+	cp $(GGSN_DIR)/dist/* dist/GGSN/code/
+	cp $(GGSN_DIR)/code/pythonlib/main/src/main.py dist/GGSN/code/
+	cp $(GGSN_DIR)/code/config/*.json dist/GGSN/schemas
+	cp $(GGSN_DIR)/config/*.json dist/GGSN/configs/
+	cp $(GGSN_DIR)/job_configs/*.json dist/GGSN/job_configs/
+
+build_ggsn_otl:
+	$(MAKE) --directory=$(GGSN_OTL_DIR) build
+	mkdir -p dist/GGSN_OTL/code dist/GGSN_OTL/configs/ dist/GGSN_OTL/schemas dist/GGSN_OTL/job_configs
+	cp $(GGSN_OTL_DIR)/dist/* dist/GGSN_OTL/code/
+	cp $(GGSN_OTL_DIR)/code/pythonlib/main/src/main.py dist/GGSN_OTL/code/
+	cp $(GGSN_OTL_DIR)/code/config/*.json dist/GGSN_OTL/schemas
+	cp $(GGSN_OTL_DIR)/config/*.json dist/GGSN_OTL/configs/
+	cp $(GGSN_OTL_DIR)/job_configs/*.json dist/GGSN_OTL/job_configs/

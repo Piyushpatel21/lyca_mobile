@@ -4,6 +4,7 @@
   "Description": "ETL job to process submodule lm_mnp_lycasp_master for acinfolm otl module",
   "Role": "AWSGlueServiceRole_311477489434",
   "PythonVersion": "3",
+  "MaxRetries": 0,
   "GlueVersion": "1.0",
   "MaxCapacity": 5,
   "Connections": ["ETLRedshiftConnection"],
