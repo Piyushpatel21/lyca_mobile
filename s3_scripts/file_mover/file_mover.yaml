@@ -117,7 +117,7 @@ Resources:
         Statement:
           - Effect: Allow
             Principal:
-              Service: "s3.amazonaws.com"
+              Service: "cloudwatch.amazonaws.com"
             Action: sns:Publish
             Resource:  
               - !Ref LambdaAlarmSNSTopic
