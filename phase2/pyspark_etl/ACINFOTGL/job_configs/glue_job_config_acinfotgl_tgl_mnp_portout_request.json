@@ -1,0 +1,31 @@
+{
+  "Name": "lyca_etl_acinfotgl_tgl_mnp_portout_request",
+  "ScriptLocation": "s3://mis-dl-uk-eu-west-2-869841577715-code-pipeline/projects/ACINFOTGL/code/main.py",
+  "Description": "ETL job to process submodule lm_mnp_portout_request for acinfotgl module",
+  "Role": "AWSGlueServiceRole_311477489434",
+  "PythonVersion": "3",
+  "MaxRetries": 0,
+  "GlueVersion": "1.0",
+  "MaxCapacity": 5,
+  "Connections": ["ETLRedshiftConnection"],
+  "DefaultArguments": {
+    "--module": "acinfotgl",
+    "--submodule": "tgl_mnp_portout_request",
+    "--code_bucket": "mis-dl-uk-eu-west-2-869841577715-code-pipeline",
+    "--configfile": "projects/ACINFOTGL/configs/acinfotgl_application_properties.json",
+    "--connfile": "projects/ACINFOTGL/configs/acinfo_connection.json",
+    "--enable-metrics": "true",
+    "--enable-continuous-cloudwatch-log": "true",
+    "--enable-spark-ui": "true",
+    "--spark-event-logs-path": "s3://mis-dl-uk-eu-west-2-311477489434-dev-logs/glue/applogs",
+    "--master": "glue",
+    "--extra-py-files": "s3://mis-dl-uk-eu-west-2-869841577715-code-pipeline/projects/ACINFOTGL/code/lycaetl_acinfo_tgl-pyspark-1.0.0.zip",
+    "--TempDir": "s3://mis-dl-uk-eu-west-2-311477489434-dev-raw/tmp/redshift"
+  },
+  "Tags": {
+    "CreatedBy": "Cloudwick",
+    "Project": "Lyca",
+    "Module": "ACINFOTGL",
+    "Submodule": "LM_MNP_PORTOUT_REQUEST"
+  }
+}
