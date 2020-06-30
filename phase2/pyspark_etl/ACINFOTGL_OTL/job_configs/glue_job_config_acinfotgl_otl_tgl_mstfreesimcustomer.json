@@ -1,0 +1,30 @@
+{
+  "Name": "lyca_etl_acinfotgl_otl_tgl_mstfreesimcustomer",
+  "ScriptLocation": "s3://mis-dl-uk-eu-west-2-869841577715-code-pipeline/projects/ACINFOTGL_OTL/code/main.py",
+  "Description": "ETL job to process submodule lm_mstfreesimcustomer for acinfotgl otl module",
+  "Role": "AWSGlueServiceRole_311477489434",
+  "PythonVersion": "3",
+  "GlueVersion": "1.0",
+  "MaxCapacity": 5,
+  "Connections": ["ETLRedshiftConnection"],
+  "DefaultArguments": {
+    "--module": "acinfotgl",
+    "--submodule": "tgl_mstfreesimcustomer",
+    "--code_bucket": "mis-dl-uk-eu-west-2-869841577715-code-pipeline",
+    "--configfile": "projects/ACINFOTGL_OTL/configs/acinfotgl_application_properties.json",
+    "--connfile": "projects/ACINFOTGL_OTL/configs/acinfo_connection.json",
+    "--enable-metrics": "true",
+    "--enable-continuous-cloudwatch-log": "true",
+    "--enable-spark-ui": "true",
+    "--spark-event-logs-path": "s3://mis-dl-uk-eu-west-2-311477489434-dev-logs/glue/applogs",
+    "--master": "glue",
+    "--extra-py-files": "s3://mis-dl-uk-eu-west-2-869841577715-code-pipeline/projects/ACINFOTGL_OTL/code/lycaetl_acinfo_tgl_otl-pyspark-1.0.0.zip",
+    "--TempDir": "s3://mis-dl-uk-eu-west-2-311477489434-dev-raw/tmp/redshift"
+  },
+  "Tags": {
+    "CreatedBy": "Cloudwick",
+    "Project": "Lyca",
+    "Module": "ACINFOTGL_OTL",
+    "Submodule": "LM_MSTFREESIMCUSTOMER"
+  }
+}
