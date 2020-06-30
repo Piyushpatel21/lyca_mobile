@@ -1,0 +1,8 @@
+{
+  "env": "dev",
+  "codepipeline_bucket_name": "mis-dl-uk-eu-west-2-869841577715-code-pipeline",
+  "etl_glue_role_name": "AWSGlueServiceRole_311477489434",
+  "glue_redshift_connections_list": ["ETLRedshiftConnection"],
+  "log_bucket_name": "mis-dl-uk-eu-west-2-311477489434-dev-logs",
+  "tmp_location_bucket_name": "mis-dl-uk-eu-west-2-311477489434-dev-raw"
+}

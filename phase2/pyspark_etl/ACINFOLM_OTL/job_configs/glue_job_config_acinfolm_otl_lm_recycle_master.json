@@ -1,0 +1,31 @@
+{
+  "Name": "lyca_etl_acinfolm_otl_lm_recycle_master",
+  "ScriptLocation": "s3://mis-dl-uk-eu-west-2-869841577715-code-pipeline/projects/ACINFOLM_OTL/code/main.py",
+  "Description": "ETL job to process submodule lm_recycle_master for acinfolm otl module",
+  "Role": "AWSGlueServiceRole_311477489434",
+  "PythonVersion": "3",
+  "MaxRetries": 0,
+  "GlueVersion": "1.0",
+  "MaxCapacity": 5,
+  "Connections": ["ETLRedshiftConnection"],
+  "DefaultArguments": {
+    "--module": "acinfolm",
+    "--submodule": "lm_recycle_master",
+    "--code_bucket": "mis-dl-uk-eu-west-2-869841577715-code-pipeline",
+    "--configfile": "projects/ACINFOLM_OTL/configs/acinfolm_application_properties.json",
+    "--connfile": "projects/ACINFOLM_OTL/configs/acinfo_connection.json",
+    "--enable-metrics": "true",
+    "--enable-continuous-cloudwatch-log": "true",
+    "--enable-spark-ui": "true",
+    "--spark-event-logs-path": "s3://mis-dl-uk-eu-west-2-311477489434-dev-logs/glue/applogs",
+    "--master": "glue",
+    "--extra-py-files": "s3://mis-dl-uk-eu-west-2-869841577715-code-pipeline/projects/ACINFOLM_OTL/code/lycaetl_acinfo_lm_otl-pyspark-1.0.0.zip",
+    "--TempDir": "s3://mis-dl-uk-eu-west-2-311477489434-dev-raw/tmp/redshift"
+  },
+  "Tags": {
+    "CreatedBy": "Cloudwick",
+    "Project": "Lyca",
+    "Module": "ACINFOLM_OTL",
+    "Submodule": "LM_RECYCLE_MASTER"
+  }
+}
