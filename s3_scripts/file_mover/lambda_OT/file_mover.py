@@ -162,7 +162,7 @@ def lambda_handler(event, context):
     sourceSystem = "/".join(key.split("/")[:-1])
     path = map_to_output(key)
     if key[-1] != "/":
-        if (sourceSystem == 'landing/MNO/GBR/202004' OR sourceSystem == 'landing/MNO/FRA/202004'):
+        if (sourceSystem == 'landing/MNO/GBR/202004' or sourceSystem == 'landing/MNO/FRA/202004'):
             ymd = year_month_day(objectname)
             if objectname.find('GPRS') != -1:
                 new_filename = path + '/GPRS/' + ymd + '/' + objectname
@@ -178,5 +178,5 @@ def lambda_handler(event, context):
         targetSystem = "/".join(new_filename.split("/")[:-1])
         s3.meta.client.copy(source_object, bucket, new_filename, ExtraArgs={'ACL': 'bucket-owner-full-control'})
         insert_transferlog(key, Etag, LastModified, size, targetSystem, objectname)  # insert the logs to dynamodb table
-        #s3.meta.client.delete_object(Bucket=bucket, Key=key)
+        s3.meta.client.delete_object(Bucket=bucket, Key=key)
     LOGGER.info("Finished")
