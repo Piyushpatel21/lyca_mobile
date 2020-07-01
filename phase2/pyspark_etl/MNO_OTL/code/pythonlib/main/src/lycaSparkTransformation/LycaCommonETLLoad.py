@@ -7,10 +7,6 @@
 # version         : 1.0                                                #
 # notes           :                                                    #
 ########################################################################
-<<<<<<< HEAD
-import argparse
-=======
->>>>>>> reOrganizing_ss
 import sys
 from datetime import datetime, timedelta
 from lycaSparkTransformation.TransformActionChain import TransformActionChain
@@ -51,12 +47,8 @@ def start_execution(args):
     lycaETL = LycaCommonETLLoad(module=args.get('module'), submodule=args.get('submodule'),
                                 configfile=args.get('configfile'), connfile=args.get('connfile'),
                                 master=args.get('master'), code_bucket=args.get('code_bucket'),
-<<<<<<< HEAD
                                 run_date=args.get('run_date'), batchID=args.get('batchID'),
                                 source_file_path=args.get('source_file_path'))
-=======
-                                run_date=args.get('run_date'), batchID=args.get('batchID'))
->>>>>>> reOrganizing_ss
     args = lycaETL.parseArguments()
     prevDate = datetime.now() + timedelta(days=-1)
     if not (args.get('run_date') and args.get('batchID')):

@@ -1,20 +1,11 @@
 [
   {
     "servicetype" : "redshift",
-<<<<<<< HEAD
     "domain" : "ukdev",
     "redshiftsecret": "Redshift/etl_user",
     "region": "eu-west-2",
     "host" : "uk-eu-west-2-311477489434-dev.c3rozf7wvu9s.eu-west-2.redshift.amazonaws.com",
     "port" : "5439",
-    "tmpdir" : "s3://mis-dl-uk-eu-west-2-311477489434-dev-raw/tmp/redshift/mno/"
-=======
-    "domain" : "dev",
-    "redshiftsecret": "redshift_etl_user",
-    "region": "eu-west-2",
-    "host" : "redshift-cluster-1.cmoksmaxzbvz.eu-west-2.redshift.amazonaws.com",
-    "port" : "5439",
-    "tmpdir" : "s3://mis-dl-lyca-raw"
->>>>>>> reOrganizing_ss
+    "tmpdir" : "s3://mis-dl-uk-eu-west-2-311477489434-dev-raw/tmp/redshift/rrbs/"
   }
 ]

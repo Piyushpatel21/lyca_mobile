@@ -1,11 +1,6 @@
-<<<<<<< HEAD
 import argparse
 import sys
 
-=======
-import sys
-import argparse
->>>>>>> reOrganizing_ss
 from lycaSparkTransformation.LycaCommonETLLoad import start_execution
 
 
