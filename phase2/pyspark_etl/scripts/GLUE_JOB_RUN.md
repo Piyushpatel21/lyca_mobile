@@ -5,15 +5,15 @@
 * We need to pass lambda name in shared account that will execute job in dev
 
 ```shell script
-LAMBDA_NAME='platform-lambda-manage-glue-rManageGlue-1GYED7HMI04Q0'
+DEV_LAMBDA_NAME='platform-lambda-manage-glue-rManageGlue-1UJR30NXYDP7V'
 
-python run_glue_job.py -n ${LAMBDA_NAME} -j lyca_etl_rrbs_sms
+python run_glue_job.py -n ${DEV_LAMBDA_NAME} -j lyca_etl_rrbs_sms
 ```
 
 ## To execute job with extra arguments
 
 ```shell script
-LAMBDA_NAME='platform-lambda-manage-glue-rManageGlue-1GYED7HMI04Q0'
+DEV_LAMBDA_NAME='platform-lambda-manage-glue-rManageGlue-1UJR30NXYDP7V'
 
-python run_glue_job.py -n ${LAMBDA_NAME} -j lyca_etl_rrbs_sms --run_date 20200419 --batch_id 104
+python run_glue_job.py -n ${DEV_LAMBDA_NAME} -j lyca_etl_rrbs_sms --run_date 20200419 --batch_id 104
 ```
