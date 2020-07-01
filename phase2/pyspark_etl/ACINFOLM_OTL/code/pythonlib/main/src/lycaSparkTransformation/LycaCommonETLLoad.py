@@ -47,7 +47,8 @@ def start_execution(args):
     lycaETL = LycaCommonETLLoad(module=args.get('module'), submodule=args.get('submodule'),
                                 configfile=args.get('configfile'), connfile=args.get('connfile'),
                                 master=args.get('master'), code_bucket=args.get('code_bucket'),
-                                run_date=args.get('run_date'), batchID=args.get('batchID'))
+                                run_date=args.get('run_date'), batchID=args.get('batchID'),
+                                source_file_path=args.get('source_file_path'))
     args = lycaETL.parseArguments()
     prevDate = datetime.now() + timedelta(days=-1)
     if not (args.get('run_date') and args.get('batchID')):

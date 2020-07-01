@@ -85,13 +85,13 @@ build_acinfotgl:
 	cp $(ACINFOTGL_DIR)/job_configs/*.json dist/ACINFOTGL/job_configs/
 
 build_acinfotgl_otl:
-	$(MAKE) --directory=$(ACINFOTGL_DIR) build
+	$(MAKE) --directory=$(ACINFOTGL_OTL_DIR) build
 	mkdir -p dist/ACINFOTGL_OTL/code dist/ACINFOTGL_OTL/configs/ dist/ACINFOTGL_OTL/schemas dist/ACINFOTGL_OTL/job_configs
-	cp $(ACINFOTGL_DIR)/dist/* dist/ACINFOTGL_OTL/code/
-	cp $(ACINFOTGL_DIR)/code/pythonlib/main/src/main.py dist/ACINFOTGL_OTL/code/
-	cp $(ACINFOTGL_DIR)/code/config/*.json dist/ACINFOTGL_OTL/schemas
-	cp $(ACINFOTGL_DIR)/config/*.json dist/ACINFOTGL_OTL/configs/
-	cp $(ACINFOTGL_DIR)/job_configs/*.json dist/ACINFOTGL_OTL/job_configs/
+	cp $(ACINFOTGL_OTL_DIR)/dist/* dist/ACINFOTGL_OTL/code/
+	cp $(ACINFOTGL_OTL_DIR)/code/pythonlib/main/src/main.py dist/ACINFOTGL_OTL/code/
+	cp $(ACINFOTGL_OTL_DIR)/code/config/*.json dist/ACINFOTGL_OTL/schemas
+	cp $(ACINFOTGL_OTL_DIR)/config/*.json dist/ACINFOTGL_OTL/configs/
+	cp $(ACINFOTGL_OTL_DIR)/job_configs/*.json dist/ACINFOTGL_OTL/job_configs/
 
 build_ggsn:
 	$(MAKE) --directory=$(GGSN_DIR) build
