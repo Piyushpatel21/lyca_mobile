@@ -14,7 +14,7 @@
     "--code_bucket": "mis-dl-uk-eu-west-2-869841577715-code-pipeline",
     "--configfile": "projects/ACINFOLM_OTL/configs/acinfolm_application_properties.json",
     "--connfile": "projects/ACINFOLM_OTL/configs/acinfo_connection.json",
-    "--source_file_path": "s3://mis-dl-uk-eu-west-2-311477489434-dev-raw/landing/ACCOUNT_INFO/LM/history/GBR/dbo/tblWPTransactionLog/",
+    "--source_file_path": "s3://mis-dl-uk-eu-west-2-311477489434-dev-raw/ACCOUNT_INFO/LM/GBR/tblWPTransactionLog/",
     "--enable-metrics": "true",
     "--enable-continuous-cloudwatch-log": "true",
     "--enable-spark-ui": "true",
