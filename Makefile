@@ -10,6 +10,7 @@ ACINFOTGL_DIR := phase2/pyspark_etl/ACINFOTGL
 ACINFOTGL_OTL_DIR := phase2/pyspark_etl/ACINFOTGL_OTL
 GGSN_DIR := phase2/pyspark_etl/GGSN
 GGSN_OTL_DIR := phase2/pyspark_etl/GGSN_OTL
+DATA_EXPORTER := phase2/pyspark_etl/DataExporter
 
 PROJECTS := $(RRBS_DIR) $(MNO_DIR)
 ENV := dev
@@ -110,3 +111,7 @@ build_ggsn_otl:
 	cp $(GGSN_OTL_DIR)/code/config/*.json dist/GGSN_OTL/schemas
 	cp $(GGSN_OTL_DIR)/config/*.json dist/GGSN_OTL/configs/
 	cp $(GGSN_OTL_DIR)/job_configs/*.json dist/GGSN_OTL/job_configs/
+
+build_data_exporter:
+	mkdir -p dist/DATA_EXPORTER/code
+	cp $(DATA_EXPORTER)/code/* dist/DATA_EXPORTER/code/
