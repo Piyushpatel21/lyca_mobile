@@ -1,0 +1,33 @@
+{
+  "Name": "lyca_etl_data_exporter_rs_to_s3",
+  "ScriptLocation": "s3://mis-dl-uk-eu-west-2-869841577715-code-pipeline/projects/DATA_EXPORTER/code/RedshitToS3.py",
+  "Description": "ETL job to unload data to s3 from redshift in parquet format",
+  "Role": "AWSGlueServiceRole_311477489434",
+  "PythonVersion": "3",
+  "MaxRetries": 0,
+  "GlueVersion": "1.0",
+  "MaxCapacity": 5,
+  "Connections": ["ETLRedshiftConnection"],
+  "DefaultArguments": {
+    "--tableName": "fact_rrbs_sms",
+    "--column_name": "",
+    "--column_value": "",
+    "--db": "ukdev",
+    "--partitionDateColumn": "msg_date_dt",
+    "--moduleName": "RRBS",
+    "--countryName": "UK",
+    "--subModule": "SMS",
+    "--bucket": "mis-dl-uk-eu-west-2-311477489434-dev-processed",
+    "--enable-metrics": "true",
+    "--enable-continuous-cloudwatch-log": "true",
+    "--enable-spark-ui": "true",
+    "--spark-event-logs-path": "s3://mis-dl-uk-eu-west-2-311477489434-dev-logs/glue/applogs",
+    "--master": "glue",
+    "--TempDir": "s3://mis-dl-uk-eu-west-2-311477489434-dev-raw/tmp/redshift"
+  },
+  "Tags": {
+    "CreatedBy": "Cloudwick",
+    "Project": "Lyca",
+    "Type": "DataExporter"
+  }
+}
