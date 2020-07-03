@@ -63,7 +63,8 @@ def start_execution(args):
     sparkSession = sparkSessionBuild.get("sparkSession")
     logger = sparkSessionBuild.get("logger")
     tf = TransformActionChain(sparkSession, logger, args.get('module'), args.get('submodule'),
-                              configfile, connfile, run_date, prevDate, args.get('code_bucket'))
+                              configfile, connfile, run_date, prevDate, args.get('code_bucket'),
+                              args.get('source_file_path'))
     if not (args.get('run_date') and args.get('batchID')):
         batch_id = tf.getBatchID()
     else:
