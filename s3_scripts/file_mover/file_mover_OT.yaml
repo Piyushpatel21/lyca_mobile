@@ -75,6 +75,16 @@ Resources:
         Version: "2012-10-17"
         Statement:
           - Effect: Allow
+            Sid: AllowEngineerAccess
+            Principal:
+              AWS:
+                - !Sub arn:aws:iam::${AWS::AccountId}:role/OrganizationAccountDataEngineer
+                - !Sub arn:aws:iam::${AWS::AccountId}:role/OrganizationAccountDevOps
+            Action: sns:Publish
+            Resource:
+               - !Ref FileUploadsSnsTopic
+          - Effect: Allow
+            Sid: AllowS3Access
             Principal:
               Service: "s3.amazonaws.com"
             Action: sns:Publish
