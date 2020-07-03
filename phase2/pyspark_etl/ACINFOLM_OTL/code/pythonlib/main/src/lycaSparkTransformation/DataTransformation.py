@@ -306,7 +306,8 @@ class DSMRetailerTransformation:
 
         try:
             self._logger.info("Generating derived columns for SMS data.")
-            return df
+            df_trans = df.withColumn("password", F.lit(""))
+            return df_trans
         except Exception as ex:
             self._logger.error("Failed to generate derived columns with error: {err}".format(err=ex))
 
@@ -1246,7 +1247,7 @@ class DataTransformation:
                 src_schema_string = []
                 for elem in structtype:
                     src_schema_string.append(StructField(elem.name, StringType()))
-                df_source = spark.read.option("header", "false").option("dateFormat", 'dd-MM-yyyy') \
+                df_source = spark.read.option("header", "true").option("multiLine", "true").option("dateFormat", 'dd-MM-yyyy') \
                     .schema(StructType(src_schema_string)).csv(file)
                 df_trimmed = self.trimAllCols(df_source).withColumn("unique_id", F.monotonically_increasing_id())
                 df_cleaned_checksum = self.cleanDataForChecksum(df_trimmed)
