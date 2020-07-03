@@ -16,6 +16,8 @@
     "--configfile": "projects/MNO_OTL/configs/mno_application_properties.json",
     "--connfile": "projects/MNO_OTL/configs/mno_connection.json",
     "--enable-metrics": "true",
+    "--batchID": "1",
+    "--run_date": "20200630",
     "--enable-continuous-cloudwatch-log": "true",
     "--enable-spark-ui": "true",
     "--spark-event-logs-path": "s3://mis-dl-uk-eu-west-2-311477489434-dev-logs/glue/applogs",
