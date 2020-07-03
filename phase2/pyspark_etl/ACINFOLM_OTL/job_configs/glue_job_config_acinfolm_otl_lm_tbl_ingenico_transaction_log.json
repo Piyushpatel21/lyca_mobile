@@ -16,6 +16,8 @@
     "--connfile": "projects/ACINFOLM_OTL/configs/acinfo_connection.json",
     "--source_file_path": "s3://mis-dl-uk-eu-west-2-311477489434-dev-raw/ACCOUNT_INFO/LM/GBR/tbl_IngenicoTransactionLog/",
     "--enable-metrics": "true",
+    "--batchID": 1,
+    "--run_date": 20200630,
     "--enable-continuous-cloudwatch-log": "true",
     "--enable-spark-ui": "true",
     "--spark-event-logs-path": "s3://mis-dl-uk-eu-west-2-311477489434-dev-logs/glue/applogs",

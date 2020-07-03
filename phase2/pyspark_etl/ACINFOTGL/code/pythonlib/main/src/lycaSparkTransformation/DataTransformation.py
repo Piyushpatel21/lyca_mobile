@@ -306,7 +306,8 @@ class DSMRetailerTransformation:
 
         try:
             self._logger.info("Generating derived columns for SMS data.")
-            return df
+            df_trans = df.withColumn("password", F.lit(""))
+            return df_trans
         except Exception as ex:
             self._logger.error("Failed to generate derived columns with error: {err}".format(err=ex))
 
@@ -1244,7 +1245,7 @@ class DataTransformation:
 
             self._logger.info("Reading from file list: {list}".format(list=full_path_list))
 
-            df_source_all = spark.read.option("header", "false") \
+            df_source_all = spark.read.option("header", "true").option("multiLine", "true")\
                 .schema(StructType(src_schema_string)).csv(full_path_list)
 
             df_source = df_source_all.withColumn("filename", F.input_file_name()) \
