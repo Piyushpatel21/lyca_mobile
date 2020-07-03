@@ -82,6 +82,18 @@ class JSONBuilder:
         """ :return duplicate cdr table name"""
         return self.prop['module_prop']['duplicatecdrtbl']
 
+    def getLogDB(self):
+        """ :return duplicate cdr table name"""
+        return self.prop['module_prop']['logdb']
+
+    def getBatchFileTbl(self):
+        """ :return duplicate cdr table name"""
+        return self.prop['module_prop']['batchfiletbl']
+
+    def getBatchStatusTbl(self):
+        """ :return duplicate cdr table name"""
+        return self.prop['module_prop']['batchstatustbl']
+
     def getUsername(self):
         """ :return username of db"""
         return self.servicetype['servicetypeObj'].get('username')
@@ -131,6 +143,9 @@ class JSONBuilder:
         latecdrtbl = self.getLatecdrtbl()
         duplicatecdrtbl = self.getDuplicatecdrtbl()
         database = self.getDatabase()
+        logdb = self.getLogDB()
+        batchfiletbl = self.getBatchFileTbl()
+        batchstatustbl = self.getBatchStatusTbl()
         return {
             "module": module,
             "subModule": subModule,
@@ -146,7 +161,10 @@ class JSONBuilder:
             "duplicatecdrtbl": duplicatecdrtbl,
             "latecdrtbl": latecdrtbl,
             "normalcdrtbl": normalcdrtbl,
-            "database": database
+            "database": database,
+            "logdb": logdb,
+            "batchfiletbl": batchfiletbl,
+            "batchstatustbl": batchstatustbl
         }
 
     def getConnPrpperty(self):
