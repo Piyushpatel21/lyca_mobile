@@ -13,6 +13,7 @@ import pyspark
 import sys
 import argparse
 
+
 sconf = pyspark.SparkConf()
 sc = SparkContext()
 glue_context = GlueContext(sc)
@@ -32,7 +33,6 @@ def get_secret(secret_name, region_name=None):
         client = boto3.client(
             'secretsmanager'
         )
-
     try:
         get_secret_value_response = client.get_secret_value(
             SecretId=secret_name
@@ -76,25 +76,18 @@ print("The value for the Secrets")
 print(secrets)
 jdbcUsername = secrets["username"]
 jdbcPassword = secrets["password"]
-
 jdbcHostname = "uk-eu-west-2-311477489434-dev.c3rozf7wvu9s.eu-west-2.redshift.amazonaws.com"
 jdbcPort = "5439"
 jdbcDatabase = "ukdev"
 redshiftTmpDir = "s3://mis-dl-uk-eu-west-2-311477489434-dev-raw/tmp/redshift/rrbs/"
-
-
 jdbcUrl = "jdbc:redshift://{jdbcHostname}:{jdbcPort}/{jdbcDatabase}?user={jdbcUsername}&password={jdbcPassword}" \
     .format(jdbcHostname=jdbcHostname, jdbcPort=jdbcPort, jdbcDatabase=jdbcDatabase,
             jdbcUsername=jdbcUsername,
             jdbcPassword=jdbcPassword)
 
 
-def copyRedshiftToS3(tableName, column_name, column_value, db, partionDateColumn, moduleName, countryName, subModule,
-                     bucket):
-    # query = "SELECT * FROM uk_rrbs_dm.{table} WHERE {columnName} ='{columnValue}'".format(table=tableName, columnName =column_name, columnValue=column_value)
-    query = "SELECT * FROM {schemaname}.{table} ".format(schemaname=db, table=tableName)
-    # query = "SELECT * FROM uk_rrbs_dm.fact_rrbs_sms"
-
+def copyRedshiftToS3(tableName, column_name, column_value, db, partitionDateColumn, moduleName, countryName, subModule, bucket,start_date,end_date):
+    query = """SELECT * FROM {schemaName}.{table} WHERE {columnName} between '{startDate}' AND '{endDate}'""".format(schemaName = db, table=tableName, columnName=column_name, startDate=start_date, endDate=end_date)
     redshiftTable = spark.read \
         .format("com.databricks.spark.redshift") \
         .option("url", jdbcUrl) \
@@ -102,14 +95,12 @@ def copyRedshiftToS3(tableName, column_name, column_value, db, partionDateColumn
         .option("forward_spark_s3_credentials", "true") \
         .option("tempdir", redshiftTmpDir) \
         .load()
-
     redshiftTable.show()
-
-    redshiftTablePartionColumn = redshiftTable.withColumn("year", F.date_format(F.col(partionDateColumn), "yyyy").cast(
-        IntegerType())) \
-        .withColumn("month", F.date_format(F.col(partionDateColumn), "MM").cast(IntegerType())) \
-        .withColumn("day", F.date_format(F.col(partionDateColumn), "dd").cast(IntegerType()))
-
+    redshiftTable.select("msg_date_dt").show()
+    redshiftTablePartionColumn = redshiftTable.withColumn("year", F.date_format(F.col(partitionDateColumn), "yyyy").cast(IntegerType())) \
+        .withColumn("month", F.date_format(F.col(partitionDateColumn), "MM").cast(IntegerType())) \
+        .withColumn("day", F.date_format(F.col(partitionDateColumn), "dd").cast(IntegerType()))
+    redshiftTablePartionColumn.printSchema()
     redshiftTablePartionColumn.write.mode("overwrite").format("parquet").partitionBy("year", "month", "day").save(
         "s3://" + str(bucket) + "/" + str(moduleName) + "/" + str(countryName) + "/" + str(subModule))
 
@@ -125,6 +116,8 @@ def parseArguments():
     parser.add_argument('--countryName')
     parser.add_argument('--subModule')
     parser.add_argument('--bucket')
+    parser.add_argument('--start_date')
+    parser.add_argument('--end_date')
     known_arguments, unknown_arguments = parser.parse_known_args()
     arguments = vars(known_arguments)
     return arguments
@@ -132,4 +125,6 @@ def parseArguments():
 
 if __name__ == '__main__':
     args = parseArguments()
+    print("arguments********")
+    print(args)
     copyRedshiftToS3(**args)
