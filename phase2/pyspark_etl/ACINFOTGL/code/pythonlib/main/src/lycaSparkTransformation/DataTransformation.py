@@ -1226,7 +1226,7 @@ class DataTransformation:
         self._logger = Log4j().getLogger()
         self.default_value_dict = {'string': '0', 'number': 0, 'date': '1970-01-01', 'datetime': '1970-01-01 00:00:00'}
 
-    def readSourceFile(self, spark, path, structtype: StructType, batchid, checkSumColumns=[],
+    def readSourceFile(self, spark, path, structtype: StructType, batchid, encoding, checkSumColumns=[],
                        fList=[]) -> DataFrame:
         """ :parameter spark
             :parameter path of source files
@@ -1245,7 +1245,7 @@ class DataTransformation:
 
             self._logger.info("Reading from file list: {list}".format(list=full_path_list))
 
-            df_source_all = spark.read.option("header", "true").option("multiLine", "true")\
+            df_source_all = spark.read.option("header", "true").option("multiLine", "true").option("encoding", encoding) \
                 .schema(StructType(src_schema_string)).csv(full_path_list)
 
             df_source = df_source_all.withColumn("filename", F.input_file_name()) \
