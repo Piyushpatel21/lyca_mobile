@@ -57,7 +57,7 @@ create table fact_mno_o2
     filename                  varchar(50) encode zstd,
     batch_id                  integer encode az64,
     created_date              timestamp encode az64,
-    rec_checksum              varchar(32) encode zstd,
+    rec_checksum              varchar(32) encode zstd
 )
     diststyle key
     sortkey (charging_month, charging_dt_num);
