@@ -14,6 +14,7 @@ def parseArguments():
     parser.add_argument('--master', help='session for glue')
     parser.add_argument('--code_bucket', help='Name of the code bucket')
     parser.add_argument('--source_file_path', help='file path for one time load')
+    parser.add_argument('--encoding', help='encoding for read different encoded dataset, ex - UTF-8, UTF-16')
     known_arguments, unknown_arguments = parser.parse_known_args()
     arguments = vars(known_arguments)
     if arguments:

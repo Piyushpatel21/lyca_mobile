@@ -23,7 +23,7 @@ from pyspark.sql import functions as py_function
 
 
 class TransformActionChain:
-    def __init__(self, sparkSession: SparkSession, logger, module, subModule, configfile, connfile, run_date, prevDate, code_bucket, source_file_path=None):
+    def __init__(self, sparkSession: SparkSession, logger, module, subModule, configfile, connfile, run_date, prevDate, code_bucket, encoding, source_file_path=None):
         self.sparkSession = sparkSession
         self.logger = logger
         self.module = module
@@ -43,6 +43,7 @@ class TransformActionChain:
         self.batch_start_dt = datetime.now()
         self.logBatchFileTbl = ".".join([self.property.get("logdb"), self.property.get("batchfiletbl")])
         self.logBatchStatusTbl = ".".join([self.property.get("logdb"), self.property.get("batchstatustbl")])
+        self.encoding = encoding
         self.source_file_path = source_file_path
         if self.source_file_path is not None:
             self.one_time_load = 'YES'
@@ -81,7 +82,7 @@ class TransformActionChain:
             path = self.property.get("sourceFilePath") + "/" + self.module.upper() + "/" + "UK" + "/" + self.subModule.upper() + "/" + self.run_date[:4] + "/" + self.run_date[4:6] + "/" + self.run_date[6:8] + "/"
             self.logger.info("***** Daily Load: Reading from {path} *****".format(path=path))
         try:
-            df_source_raw = self.trans.readSourceFile(self.sparkSession, path, srcSchema, batchid, checkSumColumns, file_list)
+            df_source_raw = self.trans.readSourceFile(self.sparkSession, path, srcSchema, batchid, self.encoding, checkSumColumns, file_list)
             df_source_raw.persist()
             if self.property.get("subModule") == "sms":
                 smsModuleTransformation = SmsDataTransformation()

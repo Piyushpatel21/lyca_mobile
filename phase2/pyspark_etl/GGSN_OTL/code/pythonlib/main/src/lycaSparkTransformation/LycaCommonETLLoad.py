@@ -18,7 +18,7 @@ class LycaCommonETLLoad:
        :parameter sub-module
        :parameter application property file path"""
 
-    def __init__(self, module, submodule, configfile, connfile, master, code_bucket, run_date=None, batchID= None, source_file_path=None):
+    def __init__(self, module, submodule, configfile, connfile, master, code_bucket, encoding, run_date=None, batchID= None, source_file_path=None):
         self.batchID = batchID
         self.module = module
         self.submodule = submodule
@@ -28,6 +28,7 @@ class LycaCommonETLLoad:
         self.run_date = run_date
         self.code_bucket = code_bucket
         self.source_file_path = source_file_path
+        self.encoding = encoding
 
     def parseArguments(self):
         return {
@@ -39,7 +40,8 @@ class LycaCommonETLLoad:
             "master": self.master,
             "batchID": self.batchID,
             "code_bucket": self.code_bucket,
-            "source_file_path": self.source_file_path
+            "source_file_path": self.source_file_path,
+            "encoding": self.encoding
         }
 
 
@@ -47,8 +49,8 @@ def start_execution(args):
     lycaETL = LycaCommonETLLoad(module=args.get('module'), submodule=args.get('submodule'),
                                 configfile=args.get('configfile'), connfile=args.get('connfile'),
                                 master=args.get('master'), code_bucket=args.get('code_bucket'),
-                                run_date=args.get('run_date'), batchID=args.get('batchID'),
-                                source_file_path=args.get('source_file_path'))
+                                encoding=args.get('encoding'), run_date=args.get('run_date'),
+                                batchID=args.get('batchID'), source_file_path=args.get('source_file_path'))
 
     args = lycaETL.parseArguments()
     prevDate = datetime.now() + timedelta(days=-1)

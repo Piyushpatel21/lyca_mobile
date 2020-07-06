@@ -20,6 +20,7 @@
     "--bucket": "mis-dl-uk-eu-west-2-311477489434-dev-processed",
     "--start_date": "",
     "--end_date": "",
+    "--encoding": "UTF-8",
     "--enable-metrics": "true",
     "--enable-continuous-cloudwatch-log": "true",
     "--enable-spark-ui": "true",
