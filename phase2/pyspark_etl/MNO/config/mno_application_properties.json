@@ -10,11 +10,11 @@
     "sourceFilePath" : "s3://mis-dl-uk-eu-west-2-311477489434-dev-raw",
     "srcSchemaPath": "projects/MNO/schemas/mno_src_fct_mno_o2.json",
     "tgtSchemaPath": "projects/MNO/schemas/mno_tgt_fct_mno_o2.json",
-    "database" : "uk_test",
+    "database" : "uk_mno_dm",
     "normalcdrtbl" : "fact_mno_o2",
     "latecdrtbl" : "fact_mno_o2_latecdr",
     "duplicatecdrtbl" : "fact_mno_o2_duplcdr",
-    "logdb" : "uk_test",
+    "logdb" : "uk_logs",
     "batchfiletbl" : "log_batch_files_mno",
     "batchstatustbl" : "log_batch_status_mno"
   },
@@ -29,11 +29,11 @@
     "sourceFilePath" : "s3://mis-dl-uk-eu-west-2-311477489434-dev-raw",
     "srcSchemaPath": "projects/MNO/schemas/mno_src_fct_mno_data.json",
     "tgtSchemaPath": "projects/MNO/schemas/mno_tgt_fct_mno_data.json",
-    "database" : "uk_test",
+    "database" : "uk_mno_dm",
     "normalcdrtbl" : "fact_mno_o2_data",
     "latecdrtbl" : "fact_mno_o2_data_latecdr",
     "duplicatecdrtbl" : "fact_mno_o2_data_duplcdr",
-    "logdb" : "uk_test",
+    "logdb" : "uk_logs",
     "batchfiletbl" : "log_batch_files_mno",
     "batchstatustbl" : "log_batch_status_mno"
   }
