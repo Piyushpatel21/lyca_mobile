@@ -21,7 +21,7 @@ from pyspark.sql import functions as py_function
 
 
 class TransformActionChain:
-    def __init__(self, sparkSession: SparkSession, logger, module, subModule, configfile, connfile, run_date, prevDate, code_bucket):
+    def __init__(self, sparkSession: SparkSession, logger, module, subModule, configfile, connfile, run_date, prevDate, code_bucket, encoding):
         self.sparkSession = sparkSession
         self.logger = logger
         self.module = module
@@ -40,6 +40,7 @@ class TransformActionChain:
         self.batch_start_dt = datetime.now()
         self.logBatchFileTbl = ".".join([self.property.get("logdb"), self.property.get("batchfiletbl")])
         self.logBatchStatusTbl = ".".join([self.property.get("logdb"), self.property.get("batchstatustbl")])
+        self.encoding = encoding
 
     def getBatchID(self, ) -> int:
         return self.redshiftprop.getBatchId(self.sparkSession, self.logBatchFileTbl, self.subModule.upper(), self.prevDate)
@@ -72,7 +73,7 @@ class TransformActionChain:
         file_list = fList
 
         try:
-            df_source_raw = self.trans.readSourceFile(self.sparkSession, path, srcSchema, batchid, checkSumColumns, file_list)
+            df_source_raw = self.trans.readSourceFile(self.sparkSession, path, srcSchema, batchid, self.encoding, checkSumColumns, file_list)
             df_source_raw.persist()
             if self.property.get("subModule") == "fact_ggsn":
                 transformation = GGSNDataTransformation()

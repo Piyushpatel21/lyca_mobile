@@ -466,7 +466,7 @@ class DataTransformation:
         self._logger = Log4j().getLogger()
         self.default_value_dict = {'string': '0', 'number': 0, 'date': '1970-01-01', 'datetime': '1970-01-01 00:00:00'}
 
-    def readSourceFile(self, spark, path, structtype: StructType, batchid, checkSumColumns=[],
+    def readSourceFile(self, spark, path, structtype: StructType, batchid, encoding, checkSumColumns=[],
                        fList=[]) -> DataFrame:
         """ :parameter spark
             :parameter path of source files
@@ -487,7 +487,7 @@ class DataTransformation:
                 src_schema_string = []
                 for elem in structtype:
                     src_schema_string.append(StructField(elem.name, StringType()))
-                df_source = spark.read.option("header", "false").option("dateFormat", 'dd-MM-yyyy') \
+                df_source = spark.read.option("header", "false").option("encoding", encoding).option("dateFormat", 'dd-MM-yyyy') \
                     .schema(StructType(src_schema_string)).csv(file)
                 df_trimmed = self.trimAllCols(df_source).withColumn("unique_id", F.monotonically_increasing_id())
                 df_cleaned_checksum = self.cleanDataForChecksum(df_trimmed)
