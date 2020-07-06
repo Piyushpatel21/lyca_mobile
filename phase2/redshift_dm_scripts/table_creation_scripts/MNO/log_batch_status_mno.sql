@@ -1,4 +1,4 @@
-create table log_batch_status_rrbs
+create table log_batch_status_mno
 (
     batch_id                    integer encode az64 distkey,
     s3_batchreadcount           integer encode az64,
