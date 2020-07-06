@@ -15,6 +15,7 @@
     "--code_bucket": "mis-dl-uk-eu-west-2-869841577715-code-pipeline",
     "--configfile": "projects/MNO_OTL/configs/mno_application_properties.json",
     "--connfile": "projects/MNO_OTL/configs/mno_connection.json",
+    "--encoding": "UTF-8",
     "--enable-metrics": "true",
     "--batchID": "1",
     "--run_date": "20200630",

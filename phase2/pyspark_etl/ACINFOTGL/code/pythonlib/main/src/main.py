@@ -13,6 +13,7 @@ def parseArguments():
     parser.add_argument('--connfile', help='connection config file path')
     parser.add_argument('--master', help='session for glue')
     parser.add_argument('--code_bucket', help='Name of the code bucket')
+    parser.add_argument('--encoding', help='encoding for read different encoded dataset, ex - UTF-8, UTF-16')
     known_arguments, unknown_arguments = parser.parse_known_args()
     arguments = vars(known_arguments)
     if arguments:

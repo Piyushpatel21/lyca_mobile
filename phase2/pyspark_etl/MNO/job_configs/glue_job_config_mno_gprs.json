@@ -14,6 +14,7 @@
     "--code_bucket": "mis-dl-uk-eu-west-2-869841577715-code-pipeline",
     "--configfile": "projects/MNO/configs/mno_application_properties.json",
     "--connfile": "projects/MNO/configs/mno_connection.json",
+    "--encoding": "UTF-8",
     "--enable-metrics": "true",
     "--enable-continuous-cloudwatch-log": "true",
     "--enable-spark-ui": "true",

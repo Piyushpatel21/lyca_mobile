@@ -15,6 +15,7 @@
     "--configfile": "projects/ACINFOLM_OTL/configs/acinfolm_application_properties.json",
     "--connfile": "projects/ACINFOLM_OTL/configs/acinfo_connection.json",
     "--source_file_path": "s3://mis-dl-uk-eu-west-2-311477489434-dev-raw/ACCOUNT_INFO/LM/GBR/TrnVouchers/",
+    "--encoding": "UTF-8",
     "--enable-metrics": "true",
     "--batchID": "1",
     "--run_date": "20200630",
