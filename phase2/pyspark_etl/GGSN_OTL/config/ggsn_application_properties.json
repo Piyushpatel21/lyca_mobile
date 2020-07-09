@@ -10,11 +10,11 @@
     "sourceFilePath": "s3://mis-dl-uk-eu-west-2-311477489434-dev-raw",
     "srcSchemaPath": "projects/GGSN_OTL/schemas/ggsn_src_fact_ggsn.json",
     "tgtSchemaPath": "projects/GGSN_OTL/schemas/ggsn_tgt_fact_ggsn.json",
-    "database" : "uk_test",
+    "database" : "all_ggsn_dm",
     "normalcdrtbl" : "fact_ggsn",
     "latecdrtbl" : "fact_ggsn_latecdr",
     "duplicatecdrtbl" : "fact_ggsn_duplcdr",
-    "logdb" : "uk_test",
+    "logdb" : "uk_logs",
     "batchfiletbl" : "log_batch_files_ggsn",
     "batchstatustbl" : "log_batch_status_ggsn"
   }
