@@ -95,8 +95,8 @@ def copyRedshiftToS3(tableName, column_name, column_value, db, partitionDateColu
         .option("forward_spark_s3_credentials", "true") \
         .option("tempdir", redshiftTmpDir) \
         .load()
-    redshiftTable.show()
-    redshiftTable.select("msg_date_dt").show()
+    redshiftTable.count()
+    #redshiftTable.select("msg_date_dt").show()
     redshiftTablePartionColumn = redshiftTable.withColumn("year", F.date_format(F.col(partitionDateColumn), "yyyy").cast(IntegerType())) \
         .withColumn("month", F.date_format(F.col(partitionDateColumn), "MM").cast(IntegerType())) \
         .withColumn("day", F.date_format(F.col(partitionDateColumn), "dd").cast(IntegerType()))
