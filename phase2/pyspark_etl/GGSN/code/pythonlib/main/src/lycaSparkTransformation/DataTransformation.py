@@ -110,7 +110,7 @@ class DataTransformation:
 
             self._logger.info("Reading from file list: {list}".format(list=full_path_list))
 
-            df_source_all = spark.read.option("header", "false").option("encoding", encoding) \
+            df_source_all = spark.read.option("header", "false").option("multiLine", "true").option("encoding", encoding) \
                 .schema(StructType(src_schema_string)).csv(full_path_list)
 
             df_source = df_source_all.withColumn("filename", F.input_file_name()) \
