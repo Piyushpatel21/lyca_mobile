@@ -112,7 +112,7 @@ class DataTransformation:
                 src_schema_string = []
                 for elem in structtype:
                     src_schema_string.append(StructField(elem.name, StringType()))
-                df_source = spark.read.option("header", "false").option("encoding", encoding).option("dateFormat", 'dd-MM-yyyy') \
+                df_source = spark.read.option("header", "false").option("multiLine", "true").option("encoding", encoding).option("dateFormat", 'dd-MM-yyyy') \
                     .schema(StructType(src_schema_string)).csv(file)
                 df_trimmed = self.trimAllCols(df_source).withColumn("unique_id", F.monotonically_increasing_id())
                 df_cleaned_checksum = self.cleanDataForChecksum(df_trimmed)
