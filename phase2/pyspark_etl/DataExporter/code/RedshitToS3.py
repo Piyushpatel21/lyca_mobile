@@ -97,12 +97,11 @@ def copyRedshiftToS3(tableName, column_name, column_value, db, partitionDateColu
         .load()
     redshiftTable.count()
     #redshiftTable.select("msg_date_dt").show()
-    redshiftTablePartionColumn = redshiftTable.withColumn("year", F.date_format(F.col(partitionDateColumn), "yyyy").cast(IntegerType())) \
-        .withColumn("month", F.date_format(F.col(partitionDateColumn), "MM").cast(IntegerType())) \
-        .withColumn("day", F.date_format(F.col(partitionDateColumn), "dd").cast(IntegerType()))
+    redshiftTablePartionColumn = redshiftTable.withColumn(str(partitionDateColumn) + "-year", F.date_format(F.col(partitionDateColumn), "yyyy").cast(IntegerType())) \
+        .withColumn(str(partitionDateColumn) + "-month", F.date_format(F.col(partitionDateColumn), "MM").cast(IntegerType())) \
+        .withColumn(str(partitionDateColumn) + "-day", F.date_format(F.col(partitionDateColumn), "dd").cast(IntegerType()))
     redshiftTablePartionColumn.printSchema()
-    redshiftTablePartionColumn.write.mode("overwrite").format("parquet").partitionBy("year", "month", "day").save(
-        "s3://" + str(bucket) + "/" + str(moduleName) + "/" + str(countryName) + "/" + str(subModule))
+    redshiftTablePartionColumn.write.mode("overwrite").format("parquet").partitionBy(str(partitionDateColumn) + "-year", str(partitionDateColumn) + "-month", str(partitionDateColumn) + "-day").save("s3://" + str(bucket) + "/" + str(moduleName) + "/" + str(countryName) + "/" + str(subModule))
 
 
 def parseArguments():
