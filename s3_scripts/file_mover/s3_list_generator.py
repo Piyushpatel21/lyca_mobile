@@ -23,12 +23,14 @@ s3_c = session.client('s3')
 s3_r = session.resource('s3')
 paginator = s3_c.get_paginator('list_objects_v2')
 pages = paginator.paginate(Bucket=bucket, Prefix=prefix)
-for page in pages:
+page_filtered = pages.search("Contents[?to_string(LastModified) <= '\"2020-07-10 10:00:00+00:00\"'].Key")
+with open(filename, 'a') as outfile:
+    for page in pages:
         for obj in page['Contents']:
             if obj['Key'][-1] != '/':
-                with open(filename, 'a') as outfile:
+                if obj['Key'] in page_filtered:
                     outfile.write(json.dumps(obj,default=str))
                     outfile.write("\n")
-                      # print(json.dumps(obj,default=str))
+                  # print(json.dumps(obj,default=str))
 #s3_r.Bucket(bucket).upload_file(filename,'transfer_log/'+filename)
 print(time.clock() - start_time)
