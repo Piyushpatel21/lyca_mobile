@@ -14,13 +14,16 @@ source_profile = mis_lycamobile
 region = {{ AWS_REGION }}
 EOF
 
+mv ~/.aws/credentials{,"-`date`"} || true
+mv ~/.aws/config{,"-`date`"} || true
+
 envtpl  < creds.tpl > ~/.aws/credentials
 envtpl  < config.tpl > ~/.aws/config
 
-git config --global credential.helper '!aws --profile mis_code_commit codecommit credential-helper $@'
-git config --global credential.UseHttpPath true
-git config --global user.email "git@cloudwick.com"
-git config --global user.name "Git CI/CD"
+git config --local credential.helper '!aws --profile mis_code_commit codecommit credential-helper $@'
+git config --local credential.UseHttpPath true
+git config --local user.email "git@cloudwick.com"
+git config --local user.name "Git CI/CD"
 
 git remote remove code_commit || printf "code_commit does not exist"
 git remote add code_commit https://git-codecommit.eu-west-2.amazonaws.com/v1/repos/lycamobile-etl-movements
