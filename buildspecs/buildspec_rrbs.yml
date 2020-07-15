@@ -8,7 +8,7 @@ phases:
   build:
     commands:
       - make build_rrbs
-      - make build_FRRRBS
+      - make build_fr_rrbs
       - make build_data_exporter
 artifacts:
   files:
