@@ -29,20 +29,37 @@ create user saravana_5002 password '' in group lycagroup;
 create user manikandan_5435 password '' in group lycagroup;
 create user vasanth_5564 password '' in group lycagroup;
 
+--#2.5 Create Redshift database
+
+--France
+CREATE DATABASE FRADEV WITH OWNER ukdevadmin;
+
 --#3 Create redshift schemas ---------------------------------------------------
+--UK
 create schema if not exists uk_rrbs_stg authorization ukdevadmin;
 create schema if not exists uk_rrbs_dm authorization ukdevadmin;
 create schema if not exists uk_rrbs_rt authorization ukdevadmin;
-create schema if not exists uk_mno_dm authorization <username>;
-create schema if not exists uk_accountinfo_dm authorization <username>;
-create schema if not exists uk_logs authorization <username>;
-create schema if not exists uk_test authorization <username>;
-create schema if not exists uk_log_test authorization <username>;
+create schema if not exists uk_mno_dm authorization <username>; 		--change to ukdevadmin
+create schema if not exists uk_accountinfo_dm authorization <username>; --change to ukdevadmin
+create schema if not exists uk_logs authorization <username>; 			--change to ukdevadmin
+create schema if not exists uk_test authorization <username>; 
+create schema if not exists uk_log_test authorization <username>; 
+
+--France
+create schema if not exists fra_rrbs_stg  authorization ukdevadmin;
+create schema if not exists fra_rrbs_dm   authorization ukdevadmin;
+create schema if not exists fra_rrbs_rt   authorization ukdevadmin;
+create schema if not exists fra_mno_dm    authorization ukdevadmin;
+create schema if not exists fra_accountinfo_dm  authorization ukdevadmin;
+create schema if not exists fra_logs			authorization ukdevadmin;
+create schema if not exists fra_test      		authorization <username>;
 
 --#4 Grant permission to ukdev database to cloudwickgroup--------------------
 grant all on DATABASE ukdev to group cloudwickgroup;
 
 --#5 Grant permission to the schemas to cloudwickgroup--------------------------
+
+--UK
 GRANT USAGE ON SCHEMA uk_rrbs_stg TO GROUP cloudwickgroup;
 GRANT USAGE ON SCHEMA uk_rrbs_dm TO GROUP cloudwickgroup;
 GRANT USAGE ON SCHEMA uk_rrbs_rt TO GROUP cloudwickgroup;
@@ -51,6 +68,7 @@ GRANT USAGE ON SCHEMA uk_accountinfo_dm TO GROUP cloudwickgroup;
 GRANT USAGE ON SCHEMA uk_logs TO GROUP cloudwickgroup;
 GRANT USAGE ON SCHEMA uk_test TO GROUP cloudwickgroup;
 GRANT USAGE ON SCHEMA uk_log_test TO GROUP cloudwickgroup;
+
 grant all on schema uk_rrbs_stg to group cloudwickgroup;
 grant all on schema uk_rrbs_dm to group cloudwickgroup;
 grant all on schema uk_rrbs_rt to group cloudwickgroup;
@@ -59,14 +77,16 @@ grant all on schema uk_accountinfo_dm TO GROUP cloudwickgroup;
 grant all on schema uk_logs TO GROUP cloudwickgroup;
 grant all on schema uk_test TO GROUP cloudwickgroup;
 grant all on schema uk_log_test TO GROUP cloudwickgroup;
-grant all on all tables in schema uk_rrbs_stg to group cloudwickgroup;
-grant all on all tables in schema uk_rrbs_dm to group cloudwickgroup;
-grant all on all tables in schema uk_rrbs_rt to group cloudwickgroup;
-grant all on all tables in schema uk_mno_dm to group cloudwickgroup;
-grant all on all tables in schema uk_accountinfo_dm to group cloudwickgroup;
-grant all on all tables in schema uk_logs to group cloudwickgroup;
-grant all on all tables in schema uk_test to group cloudwickgroup;
-grant all on all tables in schema uk_log_test to group cloudwickgroup;
+
+GRANT ALL ON ALL tables in schema uk_rrbs_stg to group cloudwickgroup;
+GRANT ALL ON ALL tables in schema uk_rrbs_dm to group cloudwickgroup;
+GRANT ALL ON ALL tables in schema uk_rrbs_rt to group cloudwickgroup;
+GRANT ALL ON ALL tables in schema uk_mno_dm to group cloudwickgroup;
+GRANT ALL ON ALL tables in schema uk_accountinfo_dm to group cloudwickgroup;
+GRANT ALL ON ALL tables in schema uk_logs to group cloudwickgroup;
+GRANT ALL ON ALL tables in schema uk_test to group cloudwickgroup;
+GRANT ALL ON ALL tables in schema uk_log_test to group cloudwickgroup;
+
 ALTER DEFAULT PRIVILEGES IN SCHEMA uk_rrbs_stg GRANT ALL ON TABLES TO group cloudwickgroup;
 ALTER DEFAULT PRIVILEGES IN SCHEMA uk_rrbs_dm GRANT ALL ON TABLES TO group cloudwickgroup;
 ALTER DEFAULT PRIVILEGES IN SCHEMA uk_rrbs_rt GRANT ALL ON TABLES TO group cloudwickgroup;
@@ -75,6 +95,41 @@ ALTER DEFAULT PRIVILEGES IN SCHEMA uk_accountinfo_dm GRANT ALL ON TABLES TO grou
 ALTER DEFAULT PRIVILEGES IN SCHEMA uk_logs GRANT ALL ON TABLES TO group cloudwickgroup;
 ALTER DEFAULT PRIVILEGES IN SCHEMA uk_test GRANT ALL ON TABLES TO group cloudwickgroup;
 ALTER DEFAULT PRIVILEGES IN SCHEMA uk_log_test GRANT ALL ON TABLES TO group cloudwickgroup;
+
+--France
+
+GRANT USAGE ON SCHEMA fra_rrbs_stg TO GROUP cloudwickgroup;
+GRANT USAGE ON SCHEMA fra_rrbs_dm  TO GROUP cloudwickgroup;
+GRANT USAGE ON SCHEMA fra_rrbs_rt  TO GROUP cloudwickgroup;
+GRANT USAGE ON SCHEMA fra_mno_dm   TO GROUP cloudwickgroup;
+GRANT USAGE ON SCHEMA fra_accountinfo_dm TO GROUP cloudwickgroup;
+GRANT USAGE ON SCHEMA fra_logs			 TO GROUP cloudwickgroup;
+GRANT USAGE ON SCHEMA fra_test     TO GROUP cloudwickgroup;
+
+GRANT ALL ON SCHEMA fra_rrbs_stg  to group cloudwickgroup;
+GRANT ALL ON SCHEMA fra_rrbs_dm   to group cloudwickgroup;
+GRANT ALL ON SCHEMA fra_rrbs_rt   to group cloudwickgroup;
+GRANT ALL ON SCHEMA fra_mno_dm    to group cloudwickgroup;
+GRANT ALL ON SCHEMA fra_accountinfo_dm  to group cloudwickgroup;
+GRANT ALL ON SCHEMA fra_logs			to group cloudwickgroup;
+GRANT ALL ON SCHEMA fra_test      to group cloudwickgroup;
+
+GRANT ALL ON ALL fra_rrbs_stg  to group cloudwickgroup;
+GRANT ALL ON ALL fra_rrbs_dm   to group cloudwickgroup;
+GRANT ALL ON ALL fra_rrbs_rt   to group cloudwickgroup;
+GRANT ALL ON ALL fra_mno_dm    to group cloudwickgroup;
+GRANT ALL ON ALL fra_accountinfo_dm  to group cloudwickgroup;
+GRANT ALL ON ALL fra_logs			 to group cloudwickgroup;
+GRANT ALL ON ALL fra_test      to group cloudwickgroup;
+
+ALTER DEFAULT PRIVILEGES IN SCHEMA fra_rrbs_stg  GRANT ALL ON TABLES TO group cloudwickgroup;
+ALTER DEFAULT PRIVILEGES IN SCHEMA fra_rrbs_dm   GRANT ALL ON TABLES TO group cloudwickgroup;
+ALTER DEFAULT PRIVILEGES IN SCHEMA fra_rrbs_rt   GRANT ALL ON TABLES TO group cloudwickgroup;
+ALTER DEFAULT PRIVILEGES IN SCHEMA fra_mno_dm    GRANT ALL ON TABLES TO group cloudwickgroup;
+ALTER DEFAULT PRIVILEGES IN SCHEMA fra_accountinfo_dm  GRANT ALL ON TABLES TO group cloudwickgroup;
+ALTER DEFAULT PRIVILEGES IN SCHEMA fra_logs			   GRANT ALL ON TABLES TO group cloudwickgroup;
+ALTER DEFAULT PRIVILEGES IN SCHEMA fra_test      GRANT ALL ON TABLES TO group cloudwickgroup;
+
 
 --#6 Revoke default rights on schemas and tables to lycagroup-----------------------
 revoke all on all tables in schema uk_rrbs_stg from group lycagroup;

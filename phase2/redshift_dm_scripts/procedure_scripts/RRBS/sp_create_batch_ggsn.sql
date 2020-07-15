@@ -1,10 +1,12 @@
-CREATE
-	OR REPLACE  PROCEDURE sp_create_batch_rrbs (
-	p_rundate TIMESTAMP
-	,p_batch_count NUMERIC
-	,p_source VARCHAR
-	,p_schema VARCHAR
-	) LANGUAGE plpgsql AS $$
+CREATE OR REPLACE PROCEDURE uk_logs.sp_create_batch_ggsn(p_rundate timestamp,p_batch_count numeric,p_source varchar,p_schema varchar)
+	LANGUAGE plpgsql
+AS $$
+	
+	
+	
+	
+	
+	
 
 DECLARE
 	--                v_filename 			VARCHAR(100);
@@ -52,7 +54,7 @@ BEGIN
 	--RAISE NOTICE 'Procedure body begins here';                        
 	SELECT nvl(max(batch_id), 0)
 	INTO v_max_batchid
-	FROM log_batch_files_rrbs;
+	FROM log_batch_files_ggsn;--log_batch_files_rrbs;
 
 	/*v_sql1 = 'select nvl(max(batch_id),0) into v_max_batchid from '
 			||QUOTE_IDENT(p_schema) ||'.'
@@ -95,11 +97,12 @@ BEGIN
 	--check if the same start time is available in the batch_file table                               		
 	SELECT COUNT(1)
 	INTO v_check_batch
-	FROM log_batch_files_rrbs--_new --log_batch_files_rrbs 
-	WHERE batch_from >= v_start_time --to_timestamp(v_start_time, 'yyyy-mm-dd h24:mi:ss') 
+	FROM log_batch_files_ggsn--log_batch_files_rrbs--_new --log_batch_files_rrbs 
+	WHERE --batch_from >= v_start_time --to_timestamp(v_start_time, 'yyyy-mm-dd h24:mi:ss') 
+	v_start_time between batch_from and batch_to
 		AND is_valid = 'Y'
 		--to_timestamp(NULLIF(NULLIF(batch_from, '0'), ''), 'yyyymmddhhmiss') => v_start_time										
-		AND file_source LIKE 'landing/' || v_source || '%';
+		AND target_system LIKE  v_source||'%';
 
 	raise notice 'v_check_batch : %'
 		,v_check_batch;
@@ -107,10 +110,10 @@ BEGIN
 	BEGIN
 		IF v_check_batch > 0 THEN RAISE NOTICE 'Batch ''%'' already created'
 			,v_start_time;ELSE
-			lock log_batch_files_rrbs;
+			lock log_batch_files_mno;--log_batch_files_rrbs;
 
 		--insert
-		INSERT INTO log_batch_files_rrbs --_new--log_batch_files_rrbs_1
+		INSERT INTO log_batch_files_ggsn--log_batch_files_rrbs --_new--log_batch_files_rrbs_1
 			(
 			batch_id
 			,file_source
@@ -133,7 +136,8 @@ BEGIN
 			,'Y'
 			,sysdate
 		FROM log_landing
-		WHERE source_system LIKE 'landing/' || v_source || '%'
+		WHERE target_system LIKE v_source ||'%'
+		AND upper(target_system) LIKE '%GGSN%'
 			AND file_landing_date >= v_start_time --to_timestamp(v_start_time, 'yyyy-mm-dd h24:mi:ss')
 			AND file_landing_date < v_end_time --to_timestamp(v_end_time, 'yyyy-mm-dd h24:mi:ss')
 			;
@@ -144,4 +148,11 @@ BEGIN
 			,insert_count;
 	END
 
-	IF ;END;END;$$;
+	IF ;END;END;
+
+
+
+
+
+$$
+;
