@@ -8,6 +8,7 @@ phases:
   build:
     commands:
       - make build_mno
+      - make build_fr_mno
 artifacts:
   files:
     - '**/*'

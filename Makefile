@@ -12,6 +12,7 @@ GGSN_DIR := phase2/pyspark_etl/GGSN
 GGSN_OTL_DIR := phase2/pyspark_etl/GGSN_OTL
 DATA_EXPORTER := phase2/pyspark_etl/DataExporter
 FR_RRBS_DIR := phase2/pyspark_etl/FRRRBS
+FR_MNO_DIR := phase2/pyspark_etl/FRMNO
 
 PROJECTS := $(RRBS_DIR) $(MNO_DIR)
 ENV := dev
@@ -125,3 +126,12 @@ build_fr_rrbs:
 	cp $(FR_RRBS_DIR)/code/config/*.json dist/FRRRBS/schemas
 	cp $(FR_RRBS_DIR)/config/*.json dist/FRRRBS/configs/
 	cp $(FR_RRBS_DIR)/job_configs/*.json dist/FRRRBS/job_configs/
+
+build_fr_mno:
+	$(MAKE) --directory=$(FR_MNO_DIR) build
+	mkdir -p dist/FRMNO/code dist/FRMNO/configs/ dist/FRMNO/schemas dist/FRMNO/job_configs
+	cp $(FR_MNO_DIR)/dist/* dist/FRMNO/code/
+	cp $(FR_MNO_DIR)/code/pythonlib/main/src/main.py dist/FRMNO/code/
+	cp $(FR_MNO_DIR)/code/config/*.json dist/FRMNO/schemas
+	cp $(FR_MNO_DIR)/config/*.json dist/FRMNO/configs/
+	cp $(FR_MNO_DIR)/job_configs/*.json dist/FRMNO/job_configs/
