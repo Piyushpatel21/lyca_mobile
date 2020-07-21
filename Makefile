@@ -13,9 +13,10 @@ GGSN_OTL_DIR := phase2/pyspark_etl/GGSN_OTL
 DATA_EXPORTER := phase2/pyspark_etl/DataExporter
 FR_RRBS_DIR := phase2/pyspark_etl/FRRRBS
 FR_MNO_DIR := phase2/pyspark_etl/FRMNO
+AGG_USER_MODEL_DIR := phase2/pyspark_etl/aggregations/user_model
 
 PROJECTS := $(RRBS_DIR) $(MNO_DIR)
-ENV := dev
+ENV :=
 
 .PHONY: build_all build_rrbs build_rrbs_otl build_mno build_mno_otl clean
 
@@ -135,3 +136,25 @@ build_fr_mno:
 	cp $(FR_MNO_DIR)/code/config/*.json dist/FRMNO/schemas
 	cp $(FR_MNO_DIR)/config/*.json dist/FRMNO/configs/
 	cp $(FR_MNO_DIR)/job_configs/*.json dist/FRMNO/job_configs/
+
+build_aggregation_agg1_rrbs_voice:
+	$(eval AGG_PRJ := agg1_rrbs_voice)
+	$(eval VERSION := $(shell grep "version=[0-9.]*" $(AGG_USER_MODEL_DIR)/agg1_rrbs_voice/setup.py | cut -d\" -f2))
+	echo "Building for $(ENV) $(AGG_PRJ) with version as $(VERSION)"
+	$(MAKE) --directory=$(AGG_USER_MODEL_DIR)/agg1_rrbs_voice build
+	mkdir -p dist/$(ENV)/aggregations/$(AGG_PRJ)/$(VERSION)/code dist/$(ENV)/aggregations/$(AGG_PRJ)/$(VERSION)/configs dist/$(ENV)/aggregations/$(AGG_PRJ)/$(VERSION)/job_configs
+	cp $(AGG_USER_MODEL_DIR)/$(AGG_PRJ)/dist/* dist/$(ENV)/aggregations/$(AGG_PRJ)/$(VERSION)/code
+	cp $(AGG_USER_MODEL_DIR)/$(AGG_PRJ)/main.py  dist/$(ENV)/aggregations/$(AGG_PRJ)/$(VERSION)/code
+	cp $(AGG_USER_MODEL_DIR)/$(AGG_PRJ)/configs/* dist/$(ENV)/aggregations/$(AGG_PRJ)/$(VERSION)/configs
+	cp $(AGG_USER_MODEL_DIR)/$(AGG_PRJ)/job_configs/* dist/$(ENV)/aggregations/$(AGG_PRJ)/$(VERSION)/job_configs
+
+build_aggregation_agg1_rrbs_sms:
+	$(eval AGG_PRJ := agg1_rrbs_sms)
+	$(eval VERSION := $(shell grep "version=[0-9.]*" $(AGG_USER_MODEL_DIR)/agg1_rrbs_voice/setup.py | cut -d\" -f2))
+	echo "Building for $(ENV) $(AGG_PRJ) with version as $(VERSION)"
+	$(MAKE) --directory=$(AGG_USER_MODEL_DIR)/$(AGG_PRJ) build
+	mkdir -p dist/$(ENV)/aggregations/$(AGG_PRJ)/$(VERSION)/code dist/$(ENV)/aggregations/$(AGG_PRJ)/$(VERSION)/configs dist/$(ENV)/aggregations/$(AGG_PRJ)/$(VERSION)/job_configs
+	cp $(AGG_USER_MODEL_DIR)/$(AGG_PRJ)/dist/* dist/$(ENV)/aggregations/$(AGG_PRJ)/$(VERSION)/code
+	cp $(AGG_USER_MODEL_DIR)/$(AGG_PRJ)/main.py  dist/$(ENV)/aggregations/$(AGG_PRJ)/$(VERSION)/code
+	cp $(AGG_USER_MODEL_DIR)/$(AGG_PRJ)/configs/* dist/$(ENV)/aggregations/$(AGG_PRJ)/$(VERSION)/configs
+	cp $(AGG_USER_MODEL_DIR)/$(AGG_PRJ)/job_configs/* dist/$(ENV)/aggregations/$(AGG_PRJ)/$(VERSION)/job_configs
