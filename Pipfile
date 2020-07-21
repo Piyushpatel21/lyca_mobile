@@ -7,7 +7,7 @@ verify_ssl = true
 pyspark = "==2.4.3"
 pytest = "==4.6.0"
 pytest-cov = ">=2.8.1"
-mock = "*"
+moto = "*"
 pipenv = "*"
 boto3 = "*"
 j2cli = "*"
