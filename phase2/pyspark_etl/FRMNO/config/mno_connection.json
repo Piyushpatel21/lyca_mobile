@@ -1,7 +1,7 @@
 [
   {
     "servicetype" : "redshift",
-    "domain" : "ukdev",
+    "domain" : "fradev",
     "redshiftsecret": "Redshift/etl_user",
     "region": "eu-west-2",
     "host" : "uk-eu-west-2-311477489434-dev.c3rozf7wvu9s.eu-west-2.redshift.amazonaws.com",
