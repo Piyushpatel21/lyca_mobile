@@ -1,0 +1,30 @@
+[
+  {
+    "module" : "rrbs",
+    "subModule" : "voice",
+    "input": {
+      "database": "uk_rrbs_dm",
+      "normal_cdr_table": "fact_rrbs_voice",
+      "uid": "charged_party_number",
+      "created_date_col": "created_date",
+      "date_hour_col": "call_date_hour",
+      "date_daily_col": "call_date_num",
+      "date_monthly_col": "call_date_month"
+    },
+    "output": {
+      "database": "uk_agg",
+      "hourly_table": "factagg_user_rrbs_voice_hourly",
+      "hourly_temp_table": "temp_factagg_user_rrbs_voice_hourly",
+      "daily_table": "factagg_user_rrbs_voice_daily",
+      "daily_temp_table": "temp_factagg_user_rrbs_voice_daily",
+      "monthly_table": "factagg_user_rrbs_voice_monthly",
+      "monthly_temp_table": "temp_factagg_user_rrbs_voice_monthly",
+      "yearly_table": "factagg_user_rrbs_voice_yearly",
+      "yearly_temp_table": "temp_factagg_user_rrbs_voice_yearly"
+    },
+    "logging": {
+      "database" : "uk_test",
+      "batch_status_table": ""
+    }
+  }
+]
