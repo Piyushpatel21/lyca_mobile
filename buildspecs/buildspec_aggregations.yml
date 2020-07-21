@@ -1,0 +1,19 @@
+version: 0.2
+
+env:
+  variables:
+    env: ''
+
+phases:
+  install:
+    runtime-versions:
+      python: 3.7
+
+  build:
+    commands:
+      - make build_aggregation_agg1_rrbs_voice ENV=$env
+      - make build_aggregation_agg1_rrbs_sms ENV=$env
+artifacts:
+  files:
+    - '**/*'
+  base-directory: 'dist'
