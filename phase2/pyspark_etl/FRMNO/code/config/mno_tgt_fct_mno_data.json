@@ -1,9 +1,15 @@
 [
   {
-    "column_name": "cdr_type"
+    "column_name": "idncom"
   },
   {
-    "column_name": "cdr_id"
+    "column_name": "naturecode"
+  },
+  {
+    "column_name": "imei"
+  },
+  {
+    "column_name": "timeoffset"
   },
   {
     "column_name": "imsi"
@@ -12,64 +18,40 @@
     "column_name": "msisdn"
   },
   {
-    "column_name": "imei"
+    "column_name": "type"
   },
   {
-    "column_name": "location"
+    "column_name": "apn"
   },
   {
-    "column_name": "apn_ni"
+    "column_name": "upload_bytes"
   },
   {
-    "column_name": "apn_oi"
+    "column_name": "download_bytes"
   },
   {
-    "column_name": "charging_timestamp"
+    "column_name": "total_bytes"
   },
   {
     "column_name": "duration"
   },
   {
-    "column_name": "data_volume_download"
+    "column_name": "pdp_ip"
   },
   {
-    "column_name": "data_volume_upload"
+    "column_name": "cell_gsm"
   },
   {
-    "column_name": "data_volume_total"
+    "column_name": "ggsn_ip"
   },
   {
-    "column_name": "username"
+    "column_name": "network_type"
   },
   {
-    "column_name": "network_element_id"
+    "column_name": "start_time"
   },
   {
-    "column_name": "ggsn_address"
-  },
-  {
-    "column_name": "charging_id"
-  },
-  {
-    "column_name": "fragment_number"
-  },
-  {
-    "column_name": "fragment_indicator"
-  },
-  {
-    "column_name": "recordsequencenumber"
-  },
-  {
-    "column_name": "content_source"
-  },
-  {
-    "column_name": "rate_class"
-  },
-  {
-    "column_name": "charge"
-  },
-  {
-    "column_name": "end_user_charge"
+    "column_name": "end_time"
   },
   {
     "column_name": "fct_free_text_1"
@@ -132,43 +114,34 @@
     "column_name": "fct_free_text_20"
   },
   {
-    "column_name": "data_usage"
+    "column_name": "start_dt"
   },
   {
-    "column_name": "charging_dt"
+    "column_name": "start_month"
   },
   {
-    "column_name": "charging_month"
+    "column_name": "start_dt_num"
   },
   {
-    "column_name": "charging_dt_num"
+    "column_name": "start_dt_hour"
   },
   {
-    "column_name": "charging_dt_hour"
+    "column_name": "start_timestamp_gmt"
   },
   {
-    "column_name": "charging_timestamp_gmt"
+    "column_name": "start_month_gmt"
   },
   {
-    "column_name": "charging_month_gmt"
+    "column_name": "start_dt_num_gmt"
   },
   {
-    "column_name": "charging_dt_num_gmt"
-  },
-  {
-    "column_name": "charging_dt_hour_gmt"
-  },
-  {
-    "column_name": "duration_min"
+    "column_name": "start_dt_hour_gmt"
   },
   {
     "column_name": "filename"
   },
   {
     "column_name": "batch_id"
-  },
-  {
-    "column_name": "created_date"
   },
   {
     "column_name": "rec_checksum"

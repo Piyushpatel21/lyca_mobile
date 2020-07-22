@@ -1,75 +1,48 @@
 [
   {
-    "column_name": "cdr_type"
+    "column_name": "idncom"
   },
   {
-    "column_name": "cdr_id"
-  },
-  {
-    "column_name": "network_call_reference"
-  },
-  {
-    "column_name": "subscriber_imsi"
-  },
-  {
-    "column_name": "a_number"
-  },
-  {
-    "column_name": "b_number"
-  },
-  {
-    "column_name": "dialled_digits"
-  },
-  {
-    "column_name": "location"
-  },
-  {
-    "column_name": "call_forwarding_flag"
-  },
-  {
-    "column_name": "smsc_address"
-  },
-  {
-    "column_name": "charging_timestamp"
-  },
-  {
-    "column_name": "duration"
-  },
-  {
-    "column_name": "rate_class"
-  },
-  {
-    "column_name": "charge"
-  },
-  {
-    "column_name": "fragment_number"
-  },
-  {
-    "column_name": "last_fragment_indicator"
-  },
-  {
-    "column_name": "record_sequence_number"
-  },
-  {
-    "column_name": "provider_id"
-  },
-  {
-    "column_name": "service_type"
+    "column_name": "naturecode"
   },
   {
     "column_name": "imei"
   },
   {
-    "column_name": "message_type"
+    "column_name": "timeoffset"
   },
   {
-    "column_name": "end_user_charge"
+    "column_name": "imsi"
   },
   {
-    "column_name": "premium_sms_delivery_flag"
+    "column_name": "msisdn"
   },
   {
-    "column_name": "lyca_number"
+    "column_name": "type"
+  },
+  {
+    "column_name": "service"
+  },
+  {
+    "column_name": "called_number"
+  },
+  {
+    "column_name": "cell_gsm"
+  },
+  {
+    "column_name": "smsc"
+  },
+  {
+    "column_name": "caller_number"
+  },
+  {
+    "column_name": "network_type"
+  },
+  {
+    "column_name": "start_time"
+  },
+  {
+    "column_name": "end_time"
   },
   {
     "column_name": "fct_free_text_1"
@@ -132,40 +105,34 @@
     "column_name": "fct_free_text_20"
   },
   {
-    "column_name": "charging_dt"
+    "column_name": "start_dt"
   },
   {
-    "column_name": "charging_month"
+    "column_name": "start_month"
   },
   {
-    "column_name": "charging_dt_num"
+    "column_name": "start_dt_num"
   },
   {
-    "column_name": "charging_dt_hour"
+    "column_name": "start_dt_hour"
   },
   {
-    "column_name": "charging_timestamp_gmt"
+    "column_name": "start_timestamp_gmt"
   },
   {
-    "column_name": "charging_month_gmt"
+    "column_name": "start_month_gmt"
   },
   {
-    "column_name": "charging_dt_num_gmt"
+    "column_name": "start_dt_num_gmt"
   },
   {
-    "column_name": "charging_dt_hour_gmt"
-  },
-  {
-    "column_name": "duration_min"
+    "column_name": "start_dt_hour_gmt"
   },
   {
     "column_name": "filename"
   },
   {
     "column_name": "batch_id"
-  },
-  {
-    "column_name": "created_date"
   },
   {
     "column_name": "rec_checksum"
