@@ -2,7 +2,7 @@
   {
     "module" : "mno",
     "subModule" : "voice",
-    "integerDateColumn" : "charging_dt_num",
+    "integerDateColumn" : "start_dt_num",
     "normalcdrfrq" : "daily",
     "numofdayormnthnormal" : 1,
     "latecdrfrq" : "monthly",
@@ -11,9 +11,9 @@
     "srcSchemaPath": "projects/FRMNO/schemas/mno_src_fct_mno_o2.json",
     "tgtSchemaPath": "projects/FRMNO/schemas/mno_tgt_fct_mno_o2.json",
     "database" : "fra_mno_dm",
-    "normalcdrtbl" : "fact_mno_o2",
-    "latecdrtbl" : "fact_mno_o2_latecdr",
-    "duplicatecdrtbl" : "fact_mno_o2_duplcdr",
+    "normalcdrtbl" : "fact_mno_voice",
+    "latecdrtbl" : "fact_mno_voice_latecdr",
+    "duplicatecdrtbl" : "fact_mno_voice_duplcdr",
     "logdb" : "fra_logs",
     "batchfiletbl" : "log_batch_files_mno",
     "batchstatustbl" : "log_batch_status_mno"
@@ -21,7 +21,7 @@
   {
     "module" : "mno",
     "subModule" : "gprs",
-    "integerDateColumn" : "charging_dt_num",
+    "integerDateColumn" : "start_dt_num",
     "normalcdrfrq" : "daily",
     "numofdayormnthnormal" : 1,
     "latecdrfrq" : "monthly",
@@ -30,9 +30,9 @@
     "srcSchemaPath": "projects/FRMNO/schemas/mno_src_fct_mno_data.json",
     "tgtSchemaPath": "projects/FRMNO/schemas/mno_tgt_fct_mno_data.json",
     "database" : "fra_mno_dm",
-    "normalcdrtbl" : "fact_mno_o2_data",
-    "latecdrtbl" : "fact_mno_o2_data_latecdr",
-    "duplicatecdrtbl" : "fact_mno_o2_data_duplcdr",
+    "normalcdrtbl" : "fact_mno_data",
+    "latecdrtbl" : "fact_mno_data_latecdr",
+    "duplicatecdrtbl" : "fact_mno_data_duplcdr",
     "logdb" : "fra_logs",
     "batchfiletbl" : "log_batch_files_mno",
     "batchstatustbl" : "log_batch_status_mno"
