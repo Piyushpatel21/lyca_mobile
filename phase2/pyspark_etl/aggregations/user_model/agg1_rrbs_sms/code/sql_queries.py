@@ -2,7 +2,7 @@
 Contains SQL queries for aggregation
 """
 
-rrbs_voice_hourly = """
+rrbs_sms_hourly = """
 SELECT DISTINCT 
     cli
     , case when bundle_code>1 then 'Bundle_use' else 'Payg' end as user_type
@@ -21,7 +21,7 @@ SELECT DISTINCT
      from {table}
 """
 
-rrbs_voice_daily = """
+rrbs_sms_daily = """
 SELECT DISTINCT 
     cli
     , case when bundle_code>1 then 'Bundle_use' else 'Payg' end as user_type
@@ -39,7 +39,7 @@ SELECT DISTINCT
      from {table}
 """
 
-rrbs_voice_monthly = """
+rrbs_sms_monthly = """
 SELECT DISTINCT 
     cli
     , case when bundle_code>1 then 'Bundle_use' else 'Payg' end as user_type
@@ -55,7 +55,7 @@ SELECT DISTINCT
      from {table}
 """
 
-rrbs_voice_yearly = """
+rrbs_sms_yearly = """
 SELECT DISTINCT 
     cli
     , case when bundle_code>1 then 'Bundle_use' else 'Payg' end as user_type
