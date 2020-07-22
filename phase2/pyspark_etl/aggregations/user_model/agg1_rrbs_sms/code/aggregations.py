@@ -253,21 +253,21 @@ class Aggregation:
 
         if self.fmt.startswith('%Y%m%d') or self.creation_date_range:
 
-            df_distinct_groupby_hourly = self.spark.sql(rrbs_voice_hourly.format(table=self.spark_table_name))
+            df_distinct_groupby_hourly = self.spark.sql(rrbs_sms_hourly.format(table=self.spark_table_name))
             if df_distinct_groupby_hourly and hourly_df:
                 df_distinct_groupby_hourly = df_distinct_groupby_hourly.subtract(hourly_df)
 
-            df_distinct_groupby_daily = self.spark.sql(rrbs_voice_daily.format(table=self.spark_table_name))
+            df_distinct_groupby_daily = self.spark.sql(rrbs_sms_daily.format(table=self.spark_table_name))
             if df_distinct_groupby_daily and daily_df:
                 df_distinct_groupby_daily = df_distinct_groupby_daily.subtract(daily_df)
 
         if self.fmt.startswith('%Y%m') or self.creation_date_range:
-            df_distinct_groupby_monthly = self.spark.sql(rrbs_voice_monthly.format(table=self.spark_table_name))
+            df_distinct_groupby_monthly = self.spark.sql(rrbs_sms_monthly.format(table=self.spark_table_name))
             if monthly_df and df_distinct_groupby_monthly:
                 df_distinct_groupby_monthly = df_distinct_groupby_monthly.subtract(monthly_df)
 
         if self.fmt.startswith('%Y') or self.creation_date_range:
-            df_distinct_groupby_yearly = self.spark.sql(rrbs_voice_yearly.format(table=self.spark_table_name))
+            df_distinct_groupby_yearly = self.spark.sql(rrbs_sms_yearly.format(table=self.spark_table_name))
             if yearly_df and df_distinct_groupby_yearly:
                 df_distinct_groupby_yearly = df_distinct_groupby_yearly.subtract(yearly_df)
 
