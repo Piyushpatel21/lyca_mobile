@@ -14,7 +14,7 @@ DATA_EXPORTER := phase2/pyspark_etl/DataExporter
 FR_RRBS_DIR := phase2/pyspark_etl/FRRRBS
 FR_MNO_DIR := phase2/pyspark_etl/FRMNO
 RECON_DIR := phase2/pyspark_etl/RECON
-AGG_USER_MODEL_DIR := phase2/pyspark_etl/aggregations/user_model
+AGG_DIR := phase2/pyspark_etl/aggregations
 
 PROJECTS := $(RRBS_DIR) $(MNO_DIR)
 ENV :=
@@ -148,46 +148,62 @@ build_recon:
 	cp $(RECON_DIR)/job_configs/*.json dist/RECON/job_configs/
 
 build_aggregation_agg1_rrbs_voice:
-	$(eval AGG_PRJ := agg1_rrbs_voice)
-	$(eval VERSION := $(shell grep "version=[0-9.]*" $(AGG_USER_MODEL_DIR)/$(AGG_PRJ)/setup.py | cut -d\" -f2))
+	$(eval AGG_MODEL := user_model)
+	$(eval AGG_PRJ := $(AGG_MODEL)/agg1_rrbs_voice)
+	$(eval VERSION := $(shell grep "version=[0-9.]*" $(AGG_DIR)/$(AGG_PRJ)/setup.py | cut -d\" -f2))
 	echo "Building for $(ENV) $(AGG_PRJ) with version as $(VERSION)"
-	$(MAKE) --directory=$(AGG_USER_MODEL_DIR)/agg1_rrbs_voice build
+	$(MAKE) --directory=$(AGG_DIR)/$(AGG_PRJ) build
 	mkdir -p dist/$(ENV)/aggregations/$(AGG_PRJ)/$(VERSION)/code dist/$(ENV)/aggregations/$(AGG_PRJ)/$(VERSION)/configs dist/$(ENV)/aggregations/$(AGG_PRJ)/$(VERSION)/job_configs
-	cp $(AGG_USER_MODEL_DIR)/$(AGG_PRJ)/dist/* dist/$(ENV)/aggregations/$(AGG_PRJ)/$(VERSION)/code
-	cp $(AGG_USER_MODEL_DIR)/$(AGG_PRJ)/main.py  dist/$(ENV)/aggregations/$(AGG_PRJ)/$(VERSION)/code
-	cp $(AGG_USER_MODEL_DIR)/$(AGG_PRJ)/configs/* dist/$(ENV)/aggregations/$(AGG_PRJ)/$(VERSION)/configs
-	cp $(AGG_USER_MODEL_DIR)/$(AGG_PRJ)/job_configs/* dist/$(ENV)/aggregations/$(AGG_PRJ)/$(VERSION)/job_configs
+	cp $(AGG_DIR)/$(AGG_PRJ)/dist/* dist/$(ENV)/aggregations/$(AGG_PRJ)/$(VERSION)/code
+	cp $(AGG_DIR)/$(AGG_PRJ)/main.py  dist/$(ENV)/aggregations/$(AGG_PRJ)/$(VERSION)/code
+	cp $(AGG_DIR)/$(AGG_PRJ)/configs/* dist/$(ENV)/aggregations/$(AGG_PRJ)/$(VERSION)/configs
+	cp $(AGG_DIR)/$(AGG_PRJ)/job_configs/* dist/$(ENV)/aggregations/$(AGG_PRJ)/$(VERSION)/job_configs
 
 build_aggregation_agg1_rrbs_sms:
-	$(eval AGG_PRJ := agg1_rrbs_sms)
-	$(eval VERSION := $(shell grep "version=[0-9.]*" $(AGG_USER_MODEL_DIR)/$(AGG_PRJ)/setup.py | cut -d\" -f2))
+	$(eval AGG_MODEL := user_model)
+	$(eval AGG_PRJ := $(AGG_MODEL)/agg1_rrbs_sms)
+	$(eval VERSION := $(shell grep "version=[0-9.]*" $(AGG_DIR)/$(AGG_PRJ)/setup.py | cut -d\" -f2))
 	echo "Building for $(ENV) $(AGG_PRJ) with version as $(VERSION)"
-	$(MAKE) --directory=$(AGG_USER_MODEL_DIR)/$(AGG_PRJ) build
+	$(MAKE) --directory=$(AGG_DIR)/$(AGG_PRJ) build
 	mkdir -p dist/$(ENV)/aggregations/$(AGG_PRJ)/$(VERSION)/code dist/$(ENV)/aggregations/$(AGG_PRJ)/$(VERSION)/configs dist/$(ENV)/aggregations/$(AGG_PRJ)/$(VERSION)/job_configs
-	cp $(AGG_USER_MODEL_DIR)/$(AGG_PRJ)/dist/* dist/$(ENV)/aggregations/$(AGG_PRJ)/$(VERSION)/code
-	cp $(AGG_USER_MODEL_DIR)/$(AGG_PRJ)/main.py  dist/$(ENV)/aggregations/$(AGG_PRJ)/$(VERSION)/code
-	cp $(AGG_USER_MODEL_DIR)/$(AGG_PRJ)/configs/* dist/$(ENV)/aggregations/$(AGG_PRJ)/$(VERSION)/configs
-	cp $(AGG_USER_MODEL_DIR)/$(AGG_PRJ)/job_configs/* dist/$(ENV)/aggregations/$(AGG_PRJ)/$(VERSION)/job_configs
+	cp $(AGG_DIR)/$(AGG_PRJ)/dist/* dist/$(ENV)/aggregations/$(AGG_PRJ)/$(VERSION)/code
+	cp $(AGG_DIR)/$(AGG_PRJ)/main.py  dist/$(ENV)/aggregations/$(AGG_PRJ)/$(VERSION)/code
+	cp $(AGG_DIR)/$(AGG_PRJ)/configs/* dist/$(ENV)/aggregations/$(AGG_PRJ)/$(VERSION)/configs
+	cp $(AGG_DIR)/$(AGG_PRJ)/job_configs/* dist/$(ENV)/aggregations/$(AGG_PRJ)/$(VERSION)/job_configs
 
 build_aggregation_agg1_rrbs_gprs_conn:
-	$(eval AGG_PRJ := agg1_rrbs_gprs_conn)
-	$(eval VERSION := $(shell grep "version=[0-9.]*" $(AGG_USER_MODEL_DIR)/$(AGG_PRJ)/setup.py | cut -d\" -f2))
+	$(eval AGG_MODEL := user_model)
+	$(eval AGG_PRJ := $(AGG_MODEL)/agg1_rrbs_gprs_conn)
+	$(eval VERSION := $(shell grep "version=[0-9.]*" $(AGG_DIR)/$(AGG_PRJ)/setup.py | cut -d\" -f2))
 	echo "Building for $(ENV) $(AGG_PRJ) with version as $(VERSION)"
-	$(MAKE) --directory=$(AGG_USER_MODEL_DIR)/$(AGG_PRJ) build
+	$(MAKE) --directory=$(AGG_DIR)/$(AGG_PRJ) build
 	mkdir -p dist/$(ENV)/aggregations/$(AGG_PRJ)/$(VERSION)/code dist/$(ENV)/aggregations/$(AGG_PRJ)/$(VERSION)/configs dist/$(ENV)/aggregations/$(AGG_PRJ)/$(VERSION)/job_configs
-	cp $(AGG_USER_MODEL_DIR)/$(AGG_PRJ)/dist/* dist/$(ENV)/aggregations/$(AGG_PRJ)/$(VERSION)/code
-	cp $(AGG_USER_MODEL_DIR)/$(AGG_PRJ)/main.py  dist/$(ENV)/aggregations/$(AGG_PRJ)/$(VERSION)/code
-	cp $(AGG_USER_MODEL_DIR)/$(AGG_PRJ)/configs/* dist/$(ENV)/aggregations/$(AGG_PRJ)/$(VERSION)/configs
-	cp $(AGG_USER_MODEL_DIR)/$(AGG_PRJ)/job_configs/* dist/$(ENV)/aggregations/$(AGG_PRJ)/$(VERSION)/job_configs
+	cp $(AGG_DIR)/$(AGG_PRJ)/dist/* dist/$(ENV)/aggregations/$(AGG_PRJ)/$(VERSION)/code
+	cp $(AGG_DIR)/$(AGG_PRJ)/main.py  dist/$(ENV)/aggregations/$(AGG_PRJ)/$(VERSION)/code
+	cp $(AGG_DIR)/$(AGG_PRJ)/configs/* dist/$(ENV)/aggregations/$(AGG_PRJ)/$(VERSION)/configs
+	cp $(AGG_DIR)/$(AGG_PRJ)/job_configs/* dist/$(ENV)/aggregations/$(AGG_PRJ)/$(VERSION)/job_configs
 
 build_aggregation_agg1_rrbs_gprs_term:
-	$(eval AGG_PRJ := agg1_rrbs_gprs_term)
-	$(eval VERSION := $(shell grep "version=[0-9.]*" $(AGG_USER_MODEL_DIR)/$(AGG_PRJ)/setup.py | cut -d\" -f2))
+	$(eval AGG_MODEL := user_model)
+	$(eval AGG_PRJ := $(AGG_MODEL)/agg1_rrbs_gprs_term)
+	$(eval VERSION := $(shell grep "version=[0-9.]*" $(AGG_DIR)/$(AGG_PRJ)/setup.py | cut -d\" -f2))
 	echo "Building for $(ENV) $(AGG_PRJ) with version as $(VERSION)"
-	$(MAKE) --directory=$(AGG_USER_MODEL_DIR)/$(AGG_PRJ) build
+	$(MAKE) --directory=$(AGG_DIR)/$(AGG_PRJ) build
 	mkdir -p dist/$(ENV)/aggregations/$(AGG_PRJ)/$(VERSION)/code dist/$(ENV)/aggregations/$(AGG_PRJ)/$(VERSION)/configs dist/$(ENV)/aggregations/$(AGG_PRJ)/$(VERSION)/job_configs
-	cp $(AGG_USER_MODEL_DIR)/$(AGG_PRJ)/dist/* dist/$(ENV)/aggregations/$(AGG_PRJ)/$(VERSION)/code
-	cp $(AGG_USER_MODEL_DIR)/$(AGG_PRJ)/main.py  dist/$(ENV)/aggregations/$(AGG_PRJ)/$(VERSION)/code
-	cp $(AGG_USER_MODEL_DIR)/$(AGG_PRJ)/configs/* dist/$(ENV)/aggregations/$(AGG_PRJ)/$(VERSION)/configs
-	cp $(AGG_USER_MODEL_DIR)/$(AGG_PRJ)/job_configs/* dist/$(ENV)/aggregations/$(AGG_PRJ)/$(VERSION)/job_configs
+	cp $(AGG_DIR)/$(AGG_PRJ)/dist/* dist/$(ENV)/aggregations/$(AGG_PRJ)/$(VERSION)/code
+	cp $(AGG_DIR)/$(AGG_PRJ)/main.py  dist/$(ENV)/aggregations/$(AGG_PRJ)/$(VERSION)/code
+	cp $(AGG_DIR)/$(AGG_PRJ)/configs/* dist/$(ENV)/aggregations/$(AGG_PRJ)/$(VERSION)/configs
+	cp $(AGG_DIR)/$(AGG_PRJ)/job_configs/* dist/$(ENV)/aggregations/$(AGG_PRJ)/$(VERSION)/job_configs
+
+build_aggregation_agg1_rrbs_topup:
+	$(eval AGG_MODEL := user_model)
+	$(eval AGG_PRJ := $(AGG_MODEL)/agg1_rrbs_topup)
+	$(eval VERSION := $(shell grep "version=[0-9.]*" $(AGG_DIR)/$(AGG_PRJ)/setup.py | cut -d\" -f2))
+	echo "Building for $(ENV) $(AGG_PRJ) with version as $(VERSION)"
+	$(MAKE) --directory=$(AGG_DIR)/$(AGG_PRJ) build
+	mkdir -p dist/$(ENV)/aggregations/$(AGG_PRJ)/$(VERSION)/code dist/$(ENV)/aggregations/$(AGG_PRJ)/$(VERSION)/configs dist/$(ENV)/aggregations/$(AGG_PRJ)/$(VERSION)/job_configs
+	cp $(AGG_DIR)/$(AGG_PRJ)/dist/* dist/$(ENV)/aggregations/$(AGG_PRJ)/$(VERSION)/code
+	cp $(AGG_DIR)/$(AGG_PRJ)/main.py  dist/$(ENV)/aggregations/$(AGG_PRJ)/$(VERSION)/code
+	cp $(AGG_DIR)/$(AGG_PRJ)/configs/* dist/$(ENV)/aggregations/$(AGG_PRJ)/$(VERSION)/configs
+	cp $(AGG_DIR)/$(AGG_PRJ)/job_configs/* dist/$(ENV)/aggregations/$(AGG_PRJ)/$(VERSION)/job_configs
 
