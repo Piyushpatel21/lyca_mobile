@@ -13,6 +13,8 @@ phases:
     commands:
       - make build_aggregation_agg1_rrbs_voice ENV=$env
       - make build_aggregation_agg1_rrbs_sms ENV=$env
+      - make build_aggregation_agg1_rrbs_gprs_conn ENV=$env
+      - make build_aggregation_agg1_rrbs_gprs_term ENV=$env
 artifacts:
   files:
     - '**/*'

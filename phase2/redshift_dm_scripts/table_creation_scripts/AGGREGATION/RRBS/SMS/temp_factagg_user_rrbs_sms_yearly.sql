@@ -1,7 +1,7 @@
 CREATE TABLE temp_factagg_user_rrbs_sms_yearly (
     cli                       bigint encode az64
     , user_type                 varchar(30) encode zstd
-    , bundle_code               integer encode az64
+    , bundle_code               varchar(20) encode zstd
     , call_type                 integer
     , cdr_types                 integer encode az64
     , destination_zone_code     integer encode az64
