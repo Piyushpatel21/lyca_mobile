@@ -12,7 +12,7 @@ SELECT DISTINCT
     , voice_call_cdr
     , destination_zone
     , destination_area_code
-    , destinationzone_name
+    , destinationzone_name as destination_zone_name
     , roam_flag
     , network_id
     , call_date_hour
@@ -33,7 +33,7 @@ SELECT DISTINCT
     , voice_call_cdr
     , destination_zone
     , destination_area_code
-    , destinationzone_name
+    , destinationzone_name as destination_zone_name
     , roam_flag
     , network_id
     , call_date_dt
@@ -53,7 +53,7 @@ SELECT DISTINCT
     , voice_call_cdr
     , destination_zone
     , destination_area_code
-    , destinationzone_name
+    , destinationzone_name as destination_zone_name
     , roam_flag
     , network_id
     , call_date_month
@@ -71,7 +71,7 @@ SELECT DISTINCT
     , voice_call_cdr
     , destination_zone
     , destination_area_code
-    , destinationzone_name
+    , destinationzone_name as destination_zone_name
     , roam_flag
     , network_id
     , CAST(LEFT(call_date_month, 4) as INT) as call_date_year

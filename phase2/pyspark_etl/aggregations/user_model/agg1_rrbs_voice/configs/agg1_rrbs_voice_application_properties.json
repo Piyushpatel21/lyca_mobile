@@ -12,7 +12,7 @@
       "date_monthly_col": "call_date_month"
     },
     "output": {
-      "database": "uk_agg",
+      "database": "uk_rrbs_agg",
       "hourly_table": "factagg_user_rrbs_voice_hourly",
       "hourly_temp_table": "temp_factagg_user_rrbs_voice_hourly",
       "daily_table": "factagg_user_rrbs_voice_daily",

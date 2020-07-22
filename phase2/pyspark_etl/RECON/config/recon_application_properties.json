@@ -1,0 +1,10 @@
+[
+  {
+    "sourceFilePath" : "s3://mis-dl-uk-eu-west-2-311477489434-dev-raw",
+    "database" : "uk_rrbs_dm",
+    "tbl" : "log_rrbs_recon",
+    "logdb" : "uk_rrbs_dm",
+    "batchfiletbl" : "log_batch_files_rrbs_recon",
+    "batchstatustbl" : "log_batch_status_rrbs_recon"
+  }
+]
