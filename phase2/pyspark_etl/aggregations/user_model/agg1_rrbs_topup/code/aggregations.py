@@ -184,9 +184,9 @@ class Aggregation:
             # get monthly data from agg table
             full_monthly_tbl_name = '.'.join(
                 [self.config['output']['database'], self.config['output']['monthly_table']])
-            query = "SELECT {cols} FROM {table} WHERE {msg_month} >= {start} AND {msg_month} <= {end}".format(
+            query = "SELECT {cols} FROM {table} WHERE {cdr_month} >= {start} AND {cdr_month} <= {end}".format(
                 cols=','.join(self.monthly_cols), table=full_monthly_tbl_name, start=self.start[:6], end=self.end[:6],
-                msg_month='msg_date_month'
+                cdr_month='cdr_dt_month'
             )
             _monthly_cols = self.monthly_cols
             monthly_df = self.rs_utils.read_from_redshift_with_query(query).select(_monthly_cols)
