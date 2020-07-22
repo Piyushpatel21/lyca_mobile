@@ -1,0 +1,30 @@
+[
+  {
+    "module" : "rrbs",
+    "subModule" : "topup",
+    "input": {
+      "database": "uk_rrbs_dm",
+      "normal_cdr_table": "fact_rrbs_topup",
+      "uid": "cli",
+      "created_date_col": "created_date",
+      "date_hour_col": "cdr_dt_hour_gmt",
+      "date_daily_col": "cdr_dt_num",
+      "date_monthly_col": "cdr_dt_month"
+    },
+    "output": {
+      "database": "uk_rrbs_agg",
+      "hourly_table": "",
+      "hourly_temp_table": "",
+      "daily_table": "",
+      "daily_temp_table": "",
+      "monthly_table": "factagg_user_rrbs_topup_monthly",
+      "monthly_temp_table": "temp_factagg_user_rrbs_topup_monthly",
+      "yearly_table": "",
+      "yearly_temp_table": ""
+    },
+    "logging": {
+      "database" : "uk_test",
+      "batch_status_table": ""
+    }
+  }
+]
