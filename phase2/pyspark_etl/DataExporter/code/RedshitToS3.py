@@ -101,6 +101,7 @@ def copyRedshiftToS3(tableName, column_name, column_value, db, partitionDateColu
         .withColumn(str(partitionDateColumn) + "-month", F.date_format(F.col(partitionDateColumn), "MM").cast(IntegerType())) \
         .withColumn(str(partitionDateColumn) + "-day", F.date_format(F.col(partitionDateColumn), "dd").cast(IntegerType()))
     redshiftTablePartionColumn.printSchema()
+
     redshiftTablePartionColumn.write.mode("overwrite").format("parquet").partitionBy(str(partitionDateColumn) + "-year", str(partitionDateColumn) + "-month", str(partitionDateColumn) + "-day").save("s3://" + str(bucket) + "/" + str(moduleName) + "/" + str(countryName) + "/" + str(subModule))
 
 
