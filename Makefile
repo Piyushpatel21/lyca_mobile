@@ -13,6 +13,7 @@ GGSN_OTL_DIR := phase2/pyspark_etl/GGSN_OTL
 DATA_EXPORTER := phase2/pyspark_etl/DataExporter
 FR_RRBS_DIR := phase2/pyspark_etl/FRRRBS
 FR_MNO_DIR := phase2/pyspark_etl/FRMNO
+RECON_DIR := phase2/pyspark_etl/RECON
 AGG_USER_MODEL_DIR := phase2/pyspark_etl/aggregations/user_model
 
 PROJECTS := $(RRBS_DIR) $(MNO_DIR)
@@ -136,6 +137,15 @@ build_fr_mno:
 	cp $(FR_MNO_DIR)/code/config/*.json dist/FRMNO/schemas
 	cp $(FR_MNO_DIR)/config/*.json dist/FRMNO/configs/
 	cp $(FR_MNO_DIR)/job_configs/*.json dist/FRMNO/job_configs/
+
+build_recon:
+	$(MAKE) --directory=$(RECON_DIR) build
+	mkdir -p dist/RECON/code dist/RECON/configs/ dist/RECON/schemas dist/RECON/job_configs
+	cp $(RECON_DIR)/dist/* dist/RECON/code/
+	cp $(RECON_DIR)/code/pythonlib/main/src/main.py dist/RECON/code/
+	cp $(RECON_DIR)/code/config/*.json dist/RECON/schemas
+	cp $(RECON_DIR)/config/*.json dist/RECON/configs/
+	cp $(RECON_DIR)/job_configs/*.json dist/RECON/job_configs/
 
 build_aggregation_agg1_rrbs_voice:
 	$(eval AGG_PRJ := agg1_rrbs_voice)
