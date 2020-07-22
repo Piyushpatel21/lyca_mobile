@@ -40,6 +40,7 @@ create schema if not exists uk_accountinfo_dm authorization <username>; --change
 create schema if not exists uk_logs authorization <username>; 			--change to ukdevadmin
 create schema if not exists uk_test authorization <username>; 
 create schema if not exists uk_log_test authorization <username>; 
+create schema if not exists uk_rrbs_agg authorization ukdevadmin;
 
 --#4 Grant permission to ukdev database to cloudwickgroup--------------------
 grant all on DATABASE ukdev to group cloudwickgroup;
@@ -55,15 +56,19 @@ GRANT USAGE ON SCHEMA uk_accountinfo_dm TO GROUP cloudwickgroup;
 GRANT USAGE ON SCHEMA uk_logs TO GROUP cloudwickgroup;
 GRANT USAGE ON SCHEMA uk_test TO GROUP cloudwickgroup;
 GRANT USAGE ON SCHEMA uk_log_test TO GROUP cloudwickgroup;
+GRANT USAGE ON SCHEMA uk_rrbs_agg TO GROUP CLOUDWICKGROUP;
 
-grant all on schema uk_rrbs_stg to group cloudwickgroup;
-grant all on schema uk_rrbs_dm to group cloudwickgroup;
-grant all on schema uk_rrbs_rt to group cloudwickgroup;
-grant all on schema uk_mno_dm TO GROUP cloudwickgroup;
-grant all on schema uk_accountinfo_dm TO GROUP cloudwickgroup;
-grant all on schema uk_logs TO GROUP cloudwickgroup;
-grant all on schema uk_test TO GROUP cloudwickgroup;
-grant all on schema uk_log_test TO GROUP cloudwickgroup;
+
+GRANT ALL ON SCHEMA uk_rrbs_stg to GROUP cloudwickgroup;
+GRANT ALL ON SCHEMA uk_rrbs_dm to GROUP cloudwickgroup;
+GRANT ALL ON SCHEMA uk_rrbs_rt to GROUP cloudwickgroup;
+GRANT ALL ON SCHEMA uk_mno_dm TO GROUP cloudwickgroup;
+GRANT ALL ON SCHEMA uk_accountinfo_dm TO GROUP cloudwickgroup;
+GRANT ALL ON SCHEMA uk_logs TO GROUP cloudwickgroup;
+GRANT ALL ON SCHEMA uk_test TO GROUP cloudwickgroup;
+GRANT ALL ON SCHEMA uk_log_test TO GROUP cloudwickgroup;
+GRANT ALL ON SCHEMA uk_rrbs_agg to GROUP cloudwickgroup;
+
 
 GRANT ALL ON ALL tables in schema uk_rrbs_stg to group cloudwickgroup;
 GRANT ALL ON ALL tables in schema uk_rrbs_dm to group cloudwickgroup;
@@ -73,6 +78,8 @@ GRANT ALL ON ALL tables in schema uk_accountinfo_dm to group cloudwickgroup;
 GRANT ALL ON ALL tables in schema uk_logs to group cloudwickgroup;
 GRANT ALL ON ALL tables in schema uk_test to group cloudwickgroup;
 GRANT ALL ON ALL tables in schema uk_log_test to group cloudwickgroup;
+GRANT ALL ON all tables in schema uk_rrbs_agg to GROUP cloudwickgroup;
+
 
 ALTER DEFAULT PRIVILEGES IN SCHEMA uk_rrbs_stg GRANT ALL ON TABLES TO group cloudwickgroup;
 ALTER DEFAULT PRIVILEGES IN SCHEMA uk_rrbs_dm GRANT ALL ON TABLES TO group cloudwickgroup;
