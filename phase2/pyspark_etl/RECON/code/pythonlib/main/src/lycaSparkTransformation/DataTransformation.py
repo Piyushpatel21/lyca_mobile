@@ -25,7 +25,7 @@ def getSourceFilePath(path):
 
 schema = StructType(
     [StructField("source_file_name", StringType(), True),
-     StructField("source_rec_count", StringType(), True)]
+     StructField("source_rec_count", IntegerType(), True)]
 )
 
 
@@ -61,6 +61,7 @@ class DataTransformation:
             df_trans = df_cleaned_checksum \
                 .withColumn("batch_id", F.lit(batchid).cast(IntegerType())) \
                 .withColumn("created_date", F.current_timestamp())
+
             return df_trans
         except Exception as ex:
             self._logger.error("Failed to merge all source files with error: {error}".format(error=ex))
@@ -167,9 +168,6 @@ class DataTransformation:
         :return:
         """
         new_df = df
-        for elem in new_df.schema:
-            if elem.dataType != StringType():
-                new_df = new_df.withColumn(elem.name, new_df[elem.name].cast(StringType()))
         no_blanks_df = self.fillBlanks(new_df, "0")
         no_null_df = self.fillNull(no_blanks_df)
         return no_null_df
