@@ -16,6 +16,7 @@ phases:
       - make build_aggregation_agg1_rrbs_gprs_conn ENV=$env
       - make build_aggregation_agg1_rrbs_gprs_term ENV=$env
       - make build_aggregation_agg1_rrbs_topup ENV=$env
+      - make build_aggregation_agg2_rrbs ENV=$env
 artifacts:
   files:
     - '**/*'
