@@ -70,12 +70,11 @@ def start_execution(args):
                 .format(batch_id=batch_id, run_date=run_date, prevDate=prevDate))
     try:
         df_raw, dfmetadata = tf.getSourceData(batch_id)
-        df_source = df_raw.select('recon_file_name', 's3_prefix', 'source_file_name',
-                                                      'source_rec_count', 'batch_id', 'created_date')
-        df_raw.show(20, False)
-        dfmetadata.show(20, False)
+        # df_source = df_raw.select('recon_file_name', 's3_prefix', 'source_file_name',
+        #                                               'source_rec_count', 'batch_id', 'created_date')
+        tgtSchema = ['recon_file_name', 's3_prefix', 'source_file_name', 'source_rec_count', 'batch_id', 'created_date']
         tf.writeBatchFileStatus(dfmetadata, batch_id)
-        tf.writetoDataMart(df_source)
+        tf.writetoDataMart(df_raw, tgtSchema)
         logger.info("ETL processing completed for batch - {batch_id}".format(batch_id=batch_id))
         tf.writeBatchStatus(batch_id, "Complete")
     except Exception as ex:
