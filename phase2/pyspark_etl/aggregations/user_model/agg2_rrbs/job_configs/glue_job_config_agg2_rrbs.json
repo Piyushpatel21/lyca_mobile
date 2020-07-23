@@ -1,0 +1,34 @@
+{
+  "Name": "lyca_etl_agg2_rrbs",
+  "ScriptLocation": "s3://mis-dl-uk-eu-west-2-869841577715-code-pipeline/projects/aggregations/user_model/agg2_rrbs/1.0.0/code/main.py",
+  "Description": "ETL job for aggregation level 2 for RRBS",
+  "Role": "AWSGlueServiceRole_311477489434",
+  "PythonVersion": "3",
+  "MaxRetries": 0,
+  "GlueVersion": "1.0",
+  "MaxCapacity": 5,
+  "Connections": ["ETLRedshiftConnection"],
+  "DefaultArguments": {
+    "--start_date": "",
+    "--end_date": "",
+    "--module": "rrbs",
+    "--agg_type": "all",
+    "--configfile": "projects/aggregations/user_model/agg2_rrbs/1.0.0/configs/agg2_rrbs_application_properties.json",
+    "--connfile": "projects/aggregations/user_model/agg2_rrbs/1.0.0/configs/agg_connection.json",
+    "--code_bucket": "mis-dl-uk-eu-west-2-869841577715-code-pipeline",
+    "--extra-py-files": "s3://mis-dl-uk-eu-west-2-869841577715-code-pipeline/projects/aggregations/user_model/agg2_rrbs/1.0.0/code/lycaetl_agg2_rrbs-pyspark-1.0.0.zip",
+    "--enable-metrics": "true",
+    "--enable-continuous-cloudwatch-log": "true",
+    "--enable-spark-ui": "true",
+    "--spark-event-logs-path": "s3://mis-dl-uk-eu-west-2-311477489434-dev-logs/glue/applogs",
+    "--master": "glue",
+    "--TempDir": "s3://mis-dl-uk-eu-west-2-311477489434-dev-raw/tmp/redshift"
+  },
+  "Tags": {
+    "CreatedBy": "Cloudwick",
+    "Project": "Lyca",
+    "Module": "RRBS",
+    "SubModule": "Voice",
+    "Type": "AggregationLayer2"
+  }
+}

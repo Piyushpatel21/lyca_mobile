@@ -12,7 +12,11 @@
     "--start_date": "",
     "--end_date": "",
     "--module": "rrbs",
+<<<<<<< HEAD
+    "--sub_module": "sms",
+=======
     "--sub_module": "topup",
+>>>>>>> lycadev
     "--configfile": "projects/aggregations/user_model/agg1_rrbs_topup/1.0.0/configs/agg1_rrbs_topup_application_properties.json",
     "--connfile": "projects/aggregations/user_model/agg1_rrbs_topup/1.0.0/configs/agg1_connection.json",
     "--code_bucket": "mis-dl-uk-eu-west-2-869841577715-code-pipeline",
