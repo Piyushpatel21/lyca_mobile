@@ -41,6 +41,16 @@
         "date_col": "data_connection_dt_num",
         "month_col": "data_connection_month",
         "year_col": "data_connection_year"
+      },
+      "gprs_term": {
+        "database": "uk_rrbs_agg",
+        "hourly_table": "factagg_user_rrbs_gprs_term_hourly",
+        "daily_table": "factagg_user_rrbs_gprs_term_daily",
+        "monthly_table": "factagg_user_rrbs_gprs_term_monthly",
+        "yearly_table": "factagg_user_rrbs_gprs_term_yearly",
+        "date_col": "data_termination_dt_num",
+        "month_col": "data_termination_month",
+        "year_col": "data_termination_year"
       }
     },
     "output": {
