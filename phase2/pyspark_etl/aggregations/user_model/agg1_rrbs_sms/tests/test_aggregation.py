@@ -51,6 +51,7 @@ class TestAgg1RRBSSMS:
         df_distinct_groupby_hour, df_distinct_groupby_daily, df_distinct_groupby_monthly, df_distinct_groupby_yearly = all_aggregation
 
         print("Hourly: ", df_distinct_groupby_hour.count())
+        print(df_distinct_groupby_hour.show())
 
         print("Daily: ", df_distinct_groupby_daily.count())
 

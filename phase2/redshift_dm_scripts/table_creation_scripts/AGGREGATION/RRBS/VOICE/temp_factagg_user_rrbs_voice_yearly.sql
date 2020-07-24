@@ -10,6 +10,7 @@ CREATE TABLE temp_factagg_user_rrbs_voice_yearly (
     , destination_zone_name      varchar(30) encode bytedict
     , roam_flag                 smallint
     , network_id                integer
+    , call_feature              smallint
     , call_date_year            integer encode az64
 )
 diststyle even

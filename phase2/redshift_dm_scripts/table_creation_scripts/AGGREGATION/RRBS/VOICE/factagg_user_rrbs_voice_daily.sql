@@ -8,9 +8,10 @@ CREATE TABLE factagg_user_rrbs_voice_daily (
     , voice_call_cdr            integer encode az64
     , destination_zone          integer encode az64
     , destination_area_code     bigint encode az64
-    , destination_zone_name      varchar(30) encode bytedict
+    , destination_zone_name     varchar(30) encode bytedict
     , roam_flag                 smallint
     , network_id                integer
+    , call_feature              smallint
     , call_date_dt              date encode az64
     , call_date_num             integer encode az64
     , call_date_month           integer encode az64

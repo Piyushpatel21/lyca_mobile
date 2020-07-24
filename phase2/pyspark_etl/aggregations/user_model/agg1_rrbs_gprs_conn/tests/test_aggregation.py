@@ -5,7 +5,7 @@ import boto3
 import pytest
 
 
-class TestAgg1RRBSGprsTerm:
+class TestAgg1RRBSGprsConn:
 
     gprs_fact_location = 'assets/fact_rrbs_gprs_2020-07-22.csv'
     redshift_credentials = 'Redshift/etl_user'
@@ -31,7 +31,7 @@ class TestAgg1RRBSGprsTerm:
             "end_date": "",
             "module": "rrbs",
             "sub_module": "gprs",
-            "configfile": "../configs/agg1_rrbs_gprs_term_application_properties.json",
+            "configfile": "../configs/agg1_rrbs_gprs_conn_application_properties.json",
             "connfile": "../configs/agg1_connection.json",
             "master": "",
             "code_bucket": ""

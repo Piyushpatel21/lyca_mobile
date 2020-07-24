@@ -43,21 +43,21 @@ class Aggregation:
         self.end = end_date
         self.fmt = fmt
         self.code_bucket = code_bucket
-        self.src_cols = ['charged_party_number', 'bundle_code', 'tariffplan_id', 'call_type', 'voice_call_cdr',
+        self.src_cols = ['charged_party_number', 'bundle_code', 'call_feature', 'tariffplan_id', 'call_type', 'voice_call_cdr',
                          'destination_zone', 'destination_area_code', 'destinationzone_name', 'roam_flag',
                          'network_id', 'call_date_hour', 'call_date_dt', 'call_date_num', 'call_date_month']
         self.hourly_cols = ['charged_party_number', 'user_type', 'bundle_code', 'tariffplan_id', 'call_type', 'voice_call_cdr',
                             'destination_zone', 'destination_area_code', 'destination_zone_name', 'roam_flag',
-                            'network_id', 'call_date_hour', 'call_date_dt', 'call_date_num', 'call_date_month', 'call_date_year']
+                            'network_id', 'call_feature', 'call_date_hour', 'call_date_dt', 'call_date_num', 'call_date_month', 'call_date_year']
         self.daily_cols = ['charged_party_number', 'user_type', 'bundle_code', 'tariffplan_id', 'call_type', 'voice_call_cdr',
                            'destination_zone', 'destination_area_code', 'destination_zone_name', 'roam_flag',
-                           'network_id', 'call_date_dt', 'call_date_num', 'call_date_month', 'call_date_year']
+                           'network_id', 'call_feature', 'call_date_dt', 'call_date_num', 'call_date_month', 'call_date_year']
         self.monthly_cols = ['charged_party_number', 'user_type', 'bundle_code', 'tariffplan_id', 'call_type', 'voice_call_cdr',
                              'destination_zone', 'destination_area_code', 'destination_zone_name', 'roam_flag',
-                             'network_id', 'call_date_month', 'call_date_year']
+                             'network_id', 'call_feature', 'call_date_month', 'call_date_year']
         self.yearly_cols = ['charged_party_number', 'user_type', 'bundle_code', 'tariffplan_id', 'call_type', 'voice_call_cdr',
                             'destination_zone', 'destination_area_code', 'destination_zone_name', 'roam_flag',
-                            'network_id', 'call_date_year']
+                            'network_id', 'call_feature', 'call_date_year']
         self.spark_table_name = "temp_fact_table"
         self.conn = self._read_conn_properties(file_path=conn_file_path, code_bucket=self.code_bucket)
         self.logger.info("Received connection properties as: {prop}".format(prop=self.conn))

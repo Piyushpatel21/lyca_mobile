@@ -66,7 +66,7 @@ class TestAgg1RRBSVoice:
             "start_date": "",
             "end_date": "",
             "module": "rrbs",
-            "agg_type": "count_usemode",
+            "agg_type": "all",
             "configfile": "../configs/agg2_rrbs_application_properties.json",
             "connfile": "../configs/agg_connection.json",
             "master": "",
@@ -123,7 +123,8 @@ class TestAgg1RRBSVoice:
                 gprs_term_tables[table_type] = None
 
         if args['agg_type'] == 'all':
-            agg_type_list = ["count_total", "count_usemode", "count_calltype_user", "count_call_user_usage"]
+            agg_type_list = ["count_total", "count_usemode"]
+            # "count_calltype_user", "count_call_user_usage"
         else:
             agg_type_list = [args['agg_type']]
 

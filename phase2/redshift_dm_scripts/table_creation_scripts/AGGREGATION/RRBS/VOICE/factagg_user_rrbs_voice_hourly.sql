@@ -11,6 +11,7 @@ CREATE TABLE factagg_user_rrbs_voice_hourly (
     , destination_zone_name      varchar(30) encode bytedict
     , roam_flag                 smallint
     , network_id                integer
+    , call_feature              smallint
     , call_date_hour            integer encode az64
     , call_date_dt              date encode az64
     , call_date_num             integer encode az64
