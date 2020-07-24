@@ -35,11 +35,11 @@ create user vasanth_5564 password '' in group lycagroup;
 create schema if not exists uk_rrbs_stg authorization ukdevadmin;
 create schema if not exists uk_rrbs_dm authorization ukdevadmin;
 create schema if not exists uk_rrbs_rt authorization ukdevadmin;
-create schema if not exists uk_mno_dm authorization <username>; 		--change to ukdevadmin
-create schema if not exists uk_accountinfo_dm authorization <username>; --change to ukdevadmin
-create schema if not exists uk_logs authorization <username>; 			--change to ukdevadmin
-create schema if not exists uk_test authorization <username>; 
-create schema if not exists uk_log_test authorization <username>; 
+create schema if not exists uk_mno_dm authorization ukdevadmin;
+create schema if not exists uk_accountinfo_dm authorization ukdevadmin;
+create schema if not exists uk_logs authorization ukdevadmin;
+create schema if not exists uk_test authorization ukdevadmin;
+create schema if not exists uk_log_test authorization ukdevadmin;
 create schema if not exists uk_rrbs_agg authorization ukdevadmin;
 
 --#4 Grant permission to ukdev database to cloudwickgroup--------------------
@@ -56,7 +56,7 @@ GRANT USAGE ON SCHEMA uk_accountinfo_dm TO GROUP cloudwickgroup;
 GRANT USAGE ON SCHEMA uk_logs TO GROUP cloudwickgroup;
 GRANT USAGE ON SCHEMA uk_test TO GROUP cloudwickgroup;
 GRANT USAGE ON SCHEMA uk_log_test TO GROUP cloudwickgroup;
-GRANT USAGE ON SCHEMA uk_rrbs_agg TO GROUP CLOUDWICKGROUP;
+GRANT USAGE ON SCHEMA uk_rrbs_agg TO GROUP cloudwickgroup;
 
 
 GRANT ALL ON SCHEMA uk_rrbs_stg to GROUP cloudwickgroup;
@@ -80,7 +80,7 @@ GRANT ALL ON ALL tables in schema uk_test to group cloudwickgroup;
 GRANT ALL ON ALL tables in schema uk_log_test to group cloudwickgroup;
 GRANT ALL ON all tables in schema uk_rrbs_agg to GROUP cloudwickgroup;
 
-
+--# Alter Default Privileges to maintain the permissions on new tables---------
 ALTER DEFAULT PRIVILEGES IN SCHEMA uk_rrbs_stg GRANT ALL ON TABLES TO group cloudwickgroup;
 ALTER DEFAULT PRIVILEGES IN SCHEMA uk_rrbs_dm GRANT ALL ON TABLES TO group cloudwickgroup;
 ALTER DEFAULT PRIVILEGES IN SCHEMA uk_rrbs_rt GRANT ALL ON TABLES TO group cloudwickgroup;
@@ -89,6 +89,7 @@ ALTER DEFAULT PRIVILEGES IN SCHEMA uk_accountinfo_dm GRANT ALL ON TABLES TO grou
 ALTER DEFAULT PRIVILEGES IN SCHEMA uk_logs GRANT ALL ON TABLES TO group cloudwickgroup;
 ALTER DEFAULT PRIVILEGES IN SCHEMA uk_test GRANT ALL ON TABLES TO group cloudwickgroup;
 ALTER DEFAULT PRIVILEGES IN SCHEMA uk_log_test GRANT ALL ON TABLES TO group cloudwickgroup;
+ALTER DEFAULT PRIVILEGES IN SCHEMA uk_rrbs_agg GRANT ALL ON TABLES TO group cloudwickgroup;
 
 --#6 Revoke default rights on schemas and tables to lycagroup-----------------------
 revoke all on all tables in schema uk_rrbs_stg from group lycagroup;
@@ -102,6 +103,7 @@ revoke all on all tables in schema uk_accountinfo_dm from group lycagroup;
 revoke all on all tables in schema uk_logs from group lycagroup;
 revoke all on all tables in schema uk_test from group lycagroup;
 revoke all on all tables in schema uk_log_test from group lycagroup;
+
 revoke create on schema uk_rrbs_dm from group lycagroup;
 revoke create on schema uk_rrbs_stg from group lycagroup;
 revoke create on schema uk_rrbs_rt from group lycagroup;
