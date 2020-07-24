@@ -15,6 +15,7 @@ SELECT DISTINCT
     , destinationzone_name as destination_zone_name
     , roam_flag
     , network_id
+    , call_feature
     , call_date_hour
     , call_date_dt
     , call_date_num
@@ -36,6 +37,7 @@ SELECT DISTINCT
     , destinationzone_name as destination_zone_name
     , roam_flag
     , network_id
+    , call_feature
     , call_date_dt
     , call_date_num
     , call_date_month
@@ -56,6 +58,7 @@ SELECT DISTINCT
     , destinationzone_name as destination_zone_name
     , roam_flag
     , network_id
+    , call_feature
     , call_date_month
     , CAST(LEFT(call_date_month, 4) as INT) as call_date_year
      from {table}
@@ -74,6 +77,7 @@ SELECT DISTINCT
     , destinationzone_name as destination_zone_name
     , roam_flag
     , network_id
+    , call_feature
     , CAST(LEFT(call_date_month, 4) as INT) as call_date_year
     from {table}
 """

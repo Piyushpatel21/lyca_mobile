@@ -43,22 +43,22 @@ class Aggregation:
         self.end = end_date
         self.fmt = fmt
         self.code_bucket = code_bucket
-        self.src_cols = ['cli', 'bundle_code', 'call_type', 'cdr_types',
+        self.src_cols = ['cli', 'bundle_code', 'plan_id', 'sms_feature', 'call_type', 'cdr_types',
                          'destination_zone_code', 'destination_area_code', 'destination_zone_name',
-                         'network_id', 'msg_date_hour', 'msg_date_dt', 'msg_date_num', 'msg_date_month']
-        self.hourly_cols = ['cli', 'user_type', 'bundle_code', 'call_type', 'cdr_types',
+                         'network_id', 'roam_flag', 'msg_date_hour', 'msg_date_dt', 'msg_date_num', 'msg_date_month']
+        self.hourly_cols = ['cli', 'user_type', 'bundle_code', 'plan_id', 'call_type', 'cdr_types',
                             'destination_zone_code', 'destination_area_code', 'destination_zone_name',
-                            'network_id', 'msg_date_hour', 'msg_date_dt', 'msg_date_num', 'msg_date_month',
+                            'network_id', 'roam_flag', 'sms_feature', 'msg_date_hour', 'msg_date_dt', 'msg_date_num', 'msg_date_month',
                             'msg_date_year']
-        self.daily_cols = ['cli', 'user_type', 'bundle_code', 'call_type', 'cdr_types',
+        self.daily_cols = ['cli', 'user_type', 'bundle_code', 'plan_id', 'call_type', 'cdr_types',
                            'destination_zone_code', 'destination_area_code', 'destination_zone_name',
-                           'network_id', 'msg_date_dt', 'msg_date_num', 'msg_date_month', 'msg_date_year']
-        self.monthly_cols = ['cli', 'user_type', 'bundle_code', 'call_type', 'cdr_types',
+                           'network_id', 'roam_flag', 'sms_feature', 'msg_date_dt', 'msg_date_num', 'msg_date_month', 'msg_date_year']
+        self.monthly_cols = ['cli', 'user_type', 'bundle_code', 'plan_id', 'call_type', 'cdr_types',
                              'destination_zone_code', 'destination_area_code', 'destination_zone_name',
-                             'network_id', 'msg_date_month', 'msg_date_year']
-        self.yearly_cols = ['cli', 'user_type', 'bundle_code', 'call_type', 'cdr_types',
+                             'network_id', 'roam_flag', 'sms_feature', 'msg_date_month', 'msg_date_year']
+        self.yearly_cols = ['cli', 'user_type', 'bundle_code', 'plan_id', 'call_type', 'cdr_types',
                             'destination_zone_code', 'destination_area_code', 'destination_zone_name',
-                            'network_id', 'msg_date_year']
+                            'network_id', 'roam_flag', 'sms_feature', 'msg_date_year']
         self.spark_table_name = "temp_fact_table"
         self.conn = self._read_conn_properties(file_path=conn_file_path, code_bucket=self.code_bucket)
         self.logger.info("Received connection properties as: {prop}".format(prop=self.conn))

@@ -4,7 +4,8 @@ Perform Aggregation Level 2 on RRBS. It performs:
 
 import datetime
 
-from code.sql_queries import agg_count_total_queries
+from code.sql_queries import agg_count_total_queries, agg_count_usemode_queries, \
+    agg_count_call_user_usage_queries, agg_count_calltype_user_queries
 from code.utils import Agg2RedshiftUtils, get_secret, parse_date
 from code.utils import Agg2SparkSession, Agg2JsonProcessor, Agg2AwsReader
 
@@ -139,7 +140,7 @@ class Aggregation:
 
         # Get data by creation_date
         if self.creation_date_range:
-            self.logger.info("Getting data for creation time from {start} to {end}".format(
+            self.logger.info("Getting data for creation date from {start} to {end}".format(
                 start=self.creation_date_range[0], end=self.creation_date_range[1]
             ))
 
@@ -147,8 +148,8 @@ class Aggregation:
 
             # get hourly data from agg table
 
-            query = "SELECT * FROM {table} WHERE created_date_time >= {start} AND created_date_time <= {end}".format(
-                table=full_hourly_tbl_name, start=self.start, end=self.end
+            query = "SELECT * FROM {table} WHERE created_date >= {start} AND created_date <= {end}".format(
+                table=full_hourly_tbl_name, start=self.creation_date_range[0], end=self.creation_date_range[1]
             )
             hourly_df = self.rs_utils.read_from_redshift_with_query(query)
 
@@ -156,8 +157,8 @@ class Aggregation:
 
             # get daily data from agg table
 
-            query = "SELECT * FROM {table} WHERE created_date_time >= {start} AND created_date_time <= {end}".format(
-                table=full_daily_tbl_name, start=self.start, end=self.end
+            query = "SELECT * FROM {table} WHERE created_date >= {start} AND created_date <= {end}".format(
+                table=full_daily_tbl_name, start=self.creation_date_range[0], end=self.creation_date_range[1]
             )
             daily_df = self.rs_utils.read_from_redshift_with_query(query)
 
@@ -165,8 +166,8 @@ class Aggregation:
 
             # get monthly data from agg table
 
-            query = "SELECT * FROM {table} WHERE created_date_time >= {start} AND created_date_time <= {end}".format(
-                table=full_monthly_tbl_name, start=self.start, end=self.end
+            query = "SELECT * FROM {table} WHERE created_date >= {start} AND created_date <= {end}".format(
+                table=full_monthly_tbl_name, start=self.creation_date_range[0], end=self.creation_date_range[1]
             )
             monthly_df = self.rs_utils.read_from_redshift_with_query(query)
 
@@ -174,63 +175,71 @@ class Aggregation:
 
             # get yearly data from agg table
 
-            query = "SELECT * FROM {table} WHERE created_date_time >= {start} AND created_date_time <= {end}".format(
-                table=full_yearly_tbl_name, start=self.start, end=self.end
+            query = "SELECT * FROM {table} WHERE created_date >= {start} AND created_date <= {end}".format(
+                table=full_yearly_tbl_name, start=self.creation_date_range[0], end=self.creation_date_range[1]
             )
             yearly_df = self.rs_utils.read_from_redshift_with_query(query)
 
-        # Get the data from aggregated table
-        if self.fmt.startswith('%Y%m%d'):
-            self.logger.info("Getting data from hourly table for {sub_module}.".format(sub_module=sub_module))
+        else:
 
-            # get hourly data from agg table
-            query = "SELECT * FROM {table} WHERE {date_col} >= {start} AND {date_col} <= {end}".format(
-                table=full_hourly_tbl_name, start=self.start, end=self.end,
-                date_col=self.config['input'][sub_module]['date_col']
-            )
-            hourly_df = self.rs_utils.read_from_redshift_with_query(query)
+            # Get the data from aggregated table
+            if self.fmt.startswith('%Y%m%d'):
+                self.logger.info("Getting data from hourly table for {sub_module}.".format(sub_module=sub_module))
 
-            self.logger.info("Getting data from daily table for {sub_module}.".format(sub_module=sub_module))
+                # get hourly data from agg table
+                query = "SELECT * FROM {table} WHERE {date_col} >= {start} AND {date_col} <= {end}".format(
+                    table=full_hourly_tbl_name, start=self.start, end=self.end,
+                    date_col=self.config['input'][sub_module]['date_col']
+                )
+                hourly_df = self.rs_utils.read_from_redshift_with_query(query)
 
-            # get daily data from agg table
-            query = "SELECT * FROM {table} WHERE {date_col} >= {start} AND {date_col} <= {end}".format(
-                table=full_daily_tbl_name, start=self.start, end=self.end,
-                date_col=self.config['input'][sub_module]['date_col']
-            )
-            daily_df = self.rs_utils.read_from_redshift_with_query(query)
+                self.logger.info("Getting data from daily table for {sub_module}.".format(sub_module=sub_module))
 
-        if self.fmt.startswith('%Y%m'):
+                # get daily data from agg table
+                query = "SELECT * FROM {table} WHERE {date_col} >= {start} AND {date_col} <= {end}".format(
+                    table=full_daily_tbl_name, start=self.start, end=self.end,
+                    date_col=self.config['input'][sub_module]['date_col']
+                )
+                daily_df = self.rs_utils.read_from_redshift_with_query(query)
 
-            self.logger.info("Getting data from monthly table for {sub_module}.".format(sub_module=sub_module))
+            if self.fmt.startswith('%Y%m'):
 
-            # get monthly data from agg table
-            query = "SELECT * FROM {table} WHERE {month_col} >= {start} AND {month_col} <= {end}".format(
-                table=full_monthly_tbl_name, start=self.start[:6], end=self.end[:6],
-                month_col=self.config['input'][sub_module]['month_col']
-            )
-            monthly_df = self.rs_utils.read_from_redshift_with_query(query)
+                self.logger.info("Getting data from monthly table for {sub_module}.".format(sub_module=sub_module))
 
-        if self.fmt.startswith('%Y'):
+                # get monthly data from agg table
+                query = "SELECT * FROM {table} WHERE {month_col} >= {start} AND {month_col} <= {end}".format(
+                    table=full_monthly_tbl_name, start=self.start[:6], end=self.end[:6],
+                    month_col=self.config['input'][sub_module]['month_col']
+                )
+                monthly_df = self.rs_utils.read_from_redshift_with_query(query)
 
-            self.logger.info("Getting data from yearly table for {sub_module}.".format(sub_module=sub_module))
+            if self.fmt.startswith('%Y'):
 
-            # get yearly data from agg table
-            query = "SELECT * FROM {table} WHERE {year_col} >= {start} AND {year_col} <= {end}".format(
-                table=full_yearly_tbl_name, start=self.start[:4],
-                end=self.end[:4],
-                year_col=self.config['input'][sub_module]['year_col']
-            )
-            yearly_df = self.rs_utils.read_from_redshift_with_query(query)
+                self.logger.info("Getting data from yearly table for {sub_module}.".format(sub_module=sub_module))
+
+                # get yearly data from agg table
+                query = "SELECT * FROM {table} WHERE {year_col} >= {start} AND {year_col} <= {end}".format(
+                    table=full_yearly_tbl_name, start=self.start[:4],
+                    end=self.end[:4],
+                    year_col=self.config['input'][sub_module]['year_col']
+                )
+                yearly_df = self.rs_utils.read_from_redshift_with_query(query)
 
         return {'hourly': hourly_df, 'daily': daily_df, 'monthly': monthly_df, 'yearly': yearly_df}
 
-    def perform_aggregation(self, agg_type, sms_tables, voice_tables, gprs_conn_tables):
+    def perform_aggregation(self, agg_type, sms_tables, voice_tables, gprs_conn_tables, gprs_term_tables):
         """
         Perform the aggregation based on aggregation type
         """
 
         if agg_type == "count_total":
             sql_queries = agg_count_total_queries
+        elif agg_type == "count_usemode":
+            sql_queries = agg_count_usemode_queries
+        elif agg_type == "count_calltype_user":
+            sql_queries = agg_count_calltype_user_queries
+        elif agg_type == "count_call_user_usage":
+            sql_queries = agg_count_call_user_usage_queries
         else:
             self.logger.error("Aggregation type {agg_type} is not valid.".format(agg_type=agg_type))
             raise Exception("Aggregation type {agg_type} is not valid.".format(agg_type=agg_type))
@@ -243,21 +252,25 @@ class Aggregation:
         if self.fmt.startswith('%Y%m%d') or self.creation_date_range:
             df_agg_hourly = self.spark.sql(sql_queries.hourly_query.format(sms_table=sms_tables['hourly'],
                                                                            voice_table=voice_tables['hourly'],
-                                                                           gprs_conn_table=gprs_conn_tables['hourly']))
+                                                                           gprs_conn_table=gprs_conn_tables['hourly'],
+                                                                           gprs_term_table=gprs_term_tables['hourly']))
 
             df_agg_daily = self.spark.sql(sql_queries.daily_query.format(sms_table=sms_tables['daily'],
                                                                          voice_table=voice_tables['daily'],
-                                                                         gprs_conn_table=gprs_conn_tables['daily']))
+                                                                         gprs_conn_table=gprs_conn_tables['daily'],
+                                                                         gprs_term_table=gprs_term_tables['daily']))
 
         if self.fmt.startswith('%Y%m') or self.creation_date_range:
             df_agg_monthly = self.spark.sql(sql_queries.monthly_query.format(sms_table=sms_tables['monthly'],
                                                                              voice_table=voice_tables['monthly'],
-                                                                             gprs_conn_table=gprs_conn_tables['monthly']))
+                                                                             gprs_conn_table=gprs_conn_tables['monthly'],
+                                                                             gprs_term_table=gprs_term_tables['monthly']))
 
         if self.fmt.startswith('%Y') or self.creation_date_range:
             df_agg_yearly = self.spark.sql(sql_queries.yearly_query.format(sms_table=sms_tables['yearly'],
                                                                            voice_table=voice_tables['yearly'],
-                                                                           gprs_conn_table=gprs_conn_tables['yearly']))
+                                                                           gprs_conn_table=gprs_conn_tables['yearly'],
+                                                                           gprs_term_table=gprs_term_tables['yearly']))
 
         return df_agg_hourly, \
                df_agg_daily,\
@@ -313,8 +326,8 @@ class Aggregation:
                                                WHERE {monthly_col} >= {start} AND {monthly_col} <= {end})
                     """.format(table=final_table,
                                monthly_col=self.config['output'][agg_type]['month_col'],
-                               start=self.start,
-                               end=self.end)
+                               start=self.start[0:6],
+                               end=self.end[0:6])
 
                 elif freq == 'yearly':
                     self.logger.info("Writing yearly aggregation data.")
@@ -329,8 +342,8 @@ class Aggregation:
                                                WHERE {yearly_col} >= {start} AND {yearly_col} <= {end})
                     """.format(table=final_table,
                                yearly_col=self.config['output'][agg_type]['year_col'],
-                               start=self.start,
-                               end=self.end)
+                               start=self.start[0:4],
+                               end=self.end[0:4])
 
                 else:
                     self.logger.error("Frequency of type {freq} is not valid.".format(freq=freq))
@@ -373,13 +386,11 @@ def get_aggregation_instance(spark, logger, args):
             fmt = fmt1
     else:
         datetime.datetime.combine(datetime.date.today(), datetime.datetime.min.time())
-        start_datetime = datetime.datetime.combine(datetime.date.today() - datetime.timedelta(days=1)
-                                                   , datetime.datetime.min.time())
-        end_datetime = datetime.datetime.combine(datetime.date.today() - datetime.timedelta(days=1)
-                                                 , datetime.datetime.max.time())
-        start_date = start_datetime.strftime('%Y%m%d')
-        end_date = end_datetime.strftime('%Y%m%d')
-        creation_date_range = (start_datetime, end_datetime)
+        yesterday_start_date = datetime.date.today() - datetime.timedelta(days=1)
+        yesterday_end_date = datetime.date.today() - datetime.timedelta(days=1)
+        start_date = yesterday_start_date.strftime('%Y%m%d')
+        end_date = yesterday_end_date.strftime('%Y%m%d')
+        creation_date_range = (yesterday_start_date, yesterday_end_date)
         fmt = '%Y%m%d'
 
     config_file_path = args.get('configfile')
@@ -388,8 +399,12 @@ def get_aggregation_instance(spark, logger, args):
     module = args.get('module')
     agg_type = args.get('agg_type')
 
-    logger.info("Starting aggregation job for {module} of type {type}.".format(module=module,
-                                                                               type=agg_type))
+    logger.info("Starting aggregation job for {module} of type {type} from {start} to {end}.".format(
+        module=module,
+        type=agg_type,
+        start=start_date,
+        end=end_date
+    ))
 
     aggregator = Aggregation(spark, module, agg_type, creation_date_range, start_date, end_date, fmt, conn_file_path,
                              config_file_path, code_bucket, logger)
@@ -415,6 +430,7 @@ def start_execution(args):
     sms = aggregator.read_agg_tables('sms')
     voice = aggregator.read_agg_tables('voice')
     gprs_conn = aggregator.read_agg_tables('gprs_conn')
+    gprs_term = aggregator.read_agg_tables('gprs_term')
 
     # Register table
     # SMS
@@ -447,8 +463,19 @@ def start_execution(args):
         else:
             gprs_conn_tables[table_type] = None
 
+    # Gprs Termination
+    gprs_term_tables = {}
+    for table_type, df in gprs_term.items():
+        if df:
+            df.createOrReplaceTempView('gprs_term_' + table_type)
+            spark.table('gprs_term_' + table_type).persist()
+            gprs_term_tables[table_type] = "gprs_term_" + table_type
+        else:
+            gprs_term_tables[table_type] = None
+
     if args['agg_type'] == 'all':
-        agg_type_list = ["count_total", "count_usemode", "count_calltype_user", "count_call_user_usage"]
+        agg_type_list = ["count_total", "count_usemode"]
+        # "count_calltype_user", "count_call_user_usage"
     else:
         agg_type_list = [args['agg_type']]
 
@@ -458,7 +485,8 @@ def start_execution(args):
         all_aggregation = aggregator.perform_aggregation(agg_type,
                                                          sms_tables=sms_tables,
                                                          voice_tables=voice_tables,
-                                                         gprs_conn_tables=gprs_conn_tables)
+                                                         gprs_conn_tables=gprs_conn_tables,
+                                                         gprs_term_tables=gprs_term_tables)
         frequency = ['hourly', 'daily', 'monthly', 'yearly']
 
         # Write to Redshift

@@ -10,6 +10,7 @@ CREATE TABLE temp_factagg_user_rrbs_voice_daily (
     , destination_zone_name      varchar(30) encode bytedict
     , roam_flag                 smallint
     , network_id                integer
+    , call_feature              smallint
     , call_date_dt              date encode az64
     , call_date_num             integer encode az64
     , call_date_month           integer encode az64
