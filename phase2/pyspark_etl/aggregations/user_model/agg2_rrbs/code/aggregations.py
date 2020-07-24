@@ -474,7 +474,8 @@ def start_execution(args):
             gprs_term_tables[table_type] = None
 
     if args['agg_type'] == 'all':
-        agg_type_list = ["count_total", "count_usemode", "count_calltype_user", "count_call_user_usage"]
+        agg_type_list = ["count_total", "count_usemode"]
+        # "count_calltype_user", "count_call_user_usage"
     else:
         agg_type_list = [args['agg_type']]
 
