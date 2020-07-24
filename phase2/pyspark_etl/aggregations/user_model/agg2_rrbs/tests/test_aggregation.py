@@ -26,6 +26,12 @@ class TestAgg1RRBSVoice:
             'monthly': folder_path + 'factagg_user_rrbs_gprs_conn_monthly_202007231216.csv',
             'daily': folder_path + 'factagg_user_rrbs_gprs_conn_daily_202007231216.csv',
             'hourly': folder_path + 'factagg_user_rrbs_gprs_conn_hourly_202007231216.csv'
+        },
+        'gprs_term': {
+            'yearly': folder_path + 'factagg_user_rrbs_gprs_term_yearly_202007231216.csv',
+            'monthly': folder_path + 'factagg_user_rrbs_gprs_term_monthly_202007231216.csv',
+            'daily': folder_path + 'factagg_user_rrbs_gprs_term_daily_202007231216.csv',
+            'hourly': folder_path + 'factagg_user_rrbs_gprs_term_hourly_202007231216.csv'
         }
     }
 
@@ -60,7 +66,7 @@ class TestAgg1RRBSVoice:
             "start_date": "",
             "end_date": "",
             "module": "rrbs",
-            "agg_type": "count_total",
+            "agg_type": "count_usemode",
             "configfile": "../configs/agg2_rrbs_application_properties.json",
             "connfile": "../configs/agg_connection.json",
             "master": "",
@@ -76,6 +82,7 @@ class TestAgg1RRBSVoice:
         sms = self.read_data('sms', aggregator)
         voice = self.read_data('voice', aggregator)
         gprs_conn = self.read_data('gprs_conn', aggregator)
+        gprs_term = self.read_data('gprs_term', aggregator)
 
         # Register table
         # SMS
@@ -105,6 +112,15 @@ class TestAgg1RRBSVoice:
             else:
                 gprs_conn_tables[table_type] = None
 
+        # Gprs connection
+        gprs_term_tables = {}
+        for table_type, df in gprs_term.items():
+            if df:
+                df.createOrReplaceTempView("gprs_term_" + table_type)
+                gprs_term_tables[table_type] = "gprs_term_" + table_type
+            else:
+                gprs_term_tables[table_type] = None
+
         if args['agg_type'] == 'all':
             agg_type_list = ["count_total", "count_usemode", "count_calltype_user", "count_call_user_usage"]
         else:
@@ -115,7 +131,8 @@ class TestAgg1RRBSVoice:
             all_aggregation = aggregator.perform_aggregation(agg_type,
                                                              sms_tables=sms_tables,
                                                              voice_tables=voice_tables,
-                                                             gprs_conn_tables=gprs_conn_tables)
+                                                             gprs_conn_tables=gprs_conn_tables,
+                                                             gprs_term_tables=gprs_term_tables)
             frequency = ['hourly', 'daily', 'monthly', 'yearly']
             df_hour, df_daily, df_monthly, df_yearly = all_aggregation
             df_daily.show()
