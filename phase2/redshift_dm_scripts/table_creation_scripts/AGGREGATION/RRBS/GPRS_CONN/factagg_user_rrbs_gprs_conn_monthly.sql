@@ -6,6 +6,8 @@ CREATE TABLE factagg_user_rrbs_gprs_conn_monthly (
     , tariffplan_id             smallint encode az64
     , cdr_type                  smallint encode az64
     , network_id                smallint encode az64
+    , roam_flag                 smallint
+    , data_feature              smallint encode az64
     , data_connection_month     integer encode az64
     , data_connection_year      integer encode az64
     , created_date_time         timestamp  default sysdate encode

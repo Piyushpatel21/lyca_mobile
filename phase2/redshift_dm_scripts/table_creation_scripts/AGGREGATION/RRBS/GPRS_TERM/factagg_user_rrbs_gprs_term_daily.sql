@@ -6,6 +6,8 @@ CREATE TABLE factagg_user_rrbs_gprs_term_daily (
     , tariffplan_id             smallint encode az64
     , cdr_type                  smallint encode az64
     , network_id                smallint encode az64
+    , roam_flag                 smallint
+    , data_feature              smallint encode az64
     , data_termination_dt       date encode az64
     , data_termination_dt_num   integer encode az64
     , data_termination_month    integer encode az64
