@@ -77,6 +77,7 @@ class TestAgg1RRBSVoice:
         spark = spark_session_build.get("sparkSession")
         logger = spark_session_build.get("logger")
         aggregator = get_aggregation_instance(spark, logger, args)
+        print(aggregator.creation_date_range)
 
         # Read data
         sms = self.read_data('sms', aggregator)
