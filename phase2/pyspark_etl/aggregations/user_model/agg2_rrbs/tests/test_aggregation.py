@@ -10,28 +10,34 @@ class TestAgg1RRBSVoice:
     folder_path = 'assets/'
     data_file_names = {
         'voice': {
-            'yearly': folder_path + 'factagg_user_rrbs_voice_yearly_202007231216.csv',
-            'monthly': folder_path + 'factagg_user_rrbs_voice_monthly_202007231216.csv',
-            'daily': folder_path + 'factagg_user_rrbs_voice_daily_202007231216.csv',
-            'hourly': folder_path + 'factagg_user_rrbs_voice_hourly_202007231216.csv'
+            'yearly': folder_path + 'factagg_user_rrbs_voice_yearly_202007270925.csv',
+            'monthly': folder_path + 'factagg_user_rrbs_voice_monthly_202007270925.csv',
+            'daily': folder_path + 'factagg_user_rrbs_voice_daily_202007270925.csv',
+            'hourly': folder_path + 'factagg_user_rrbs_voice_hourly_202007270925.csv'
         },
         'sms': {
-            'yearly': folder_path + 'factagg_user_rrbs_sms_yearly_202007231216.csv',
-            'monthly': folder_path + 'factagg_user_rrbs_sms_monthly_202007231216.csv',
-            'daily': folder_path + 'factagg_user_rrbs_sms_daily_202007231216.csv',
-            'hourly': folder_path + 'factagg_user_rrbs_sms_hourly_202007231216.csv'
+            'yearly': folder_path + 'factagg_user_rrbs_sms_yearly_202007270925.csv',
+            'monthly': folder_path + 'factagg_user_rrbs_sms_monthly_202007270925.csv',
+            'daily': folder_path + 'factagg_user_rrbs_sms_daily_202007270925.csv',
+            'hourly': folder_path + 'factagg_user_rrbs_sms_hourly_202007270925.csv'
         },
         'gprs_conn': {
-            'yearly': folder_path + 'factagg_user_rrbs_gprs_conn_yearly_202007231216.csv',
-            'monthly': folder_path + 'factagg_user_rrbs_gprs_conn_monthly_202007231216.csv',
-            'daily': folder_path + 'factagg_user_rrbs_gprs_conn_daily_202007231216.csv',
-            'hourly': folder_path + 'factagg_user_rrbs_gprs_conn_hourly_202007231216.csv'
+            'yearly': folder_path + 'factagg_user_rrbs_gprs_conn_yearly_202007270925.csv',
+            'monthly': folder_path + 'factagg_user_rrbs_gprs_conn_monthly_202007270925.csv',
+            'daily': folder_path + 'factagg_user_rrbs_gprs_conn_daily_202007270925.csv',
+            'hourly': folder_path + 'factagg_user_rrbs_gprs_conn_hourly_202007270925.csv'
         },
         'gprs_term': {
-            'yearly': folder_path + 'factagg_user_rrbs_gprs_term_yearly_202007231216.csv',
-            'monthly': folder_path + 'factagg_user_rrbs_gprs_term_monthly_202007231216.csv',
-            'daily': folder_path + 'factagg_user_rrbs_gprs_term_daily_202007231216.csv',
-            'hourly': folder_path + 'factagg_user_rrbs_gprs_term_hourly_202007231216.csv'
+            'yearly': folder_path + 'factagg_user_rrbs_gprs_term_yearly_202007270925.csv',
+            'monthly': folder_path + 'factagg_user_rrbs_gprs_term_monthly_202007270925.csv',
+            'daily': folder_path + 'factagg_user_rrbs_gprs_term_daily_202007270925.csv',
+            'hourly': folder_path + 'factagg_user_rrbs_gprs_term_hourly_202007270925.csv'
+        },
+        'dim_tables': {
+            'dim_voice_call_category': folder_path + 'ref_rrbs_voice_call_category_202007261312.csv',
+            'dim_sms_call_category': folder_path + 'ref_rrbs_sms_call_category_202007261313.csv',
+            'dim_data_roamflag': folder_path + 'dim_rrbs_data_roamflag_202007261313.csv',
+            'dim_destination_master': folder_path + 'dim_destination_master_202007271057.csv'
         }
     }
 
@@ -61,12 +67,24 @@ class TestAgg1RRBSVoice:
 
         return {'hourly': hourly_df, 'daily': daily_df, 'monthly': monthly_df, 'yearly': yearly_df}
 
+    def read_dim_tables(self, aggregator):
+
+        dim_voice_call_category_df = aggregator.spark.read.csv(self.data_file_names['dim_tables']['dim_voice_call_category'], header=True)
+        dim_sms_call_category_df = aggregator.spark.read.csv(self.data_file_names['dim_tables']['dim_sms_call_category'], header=True)
+        dim_data_roamflag_df = aggregator.spark.read.csv(self.data_file_names['dim_tables']['dim_data_roamflag'], header=True)
+        dim_destination_master_df = aggregator.spark.read.csv(self.data_file_names['dim_tables']['dim_destination_master'], header=True)
+
+        return {'dim_voice_call_category': dim_voice_call_category_df,
+                'dim_sms_call_category': dim_sms_call_category_df,
+                'dim_data_roamflag': dim_data_roamflag_df,
+                'dim_destination_master': dim_destination_master_df}
+
     def test_get_aggregation_instance(self, set_up):
         args = {
             "start_date": "",
             "end_date": "",
             "module": "rrbs",
-            "agg_type": "all",
+            "agg_type": "count_calltype_user",
             "configfile": "../configs/agg2_rrbs_application_properties.json",
             "connfile": "../configs/agg_connection.json",
             "master": "",
@@ -84,6 +102,10 @@ class TestAgg1RRBSVoice:
         voice = self.read_data('voice', aggregator)
         gprs_conn = self.read_data('gprs_conn', aggregator)
         gprs_term = self.read_data('gprs_term', aggregator)
+
+        # Read dim_tables
+
+        dims = self.read_dim_tables(aggregator)
 
         # Register table
         # SMS
@@ -122,9 +144,19 @@ class TestAgg1RRBSVoice:
             else:
                 gprs_term_tables[table_type] = None
 
+        # Dimension tables
+        dim_tables = {}
+        for dim_name, df in dims.items():
+            if df:
+                df.createOrReplaceTempView(dim_name)
+                spark.table(dim_name).persist()
+                dim_tables[dim_name] = dim_name
+            else:
+                dim_tables[dim_name] = None
+
         if args['agg_type'] == 'all':
-            agg_type_list = ["count_total", "count_usemode"]
-            # "count_calltype_user", "count_call_user_usage"
+            agg_type_list = ["count_calltype_user", "count_total", "count_usemode"]
+            # "", "count_call_user_usage"
         else:
             agg_type_list = [args['agg_type']]
 
@@ -134,10 +166,16 @@ class TestAgg1RRBSVoice:
                                                              sms_tables=sms_tables,
                                                              voice_tables=voice_tables,
                                                              gprs_conn_tables=gprs_conn_tables,
-                                                             gprs_term_tables=gprs_term_tables)
+                                                             gprs_term_tables=gprs_term_tables,
+                                                             dim_tables=dim_tables)
             frequency = ['hourly', 'daily', 'monthly', 'yearly']
             df_hour, df_daily, df_monthly, df_yearly = all_aggregation
             df_daily.show()
             df_hour.show()
             df_monthly.show()
             df_yearly.show()
+
+            print(df_daily.count())
+            print(df_hour.count())
+            print(df_monthly.count())
+            print(df_yearly.count())
