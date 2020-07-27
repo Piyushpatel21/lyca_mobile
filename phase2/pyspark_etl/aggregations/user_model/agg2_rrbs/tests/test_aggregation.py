@@ -155,8 +155,8 @@ class TestAgg1RRBSVoice:
                 dim_tables[dim_name] = None
 
         if args['agg_type'] == 'all':
-            agg_type_list = ["count_calltype_user", "count_total", "count_usemode"]
-            # "", "count_call_user_usage"
+            agg_type_list = ["count_call_user_usage", "count_total", "count_usemode", "count_call_dest_usage"]
+            # count_calltype_user
         else:
             agg_type_list = [args['agg_type']]
 
@@ -170,12 +170,13 @@ class TestAgg1RRBSVoice:
                                                              dim_tables=dim_tables)
             frequency = ['hourly', 'daily', 'monthly', 'yearly']
             df_hour, df_daily, df_monthly, df_yearly = all_aggregation
-            df_daily.show()
             df_hour.show()
+            df_daily.show()
             df_monthly.show()
             df_yearly.show()
 
-            print(df_daily.count())
-            print(df_hour.count())
-            print(df_monthly.count())
-            print(df_yearly.count())
+            print("Count for tables are : ")
+            print("Hourly: ", df_hour.count())
+            print("Daily: ", df_daily.count())
+            print("Monthly: ", df_monthly.count())
+            print("Yearly: ", df_yearly.count())

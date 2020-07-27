@@ -91,6 +91,22 @@
         "yearly_table": "factagg2_user_rrbs_count_usemode_yearly",
         "yearly_temp_table": "temp_factagg2_user_rrbs_count_usemode_yearly"
       },
+      "count_call_user_usage": {
+        "database": "uk_rrbs_agg",
+        "hour_col": "call_date_hour",
+        "date_col": "call_date_num",
+        "month_col": "call_date_month",
+        "year_col": "call_date_year",
+        "hourly_table": "factagg2_user_rrbs_count_call_user_usage_hourly",
+        "hourly_temp_table": "temp_factagg2_user_rrbs_count_call_user_usage_hourly",
+        "daily_table": "factagg2_user_rrbs_count_call_user_usage_daily",
+        "daily_temp_table": "temp_factagg2_user_rrbs_count_call_user_usage_daily",
+        "monthly_table": "factagg2_user_rrbs_count_call_user_usage_monthly",
+        "monthly_temp_table": "temp_factagg2_user_rrbs_count_call_user_usage_monthly",
+        "yearly_table": "factagg2_user_rrbs_count_call_user_usage_yearly",
+        "yearly_temp_table": "temp_factagg2_user_rrbs_count_call_user_usage_yearly"
+
+      },
       "count_calltype_user": {
         "database": "uk_rrbs_agg",
         "hour_col": "call_date_hour",
@@ -106,20 +122,20 @@
         "yearly_table": "factagg2_user_rrbs_count_calltype_user_yearly",
         "yearly_temp_table": "temp_factagg2_user_rrbs_count_calltype_user_yearly"
       },
-      "count_call_user_usage": {
+      "count_call_dest_usage": {
         "database": "uk_rrbs_agg",
         "hour_col": "call_date_hour",
         "date_col": "call_date_num",
         "month_col": "call_date_month",
         "year_col": "call_date_year",
-        "hourly_table": "factagg2_user_rrbs_count_call_user_usage_hourly",
-        "hourly_temp_table": "temp_factagg2_user_rrbs_count_call_user_usage_hourly",
-        "daily_table": "factagg2_user_rrbs_count_call_user_usage_daily",
-        "daily_temp_table": "temp_factagg2_user_rrbs_count_call_user_usage_daily",
-        "monthly_table": "factagg2_user_rrbs_count_call_user_usage_monthly",
-        "monthly_temp_table": "temp_factagg2_user_rrbs_count_call_user_usage_monthly",
-        "yearly_table": "factagg2_user_rrbs_count_call_user_usage_yearly",
-        "yearly_temp_table": "temp_factagg2_user_rrbs_count_call_user_usage_yearly"
+        "hourly_table": "factagg2_user_rrbs_count_call_dest_usage_hourly",
+        "hourly_temp_table": "temp_factagg2_user_rrbs_count_call_dest_usage_hourly",
+        "daily_table": "factagg2_user_rrbs_count_call_dest_usage_daily",
+        "daily_temp_table": "temp_factagg2_user_rrbs_count_call_dest_usage_daily",
+        "monthly_table": "factagg2_user_rrbs_count_call_dest_usage_monthly",
+        "monthly_temp_table": "temp_factagg2_user_rrbs_count_call_dest_usage_monthly",
+        "yearly_table": "factagg2_user_rrbs_count_call_dest_usage_yearly",
+        "yearly_temp_table": "temp_factagg2_user_rrbs_count_call_dest_usage_yearly"
       }
     },
     "logging": {

@@ -5,7 +5,7 @@ Perform Aggregation Level 2 on RRBS. It performs:
 import datetime
 
 from code.sql_queries import agg_count_total_queries, agg_count_usemode_queries, \
-    agg_count_call_user_usage_queries, agg_count_calltype_user_queries
+    agg_count_call_dest_usage_queries, agg_count_call_user_usage_queries, agg_count_calltype_user_queries
 from code.utils import Agg2RedshiftUtils, get_secret, parse_date
 from code.utils import Agg2SparkSession, Agg2JsonProcessor, Agg2AwsReader
 
@@ -282,10 +282,12 @@ class Aggregation:
             sql_queries = agg_count_total_queries
         elif agg_type == "count_usemode":
             sql_queries = agg_count_usemode_queries
-        elif agg_type == "count_calltype_user":
-            sql_queries = agg_count_calltype_user_queries
         elif agg_type == "count_call_user_usage":
             sql_queries = agg_count_call_user_usage_queries
+        elif agg_type == "count_call_dest_usage":
+            sql_queries = agg_count_call_dest_usage_queries
+        elif agg_type == "count_calltype_user":
+            sql_queries = agg_count_calltype_user_queries
         else:
             self.logger.error("Aggregation type {agg_type} is not valid.".format(agg_type=agg_type))
             raise Exception("Aggregation type {agg_type} is not valid.".format(agg_type=agg_type))
@@ -371,11 +373,11 @@ class Aggregation:
                                             self.config['output'][agg_type]['hourly_table']])
                     suffix_post_query = """
                     UPDATE {table} SET is_recent = 0 
-                    WHERE {hourly_col} >= {start} AND {hourly_col} <= {end} AND
+                    WHERE {daily_col} >= {start} AND {daily_col} <= {end} AND
                     created_date_time not in (SELECT MAX(created_date_time) from {table} 
-                                               WHERE {hourly_col} >= {start} AND {hourly_col} <= {end})
+                                               WHERE {daily_col} >= {start} AND {daily_col} <= {end})
                     """.format(table=final_table,
-                               hourly_col=self.config['output'][agg_type]['hour_col'],
+                               daily_col=self.config['output'][agg_type]['date_col'],
                                start=self.start,
                                end=self.end)
 
@@ -569,8 +571,8 @@ def start_execution(args):
             dim_tables[dim_name] = None
 
     if args['agg_type'] == 'all':
-        agg_type_list = ["count_total", "count_usemode", "count_call_user_usage"]
-        # "count_calltype_user"
+        agg_type_list = ["count_total", "count_usemode", "count_call_dest_usage",
+                         "count_call_user_usage", "count_calltype_user"]
     else:
         agg_type_list = [args['agg_type']]
 
