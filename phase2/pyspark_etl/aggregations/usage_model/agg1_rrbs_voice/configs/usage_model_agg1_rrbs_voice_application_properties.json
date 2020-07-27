@@ -11,10 +11,6 @@
       "date_daily_col": "call_date_num",
       "date_monthly_col": "call_date_month"
     },
-    "dim_tables": {
-      "database": "uk_rrbs_dm",
-       "vmd": "ref_rrbs_vmd"
-    },
     "output": {
       "database": "uk_rrbs_agg",
       "hourly_table": "factagg_user_rrbs_voice_hourly",
