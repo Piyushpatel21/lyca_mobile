@@ -227,7 +227,53 @@ class Aggregation:
 
         return {'hourly': hourly_df, 'daily': daily_df, 'monthly': monthly_df, 'yearly': yearly_df}
 
-    def perform_aggregation(self, agg_type, sms_tables, voice_tables, gprs_conn_tables, gprs_term_tables):
+    def read_dim_tables(self):
+        """
+        Read the dimension tables
+        """
+
+        dim_voice_call_category = '.'.join(
+            [self.config['input']['dim_tables']['database'],
+             self.config['input']['dim_tables']['dim_voice_call_category']])
+        dim_sms_call_category = '.'.join(
+            [self.config['input']['dim_tables']['database'],
+             self.config['input']['dim_tables']['dim_sms_call_category']])
+        dim_data_roamflag = '.'.join(
+            [self.config['input']['dim_tables']['database'], self.config['input']['dim_tables']['dim_data_roamflag']])
+        dim_destination_master = '.'.join(
+            [self.config['input']['dim_tables']['database'], self.config['input']['dim_tables']['dim_destination_master']])
+
+
+        # get dim_voice_call_category data from agg table
+        query = "SELECT * FROM {table}".format(
+            table=dim_voice_call_category
+        )
+        dim_voice_call_category_df = self.rs_utils.read_from_redshift_with_query(query)
+
+        # get dim_sms_call_category data from agg table
+        query = "SELECT * FROM {table}".format(
+            table=dim_sms_call_category
+        )
+        dim_sms_call_category_df = self.rs_utils.read_from_redshift_with_query(query)
+
+        # get dim_voice_call_category data from agg table
+        query = "SELECT * FROM {table}".format(
+            table=dim_data_roamflag
+        )
+        dim_data_roamflag_df = self.rs_utils.read_from_redshift_with_query(query)
+
+        # get dim_voice_call_category data from agg table
+        query = "SELECT * FROM {table}".format(
+            table=dim_destination_master
+        )
+        dim_destination_master_df = self.rs_utils.read_from_redshift_with_query(query)
+
+        return {'dim_voice_call_category': dim_voice_call_category_df,
+                'dim_sms_call_category': dim_sms_call_category_df,
+                'dim_data_roamflag': dim_data_roamflag_df,
+                'dim_destination_master': dim_destination_master_df}
+
+    def perform_aggregation(self, agg_type, sms_tables, voice_tables, gprs_conn_tables, gprs_term_tables, dim_tables):
         """
         Perform the aggregation based on aggregation type
         """
@@ -253,24 +299,60 @@ class Aggregation:
             df_agg_hourly = self.spark.sql(sql_queries.hourly_query.format(sms_table=sms_tables['hourly'],
                                                                            voice_table=voice_tables['hourly'],
                                                                            gprs_conn_table=gprs_conn_tables['hourly'],
-                                                                           gprs_term_table=gprs_term_tables['hourly']))
+                                                                           gprs_term_table=gprs_term_tables['hourly'],
+                                                                           dim_voice_call_category=dim_tables[
+                                                                               'dim_voice_call_category'],
+                                                                           dim_sms_call_category=dim_tables[
+                                                                               'dim_sms_call_category'],
+                                                                           dim_data_roamflag=dim_tables[
+                                                                               'dim_data_roamflag'],
+                                                                           dim_destination_master=dim_tables[
+                                                                               'dim_destination_master']
+                                                                           ))
 
             df_agg_daily = self.spark.sql(sql_queries.daily_query.format(sms_table=sms_tables['daily'],
                                                                          voice_table=voice_tables['daily'],
                                                                          gprs_conn_table=gprs_conn_tables['daily'],
-                                                                         gprs_term_table=gprs_term_tables['daily']))
+                                                                         gprs_term_table=gprs_term_tables['daily'],
+                                                                         dim_voice_call_category=dim_tables[
+                                                                             'dim_voice_call_category'],
+                                                                         dim_sms_call_category=dim_tables[
+                                                                             'dim_sms_call_category'],
+                                                                         dim_data_roamflag=dim_tables[
+                                                                             'dim_data_roamflag'],
+                                                                         dim_destination_master=dim_tables[
+                                                                             'dim_destination_master']
+                                                                         ))
 
         if self.fmt.startswith('%Y%m') or self.creation_date_range:
             df_agg_monthly = self.spark.sql(sql_queries.monthly_query.format(sms_table=sms_tables['monthly'],
                                                                              voice_table=voice_tables['monthly'],
                                                                              gprs_conn_table=gprs_conn_tables['monthly'],
-                                                                             gprs_term_table=gprs_term_tables['monthly']))
+                                                                             gprs_term_table=gprs_term_tables['monthly'],
+                                                                             dim_voice_call_category=dim_tables[
+                                                                                 'dim_voice_call_category'],
+                                                                             dim_sms_call_category=dim_tables[
+                                                                                 'dim_sms_call_category'],
+                                                                             dim_data_roamflag=dim_tables[
+                                                                                 'dim_data_roamflag'],
+                                                                             dim_destination_master=dim_tables[
+                                                                                 'dim_destination_master']
+                                                                             ))
 
         if self.fmt.startswith('%Y') or self.creation_date_range:
             df_agg_yearly = self.spark.sql(sql_queries.yearly_query.format(sms_table=sms_tables['yearly'],
                                                                            voice_table=voice_tables['yearly'],
                                                                            gprs_conn_table=gprs_conn_tables['yearly'],
-                                                                           gprs_term_table=gprs_term_tables['yearly']))
+                                                                           gprs_term_table=gprs_term_tables['yearly'],
+                                                                           dim_voice_call_category=dim_tables[
+                                                                               'dim_voice_call_category'],
+                                                                           dim_sms_call_category=dim_tables[
+                                                                               'dim_sms_call_category'],
+                                                                           dim_data_roamflag=dim_tables[
+                                                                               'dim_data_roamflag'],
+                                                                           dim_destination_master=dim_tables[
+                                                                               'dim_destination_master']
+                                                                           ))
 
         return df_agg_hourly, \
                df_agg_daily,\
@@ -432,6 +514,9 @@ def start_execution(args):
     gprs_conn = aggregator.read_agg_tables('gprs_conn')
     gprs_term = aggregator.read_agg_tables('gprs_term')
 
+    # Read dimension tables
+    dims = aggregator.read_dim_tables()
+
     # Register table
     # SMS
     sms_tables = {}
@@ -473,9 +558,19 @@ def start_execution(args):
         else:
             gprs_term_tables[table_type] = None
 
+    # Dimension tables
+    dim_tables = {}
+    for dim_name, df in dims.items():
+        if df:
+            df.createOrReplaceTempView(dim_name)
+            spark.table(dim_name).persist()
+            dim_tables[dim_name] = dim_name
+        else:
+            dim_tables[dim_name] = None
+
     if args['agg_type'] == 'all':
-        agg_type_list = ["count_total", "count_usemode"]
-        # "count_calltype_user", "count_call_user_usage"
+        agg_type_list = ["count_total", "count_usemode", "count_call_user_usage"]
+        # "count_calltype_user"
     else:
         agg_type_list = [args['agg_type']]
 
@@ -486,7 +581,8 @@ def start_execution(args):
                                                          sms_tables=sms_tables,
                                                          voice_tables=voice_tables,
                                                          gprs_conn_tables=gprs_conn_tables,
-                                                         gprs_term_tables=gprs_term_tables)
+                                                         gprs_term_tables=gprs_term_tables,
+                                                         dim_tables=dim_tables)
         frequency = ['hourly', 'daily', 'monthly', 'yearly']
 
         # Write to Redshift
