@@ -1,5 +1,6 @@
 """
-Sql queries for aggregation of call type user count
+Sql queries for aggregation of count_call_user_usage
+S.No 2.4
 """
 
 hourly_query = """

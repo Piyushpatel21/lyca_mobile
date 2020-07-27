@@ -1,5 +1,6 @@
 """
-Sql queries for aggregation of call user usage queries
+Sql queries for aggregation of count call dest usage queries
+S.No 2.5
 """
 
 hourly_query = """
