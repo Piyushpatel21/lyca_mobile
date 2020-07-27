@@ -40,7 +40,7 @@ FROM (
     FROM {gprs_conn_table}
     UNION
     SELECT DISTINCT
-        'gprs_conn' as use_mode
+        'gprs_term' as use_mode
         , msisdn as cli
         , data_termination_hour
         , data_termination_dt_num
@@ -89,7 +89,7 @@ FROM (
     FROM {gprs_conn_table}
     UNION
     SELECT DISTINCT
-        'gprs_conn' as use_mode
+        'gprs_term' as use_mode
         , msisdn as cli
         , data_termination_dt_num
         , data_termination_month
@@ -132,7 +132,7 @@ FROM (
     FROM {gprs_conn_table}
     UNION
     SELECT DISTINCT
-        'gprs_conn' as use_mode
+        'gprs_term' as use_mode
         , msisdn as cli
         , data_termination_month
         , data_termination_year
@@ -169,7 +169,7 @@ FROM (
     FROM {gprs_conn_table}
     UNION
     SELECT DISTINCT
-        'gprs_conn' as use_mode
+        'gprs_term' as use_mode
         , msisdn as cli
         , data_termination_year
     FROM {gprs_term_table}

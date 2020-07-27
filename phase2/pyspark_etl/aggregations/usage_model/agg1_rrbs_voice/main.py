@@ -1,5 +1,5 @@
 """
-Entry point of RRBS Aggregation Level 2
+Entry point of Usage Model RRBS Voice Aggregation
 """
 
 
@@ -13,9 +13,7 @@ def parse_arguments():
     parser.add_argument('--start_date', type=str, default='', nargs='?', help='Start date of aggregation in format yyyyMMdd inclusive of value.')
     parser.add_argument('--end_date', type=str, default='', nargs='?', help='End date of aggregation in format yyyyMMdd inclusive of value.')
     parser.add_argument('--module', help='module name required to process data')
-    parser.add_argument('--agg_type', default="all", choices=["all", "count_total", "count_usemode", "count_call_dest_usage",
-                                                              "count_calltype_user", "count_call_dest_usage"],
-                        help='Type of aggregation')
+    parser.add_argument('--sub_module', help='submodule name required to process data')
     parser.add_argument('--configfile', help='application module level config file path')
     parser.add_argument('--connfile', help='connection config file path')
     parser.add_argument('--master', help='session for glue')
@@ -23,8 +21,8 @@ def parse_arguments():
     known_arguments, unknown_arguments = parser.parse_known_args()
     arguments = vars(known_arguments)
     if arguments:
-        if not (arguments.get('module') and arguments.get('agg_type')):
-            print("--module, --agg_type required for trigger pipeline")
+        if not (arguments.get('module') and arguments.get('sub_module')):
+            print("--module, --sub_module required for trigger pipeline")
             sys.exit(1)
         if bool(arguments.get('start_date')) ^ bool(arguments.get('end_date')):
             print("Both --start_date and --end_date should exist conjointly.")
