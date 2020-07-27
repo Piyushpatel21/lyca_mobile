@@ -157,7 +157,7 @@ class RedshiftUtils:
                     .option("forward_spark_s3_credentials", "true") \
                     .option("tempdir", self.redshiftTmpDir) \
                     .load()
-                df = redshiftDF.join(metaDF, on='FILE_NAME', how='inner')
+                df = redshiftDF.join(metaDF, on='FILE_NAME', how='left')
                 return df.select(redshiftDF['BATCH_ID'], redshiftDF['FILE_SOURCE'], redshiftDF['TARGET_SYSTEM'], redshiftDF['FILE_ID'], redshiftDF['FILE_NAME'], redshiftDF['BATCH_FROM'],
                                  redshiftDF['BATCH_TO'], metaDF['RECORD_COUNT'], metaDF['DM_NORMAL_COUNT'], redshiftDF['DM_LATECDR_COUNT'],
                                  redshiftDF['LDM_LATECDR_COUNT'], metaDF['DM_NORMAL_DBDUPL_COUNT'],
