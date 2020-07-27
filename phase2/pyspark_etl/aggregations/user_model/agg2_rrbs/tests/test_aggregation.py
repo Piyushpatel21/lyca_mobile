@@ -155,8 +155,8 @@ class TestAgg1RRBSVoice:
                 dim_tables[dim_name] = None
 
         if args['agg_type'] == 'all':
-            agg_type_list = ["count_call_user_usage", "count_total", "count_usemode", "count_call_dest_usage"]
-            # count_calltype_user
+            agg_type_list = ["count_call_user_usage", "count_total", "count_usemode",
+                             "count_call_dest_usage", "count_calltype_user"]
         else:
             agg_type_list = [args['agg_type']]
 
