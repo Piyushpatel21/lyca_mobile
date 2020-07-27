@@ -11,5 +11,5 @@ CREATE TABLE factagg2_user_rrbs_count_usemode_daily (
 )
 diststyle even
 sortkey
-(is_recent, call_date_year, call_date_month, call_date_num)
+(is_recent, call_date_num)
 ;
