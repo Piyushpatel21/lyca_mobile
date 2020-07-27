@@ -130,6 +130,7 @@ class Aggregation:
         """
 
         full_tbl_name = '.'.join([self.config['input']['database'], self.config['input']['normal_cdr_table']])
+        vmd_tbl_name = '.'.join([self.config['dim_tables']['database'], self.config['dim_tables']['vmd']])
         src_cols = ','.join(self.src_cols)
         self.logger.info('Reading fact table {tbl} from {start} to {end}'.format(
             tbl=full_tbl_name, start=self.start, end=self.end
@@ -138,30 +139,35 @@ class Aggregation:
         if self.creation_date_range:
             query = "SELECT {cols} FROM {table} WHERE {date_daily_col} IN " \
                     "(SELECT DISTINCT {date_daily_col} " \
-                    "FROM {table} WHERE {created_date_col} >= '{start}' AND {created_date_col} <= '{end}')"\
-                .format(cols=src_cols, table=full_tbl_name, start=self.creation_date_range[0],
+                    "FROM {table} WHERE {created_date_col} >= '{start}' AND {created_date_col} <= '{end}') " \
+                    "AND dialed_number NOT IN (SELECT vm_deposit from {vmd_table})"\
+                .format(cols=src_cols, table=full_tbl_name, vmd_table=vmd_tbl_name, start=self.creation_date_range[0],
                         end=self.creation_date_range[1], created_date_col=self.config['input']['created_date_col'],
                         date_daily_col=self.config['input']['date_daily_col']
                         )
         else:
             if self.fmt.startswith('%Y%m%d'):
-                query = "SELECT {cols} FROM {table} WHERE {date_daily_col} >= {start} AND {date_daily_col} <= {end}".format(
-                        cols=src_cols, table=full_tbl_name, start=self.start, end=self.end,
+                query = "SELECT {cols} FROM {table} WHERE {date_daily_col} >= {start} AND {date_daily_col} <= {end} " \
+                        "AND dialed_number NOT IN (SELECT vm_deposit from {vmd_table})".format(
+                        cols=src_cols, table=full_tbl_name, vmd_table=vmd_tbl_name, start=self.start, end=self.end,
                         date_daily_col=self.config['input']['date_daily_col']
                         )
             elif self.fmt.startswith('%Y%m'):
-                query = "SELECT {cols} FROM {table} WHERE {date_monthly_col} >= {start} AND {date_monthly_col} <= {end}".format(
-                    cols=src_cols, table=full_tbl_name, start=self.start, end=self.end,
+                query = "SELECT {cols} FROM {table} WHERE {date_monthly_col} >= {start} AND {date_monthly_col} <= {end} " \
+                        "AND dialed_number NOT IN (SELECT vm_deposit from {vmd_table})".format(
+                    cols=src_cols, table=full_tbl_name, vmd_table=vmd_tbl_name, start=self.start, end=self.end,
                     date_monthly_col=self.config['input']['date_monthly_col']
                 )
             elif self.fmt.startswith('%Y'):
-                query = "SELECT {cols} FROM {table} WHERE {date_monthly_col} >= {start} AND {date_monthly_col} <= {end}".format(
-                    cols=src_cols, table=full_tbl_name, start=self.start + '01', end=self.end + '12',
+                query = "SELECT {cols} FROM {table} WHERE {date_monthly_col} >= {start} AND {date_monthly_col} <= {end} " \
+                        "AND dialed_number NOT IN (SELECT vm_deposit from {vmd_table})".format(
+                    cols=src_cols, table=full_tbl_name, vmd_table=vmd_tbl_name, start=self.start + '01', end=self.end + '12',
                     date_monthly_col=self.config['input']['date_monthly_col']
                 )
             else:
-                query = "SELECT {cols} FROM {table} WHERE {date_hour_col} >= {start} AND {date_hour_col} <= {end}".format(
-                    cols=src_cols, table=full_tbl_name, start=self.start, end=self.end,
+                query = "SELECT {cols} FROM {table} WHERE {date_hour_col} >= {start} AND {date_hour_col} <= {end} " \
+                        "AND dialed_number NOT IN (SELECT vm_deposit from {vmd_table})".format(
+                    cols=src_cols, table=full_tbl_name, vmd_table=vmd_tbl_name, start=self.start, end=self.end,
                     date_hour_col=self.config['input']['date_hour_col']
                 )
 
