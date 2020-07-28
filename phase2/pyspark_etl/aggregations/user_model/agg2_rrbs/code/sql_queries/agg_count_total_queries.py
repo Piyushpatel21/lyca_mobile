@@ -1,5 +1,6 @@
 """
 Sql queries for aggregation of total count
+S.No: 2.1
 """
 
 hourly_query = """

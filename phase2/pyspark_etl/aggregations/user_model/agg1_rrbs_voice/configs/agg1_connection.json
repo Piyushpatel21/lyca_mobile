@@ -6,6 +6,6 @@
     "region": "eu-west-2",
     "host" : "uk-eu-west-2-311477489434-dev.c3rozf7wvu9s.eu-west-2.redshift.amazonaws.com",
     "port" : "5439",
-    "tmpdir" : "s3://mis-dl-uk-eu-west-2-311477489434-dev-raw/tmp/redshift/agg1rrbsvoice/"
+    "tmpdir" : "s3://mis-dl-uk-eu-west-2-311477489434-dev-raw/tmp/redshift/useragg1rrbsvoice/"
   }
 ]

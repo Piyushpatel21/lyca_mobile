@@ -5,7 +5,8 @@ Perform Aggregation Level 2 on RRBS. It performs:
 import datetime
 
 from code.sql_queries import agg_count_total_queries, agg_count_usemode_queries, \
-    agg_count_call_dest_usage_queries, agg_count_call_user_usage_queries, agg_count_calltype_user_queries
+    agg_count_call_dest_usage_queries, agg_count_call_user_usage_queries, agg_count_calltype_user_queries, \
+    agg_count_user_usemode_queries
 from code.utils import Agg2RedshiftUtils, get_secret, parse_date
 from code.utils import Agg2SparkSession, Agg2JsonProcessor, Agg2AwsReader
 
@@ -278,6 +279,8 @@ class Aggregation:
         Perform the aggregation based on aggregation type
         """
 
+        self.logger.info("Performing aggregation for {agg_type}.".format(agg_type=agg_type))
+
         if agg_type == "count_total":
             sql_queries = agg_count_total_queries
         elif agg_type == "count_usemode":
@@ -288,6 +291,8 @@ class Aggregation:
             sql_queries = agg_count_call_dest_usage_queries
         elif agg_type == "count_calltype_user":
             sql_queries = agg_count_calltype_user_queries
+        elif agg_type == "count_user_usemode":
+            sql_queries = agg_count_user_usemode_queries
         else:
             self.logger.error("Aggregation type {agg_type} is not valid.".format(agg_type=agg_type))
             raise Exception("Aggregation type {agg_type} is not valid.".format(agg_type=agg_type))
@@ -572,7 +577,7 @@ def start_execution(args):
 
     if args['agg_type'] == 'all':
         agg_type_list = ["count_total", "count_usemode", "count_call_dest_usage",
-                         "count_call_user_usage", "count_calltype_user"]
+                         "count_call_user_usage", "count_calltype_user", "count_user_usemode"]
     else:
         agg_type_list = [args['agg_type']]
 
