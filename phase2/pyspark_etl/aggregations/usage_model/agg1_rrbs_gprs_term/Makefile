@@ -16,7 +16,7 @@ build_pyspark_zip: clean
 	rm -rf dist/${PROJECT_NAME}-pyspark-${VERSION}.zip
 	mkdir -p dist
 	zip -r dist/${PROJECT_NAME}-pyspark-${VERSION}.zip code
-	(cd ../../ ;zip -r usage_model/agg1_rrbs_voice/dist/${PROJECT_NAME}-pyspark-${VERSION}.zip parent_utils)
+	(cd ../../ ;zip -r usage_model/agg1_rrbs_gprs_term/dist/${PROJECT_NAME}-pyspark-${VERSION}.zip parent_utils)
 
 test: init
 	python -m pytest --verbose --color=yes tests/
