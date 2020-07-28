@@ -136,6 +136,21 @@
         "monthly_temp_table": "temp_factagg2_user_rrbs_count_call_dest_usage_monthly",
         "yearly_table": "factagg2_user_rrbs_count_call_dest_usage_yearly",
         "yearly_temp_table": "temp_factagg2_user_rrbs_count_call_dest_usage_yearly"
+      },
+      "count_user_usemode": {
+        "database": "uk_rrbs_agg",
+        "hour_col": "call_date_hour",
+        "date_col": "call_date_num",
+        "month_col": "call_date_month",
+        "year_col": "call_date_year",
+        "hourly_table": "factagg2_user_rrbs_count_user_usemode_hourly",
+        "hourly_temp_table": "temp_factagg2_user_rrbs_count_user_usemode_hourly",
+        "daily_table": "factagg2_user_rrbs_count_user_usemode_daily",
+        "daily_temp_table": "temp_factagg2_user_rrbs_count_user_usemode_daily",
+        "monthly_table": "factagg2_user_rrbs_count_user_usemode_monthly",
+        "monthly_temp_table": "temp_factagg2_user_rrbs_count_user_usemode_monthly",
+        "yearly_table": "factagg2_user_rrbs_count_user_usemode_yearly",
+        "yearly_temp_table": "temp_factagg2_user_rrbs_count_user_usemode_yearly"
       }
     },
     "logging": {

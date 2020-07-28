@@ -26,7 +26,7 @@ class Agg2RedshiftUtils(RedshiftUtils):
 
         RedshiftUtils.__init__(self, spark, dwh_host, dwh_port, dwh_db, dwh_user, dwh_pass, tmp_dir)
 
-    def write_to_redshift_with_temp_table(self, temp_table, final_table, cols, df, pre_query=None, suffix_post_query=None):
+    def write_to_redshift_with_temp_table(self, temp_table, final_table, cols, df, pre_query=None, suffix_post_query=None, truncate_temp=True):
         """
         Writes the data to final table using temp table
 
@@ -47,6 +47,14 @@ class Agg2RedshiftUtils(RedshiftUtils):
                 cols=','.join(cols)
             )
             post_query = insert_statement + suffix_post_query
+
+            if truncate_temp:
+                if post_query.endswith(';'):
+                    truncate_temp_query = "TRUNCATE TABLE {temp_table};".format(temp_table=temp_table)
+                else:
+                    truncate_temp_query = ";TRUNCATE TABLE {temp_table};".format(temp_table=temp_table)
+                post_query = post_query + truncate_temp_query
+
             self._logger.info("Pre query: {query}".format(query=pre_query))
             self._logger.info("Post query: {query}".format(query=post_query))
             df.write.format("com.databricks.spark.redshift") \

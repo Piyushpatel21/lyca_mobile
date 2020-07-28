@@ -1,5 +1,6 @@
 """
 Sql queries for aggregation of count usemode
+S.No: 2.2
 """
 
 hourly_query = """

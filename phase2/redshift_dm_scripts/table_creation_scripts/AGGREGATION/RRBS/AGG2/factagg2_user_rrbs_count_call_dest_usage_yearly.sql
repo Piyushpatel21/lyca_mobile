@@ -4,7 +4,7 @@ CREATE TABLE factagg2_user_rrbs_count_call_dest_usage_yearly (
     , user_type             varchar(30) encode zstd
     , use_mode				varchar(30) encode zstd
     , country_code			varchar(30) encode zstd
-    , country_name			varchar(30) encode zstd
+    , country_name			varchar(50) encode zstd
     , call_date_year        integer encode az64
     , is_recent             smallint
     , created_date_time     timestamp  default sysdate encode
