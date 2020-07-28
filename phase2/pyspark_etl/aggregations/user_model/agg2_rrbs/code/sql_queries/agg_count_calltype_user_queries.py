@@ -133,7 +133,7 @@ group by
 union
 -- SMS
 SELECT
-    count(COUNT(cli)) ct
+    count(DISTINCT(cli)) ct
      ,'sms' as use_mode
      ,b.sub_category as call_type
     ,msg_date_num
@@ -156,7 +156,7 @@ group by
 union
 -- GPRS Termination
 select
-    count(COUNT(msisdn)) ct
+    count(DISTINCT(msisdn)) ct
      ,'gprs' as use_mode
      ,b.roam_flag_val as call_type
      ,data_termination_dt_num
@@ -179,7 +179,7 @@ group by
 union
 -- GPRS Connection
 SELECT
-    count(COUNT(msisdn)) ct
+    count(DISTINCT(msisdn)) ct
      ,'gprs' as use_mode
      ,b.roam_flag_val as call_type
      ,data_connection_dt_num
@@ -224,7 +224,7 @@ group by
 union
 -- SMS
 SELECT
-    count(COUNT(cli)) ct
+    count(DISTINCT(cli)) ct
      ,'sms' as use_mode
      ,b.sub_category as call_type
     ,msg_date_month
@@ -243,7 +243,7 @@ group by
 union
 -- GPRS Termination
 select
-    count(COUNT(msisdn)) ct
+    count(DISTINCT(msisdn)) ct
      ,'gprs' as use_mode
      ,b.roam_flag_val as call_type
     ,data_termination_month
@@ -262,7 +262,7 @@ group by
 union
 -- GPRS Connection
 SELECT
-    count(COUNT(msisdn)) ct
+    count(DISTINCT(msisdn)) ct
      ,'gprs' as use_mode
      ,b.roam_flag_val as call_type
     ,data_connection_month
@@ -301,7 +301,7 @@ group by
 union
 -- SMS
 SELECT
-    count(COUNT(cli)) ct
+    count(DISTINCT(cli)) ct
      ,'sms' as use_mode
      ,b.sub_category as call_type
     ,msg_date_year
@@ -318,7 +318,7 @@ group by
 union
 -- GPRS Termination
 select
-    count(COUNT(msisdn)) ct
+    count(DISTINCT(msisdn)) ct
      ,'gprs' as use_mode
      ,b.roam_flag_val as call_type
     ,data_termination_year
@@ -335,7 +335,7 @@ group by
 union
 -- GPRS Connection
 SELECT
-    count(COUNT(msisdn)) ct
+    count(DISTINCT(msisdn)) ct
      ,'gprs' as use_mode
      ,b.roam_flag_val as call_type
     ,data_connection_year
