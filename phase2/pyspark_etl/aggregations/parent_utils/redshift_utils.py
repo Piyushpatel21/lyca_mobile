@@ -51,7 +51,7 @@ class RedshiftUtils:
             self._logger.error("Failed to read from redshift with error {err}.".format(err=ex))
             raise Exception(ex)
 
-    def write_to_redshift_with_temp_table(self, temp_table, final_table, cols, df, pre_query=None, truncate_temp=True):
+    def write_to_redshift_with_temp_table(self, temp_table, final_table, cols, df, pre_query=None, suffix_post_query=None, truncate_temp=True):
         """
         Writes the data to final table using temp table
 
@@ -66,14 +66,24 @@ class RedshiftUtils:
             self._logger.info("Writing to {table} table using {temp_table} table."
                               .format(table=final_table,
                                       temp_table=temp_table))
-            post_query = "INSERT INTO {final_table}({cols}) SELECT {cols} FROM {temp_table};".format(
+            insert_statement = "INSERT INTO {final_table}({cols}) SELECT {cols} FROM {temp_table};".format(
                 final_table=final_table,
                 temp_table=temp_table,
                 cols=','.join(cols)
             )
+
+            if suffix_post_query:
+                post_query = insert_statement + suffix_post_query
+            else:
+                post_query = insert_statement
+
             if truncate_temp:
-                truncate_temp_query = "TRUNCATE TABLE {temp_table};".format(temp_table=temp_table)
+                if post_query.endswith(';'):
+                    truncate_temp_query = "TRUNCATE TABLE {temp_table};".format(temp_table=temp_table)
+                else:
+                    truncate_temp_query = ";TRUNCATE TABLE {temp_table};".format(temp_table=temp_table)
                 post_query = post_query + truncate_temp_query
+
             self._logger.info("Pre query: {query}".format(query=pre_query))
             self._logger.info("Post query: {query}".format(query=post_query))
             df.write.format("com.databricks.spark.redshift") \
