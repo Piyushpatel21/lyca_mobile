@@ -4,7 +4,7 @@ CREATE TABLE factagg2_user_rrbs_count_call_dest_usage_hourly (
     , user_type             varchar(30) encode zstd
     , use_mode				varchar(30) encode zstd
     , country_code			varchar(30) encode zstd
-    , country_name			varchar(30) encode zstd
+    , country_name			varchar(50) encode zstd
     , call_date_hour        integer encode az64
     , call_date_num         integer encode az64
     , call_date_month       integer encode az64
