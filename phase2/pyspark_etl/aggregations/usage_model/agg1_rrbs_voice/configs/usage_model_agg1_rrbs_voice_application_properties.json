@@ -11,16 +11,24 @@
       "date_daily_col": "call_date_num",
       "date_monthly_col": "call_date_month"
     },
+    "dim_tables": {
+      "database": "uk_rrbs_dm",
+      "vmd": "ref_rrbs_vmd",
+       "dim_destination_master": "dim_destination_master"
+    },
     "output": {
       "database": "uk_rrbs_agg",
-      "hourly_table": "factagg_user_rrbs_voice_hourly",
-      "hourly_temp_table": "temp_factagg_user_rrbs_voice_hourly",
-      "daily_table": "factagg_user_rrbs_voice_daily",
-      "daily_temp_table": "temp_factagg_user_rrbs_voice_daily",
-      "monthly_table": "factagg_user_rrbs_voice_monthly",
-      "monthly_temp_table": "temp_factagg_user_rrbs_voice_monthly",
-      "yearly_table": "factagg_user_rrbs_voice_yearly",
-      "yearly_temp_table": "temp_factagg_user_rrbs_voice_yearly"
+      "date_col": "call_date_num",
+      "month_col": "call_date_month",
+      "year_col": "call_date_year",
+      "hourly_table": "factagg_usage_rrbs_voice_hourly",
+      "hourly_temp_table": "temp_factagg_usage_rrbs_voice_hourly",
+      "daily_table": "factagg_usage_rrbs_voice_daily",
+      "daily_temp_table": "temp_factagg_usage_rrbs_voice_daily",
+      "monthly_table": "factagg_usage_rrbs_voice_monthly",
+      "monthly_temp_table": "temp_factagg_usage_rrbs_voice_monthly",
+      "yearly_table": "factagg_usage_rrbs_voice_yearly",
+      "yearly_temp_table": "temp_factagg_usage_rrbs_voice_yearly"
     },
     "logging": {
       "database" : "uk_test",
