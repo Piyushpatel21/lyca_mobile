@@ -84,7 +84,7 @@ class TestAgg1RRBSVoice:
             "start_date": "",
             "end_date": "",
             "module": "rrbs",
-            "agg_type": "count_calltype_user",
+            "agg_type": "count_user_usemode",
             "configfile": "../configs/agg2_rrbs_application_properties.json",
             "connfile": "../configs/agg_connection.json",
             "master": "",
@@ -156,7 +156,7 @@ class TestAgg1RRBSVoice:
 
         if args['agg_type'] == 'all':
             agg_type_list = ["count_call_user_usage", "count_total", "count_usemode",
-                             "count_call_dest_usage", "count_calltype_user"]
+                             "count_call_dest_usage", "count_calltype_user", "count_user_usemode"]
         else:
             agg_type_list = [args['agg_type']]
 
