@@ -43,18 +43,18 @@ class Aggregation:
         self.end = end_date
         self.fmt = fmt
         self.code_bucket = code_bucket
-        self.src_cols = ['msisdn', 'bundle_code', 'tariffplan_id', 'cdr_type', 'network_id', 'data_termination_hour',
+        self.src_cols = ['msisdn', 'bundle_code', 'data_feature', 'tariffplan_id', 'cdr_type', 'network_id', 'roam_flag', 'data_termination_hour',
                          'data_termination_dt', 'data_termination_dt_num', 'data_termination_month']
-        self.hourly_cols = ['msisdn', 'user_type', 'bundle_code', 'tariffplan_id', 'cdr_type', 'network_id',
+        self.hourly_cols = ['msisdn', 'user_type', 'bundle_code', 'tariffplan_id', 'cdr_type', 'network_id', 'roam_flag', 'data_feature',
                             'data_termination_hour',
                             'data_termination_dt', 'data_termination_dt_num', 'data_termination_month',
                             'data_termination_year']
-        self.daily_cols = ['msisdn', 'user_type', 'bundle_code', 'tariffplan_id', 'cdr_type', 'network_id',
+        self.daily_cols = ['msisdn', 'user_type', 'bundle_code', 'tariffplan_id', 'cdr_type', 'network_id', 'roam_flag', 'data_feature',
                            'data_termination_dt', 'data_termination_dt_num', 'data_termination_month',
                            'data_termination_year']
-        self.monthly_cols = ['msisdn', 'user_type', 'bundle_code', 'tariffplan_id', 'cdr_type', 'network_id',
+        self.monthly_cols = ['msisdn', 'user_type', 'bundle_code', 'tariffplan_id', 'cdr_type', 'network_id', 'roam_flag', 'data_feature',
                              'data_termination_month', 'data_termination_year']
-        self.yearly_cols = ['msisdn', 'user_type', 'bundle_code', 'tariffplan_id', 'cdr_type', 'network_id',
+        self.yearly_cols = ['msisdn', 'user_type', 'bundle_code', 'tariffplan_id', 'cdr_type', 'network_id', 'roam_flag', 'data_feature',
                             'data_termination_year']
         self.spark_table_name = "temp_fact_table"
         self.conn = self._read_conn_properties(file_path=conn_file_path, code_bucket=self.code_bucket)

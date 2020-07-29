@@ -43,21 +43,21 @@ class Aggregation:
         self.end = end_date
         self.fmt = fmt
         self.code_bucket = code_bucket
-        self.src_cols = ['charged_party_number', 'bundle_code', 'tariffplan_id', 'call_type', 'voice_call_cdr',
+        self.src_cols = ['charged_party_number', 'bundle_code', 'call_feature', 'tariffplan_id', 'call_type', 'voice_call_cdr',
                          'destination_zone', 'destination_area_code', 'destinationzone_name', 'roam_flag',
                          'network_id', 'call_date_hour', 'call_date_dt', 'call_date_num', 'call_date_month']
         self.hourly_cols = ['charged_party_number', 'user_type', 'bundle_code', 'tariffplan_id', 'call_type', 'voice_call_cdr',
                             'destination_zone', 'destination_area_code', 'destination_zone_name', 'roam_flag',
-                            'network_id', 'call_date_hour', 'call_date_dt', 'call_date_num', 'call_date_month', 'call_date_year']
+                            'network_id', 'call_feature', 'call_date_hour', 'call_date_dt', 'call_date_num', 'call_date_month', 'call_date_year']
         self.daily_cols = ['charged_party_number', 'user_type', 'bundle_code', 'tariffplan_id', 'call_type', 'voice_call_cdr',
                            'destination_zone', 'destination_area_code', 'destination_zone_name', 'roam_flag',
-                           'network_id', 'call_date_dt', 'call_date_num', 'call_date_month', 'call_date_year']
+                           'network_id', 'call_feature', 'call_date_dt', 'call_date_num', 'call_date_month', 'call_date_year']
         self.monthly_cols = ['charged_party_number', 'user_type', 'bundle_code', 'tariffplan_id', 'call_type', 'voice_call_cdr',
                              'destination_zone', 'destination_area_code', 'destination_zone_name', 'roam_flag',
-                             'network_id', 'call_date_month', 'call_date_year']
+                             'network_id', 'call_feature', 'call_date_month', 'call_date_year']
         self.yearly_cols = ['charged_party_number', 'user_type', 'bundle_code', 'tariffplan_id', 'call_type', 'voice_call_cdr',
                             'destination_zone', 'destination_area_code', 'destination_zone_name', 'roam_flag',
-                            'network_id', 'call_date_year']
+                            'network_id', 'call_feature', 'call_date_year']
         self.spark_table_name = "temp_fact_table"
         self.conn = self._read_conn_properties(file_path=conn_file_path, code_bucket=self.code_bucket)
         self.logger.info("Received connection properties as: {prop}".format(prop=self.conn))
@@ -130,6 +130,7 @@ class Aggregation:
         """
 
         full_tbl_name = '.'.join([self.config['input']['database'], self.config['input']['normal_cdr_table']])
+        vmd_tbl_name = '.'.join([self.config['dim_tables']['database'], self.config['dim_tables']['vmd']])
         src_cols = ','.join(self.src_cols)
         self.logger.info('Reading fact table {tbl} from {start} to {end}'.format(
             tbl=full_tbl_name, start=self.start, end=self.end
@@ -138,30 +139,35 @@ class Aggregation:
         if self.creation_date_range:
             query = "SELECT {cols} FROM {table} WHERE {date_daily_col} IN " \
                     "(SELECT DISTINCT {date_daily_col} " \
-                    "FROM {table} WHERE {created_date_col} >= '{start}' AND {created_date_col} <= '{end}')"\
-                .format(cols=src_cols, table=full_tbl_name, start=self.creation_date_range[0],
+                    "FROM {table} WHERE {created_date_col} >= '{start}' AND {created_date_col} <= '{end}') " \
+                    "AND dialed_number NOT IN (SELECT vm_deposit from {vmd_table})"\
+                .format(cols=src_cols, table=full_tbl_name, vmd_table=vmd_tbl_name, start=self.creation_date_range[0],
                         end=self.creation_date_range[1], created_date_col=self.config['input']['created_date_col'],
                         date_daily_col=self.config['input']['date_daily_col']
                         )
         else:
             if self.fmt.startswith('%Y%m%d'):
-                query = "SELECT {cols} FROM {table} WHERE {date_daily_col} >= {start} AND {date_daily_col} <= {end}".format(
-                        cols=src_cols, table=full_tbl_name, start=self.start, end=self.end,
+                query = "SELECT {cols} FROM {table} WHERE {date_daily_col} >= {start} AND {date_daily_col} <= {end} " \
+                        "AND dialed_number NOT IN (SELECT vm_deposit from {vmd_table})".format(
+                        cols=src_cols, table=full_tbl_name, vmd_table=vmd_tbl_name, start=self.start, end=self.end,
                         date_daily_col=self.config['input']['date_daily_col']
                         )
             elif self.fmt.startswith('%Y%m'):
-                query = "SELECT {cols} FROM {table} WHERE {date_monthly_col} >= {start} AND {date_monthly_col} <= {end}".format(
-                    cols=src_cols, table=full_tbl_name, start=self.start, end=self.end,
+                query = "SELECT {cols} FROM {table} WHERE {date_monthly_col} >= {start} AND {date_monthly_col} <= {end} " \
+                        "AND dialed_number NOT IN (SELECT vm_deposit from {vmd_table})".format(
+                    cols=src_cols, table=full_tbl_name, vmd_table=vmd_tbl_name, start=self.start, end=self.end,
                     date_monthly_col=self.config['input']['date_monthly_col']
                 )
             elif self.fmt.startswith('%Y'):
-                query = "SELECT {cols} FROM {table} WHERE {date_monthly_col} >= {start} AND {date_monthly_col} <= {end}".format(
-                    cols=src_cols, table=full_tbl_name, start=self.start + '01', end=self.end + '12',
+                query = "SELECT {cols} FROM {table} WHERE {date_monthly_col} >= {start} AND {date_monthly_col} <= {end} " \
+                        "AND dialed_number NOT IN (SELECT vm_deposit from {vmd_table})".format(
+                    cols=src_cols, table=full_tbl_name, vmd_table=vmd_tbl_name, start=self.start + '01', end=self.end + '12',
                     date_monthly_col=self.config['input']['date_monthly_col']
                 )
             else:
-                query = "SELECT {cols} FROM {table} WHERE {date_hour_col} >= {start} AND {date_hour_col} <= {end}".format(
-                    cols=src_cols, table=full_tbl_name, start=self.start, end=self.end,
+                query = "SELECT {cols} FROM {table} WHERE {date_hour_col} >= {start} AND {date_hour_col} <= {end} " \
+                        "AND dialed_number NOT IN (SELECT vm_deposit from {vmd_table})".format(
+                    cols=src_cols, table=full_tbl_name, vmd_table=vmd_tbl_name, start=self.start, end=self.end,
                     date_hour_col=self.config['input']['date_hour_col']
                 )
 

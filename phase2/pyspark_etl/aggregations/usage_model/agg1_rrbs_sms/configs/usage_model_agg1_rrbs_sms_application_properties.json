@@ -1,0 +1,37 @@
+[
+  {
+    "module" : "rrbs",
+    "subModule" : "sms",
+    "input": {
+      "database": "uk_rrbs_dm",
+      "normal_cdr_table": "fact_rrbs_sms",
+      "uid": "cli",
+      "created_date_col": "created_date",
+      "date_hour_col": "msg_date_hour",
+      "date_daily_col": "msg_date_num",
+      "date_monthly_col": "msg_date_month"
+    },
+    "dim_tables": {
+      "database": "uk_rrbs_dm",
+       "dim_destination_master": "dim_destination_master"
+    },
+    "output": {
+      "database": "uk_rrbs_agg",
+      "date_col": "msg_date_num",
+      "month_col": "msg_date_month",
+      "year_col": "msg_date_year",
+      "hourly_table": "factagg_usage_rrbs_sms_hourly",
+      "hourly_temp_table": "temp_factagg_usage_rrbs_sms_hourly",
+      "daily_table": "factagg_usage_rrbs_sms_daily",
+      "daily_temp_table": "temp_factagg_usage_rrbs_sms_daily",
+      "monthly_table": "factagg_usage_rrbs_sms_monthly",
+      "monthly_temp_table": "temp_factagg_usage_rrbs_sms_monthly",
+      "yearly_table": "factagg_usage_rrbs_sms_yearly",
+      "yearly_temp_table": "temp_factagg_usage_rrbs_sms_yearly"
+    },
+    "logging": {
+      "database" : "uk_test",
+      "batch_status_table": ""
+    }
+  }
+]

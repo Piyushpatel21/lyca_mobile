@@ -53,15 +53,16 @@ class TransformActionChain:
             fList.append(s3 + "/" + file)
         try:
             df_source = self.trans.readSourceFile(self.sparkSession, batchid, self.encoding, fList)
-            s3_record_count = df_source.groupBy('recon_file_name').agg(F.count('recon_file_name').cast(IntegerType()).alias('s3_record_count'))
+            s3_record_count = df_source.groupBy('recon_file_name').agg(F.count('recon_file_name')
+                                                                       .cast(IntegerType()).alias('s3_record_count'))\
+                                                                       .withColumnRenamed("recon_file_name", "file_name")
             s3_batchreadcount = df_source.count()
             s3_filecount = df_source.select('recon_file_name').distinct().count()
             batch_status = 'Started'
-            metaQuery = ("INSERT INTO {log_batch_status} (batch_id, s3_batchreadcount, s3_filecount,batch_start_dt, batch_status) "
-                         "values({batch_id}, {s3_batchreadcount}, {s3_filecount},{batch_start_dt}, {batch_status})"
+            metaQuery = ("INSERT INTO {log_batch_status} (batch_id, s3_batchreadcount, s3_filecount, batch_start_dt, batch_status) "
+                         "values({batch_id}, {s3_batchreadcount}, {s3_filecount}, '{batch_start_dt}', '{batch_status}')"
                         .format(log_batch_status=self.logBatchStatusTbl, batch_id=batchid, s3_batchreadcount=s3_batchreadcount, s3_filecount=s3_filecount,
                                 batch_start_dt=self.batch_start_dt, batch_status=batch_status))
-            print(metaQuery)
             self.redshiftprop.writeBatchStatus(self.sparkSession, self.logBatchStatusTbl, metaQuery)
             return df_source, s3_record_count
         except Exception as ex:
@@ -69,11 +70,11 @@ class TransformActionChain:
             self.redshiftprop.writeBatchStatus(self.sparkSession, self.logBatchStatusTbl, metaQuery)
             self.logger.error("Failed to create source data : {error}".format(error=ex))
 
-    def writetoDataMart(self, srcDataframe: DataFrame):
+    def writetoDataMart(self, srcDataframe: DataFrame, tgtColmns=[]):
         try:
-            tgtColmns = ''
+            df = srcDataframe.select(*tgtColmns)
             self.logger.info("***** started writing to data mart *****")
-            self.redshiftprop.writeToRedshift(srcDataframe, self.property.get("database"), self.property.get("normalcdrtbl"), tgtColmns)
+            self.redshiftprop.writeToRedshift(df, self.property.get("database"), self.property.get("tbl"), tgtColmns)
             self.logger.info("***** started writing to data mart - completed *****")
         except Exception as ex:
             self.logger.error("Failed to write data in data mart : {error}".format(error=ex))
