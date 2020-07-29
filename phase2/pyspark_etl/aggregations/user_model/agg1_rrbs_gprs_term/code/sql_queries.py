@@ -10,6 +10,8 @@ SELECT DISTINCT
     , tariffplan_id
     , cdr_type
     , network_id
+    , roam_flag
+    , data_feature
     , data_termination_hour
     , data_termination_dt
     , data_termination_dt_num
@@ -26,6 +28,8 @@ SELECT DISTINCT
     , tariffplan_id
     , cdr_type
     , network_id
+    , roam_flag
+    , data_feature
     , data_termination_dt
     , data_termination_dt_num
     , data_termination_month
@@ -41,6 +45,8 @@ SELECT DISTINCT
     , tariffplan_id
     , cdr_type
     , network_id
+    , roam_flag
+    , data_feature
     , data_termination_month
     , CAST(LEFT(data_termination_month, 4) as INT) as data_termination_year
      from {table}
@@ -54,6 +60,8 @@ SELECT DISTINCT
     , tariffplan_id
     , cdr_type
     , network_id
+    , roam_flag
+    , data_feature
     , CAST(LEFT(data_termination_month, 4) as INT) as data_termination_year
      from {table}
 """

@@ -5,7 +5,7 @@ import boto3
 import pytest
 
 
-class TestAgg1RRBSSMS:
+class TestAgg1RRBSGprsTerm:
 
     gprs_fact_location = 'assets/fact_rrbs_gprs_2020-07-22.csv'
     redshift_credentials = 'Redshift/etl_user'
@@ -51,6 +51,7 @@ class TestAgg1RRBSSMS:
         df_distinct_groupby_hour, df_distinct_groupby_daily, df_distinct_groupby_monthly, df_distinct_groupby_yearly = all_aggregation
 
         print("Hourly: ", df_distinct_groupby_hour.count())
+        print(df_distinct_groupby_hour.show())
 
         print("Daily: ", df_distinct_groupby_daily.count())
 

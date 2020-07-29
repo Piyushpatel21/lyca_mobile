@@ -1,0 +1,161 @@
+[
+  {
+    "module" : "rrbs",
+    "input": {
+      "sms": {
+        "database": "uk_rrbs_agg",
+        "hourly_table": "factagg_user_rrbs_sms_hourly",
+        "daily_table": "factagg_user_rrbs_sms_daily",
+        "monthly_table": "factagg_user_rrbs_sms_monthly",
+        "yearly_table": "factagg_user_rrbs_sms_yearly",
+        "date_col": "msg_date_num",
+        "month_col": "msg_date_month",
+        "year_col": "msg_date_year"
+      },
+      "voice": {
+        "database": "uk_rrbs_agg",
+        "hourly_table": "factagg_user_rrbs_voice_hourly",
+        "daily_table": "factagg_user_rrbs_voice_daily",
+        "monthly_table": "factagg_user_rrbs_voice_monthly",
+        "yearly_table": "factagg_user_rrbs_voice_yearly",
+        "date_col": "call_date_num",
+        "month_col": "call_date_month",
+        "year_col": "call_date_year"
+      },
+      "topup": {
+        "database": "uk_rrbs_agg",
+        "hourly_table": "factagg_user_rrbs_topup_hourly",
+        "daily_table": "factagg_user_rrbs_topup_daily",
+        "monthly_table": "factagg_user_rrbs_topup_monthly",
+        "yearly_table": "factagg_user_rrbs_topup_yearly",
+        "date_col": "",
+        "month_col": "",
+        "year_col": ""
+      },
+      "gprs_conn": {
+        "database": "uk_rrbs_agg",
+        "hourly_table": "factagg_user_rrbs_gprs_conn_hourly",
+        "daily_table": "factagg_user_rrbs_gprs_conn_daily",
+        "monthly_table": "factagg_user_rrbs_gprs_conn_monthly",
+        "yearly_table": "factagg_user_rrbs_gprs_conn_yearly",
+        "date_col": "data_connection_dt_num",
+        "month_col": "data_connection_month",
+        "year_col": "data_connection_year"
+      },
+      "gprs_term": {
+        "database": "uk_rrbs_agg",
+        "hourly_table": "factagg_user_rrbs_gprs_term_hourly",
+        "daily_table": "factagg_user_rrbs_gprs_term_daily",
+        "monthly_table": "factagg_user_rrbs_gprs_term_monthly",
+        "yearly_table": "factagg_user_rrbs_gprs_term_yearly",
+        "date_col": "data_termination_dt_num",
+        "month_col": "data_termination_month",
+        "year_col": "data_termination_year"
+      },
+      "dim_tables": {
+        "database": "uk_rrbs_dm",
+        "dim_voice_call_category":  "ref_rrbs_voice_call_category",
+        "dim_sms_call_category":  "ref_rrbs_sms_call_category",
+        "dim_data_roamflag":  "dim_rrbs_data_roamflag",
+        "dim_destination_master": "dim_destination_master"
+      }
+    },
+    "output": {
+      "count_total": {
+        "database": "uk_rrbs_agg",
+        "hour_col": "call_date_hour",
+        "date_col": "call_date_num",
+        "month_col": "call_date_month",
+        "year_col": "call_date_year",
+        "hourly_table": "factagg2_user_rrbs_count_total_hourly",
+        "hourly_temp_table": "temp_factagg2_user_rrbs_count_total_hourly",
+        "daily_table": "factagg2_user_rrbs_count_total_daily",
+        "daily_temp_table": "temp_factagg2_user_rrbs_count_total_daily",
+        "monthly_table": "factagg2_user_rrbs_count_total_monthly",
+        "monthly_temp_table": "temp_factagg2_user_rrbs_count_total_monthly",
+        "yearly_table": "factagg2_user_rrbs_count_total_yearly",
+        "yearly_temp_table": "temp_factagg2_user_rrbs_count_total_yearly"
+      },
+      "count_usemode": {
+        "database": "uk_rrbs_agg",
+        "hour_col": "call_date_hour",
+        "date_col": "call_date_num",
+        "month_col": "call_date_month",
+        "year_col": "call_date_year",
+        "hourly_table": "factagg2_user_rrbs_count_usemode_hourly",
+        "hourly_temp_table": "temp_factagg2_user_rrbs_count_usemode_hourly",
+        "daily_table": "factagg2_user_rrbs_count_usemode_daily",
+        "daily_temp_table": "temp_factagg2_user_rrbs_count_usemode_daily",
+        "monthly_table": "factagg2_user_rrbs_count_usemode_monthly",
+        "monthly_temp_table": "temp_factagg2_user_rrbs_count_usemode_monthly",
+        "yearly_table": "factagg2_user_rrbs_count_usemode_yearly",
+        "yearly_temp_table": "temp_factagg2_user_rrbs_count_usemode_yearly"
+      },
+      "count_call_user_usage": {
+        "database": "uk_rrbs_agg",
+        "hour_col": "call_date_hour",
+        "date_col": "call_date_num",
+        "month_col": "call_date_month",
+        "year_col": "call_date_year",
+        "hourly_table": "factagg2_user_rrbs_count_call_user_usage_hourly",
+        "hourly_temp_table": "temp_factagg2_user_rrbs_count_call_user_usage_hourly",
+        "daily_table": "factagg2_user_rrbs_count_call_user_usage_daily",
+        "daily_temp_table": "temp_factagg2_user_rrbs_count_call_user_usage_daily",
+        "monthly_table": "factagg2_user_rrbs_count_call_user_usage_monthly",
+        "monthly_temp_table": "temp_factagg2_user_rrbs_count_call_user_usage_monthly",
+        "yearly_table": "factagg2_user_rrbs_count_call_user_usage_yearly",
+        "yearly_temp_table": "temp_factagg2_user_rrbs_count_call_user_usage_yearly"
+
+      },
+      "count_calltype_user": {
+        "database": "uk_rrbs_agg",
+        "hour_col": "call_date_hour",
+        "date_col": "call_date_num",
+        "month_col": "call_date_month",
+        "year_col": "call_date_year",
+        "hourly_table": "factagg2_user_rrbs_count_calltype_user_hourly",
+        "hourly_temp_table": "temp_factagg2_user_rrbs_count_calltype_user_hourly",
+        "daily_table": "factagg2_user_rrbs_count_calltype_user_daily",
+        "daily_temp_table": "temp_factagg2_user_rrbs_count_calltype_user_daily",
+        "monthly_table": "factagg2_user_rrbs_count_calltype_user_monthly",
+        "monthly_temp_table": "temp_factagg2_user_rrbs_count_calltype_user_monthly",
+        "yearly_table": "factagg2_user_rrbs_count_calltype_user_yearly",
+        "yearly_temp_table": "temp_factagg2_user_rrbs_count_calltype_user_yearly"
+      },
+      "count_call_dest_usage": {
+        "database": "uk_rrbs_agg",
+        "hour_col": "call_date_hour",
+        "date_col": "call_date_num",
+        "month_col": "call_date_month",
+        "year_col": "call_date_year",
+        "hourly_table": "factagg2_user_rrbs_count_call_dest_usage_hourly",
+        "hourly_temp_table": "temp_factagg2_user_rrbs_count_call_dest_usage_hourly",
+        "daily_table": "factagg2_user_rrbs_count_call_dest_usage_daily",
+        "daily_temp_table": "temp_factagg2_user_rrbs_count_call_dest_usage_daily",
+        "monthly_table": "factagg2_user_rrbs_count_call_dest_usage_monthly",
+        "monthly_temp_table": "temp_factagg2_user_rrbs_count_call_dest_usage_monthly",
+        "yearly_table": "factagg2_user_rrbs_count_call_dest_usage_yearly",
+        "yearly_temp_table": "temp_factagg2_user_rrbs_count_call_dest_usage_yearly"
+      },
+      "count_user_usemode": {
+        "database": "uk_rrbs_agg",
+        "hour_col": "call_date_hour",
+        "date_col": "call_date_num",
+        "month_col": "call_date_month",
+        "year_col": "call_date_year",
+        "hourly_table": "factagg2_user_rrbs_count_user_usemode_hourly",
+        "hourly_temp_table": "temp_factagg2_user_rrbs_count_user_usemode_hourly",
+        "daily_table": "factagg2_user_rrbs_count_user_usemode_daily",
+        "daily_temp_table": "temp_factagg2_user_rrbs_count_user_usemode_daily",
+        "monthly_table": "factagg2_user_rrbs_count_user_usemode_monthly",
+        "monthly_temp_table": "temp_factagg2_user_rrbs_count_user_usemode_monthly",
+        "yearly_table": "factagg2_user_rrbs_count_user_usemode_yearly",
+        "yearly_temp_table": "temp_factagg2_user_rrbs_count_user_usemode_yearly"
+      }
+    },
+    "logging": {
+      "database" : "uk_test",
+      "batch_status_table": ""
+    }
+  }
+]
