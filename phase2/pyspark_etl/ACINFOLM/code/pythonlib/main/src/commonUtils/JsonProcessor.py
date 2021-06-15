@@ -19,7 +19,10 @@ class JsonProcessor:
            :return streaming byte of input file"""
         return json.loads(file)
 
-    @staticmethod
+
+
+
+    @staticmethod######
     def processJsonProperties(module, sub_module, filepath):
         """:parameter module - read property for a particular module
            :parameter sub_module - read property for a particular sub-module
